@@ -1,0 +1,2 @@
+require ('./Point')
+require ('./Rect')
