@@ -28,6 +28,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
       this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height)
       return this
     }
+
+    PhysicsSprite.prototype.getPosition = function() {
+      return this.body.position;
+    }
      
     PhysicsSprite.prototype.setupBody = function() {
       /**

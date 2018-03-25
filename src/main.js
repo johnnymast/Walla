@@ -11,10 +11,10 @@ window.extend = function (a, b) {
 require([
   'pixi',
   'core/GameEngine',
-  'core/SceneManager',
-  'core/AssetManager',
-  'core/StateManager',
-  'core/PhysicsManager',
+  'core/managers/SceneManager',
+  'core/managers/AssetManager',
+  'core/managers/StateManager',
+  'core/managers/PhysicsManager',
   'core/Scene'
 ], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, Scene) {
   var ge = GameEngine.get()

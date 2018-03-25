@@ -75,7 +75,8 @@ const config = {
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
       //   'Howler': path.resolve(__dirname, './lib/howler.js/howler'),
       //   'Cookies': path.resolve(__dirname, './lib/js-cookie/src/js.cookie'),
-      'core': path.resolve(__dirname, 'src/core')
+      'core': path.resolve(__dirname, 'src/core'),
+      'screens': path.resolve(__dirname, 'screens')
       //   'toolbar': path.resolve(__dirname, 'toolbar'),
       //   'game': path.resolve(__dirname, 'game'),
       //   'root': path.resolve(__dirname, './')

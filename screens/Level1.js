@@ -1,6 +1,6 @@
-define(['pixi', 'core/Scene', 'core/Level', 'core/GameEngine', 'core/objects/Brick', 'core/objects/Pad', 'core/objects/Ball'], function (pixi, Scene, Level,  GameEngine,Brick, Pad, Ball) {
+define(['pixi', 'screens/GameLevel', 'core/GameEngine', 'core/objects/Brick', 'core/objects/Pad', 'core/objects/Ball'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
-    Level.call(this, options)
+    GameLevel.call(this, options)
 
     this.startY = 50;
     this.num_bricks = 11
@@ -10,10 +10,21 @@ define(['pixi', 'core/Scene', 'core/Level', 'core/GameEngine', 'core/objects/Bri
     this.boxes = [];
   }
 
-  extend(Level1, Level)
+  extend(Level1, GameLevel)
 
   Level1.prototype.onKeyPress = function(event) {
-    console.log('key press')
+
+    console.log('gtrigger')
+    if (event.key == 'ArrowLeft') {
+      this.pad.setPosition(this.pad.sprite.x - 10, this.pad.sprite.y)
+      console.log('left')
+    } else if (event.key == 'ArrowRight') {
+      this.pad.setPosition(this.pad.sprite.x + 10, this.pad.sprite.y)
+
+      console.log('right')
+
+    }
+    console.log('key press ' + event.key)
   }
 
   Level1.prototype.onKeyUp = function(event) {
@@ -21,16 +32,14 @@ define(['pixi', 'core/Scene', 'core/Level', 'core/GameEngine', 'core/objects/Bri
   }
 
   Level1.prototype.onStart = function () {
-    Level.prototype.onStart.call(this)
+    GameLevel.prototype.onStart.call(this)
+
+    this.lives = 5
+    this.score = 0
 
     this.listenForKeyboardInputs(37, 39)
-
-    this.listenSingleForKeyboardInput(13, function() {
-        console.log('A down')
-      },
-      function() {
-        console.log('A up')
-    })
+    this.setLives(this.lives)
+    this.setScore(this.score);
 
     this.textures = {
       'red':  PIXI.Texture.fromFrame('element_red_rectangle.png'),
@@ -55,7 +64,7 @@ define(['pixi', 'core/Scene', 'core/Level', 'core/GameEngine', 'core/objects/Bri
 
     this.interactive = true;
 
-
+    //
     // PIXI.sound.play('level1_music');
     // PIXI.sound.play('game_over');
 

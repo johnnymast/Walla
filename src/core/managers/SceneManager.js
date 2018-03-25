@@ -12,7 +12,7 @@ define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
 
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      var _scene = require('core/' + scene)
+      var _scene = require('screens/' + scene)
       this.scenes[scene] = new _scene(options)
     }
     return this
