@@ -5,20 +5,19 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
 
   extend(Brick, PhysicsSprite)
 
-  
-  Brick.prototype.setupBody = function() {
+  Brick.prototype.setupBody = function () {
     var options = {
-        friction: 0,
-        restitution: 0.95,
-        isStatic: true
+      friction: 0,
+      restitution: 0.95,
+      isStatic: true
     }
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
     this.PhysicsManager.add(this.body)
   }
 
-  Brick.prototype.update = function() {
-    var pos = this.body.position;
-    var angle = this.body.angle;
+  Brick.prototype.update = function () {
+    var pos = this.body.position
+    var angle = this.body.angle
 
     // this.sprite.x = pos.x
     // this.sprite.y = pos.y

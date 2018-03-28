@@ -1,4 +1,13 @@
 define([], function () {
+
+  /**
+   * Take controle over Keyboard input by using this class.
+   * You construct the class with a keycode.
+   * See http://keycode.info/ for more information.
+   * @exports core/input/KeyboardInput
+   * @constructor
+   * @param {number} keyCode - The keycode to listen for
+   */
   var KeyboardInput = function (keyCode) {
 
     let key = {}
@@ -18,6 +27,11 @@ define([], function () {
     return key
   }
 
+
+  /**
+   * The internal keyboard event handler for keydown.
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
   KeyboardInput.prototype.downHandler = function(event) {
 
     if (event.keyCode === this.code) {
@@ -28,6 +42,10 @@ define([], function () {
     event.preventDefault()
   }
 
+  /**
+   * The internal keyboard event handler for keyup.
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
   KeyboardInput.prototype.upHandler = function(event) {
     if (event.keyCode === this.code) {
       if (this.isDown && this.release) this.release(event)

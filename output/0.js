@@ -31444,7 +31444,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(539)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(540)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   var Scene = function (options) {
     GameObject.call(this, options);
 
@@ -53050,7 +53050,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 535 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(539)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(540)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   var PhysicsSprite = function (texture) {
     GameObject.call(this);
 
@@ -53104,492 +53104,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 536 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(548), __webpack_require__(221), __webpack_require__(544), __webpack_require__(545), __webpack_require__(542)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
-  var Level1 = function (options) {
-    GameLevel.call(this, options);
-
-    this.startY = 50;
-    this.num_bricks = 11;
-    this.started = false;
-
-    this.objects = [];
-    this.boxes = [];
-  };
-
-  extend(Level1, GameLevel);
-
-  Level1.prototype.onKeyPress = function (event) {
-
-    console.log('gtrigger');
-    if (event.key == 'ArrowLeft') {
-      this.pad.setPosition(this.pad.sprite.x - 10, this.pad.sprite.y);
-      console.log('left');
-    } else if (event.key == 'ArrowRight') {
-      this.pad.setPosition(this.pad.sprite.x + 10, this.pad.sprite.y);
-
-      console.log('right');
-    }
-    console.log('key press ' + event.key);
-  };
-
-  Level1.prototype.onKeyUp = function (event) {
-    console.log('key up');
-  };
-
-  Level1.prototype.onStart = function () {
-    GameLevel.prototype.onStart.call(this);
-
-    this.lives = 5;
-    this.score = 0;
-
-    this.listenForKeyboardInputs(37, 39);
-    this.setLives(this.lives);
-    this.setScore(this.score);
-
-    this.textures = {
-      'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
-      'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
-      'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
-      'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png')
-    };
-
-    var y = this.startY;
-
-    for (let key of Object.keys(this.textures)) {
-      var texture = this.textures[key];
-      for (var x = 45; x < this.num_bricks * texture.width; x += texture.width) {
-        var brick = new Brick(texture);
-        brick.setPosition(x, y);
-
-        this.objects.push(brick);
-        this.addChild(brick.sprite);
-      }
-      y += texture.height + 1;
-    }
-
-    this.interactive = true;
-
-    //
-    // PIXI.sound.play('level1_music');
-    // PIXI.sound.play('game_over');
-
-    this.resources = this.ge.get('StateManager').get('resources');
-    this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'));
-    this.pad.setPosition(this.app.screen.width / 2, this.app.screen.height - 100);
-
-    var tx = PIXI.Texture.fromFrame('ballBlue.png');
-    this.ball = new Ball(tx);
-    this.ball.setPosition(this.pad.sprite.x, this.pad.sprite.y - tx.height - 300);
-
-    this.objects.push(this.ball);
-    this.objects.push(this.pad);
-
-    this.addChild(this.ball.sprite);
-    this.addChild(this.pad.sprite);
-
-    this.PhysicsManager.run();
-  };
-
-  Level1.prototype.onMouseMove = function (event) {
-    let coords = event.data.global;
-    if (coords.x + this.pad._width > this.app.screen.width) {
-      coords.x = this.app.screen.width - this.pad._width;
-    } else if (coords.x <= 0) {
-      coords.x = 0;
-    }
-    this.pad.setPosition(coords.x, this.pad.sprite.y);
-  };
-
-  Level1.prototype.onPointerDown = function (event) {
-    this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05);
-    if (this.started == false) {
-      for (var object of this.objects) {
-        if (object instanceof Ball) {
-          object.isStatic = false;
-        }
-      }
-      this.started = true;
-    }
-  };
-
-  Level1.prototype.update = function (delta) {
-    // this.PhysicsManager.update(delta);
-
-    for (var object of this.objects) {
-      if (object instanceof Ball) {
-        if (object.isStatic == true) {
-          object.x = this.pad.x;
-        }
-      }
-      object.update(delta);
-    }
-  };
-
-  return Level1;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 537 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
-  var MainScreen = function (options) {
-    Scene.call(this, options);
-
-    this.bunny = null;
-  };
-
-  extend(MainScreen, Scene);
-
-  MainScreen.prototype.onStart = function () {
-    this.resources = this.ge.get('StateManager').get('resources');
-    this.bunny = new pixi.Sprite(PIXI.Texture.fromFrame('paddleBlu.png'));
-
-    // center the sprite's anchor point
-    this.bunny.anchor.set(0.5);
-
-    // move the bunny sprite to the center of the screen
-    this.bunny.x = this.app.screen.width / 2;
-    this.bunny.y = this.app.screen.height / 2;
-
-    var style = new pixi.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 36,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff00'], // gradient
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
-    });
-
-    var richText = new pixi.Text('Your all ready to go .. May the source be with you developer', style);
-    richText.x = this.app.screen.width / 2 - richText.width / 2;
-    richText.y = this.bunny.y - richText.height - 40; /* 40 is padding spade */
-
-    //   this.resources.wave.play()
-
-    this.addChild(richText);
-    this.addChild(this.bunny);
-  };
-
-  MainScreen.prototype.update = function (delta) {
-    if (this.bunny) {
-      this.bunny.rotation += 0.1 * delta;
-    }
-  };
-
-  return MainScreen;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 538 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
-  var SplashScene = function (options) {
-    Scene.call(this, options);
-
-    this.loaderHolder = new pixi.Graphics();
-    this.loaderFill = new pixi.Graphics();
-
-    this.precentageText = null;
-    this.logo = null;
-
-    this.percentageStyle = new pixi.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 18
-    });
-  };
-
-  extend(SplashScene, Scene);
-
-  SplashScene.prototype.onStart = function () {
-    var logoTexture = pixi.Texture.fromImage('/assets/images/engine.png');
-    logoTexture.on('update', () => {
-      this.logo = new pixi.Sprite(logoTexture);
-      this.logo.anchor.set(0.5);
-      this.logo.x = this.app.screen.width / 2;
-      this.logo.y = this.app.screen.height / 2;
-
-      this.loaderHolder.lineStyle(2, 0x000000, 1);
-      this.loaderHolder.beginFill(0xffffff, 1);
-      this.loaderHolder.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.logo.width * 2, 10);
-
-      this.loaderFill.lineStyle(2, 0x000000, 1);
-      this.loaderFill.beginFill(0x000000, 1);
-      this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, 0, 10);
-
-      this.precentageText = new pixi.Text('0%', this.percentageStyle);
-      this.precentageText.y = this.logo.y + this.logo.height / 2 + 15;
-      this.precentageText.x = this.app.screen.width / 2 - this.logo.width + this.logo.width * 2 + 10;
-
-      this.addChild(this.precentageText);
-      this.addChild(this.loaderHolder);
-      this.addChild(this.loaderFill);
-      this.addChild(this.logo);
-      this.preload();
-    });
-  };
-
-  SplashScene.prototype.preload = function () {
-    this.ge.get('AssetManager').loadManifest([{ name: 'floor', src: 'assets/images/floor.png' }, { name: 'level1_music', src: 'assets/sounds/music/level1.mp3' }, { name: 'level2_music', src: 'assets/sounds/music/level2.mp3' }, { name: 'level3_music', src: 'assets/sounds/music/level3.mp3' }, { name: 'game_over', src: 'assets/sounds/game_over.mp3' }, { name: 'mission_completed', src: 'assets/sounds/mission_completed.mp3' }, { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/spritesheets/spritesheet-1.json' }]);
-
-    this.AssetManager.once('complete', this._preloadready, this);
-    this.AssetManager.on('progress', this._preloadProgress, this);
-  };
-
-  SplashScene.prototype._preloadProgress = function (event) {
-    this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.loaderHolder.width / (100 / event.progress), 10);
-    this.precentageText.text = Math.round(event.progress) + '%';
-  };
-
-  SplashScene.prototype._preloadready = function (loader, resources) {
-
-    this.StateManager.set('resources', this.resources);
-    this.SceneManager.switchTo('Level1');
-  };
-
-  return SplashScene;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 539 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
-  var GameObject = function (options) {
-    pixi.Container.call(this);
-
-    this.ge = GameEngine.get();
-    this.app = this.ge.get('App');
-
-    this.AssetManager = this.ge.get('AssetManager');
-    this.SceneManager = this.ge.get('SceneManager');
-    this.StateManager = this.ge.get('StateManager');
-    this.PhysicsManager = this.ge.get('PhysicsManager');
-
-    // components = components || []
-  };
-
-  extend(GameObject, pixi.Container);
-
-  GameObject.prototype.update = function (delta) {
-    /**
-     * Implement this function to handle game logic in your Scene.
-     */
-  };
-
-  return GameObject;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 540 */,
-/* 541 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-  var KeyboardInput = function (keyCode) {
-
-    let key = {};
-    key.code = keyCode;
-    key.isDown = false;
-    key.isUp = true;
-    key.press = undefined;
-    key.release = undefined;
-
-    window.addEventListener('keydown', this.downHandler.bind(key), false);
-    window.addEventListener('keyup', this.upHandler.bind(key), false);
-
-    return key;
-  };
-
-  KeyboardInput.prototype.downHandler = function (event) {
-
-    if (event.keyCode === this.code) {
-      if (this.isUp && this.press) this.press(event);
-      this.isDown = true;
-      this.isUp = false;
-    }
-    event.preventDefault();
-  };
-
-  KeyboardInput.prototype.upHandler = function (event) {
-    if (event.keyCode === this.code) {
-      if (this.isDown && this.release) this.release(event);
-      this.isDown = false;
-      this.isUp = true;
-    }
-    event.preventDefault();
-  };
-
-  return KeyboardInput;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 542 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Ball = function (texture) {
-    PhysicsSprite.call(this, texture);
-  };
-
-  extend(Ball, PhysicsSprite);
-
-  Ball.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95
-      // isStatic: true,
-    };
-    this.body = this.PhysicsManager.circle(this.x, this.y, this._width, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  Ball.prototype.update = function () {
-    var pos = this.body.position;
-    var angle = this.body.angle;
-
-    this.sprite.x = pos.x;
-    this.sprite.y = pos.y;
-  };
-
-  return Ball;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 543 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Barrier = function (texture) {
-    PhysicsSprite.call(this, texture);
-
-    console.log(texture);
-  };
-
-  extend(Barrier, PhysicsSprite);
-
-  Barrier.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  return Barrier;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 544 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Brick = function (texture) {
-    PhysicsSprite.call(this, texture);
-  };
-
-  extend(Brick, PhysicsSprite);
-
-  Brick.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  Brick.prototype.update = function () {
-    var pos = this.body.position;
-    var angle = this.body.angle;
-
-    // this.sprite.x = pos.x
-    // this.sprite.y = pos.y
-  };
-
-  return Brick;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 545 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Pad = function (texture) {
-    PhysicsSprite.call(this, texture);
-  };
-
-  extend(Pad, PhysicsSprite);
-
-  Pad.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  return Pad;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 546 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var map = {
-	"./GameLevel": 548,
-	"./GameLevel.js": 548,
-	"./Level1": 536,
-	"./Level1.js": 536,
-	"./MainScreen": 537,
-	"./MainScreen.js": 537,
-	"./SplashScene": 538,
-	"./SplashScene.js": 538
-};
-function webpackContext(req) {
-	return __webpack_require__(webpackContextResolve(req));
-};
-function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
-	return id;
-};
-webpackContext.keys = function webpackContextKeys() {
-	return Object.keys(map);
-};
-webpackContext.resolve = webpackContextResolve;
-module.exports = webpackContext;
-webpackContext.id = 546;
-
-/***/ }),
-/* 547 */,
-/* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(180), __webpack_require__(222), __webpack_require__(543), __webpack_require__(541)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
@@ -53726,6 +53240,507 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   return GameLevel;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 537 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(544), __webpack_require__(545), __webpack_require__(542)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+  var Level1 = function (options) {
+    GameLevel.call(this, options);
+
+    this.startY = 50;
+    this.num_bricks = 11;
+    this.started = false;
+
+    this.objects = [];
+    this.boxes = [];
+  };
+
+  extend(Level1, GameLevel);
+
+  Level1.prototype.onKeyPress = function (event) {
+
+    console.log('gtrigger');
+    if (event.key == 'ArrowLeft') {
+      this.pad.setPosition(this.pad.sprite.x - 10, this.pad.sprite.y);
+      console.log('left');
+    } else if (event.key == 'ArrowRight') {
+      this.pad.setPosition(this.pad.sprite.x + 10, this.pad.sprite.y);
+
+      console.log('right');
+    }
+    console.log('key press ' + event.key);
+  };
+
+  Level1.prototype.onKeyUp = function (event) {
+    console.log('key up');
+  };
+
+  Level1.prototype.onStart = function () {
+    GameLevel.prototype.onStart.call(this);
+
+    this.lives = 5;
+    this.score = 0;
+
+    this.listenForKeyboardInputs(37, 39);
+    this.setLives(this.lives);
+    this.setScore(this.score);
+
+    this.textures = {
+      'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
+      'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
+      'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
+      'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png')
+    };
+
+    var y = this.startY;
+
+    for (let key of Object.keys(this.textures)) {
+      var texture = this.textures[key];
+      for (var x = 45; x < this.num_bricks * texture.width; x += texture.width) {
+        var brick = new Brick(texture);
+        brick.setPosition(x, y);
+
+        this.objects.push(brick);
+        this.addChild(brick.sprite);
+      }
+      y += texture.height + 1;
+    }
+
+    this.interactive = true;
+
+    //
+    // PIXI.sound.play('level1_music');
+    // PIXI.sound.play('game_over');
+
+    this.resources = this.ge.get('StateManager').get('resources');
+    this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'));
+    this.pad.setPosition(this.app.screen.width / 2, this.app.screen.height - 100);
+
+    var tx = PIXI.Texture.fromFrame('ballBlue.png');
+    this.ball = new Ball(tx);
+    this.ball.setPosition(this.pad.sprite.x, this.pad.sprite.y - tx.height - 300);
+
+    this.objects.push(this.ball);
+    this.objects.push(this.pad);
+
+    this.addChild(this.ball.sprite);
+    this.addChild(this.pad.sprite);
+
+    this.PhysicsManager.run();
+  };
+
+  Level1.prototype.onMouseMove = function (event) {
+    let coords = event.data.global;
+    if (coords.x + this.pad._width > this.app.screen.width) {
+      coords.x = this.app.screen.width - this.pad._width;
+    } else if (coords.x <= 0) {
+      coords.x = 0;
+    }
+    this.pad.setPosition(coords.x, this.pad.sprite.y);
+  };
+
+  Level1.prototype.onPointerDown = function (event) {
+    this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05);
+    if (this.started == false) {
+      for (var object of this.objects) {
+        if (object instanceof Ball) {
+          object.isStatic = false;
+        }
+      }
+      this.started = true;
+    }
+  };
+
+  Level1.prototype.update = function (delta) {
+    // this.PhysicsManager.update(delta);
+
+    for (var object of this.objects) {
+      if (object instanceof Ball) {
+        if (object.isStatic == true) {
+          object.x = this.pad.x;
+        }
+      }
+      object.update(delta);
+    }
+  };
+
+  return Level1;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 538 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
+  var MainScreen = function (options) {
+    Scene.call(this, options);
+
+    this.bunny = null;
+  };
+
+  extend(MainScreen, Scene);
+
+  MainScreen.prototype.onStart = function () {
+    this.resources = this.ge.get('StateManager').get('resources');
+    this.bunny = new pixi.Sprite(PIXI.Texture.fromFrame('paddleBlu.png'));
+
+    // center the sprite's anchor point
+    this.bunny.anchor.set(0.5);
+
+    // move the bunny sprite to the center of the screen
+    this.bunny.x = this.app.screen.width / 2;
+    this.bunny.y = this.app.screen.height / 2;
+
+    var style = new pixi.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 36,
+      fontStyle: 'italic',
+      fontWeight: 'bold',
+      fill: ['#ffffff', '#00ff00'], // gradient
+      stroke: '#4a1850',
+      strokeThickness: 5,
+      dropShadow: true,
+      dropShadowColor: '#000000',
+      dropShadowBlur: 4,
+      dropShadowAngle: Math.PI / 6,
+      dropShadowDistance: 6,
+      wordWrap: true,
+      wordWrapWidth: 440
+    });
+
+    var richText = new pixi.Text('Your all ready to go .. May the source be with you developer', style);
+    richText.x = this.app.screen.width / 2 - richText.width / 2;
+    richText.y = this.bunny.y - richText.height - 40; /* 40 is padding spade */
+
+    //   this.resources.wave.play()
+
+    this.addChild(richText);
+    this.addChild(this.bunny);
+  };
+
+  MainScreen.prototype.update = function (delta) {
+    if (this.bunny) {
+      this.bunny.rotation += 0.1 * delta;
+    }
+  };
+
+  return MainScreen;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 539 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
+  var SplashScene = function (options) {
+    Scene.call(this, options);
+
+    this.loaderHolder = new pixi.Graphics();
+    this.loaderFill = new pixi.Graphics();
+
+    this.precentageText = null;
+    this.logo = null;
+
+    this.percentageStyle = new pixi.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 18
+    });
+  };
+
+  extend(SplashScene, Scene);
+
+  SplashScene.prototype.onStart = function () {
+    var logoTexture = pixi.Texture.fromImage('/assets/images/engine.png');
+    logoTexture.on('update', () => {
+      this.logo = new pixi.Sprite(logoTexture);
+      this.logo.anchor.set(0.5);
+      this.logo.x = this.app.screen.width / 2;
+      this.logo.y = this.app.screen.height / 2;
+
+      this.loaderHolder.lineStyle(2, 0x000000, 1);
+      this.loaderHolder.beginFill(0xffffff, 1);
+      this.loaderHolder.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.logo.width * 2, 10);
+
+      this.loaderFill.lineStyle(2, 0x000000, 1);
+      this.loaderFill.beginFill(0x000000, 1);
+      this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, 0, 10);
+
+      this.precentageText = new pixi.Text('0%', this.percentageStyle);
+      this.precentageText.y = this.logo.y + this.logo.height / 2 + 15;
+      this.precentageText.x = this.app.screen.width / 2 - this.logo.width + this.logo.width * 2 + 10;
+
+      this.addChild(this.precentageText);
+      this.addChild(this.loaderHolder);
+      this.addChild(this.loaderFill);
+      this.addChild(this.logo);
+      this.preload();
+    });
+  };
+
+  SplashScene.prototype.preload = function () {
+    this.ge.get('AssetManager').loadManifest([{ name: 'floor', src: 'assets/images/floor.png' }, { name: 'level1_music', src: 'assets/sounds/music/level1.mp3' }, { name: 'level2_music', src: 'assets/sounds/music/level2.mp3' }, { name: 'level3_music', src: 'assets/sounds/music/level3.mp3' }, { name: 'game_over', src: 'assets/sounds/game_over.mp3' }, { name: 'mission_completed', src: 'assets/sounds/mission_completed.mp3' }, { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/spritesheets/spritesheet-1.json' }]);
+
+    this.AssetManager.once('complete', this._preloadready, this);
+    this.AssetManager.on('progress', this._preloadProgress, this);
+  };
+
+  SplashScene.prototype._preloadProgress = function (event) {
+    this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.loaderHolder.width / (100 / event.progress), 10);
+    this.precentageText.text = Math.round(event.progress) + '%';
+  };
+
+  SplashScene.prototype._preloadready = function (loader, resources) {
+
+    this.StateManager.set('resources', this.resources);
+    this.SceneManager.switchTo('Level1');
+  };
+
+  return SplashScene;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 540 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
+  var GameObject = function (options) {
+    pixi.Container.call(this);
+
+    this.ge = GameEngine.get();
+    this.app = this.ge.get('App');
+
+    this.AssetManager = this.ge.get('AssetManager');
+    this.SceneManager = this.ge.get('SceneManager');
+    this.StateManager = this.ge.get('StateManager');
+    this.PhysicsManager = this.ge.get('PhysicsManager');
+
+    // components = components || []
+  };
+
+  extend(GameObject, pixi.Container);
+
+  GameObject.prototype.update = function (delta) {
+    /**
+     * Implement this function to handle game logic in your Scene.
+     */
+  };
+
+  return GameObject;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 541 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+
+  /**
+   * Take controle over Keyboard input by using this class.
+   * You construct the class with a keycode.
+   * See http://keycode.info/ for more information.
+   * @exports core/input/KeyboardInput
+   * @constructor
+   * @param {number} keyCode - The keycode to listen for
+   */
+  var KeyboardInput = function (keyCode) {
+
+    let key = {};
+    key.code = keyCode;
+    key.isDown = false;
+    key.isUp = true;
+    key.press = undefined;
+    key.release = undefined;
+
+    window.addEventListener('keydown', this.downHandler.bind(key), false);
+    window.addEventListener('keyup', this.upHandler.bind(key), false);
+
+    return key;
+  };
+
+  /**
+   * The internal keyboard event handler for keydown.
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.downHandler = function (event) {
+
+    if (event.keyCode === this.code) {
+      if (this.isUp && this.press) this.press(event);
+      this.isDown = true;
+      this.isUp = false;
+    }
+    event.preventDefault();
+  };
+
+  /**
+   * The internal keyboard event handler for keyup.
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.upHandler = function (event) {
+    if (event.keyCode === this.code) {
+      if (this.isDown && this.release) this.release(event);
+      this.isDown = false;
+      this.isUp = true;
+    }
+    event.preventDefault();
+  };
+
+  return KeyboardInput;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 542 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Ball = function (texture) {
+    PhysicsSprite.call(this, texture);
+  };
+
+  extend(Ball, PhysicsSprite);
+
+  Ball.prototype.setupBody = function () {
+    var options = {
+      friction: 0,
+      restitution: 0.95
+      // isStatic: true,
+    };
+    this.body = this.PhysicsManager.circle(this.x, this.y, this._width, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  Ball.prototype.update = function () {
+    var pos = this.body.position;
+    var angle = this.body.angle;
+
+    this.sprite.x = pos.x;
+    this.sprite.y = pos.y;
+  };
+
+  return Ball;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 543 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Barrier = function (texture) {
+    PhysicsSprite.call(this, texture);
+
+    console.log(texture);
+  };
+
+  extend(Barrier, PhysicsSprite);
+
+  Barrier.prototype.setupBody = function () {
+    var options = {
+      friction: 0,
+      restitution: 0.95,
+      isStatic: true
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  return Barrier;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 544 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Brick = function (texture) {
+    PhysicsSprite.call(this, texture);
+  };
+
+  extend(Brick, PhysicsSprite);
+
+  Brick.prototype.setupBody = function () {
+    var options = {
+      friction: 0,
+      restitution: 0.95
+      //    isStatic: true
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  Brick.prototype.update = function () {
+    var pos = this.body.position;
+    var angle = this.body.angle;
+
+    // this.sprite.x = pos.x
+    // this.sprite.y = pos.y
+  };
+
+  return Brick;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 545 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Pad = function (texture) {
+    PhysicsSprite.call(this, texture);
+  };
+
+  extend(Pad, PhysicsSprite);
+
+  Pad.prototype.setupBody = function () {
+    var options = {
+      friction: 0,
+      restitution: 0.95,
+      isStatic: true
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  return Pad;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 546 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./GameLevel": 536,
+	"./GameLevel.js": 536,
+	"./Level1": 537,
+	"./Level1.js": 537,
+	"./MainScreen": 538,
+	"./MainScreen.js": 538,
+	"./SplashScene": 539,
+	"./SplashScene.js": 539
+};
+function webpackContext(req) {
+	return __webpack_require__(webpackContextResolve(req));
+};
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+};
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 546;
 
 /***/ })
 ]);
