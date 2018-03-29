@@ -31444,7 +31444,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(540)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   var Scene = function (options) {
     GameObject.call(this, options);
 
@@ -52660,6 +52660,7 @@ module.exports = function(module) {
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;__webpack_require__(181);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi) {
+
   var AssetManager = function () {
     PIXI.loaders.Loader.call(this);
   };
@@ -52773,7 +52774,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      var _scene = __webpack_require__(546)("./" + scene);
+      var _scene = __webpack_require__(549)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -53050,55 +53051,55 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 535 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(540)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  var PhysicsSprite = function (texture) {
-    GameObject.call(this);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+    var PhysicsSprite = function (texture) {
+        GameObject.call(this);
 
-    this.texture = texture;
-    this.sprite = new pixi.Sprite(texture);
-    this.body = null;
+        this.texture = texture;
+        this.sprite = new pixi.Sprite(texture);
+        this.body = null;
 
-    this._x = 0;
-    this._y = 0;
+        this._x = 0;
+        this._y = 0;
 
-    this._width = this.texture.width;
-    this._height = this.texture.height;
+        this._width = this.texture.width;
+        this._height = this.texture.height;
 
-    this.setupBody();
-  };
-
-  extend(PhysicsSprite, GameObject);
-
-  PhysicsSprite.prototype.setPosition = function (x = 0, y) {
-
-    x = x || this._x;
-    y = y || this._y;
-
-    this.sprite.x = x;
-    this.sprite.y = y;
-
-    this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
-    return this;
-  };
-
-  PhysicsSprite.prototype.getPosition = function () {
-    return this.body.position;
-  };
-
-  PhysicsSprite.prototype.setupBody = function () {
-    /**
-     * You can overwrite this function if you need to add your
-     * own body shape and properties.
-     */
-    var options = {
-      friction: 0,
-      restitution: 0.95
+        this.setupBody();
     };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
 
-  return PhysicsSprite;
+    extend(PhysicsSprite, GameObject);
+
+    PhysicsSprite.prototype.setPosition = function (x = 0, y) {
+
+        x = x || this._x;
+        y = y || this._y;
+
+        this.sprite.x = x;
+        this.sprite.y = y;
+
+        this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
+        return this;
+    };
+
+    PhysicsSprite.prototype.getPosition = function () {
+        return this.body.position;
+    };
+
+    PhysicsSprite.prototype.setupBody = function () {
+        /**
+         * You can overwrite this function if you need to add your
+         * own body shape and properties.
+         */
+        var options = {
+            friction: 0,
+            restitution: 0.95
+        };
+        this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+        this.PhysicsManager.add(this.body);
+    };
+
+    return PhysicsSprite;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -53106,7 +53107,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 536 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(180), __webpack_require__(222), __webpack_require__(543), __webpack_require__(541)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(180), __webpack_require__(222), __webpack_require__(546), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -53245,7 +53246,40 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 537 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(544), __webpack_require__(545), __webpack_require__(542)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
+  var GameObject = function (options) {
+    pixi.Container.call(this);
+
+    this.ge = GameEngine.get();
+    this.app = this.ge.get('App');
+
+    this.AssetManager = this.ge.get('AssetManager');
+    this.SceneManager = this.ge.get('SceneManager');
+    this.StateManager = this.ge.get('StateManager');
+    this.PhysicsManager = this.ge.get('PhysicsManager');
+
+    // components = components || []
+  };
+
+  extend(GameObject, pixi.Container);
+
+  GameObject.prototype.update = function (delta) {
+    /**
+     * Implement this function to handle game logic in your Scene.
+     */
+  };
+
+  return GameObject;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 538 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;__webpack_require__(543);
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(547), __webpack_require__(548), __webpack_require__(545)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, options);
 
@@ -53255,6 +53289,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
     this.objects = [];
     this.boxes = [];
+
+    // var menu = new Menus
+    //  console.log(Menu)
   };
 
   extend(Level1, GameLevel);
@@ -53371,7 +53408,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 538 */
+/* 539 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
@@ -53432,7 +53469,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 539 */
+/* 540 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
@@ -53504,38 +53541,36 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 540 */
+/* 541 */,
+/* 542 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
-  var GameObject = function (options) {
-    pixi.Container.call(this);
-
-    this.ge = GameEngine.get();
-    this.app = this.ge.get('App');
-
-    this.AssetManager = this.ge.get('AssetManager');
-    this.SceneManager = this.ge.get('SceneManager');
-    this.StateManager = this.ge.get('StateManager');
-    this.PhysicsManager = this.ge.get('PhysicsManager');
-
-    // components = components || []
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  var Menu = function (options) {
+    Menu.call(this, options);
   };
 
-  extend(GameObject, pixi.Container);
+  extend(Menu, GameObject);
 
-  GameObject.prototype.update = function (delta) {
-    /**
-     * Implement this function to handle game logic in your Scene.
-     */
-  };
-
-  return GameObject;
+  return Menu;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 541 */
+/* 543 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Menu__ = __webpack_require__(542);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Menu___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Menu__);
+/* harmony reexport (default from non-hamory) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return __WEBPACK_IMPORTED_MODULE_0__Menu___default.a; });
+
+
+
+
+/***/ }),
+/* 544 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -53545,6 +53580,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * You construct the class with a keycode.
    * See http://keycode.info/ for more information.
    * @exports core/input/KeyboardInput
+   * @module KeyboardInput
+   * @example
+   * let char = 32 // spacebar
+   * const space = new KeyboardInput(char)
+   * space.press = function() {
+   *  console.log('spacebar pressed')
+   * }
+   * space.release = function() {
+   *     console.log('spacebar released')
+   * }
    * @constructor
    * @param {number} keyCode - The keycode to listen for
    */
@@ -53565,6 +53610,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   /**
    * The internal keyboard event handler for keydown.
+   * @access private
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   KeyboardInput.prototype.downHandler = function (event) {
@@ -53579,6 +53625,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   /**
    * The internal keyboard event handler for keyup.
+   * @access private
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   KeyboardInput.prototype.upHandler = function (event) {
@@ -53595,7 +53642,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 542 */
+/* 545 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -53628,7 +53675,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 543 */
+/* 546 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -53655,7 +53702,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 544 */
+/* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -53668,8 +53715,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   Brick.prototype.setupBody = function () {
     var options = {
       friction: 0,
-      restitution: 0.95
-      //    isStatic: true
+      restitution: 0.95,
+      isStatic: true
     };
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
     this.PhysicsManager.add(this.body);
@@ -53688,43 +53735,43 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 545 */
+/* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Pad = function (texture) {
-    PhysicsSprite.call(this, texture);
-  };
-
-  extend(Pad, PhysicsSprite);
-
-  Pad.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true
+    var Pad = function (texture) {
+        PhysicsSprite.call(this, texture);
     };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
 
-  return Pad;
+    extend(Pad, PhysicsSprite);
+
+    Pad.prototype.setupBody = function () {
+        var options = {
+            friction: 0,
+            restitution: 0.95,
+            isStatic: true
+        };
+        this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+        this.PhysicsManager.add(this.body);
+    };
+
+    return Pad;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 546 */
+/* 549 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"./GameLevel": 536,
 	"./GameLevel.js": 536,
-	"./Level1": 537,
-	"./Level1.js": 537,
-	"./MainScreen": 538,
-	"./MainScreen.js": 538,
-	"./SplashScene": 539,
-	"./SplashScene.js": 539
+	"./Level1": 538,
+	"./Level1.js": 538,
+	"./MainScreen": 539,
+	"./MainScreen.js": 539,
+	"./SplashScene": 540,
+	"./SplashScene.js": 540
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -53740,7 +53787,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 546;
+webpackContext.id = 549;
 
 /***/ })
 ]);

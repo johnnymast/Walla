@@ -5,6 +5,16 @@ define([], function () {
    * You construct the class with a keycode.
    * See http://keycode.info/ for more information.
    * @exports core/input/KeyboardInput
+   * @module KeyboardInput
+   * @example
+   * let char = 32 // spacebar
+   * const space = new KeyboardInput(char)
+   * space.press = function() {
+   *  console.log('spacebar pressed')
+   * }
+   * space.release = function() {
+   *     console.log('spacebar released')
+   * }
    * @constructor
    * @param {number} keyCode - The keycode to listen for
    */
@@ -30,6 +40,7 @@ define([], function () {
 
   /**
    * The internal keyboard event handler for keydown.
+   * @access private
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   KeyboardInput.prototype.downHandler = function(event) {
@@ -44,6 +55,7 @@ define([], function () {
 
   /**
    * The internal keyboard event handler for keyup.
+   * @access private
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   KeyboardInput.prototype.upHandler = function(event) {
