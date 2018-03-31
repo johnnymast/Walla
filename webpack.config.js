@@ -76,6 +76,7 @@ const config = {
       //   'Howler': path.resolve(__dirname, './lib/howler.js/howler'),
       //   'Cookies': path.resolve(__dirname, './lib/js-cookie/src/js.cookie'),
       'core': path.resolve(__dirname, 'src/core'),
+      'gui': path.resolve(__dirname, 'src/gui'),
       'screens': path.resolve(__dirname, 'screens')
       //   'toolbar': path.resolve(__dirname, 'toolbar'),
       //   'game': path.resolve(__dirname, 'game'),

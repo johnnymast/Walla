@@ -1,4 +1,4 @@
-require('core/gui/menu')
+const Menus = require('gui/menu')
 
 // https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 define(['pixi', 'screens/GameLevel', 'core/GameEngine', 'core/objects/Brick', 'core/objects/Pad', 'core/objects/Ball'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
@@ -12,8 +12,13 @@ define(['pixi', 'screens/GameLevel', 'core/GameEngine', 'core/objects/Brick', 'c
     this.objects = [];
     this.boxes = [];
 
-    // var menu = new Menus
-  //  console.log(Menu)
+    var menu = new Menus.Menu()
+    this.addChild(menu)
+
+    var item1 = new Menus.MenuItemText('Play');
+
+
+   console.log(menu)
   }
 
   extend(Level1, GameLevel)
