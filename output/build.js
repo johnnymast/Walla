@@ -4089,10 +4089,14 @@ window.extend = function (a, b) {
   a.prototype.super = b.prototype;
 };
 
+window.merge = function (src, dest) {
+  return Object.assign(src, dest);
+};
+
 __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221), __webpack_require__(330), __webpack_require__(328), __webpack_require__(331), __webpack_require__(329), __webpack_require__(222)]; (function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, Scene) {
   var ge = GameEngine.get();
 
-  var app = new PIXI.Application(800, 600, { backgroundColor: 0x0, autoResize: true, resolution: window.devicePixelRatio });
+  var app = new PIXI.Application(1920, 1080, { backgroundColor: 0x0, autoResize: true, resolution: window.devicePixelRatio });
   document.body.appendChild(app.view);
 
   app.renderer.resize(800, 600);
@@ -4103,7 +4107,7 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   ge.set('StateManager', new StateManager());
   ge.set('PhysicsManager', new PhysicsManager());
 
-  ge.get('SceneManager').add('Level1', { backgroundColor: 0x000000 }).add('SplashScene').switchTo('SplashScene');
+  ge.get('SceneManager').add('SplashScene').switchTo('SplashScene');
 }.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 /***/ }),

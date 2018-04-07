@@ -78,6 +78,11 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
 
   GameLevel.prototype.onStart = function () {
 
+    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    background.width = this.app.screen.width;
+    background.height = this.app.screen.height;
+    background.alpha = 0
+    
     var ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, 5, { isStatic: true });
     this.PhysicsManager.add(ceiling)
 
@@ -89,7 +94,6 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
 
     var rightwall = this.PhysicsManager.rectangle(this.app.screen.width-5, 0, 5, this.app.screen.height, { isStatic: true });
     this.PhysicsManager.add(rightwall)
-
 
     var style =new pixi.TextStyle({
       fontFamily: 'Arial',
@@ -116,9 +120,9 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
     this.livesText.x = 45;
     this.livesText.y = 10
 
+    this.addChild(background);
     this.addChild(this.scoreText);
     this.addChild(this.livesText);
-
   }
 
   GameLevel.prototype.setScore = function(score) {

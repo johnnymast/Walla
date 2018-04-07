@@ -17,7 +17,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine'], function (pixi, Scene, GameEng
   extend(SplashScene, Scene)
 
   SplashScene.prototype.onStart = function () {
-    var logoTexture = pixi.Texture.fromImage('/assets/images/engine.png')
+    var logoTexture = pixi.Texture.fromImage('/assets/main/images/engine.png')
     logoTexture.on('update', () => {
       this.logo = new pixi.Sprite(logoTexture)
       this.logo.anchor.set(0.5)
@@ -46,13 +46,19 @@ define(['pixi', 'core/Scene', 'core/GameEngine'], function (pixi, Scene, GameEng
 
   SplashScene.prototype.preload = function () {
     this.ge.get('AssetManager').loadManifest([
-      { name: 'floor', src: 'assets/images/floor.png'},
-      { name: 'level1_music', src: 'assets/sounds/music/level1.mp3' },
-      { name: 'level2_music', src: 'assets/sounds/music/level2.mp3' },
-      { name: 'level3_music', src: 'assets/sounds/music/level3.mp3' },
-      { name: 'game_over', src: 'assets/sounds/game_over.mp3' },
-      { name: 'mission_completed', src: 'assets/sounds/mission_completed.mp3' },
-      { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/spritesheets/spritesheet-1.json'},
+      // Breakout
+      { name: 'level1_music', src: 'assets/breakout/sounds/music/level1.mp3' },
+      { name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3' },
+      { name: 'level3_music', src: 'assets/breakout/sounds/music/level3.mp3' },
+      { name: 'game_over', src: 'assets/breakout/sounds/game_over.mp3' },
+      { name: 'mission_completed', src: 'assets/breakout/sounds/mission_completed.mp3' },
+      { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/breakout/spritesheets/spritesheet-1.json'},
+      // Main
+      { name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png' },
+      { name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png' },
+      { name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png' },
+      { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' },
+      { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
     ])
 
     this.AssetManager.once('complete', this._preloadready, this)
@@ -67,7 +73,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine'], function (pixi, Scene, GameEng
   SplashScene.prototype._preloadready = function (loader, resources) {
 
     this.StateManager.set('resources', this.resources)
-    this.SceneManager.switchTo('Level1')
+    this.SceneManager.switchTo('MainMenu')
   }
 
   return SplashScene

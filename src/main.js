@@ -8,6 +8,10 @@ window.extend = function (a, b) {
   a.prototype.super = b.prototype
 }
 
+window.merge = function(src,dest) {
+  return Object.assign(src, dest);
+}
+
 require([
   'pixi',
   'core/GameEngine',
@@ -19,7 +23,7 @@ require([
 ], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, Scene) {
   var ge = GameEngine.get()
 
-  var app = new PIXI.Application(800, 600, {backgroundColor: 0x0, autoResize: true, resolution: window.devicePixelRatio})
+  var app = new PIXI.Application(1920, 1080, {backgroundColor: 0x0, autoResize: true, resolution: window.devicePixelRatio})
   document.body.appendChild(app.view)
 
   app.renderer.resize(800, 600);
@@ -31,7 +35,6 @@ require([
   ge.set('PhysicsManager', new PhysicsManager());
 
   ge.get('SceneManager')
-    .add('Level1', { backgroundColor: 0x000000 })
     .add('SplashScene')
     .switchTo('SplashScene')
 })

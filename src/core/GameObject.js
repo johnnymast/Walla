@@ -1,6 +1,6 @@
 define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
   var GameObject = function (options) {
-    pixi.Container.call(this)
+    pixi.Container.call(this, options)
 
     this.ge = GameEngine.get()
     this.app = this.ge.get('App')
@@ -9,9 +9,6 @@ define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
     this.SceneManager = this.ge.get('SceneManager')
     this.StateManager = this.ge.get('StateManager')
     this.PhysicsManager = this.ge.get('PhysicsManager')
- 
-
-    // components = components || []
   }
 
   extend(GameObject, pixi.Container)
@@ -21,7 +18,6 @@ define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
      * Implement this function to handle game logic in your Scene.
      */
   }
-
 
   return GameObject
 })
