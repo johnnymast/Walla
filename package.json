@@ -13,7 +13,7 @@
     "test": "mocha",
     "serve": "live-server",
     "predocs": "rimraf docs/**",
-    "docs": "jsdoc -c book.json -R README.md"
+    "docs": "jsdoc  -c book.json -R README.md"
   },
   "author": "Johnny Mast",
   "license": "MIT",
