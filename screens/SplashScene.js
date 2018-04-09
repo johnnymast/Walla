@@ -17,6 +17,14 @@ define(['pixi', 'core/Scene', 'core/GameEngine'], function (pixi, Scene, GameEng
   extend(SplashScene, Scene)
 
   SplashScene.prototype.onStart = function () {
+
+    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    background.width = this.app.screen.width;
+    background.height = this.app.screen.height;
+    background.alpha = 1
+
+    this.addChild(background)
+
     var logoTexture = pixi.Texture.fromImage('/assets/main/images/engine.png')
     logoTexture.on('update', () => {
       this.logo = new pixi.Sprite(logoTexture)
