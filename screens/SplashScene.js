@@ -79,7 +79,6 @@ define(['pixi', 'core/Scene', 'core/GameEngine'], function (pixi, Scene, GameEng
   }
 
   SplashScene.prototype._preloadready = function (loader, resources) {
-
     this.StateManager.set('resources', this.resources)
     this.SceneManager.switchTo('MainMenu')
   }

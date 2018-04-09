@@ -55,7 +55,7 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
     }
 
     PhysicsManager.prototype.circle = function(x, y, width, options = null) {
-        var coord = this.PixiToMatter(x, y, width, width);
+        var coord = this.PixiToMatter(x, y, width, height = width);
         return Matter.Bodies.circle(coord.x, coord.y, width, options);
     }
 

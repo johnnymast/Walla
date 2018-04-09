@@ -11,6 +11,7 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
       restitution: 0.95,
       // isStatic: true,
     }
+
     this.body = this.PhysicsManager.circle(this.x, this.y, this._width, options);
     this.PhysicsManager.add(this.body)
   }
