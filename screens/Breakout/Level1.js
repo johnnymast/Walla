@@ -1,20 +1,19 @@
-
-
 // https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects/Brick', 'core/objects/Pad', 'core/objects/Ball'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
-    GameLevel.call(this, {backgroundColor : 0x1099bb})
+    GameLevel.call(this, {backgroundColor: 0x1099bb})
 
-    this.startY = 50;
+    this.startY = 50
     this.num_bricks = 11
     this.started = false
+    this.setDisplayStats(true)
 
-    this.objects = [];
+    this.objects = []
   }
 
   extend(Level1, GameLevel)
 
-  Level1.prototype.onKeyPress = function(event) {
+  Level1.prototype.onKeyPress = function (event) {
 
     console.log('gtrigger')
     if (event.key == 'ArrowLeft') {
@@ -29,7 +28,7 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects
     console.log('key press ' + event.key)
   }
 
-  Level1.prototype.onKeyUp = function(event) {
+  Level1.prototype.onKeyUp = function (event) {
     console.log('key up')
   }
 
@@ -41,30 +40,30 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects
 
     this.listenForKeyboardInputs(37, 39)
     this.setLives(this.lives)
-    this.setScore(this.score);
+    this.setScore(this.score)
 
     this.textures = {
-      'red':  PIXI.Texture.fromFrame('element_red_rectangle.png'),
+      'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
       'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
       'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
       'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
-    };
+    }
 
     var y = this.startY
 
     for (let key of Object.keys(this.textures)) {
-      var texture = this.textures[key];
-      for (var x = 45; x < (this.num_bricks * texture.width); x+= texture.width) {
-        var brick = new Brick(texture);
+      var texture = this.textures[key]
+      for (var x = 45; x < (this.num_bricks * texture.width); x += texture.width) {
+        var brick = new Brick(texture)
         brick.setPosition(x, y)
 
         this.objects.push(brick)
         this.addChild(brick.sprite)
       }
-      y+=texture.height + 1;
+      y += texture.height + 1
     }
 
-    this.interactive = true;
+    this.interactive = true
 
     //
     // PIXI.sound.play('level1_music');
@@ -74,31 +73,31 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects
     this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'))
     this.pad.setPosition(this.app.screen.width / 2, this.app.screen.height - 100)
 
-    var tx =  PIXI.Texture.fromFrame('ballBlue.png')
-    this.ball = new Ball(tx);
-    this.ball.setPosition(this.pad.sprite.x,  this.pad.sprite.y - tx.height- 300)
+    var tx = PIXI.Texture.fromFrame('ballBlue.png')
+    this.ball = new Ball(tx)
+    this.ball.setPosition(this.pad.sprite.x / 2 - tx.width / 2 - 10, this.pad.sprite.y - this.pad.sprite.height - 10)
 
-    this.objects.push(this.ball);
+    this.objects.push(this.ball)
     this.objects.push(this.pad)
 
     this.addChild(this.ball.sprite)
     this.addChild(this.pad.sprite)
 
-    this.PhysicsManager.run();
+    this.PhysicsManager.run()
   }
 
-  Level1.prototype.onMouseMove = function(event) {
-    let coords = event.data.global;
+  Level1.prototype.onMouseMove = function (event) {
+    let coords = event.data.global
     if (coords.x + this.pad._width > this.app.screen.width) {
       coords.x = this.app.screen.width - this.pad._width
     } else if (coords.x <= 0) {
       coords.x = 0
     }
-    this.pad.setPosition(coords.x, this.pad.sprite.y);
+    this.pad.setPosition(coords.x, this.pad.sprite.y)
   }
 
-  Level1.prototype.onPointerDown = function(event) {
-    this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0 ,-0.05);
+  Level1.prototype.onPointerDown = function (event) {
+    this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05)
     if (this.started == false) {
       for (var object of this.objects) {
         if (object instanceof Ball) {
@@ -110,12 +109,13 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects
   }
 
   Level1.prototype.update = function (delta) {
-    // this.PhysicsManager.update(delta);
+    GameLevel.prototype.update.call(this, delta)
+    //this.PhysicsManager.update(delta);
 
     for (var object of this.objects) {
       if (object instanceof Ball) {
-        if (object.isStatic == true) {
-          object.x = this.pad.x;
+        if (object.getProperty('isStatic') == true) {
+           object.setX(this.pad.getX());
         }
       }
       object.update(delta)

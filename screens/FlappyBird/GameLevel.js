@@ -1,9 +1,12 @@
-define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/KeyboardInput'], function (pixi, Matter, Scene, Barrier, KeyboardInput) {
+define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options)
 
     this.on('mousemove', this.onMouseMove)
     this.on('pointerdown', this.onPointerDown)
+
+    this.statistics = new Statistics()
+    this.addChild(this.statistics);
 
     this.keyboardKeys = []
 
@@ -15,6 +18,10 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
   }
 
   extend(GameLevel, Scene)
+
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible
+  }
 
   GameLevel.prototype.listenSingleForKeyboardInput = function(keycode, keypress, keyup) {
     let key = new KeyboardInput(keycode);
@@ -133,6 +140,10 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
   GameLevel.prototype.setLives = function(lives) {
     this.lives = lives
     this.livesText.text = 'LIVES: '+this.lives
+  }
+
+  GameLevel.prototype.update = function(delta) {
+    this.statistics.update(delta)
   }
 
   return GameLevel

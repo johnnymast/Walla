@@ -32,13 +32,14 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "cross-env": "^5.1.4",
+    "eslint": "^4.19.1",
     "gitbook-plugin-theme-api": "^1.1.2",
     "matter-js": "^0.14.1",
     "npm": "^5.8.0",
     "pixi-sound": "^2.0.1",
     "pixi.js": "^4.7.1",
     "require.js": "^1.0.0",
-    "underscore": "^1.8.3",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "underscore": "^1.8.3"
   }
 }

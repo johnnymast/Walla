@@ -31444,7 +31444,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   var Scene = function (options) {
     GameObject.call(this, options);
 
@@ -52740,7 +52740,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
     };
 
     PhysicsManager.prototype.circle = function (x, y, width, options = null) {
-        var coord = this.PixiToMatter(x, y, width, width);
+        var coord = this.PixiToMatter(x, y, width, height = width);
         return Matter.Bodies.circle(coord.x, coord.y, width, options);
     };
 
@@ -52774,7 +52774,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      var _scene = __webpack_require__(552)("./" + scene);
+      var _scene = __webpack_require__(553)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -53051,12 +53051,38 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 535 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(545), __webpack_require__(543)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
+  var GameObject = function (options) {
+    pixi.Container.call(this, options);
+
+    this.ge = GameEngine.get();
+    this.app = this.ge.get('App');
+
+    this.AssetManager = this.ge.get('AssetManager');
+    this.SceneManager = this.ge.get('SceneManager');
+    this.StateManager = this.ge.get('StateManager');
+    this.PhysicsManager = this.ge.get('PhysicsManager');
+  };
+
+  extend(GameObject, pixi.Container);
+
+  return GameObject;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 536 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(545), __webpack_require__(543), __webpack_require__(548)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
     this.on('mousemove', this.onMouseMove);
     this.on('pointerdown', this.onPointerDown);
+
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
 
     this.keyboardKeys = [];
 
@@ -53068,6 +53094,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   };
 
   extend(GameLevel, Scene);
+
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+  };
 
   GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
     let key = new KeyboardInput(keycode);
@@ -53188,36 +53218,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.livesText.text = 'LIVES: ' + this.lives;
   };
 
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
   return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 536 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
-  var GameObject = function (options) {
-    pixi.Container.call(this, options);
-
-    this.ge = GameEngine.get();
-    this.app = this.ge.get('App');
-
-    this.AssetManager = this.ge.get('AssetManager');
-    this.SceneManager = this.ge.get('SceneManager');
-    this.StateManager = this.ge.get('StateManager');
-    this.PhysicsManager = this.ge.get('PhysicsManager');
-  };
-
-  extend(GameObject, pixi.Container);
-
-  GameObject.prototype.update = function (delta) {
-    /**
-     * Implement this function to handle game logic in your Scene.
-     */
-  };
-
-  return GameObject;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -53225,55 +53230,80 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 537 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-    var PhysicsSprite = function (texture) {
-        GameObject.call(this);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  var PhysicsSprite = function (texture) {
+    GameObject.call(this);
 
-        this.texture = texture;
-        this.sprite = new pixi.Sprite(texture);
-        this.body = null;
+    this.texture = texture;
+    this.sprite = new pixi.Sprite(texture);
+    this.body = null;
+    this._x = 0;
+    this._y = 0;
 
-        this._x = 0;
-        this._y = 0;
+    this._width = this.texture.width;
+    this._height = this.texture.height;
 
-        this._width = this.texture.width;
-        this._height = this.texture.height;
+    this.setupBody();
+  };
 
-        this.setupBody();
+  extend(PhysicsSprite, GameObject);
+
+  PhysicsSprite.prototype.setPosition = function (x = 0, y = 0) {
+
+    x = x || this._x;
+    y = y || this._y;
+
+    this.sprite.x = x;
+    this.sprite.y = y;
+
+    this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
+    return this;
+  };
+
+  PhysicsSprite.prototype.getPosition = function () {
+    return this.body.position;
+  };
+
+  PhysicsSprite.prototype.getX = function () {
+    return this.body.position.x;
+  };
+
+  PhysicsSprite.prototype.getY = function () {
+    return this.body.position.y;
+  };
+
+  PhysicsSprite.prototype.setX = function (x) {
+    //this.body.position.x = x
+    this.PhysicsManager.setPosition(this.body, x, this.getY(), this._width, this._height);
+  };
+
+  PhysicsSprite.prototype.setY = function (y) {
+    //this.body.position.y = y
+    this.PhysicsManager.setPosition(this.body, this.getX(), y, this._width, this._height);
+  };
+
+  PhysicsSprite.prototype.getProperty = function (key) {
+    return this.body[key];
+  };
+
+  PhysicsSprite.prototype.setProperty = function (key, val) {
+    this.body[key] = val;
+  };
+
+  PhysicsSprite.prototype.setupBody = function () {
+    /**
+     * You can overwrite this function if you need to add your
+     * own body shape and properties.
+     */
+    var options = {
+      friction: 0,
+      restitution: 0.95
     };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
 
-    extend(PhysicsSprite, GameObject);
-
-    PhysicsSprite.prototype.setPosition = function (x = 0, y) {
-
-        x = x || this._x;
-        y = y || this._y;
-
-        this.sprite.x = x;
-        this.sprite.y = y;
-
-        this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
-        return this;
-    };
-
-    PhysicsSprite.prototype.getPosition = function () {
-        return this.body.position;
-    };
-
-    PhysicsSprite.prototype.setupBody = function () {
-        /**
-         * You can overwrite this function if you need to add your
-         * own body shape and properties.
-         */
-        var options = {
-            friction: 0,
-            restitution: 0.95
-        };
-        this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-        this.PhysicsManager.add(this.body);
-    };
-
-    return PhysicsSprite;
+  return PhysicsSprite;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -53426,16 +53456,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 539 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-
-// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535), __webpack_require__(221), __webpack_require__(546), __webpack_require__(547), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(546), __webpack_require__(547), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
     this.startY = 50;
     this.num_bricks = 11;
     this.started = false;
+    this.setDisplayStats(true);
 
     this.objects = [];
   };
@@ -53503,7 +53532,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
     var tx = PIXI.Texture.fromFrame('ballBlue.png');
     this.ball = new Ball(tx);
-    this.ball.setPosition(this.pad.sprite.x, this.pad.sprite.y - tx.height - 300);
+    this.ball.setPosition(this.pad.sprite.x / 2 - tx.width / 2 - 10, this.pad.sprite.y - this.pad.sprite.height - 10);
 
     this.objects.push(this.ball);
     this.objects.push(this.pad);
@@ -53537,12 +53566,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
   };
 
   Level1.prototype.update = function (delta) {
-    // this.PhysicsManager.update(delta);
+    GameLevel.prototype.update.call(this, delta);
+    //this.PhysicsManager.update(delta);
 
     for (var object of this.objects) {
       if (object instanceof Ball) {
-        if (object.isStatic == true) {
-          object.x = this.pad.x;
+        if (object.getProperty('isStatic') == true) {
+          object.setX(this.pad.getX());
         }
       }
       object.update(delta);
@@ -53557,16 +53587,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 /* 540 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-
-// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535), __webpack_require__(221), __webpack_require__(546), __webpack_require__(547), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(546), __webpack_require__(547), __webpack_require__(544), __webpack_require__(548)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
     this.startY = 50;
     this.num_bricks = 11;
     this.started = false;
+
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
 
     this.objects = [];
   };
@@ -53668,6 +53699,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
   };
 
   Level1.prototype.update = function (delta) {
+    GameLevel.prototype.update.call(this, delta);
     // this.PhysicsManager.update(delta);
 
     for (var object of this.objects) {
@@ -53688,11 +53720,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 /* 541 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(550);
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(551);
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221), __webpack_require__(548)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
   var MainScreen = function (options) {
     Scene.call(this, options);
     this.backgrounds = [];
+
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
   };
 
   extend(MainScreen, Scene);
@@ -53725,12 +53760,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
       tilingSprite.tilePosition.y = this.app.screen.height;
 
       this.backgrounds[textureName] = tilingSprite;
-      this.addChild(tilingSprite);
+      //    this.addChild(tilingSprite)
     }
 
     var richText = new pixi.Text('Pick your game', style);
     richText.x = this.app.screen.width / 2 - richText.width / 2;
-    richText.y = 120; /* 180 is padding spade */
+    richText.y = 120;
+    /* 180 is padding spade */
 
     var menu = new Menus.Menu({
       items: {
@@ -53756,6 +53792,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
     this.addChild(richText);
   };
 
+  MainScreen.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+  };
+
   MainScreen.prototype.breakoutClicked = function (event) {
     this.SceneManager.switchTo('Breakout/Level1');
   };
@@ -53765,6 +53805,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
       var textureName = 'main_bg_0' + i;
       this.backgrounds[textureName].tilePosition.x -= 1 / (i * 1.5);
     }
+    this.statistics.update(delta);
   };
 
   return MainScreen;
@@ -53846,9 +53887,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   };
 
   SplashScene.prototype._preloadready = function (loader, resources) {
-
     this.StateManager.set('resources', this.resources);
     this.SceneManager.switchTo('MainMenu');
+  };
+
+  SplashScene.prototype.update = function (delta) {
+    // required to add
   };
 
   return SplashScene;
@@ -53941,10 +53985,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   Ball.prototype.setupBody = function () {
     var options = {
       friction: 0,
-      restitution: 0.95
-      // isStatic: true,
-    };
-    this.body = this.PhysicsManager.circle(this.x, this.y, this._width, options);
+      restitution: 0.95,
+      isStatic: true,
+      isSleeping: true
+
+      // var options = {
+      //   isSleeping: false,
+      //   isStatic: true,
+      //   friction:0.0001,
+      //   restitution: 0.7,
+      //   density:0.001,
+      //   frictionAir: 0.0001,
+      //   inverseInertia: 0,
+      //   //render: color,
+      //   force: {//x:.005,
+      //     //y:-.005
+      //   }
+      // };
+
+    };this.body = this.PhysicsManager.circle(this.x, this.y, this._width, options);
     this.PhysicsManager.add(this.body);
   };
 
@@ -54025,23 +54084,27 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-    var Pad = function (texture) {
-        PhysicsSprite.call(this, texture);
+  var Pad = function (texture) {
+    PhysicsSprite.call(this, texture);
+  };
+
+  extend(Pad, PhysicsSprite);
+
+  Pad.prototype.setupBody = function () {
+    var options = {
+      friction: 0,
+      restitution: 0.95,
+      isStatic: true
     };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
 
-    extend(Pad, PhysicsSprite);
+  Pad.prototype.update = function (delta) {
+    // Required
+  };
 
-    Pad.prototype.setupBody = function () {
-        var options = {
-            friction: 0,
-            restitution: 0.95,
-            isStatic: true
-        };
-        this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-        this.PhysicsManager.add(this.body);
-    };
-
-    return Pad;
+  return Pad;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -54049,7 +54112,44 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  var Statistics = function (options) {
+    GameObject.call(this, options);
+    this.paddingX = 10;
+    this.paddingY = 10;
+
+    this.setup();
+  };
+
+  extend(Statistics, GameObject);
+
+  Statistics.prototype.setup = function () {
+
+    var style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 18,
+      fill: ['#ffffff'] // gradient
+    });
+    this.fps = new pixi.Text('FPS: ' + this.app.ticker.FPS.toFixed(2), style);
+
+    this.addChild(this.fps);
+    this.x = this.paddingX;
+    this.y = this.app.screen.height - this.height - this.paddingY;
+  };
+
+  Statistics.prototype.update = function (delta) {
+    this.fps.text = 'FPS: ' + this.app.ticker.FPS.toFixed(2);
+  };
+
+  return Statistics;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 549 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
 
   /**
    * @classdesc Abstract class representing a menu item.
@@ -54117,10 +54217,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 549 */
+/* 550 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(548)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(549)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemText module
@@ -54203,22 +54303,22 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 550 */
+/* 551 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
-const Menu = __webpack_require__(551);
-const MenuItemText = __webpack_require__(549);
+const Menu = __webpack_require__(552);
+const MenuItemText = __webpack_require__(550);
 
 
 /***/ }),
-/* 551 */
+/* 552 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   var Menu = function (options, ...items) {
     GameObject.call(this, options);
 
@@ -54266,7 +54366,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 552 */
+/* 553 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -54274,8 +54374,8 @@ var map = {
 	"./Breakout/GameLevel.js": 538,
 	"./Breakout/Level1": 539,
 	"./Breakout/Level1.js": 539,
-	"./FlappyBird/GameLevel": 535,
-	"./FlappyBird/GameLevel.js": 535,
+	"./FlappyBird/GameLevel": 536,
+	"./FlappyBird/GameLevel.js": 536,
 	"./FlappyBird/Level1": 540,
 	"./FlappyBird/Level1.js": 540,
 	"./MainMenu": 541,
@@ -54297,7 +54397,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 552;
+webpackContext.id = 553;
 
 /***/ })
 ]);

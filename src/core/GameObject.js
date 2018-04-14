@@ -13,11 +13,5 @@ define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
 
   extend(GameObject, pixi.Container)
 
-  GameObject.prototype.update = function (delta) {
-    /**
-     * Implement this function to handle game logic in your Scene.
-     */
-  }
-
   return GameObject
 })

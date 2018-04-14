@@ -4,7 +4,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
     this.paused = false
     this.childClass = Object.getPrototypeOf(this).constructor.name
-    
+
     if (typeof this.update === 'undefined') {
       console.warn('Please add the update method to ' + this.childClass)
     }
