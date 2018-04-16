@@ -55,7 +55,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     this.addChild(menu)
 
     var item1 = new Menus.MenuItemText('Breakout', this.breakoutClicked)
-    var item2 = new Menus.MenuItemText('FlappyBird')
+    var item2 = new Menus.MenuItemText('Circles')
 
     item1.setPosition(menu.x, menu.y)
     item2.setPosition(menu.x, item1.y + item1.height + 5)

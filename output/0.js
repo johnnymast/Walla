@@ -53074,7 +53074,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 536 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(545), __webpack_require__(543), __webpack_require__(548)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(546), __webpack_require__(544), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -53311,7 +53311,44 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 538 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(545), __webpack_require__(543)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  var Statistics = function (options) {
+    GameObject.call(this, options);
+    this.paddingX = 10;
+    this.paddingY = 10;
+
+    this.setup();
+  };
+
+  extend(Statistics, GameObject);
+
+  Statistics.prototype.setup = function () {
+
+    var style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 18,
+      fill: ['#ffffff'] // gradient
+    });
+    this.fps = new pixi.Text('FPS: ' + this.app.ticker.FPS.toFixed(2), style);
+
+    this.addChild(this.fps);
+    this.x = this.paddingX;
+    this.y = this.app.screen.height - this.height - this.paddingY;
+  };
+
+  Statistics.prototype.update = function (delta) {
+    this.fps.text = 'FPS: ' + this.app.ticker.FPS.toFixed(2);
+  };
+
+  return Statistics;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 539 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(546), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -53453,11 +53490,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 539 */
+/* 540 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(546), __webpack_require__(547), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(547), __webpack_require__(548), __webpack_require__(545)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -53584,11 +53621,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 540 */
+/* 541 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(546), __webpack_require__(547), __webpack_require__(544), __webpack_require__(548)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(547), __webpack_require__(548), __webpack_require__(545), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -53717,11 +53754,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 541 */
+/* 542 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(551);
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221), __webpack_require__(548)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
   var MainScreen = function (options) {
     Scene.call(this, options);
     this.backgrounds = [];
@@ -53777,7 +53814,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
     this.addChild(menu);
 
     var item1 = new Menus.MenuItemText('Breakout', this.breakoutClicked);
-    var item2 = new Menus.MenuItemText('FlappyBird');
+    var item2 = new Menus.MenuItemText('Circles');
 
     item1.setPosition(menu.x, menu.y);
     item2.setPosition(menu.x, item1.y + item1.height + 5);
@@ -53813,7 +53850,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 542 */
+/* 543 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
@@ -53900,7 +53937,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 543 */
+/* 544 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -53972,7 +54009,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 544 */
+/* 545 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -54020,7 +54057,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 545 */
+/* 546 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -54047,7 +54084,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 546 */
+/* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -54080,7 +54117,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 547 */
+/* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -54105,43 +54142,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   };
 
   return Pad;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 548 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  var Statistics = function (options) {
-    GameObject.call(this, options);
-    this.paddingX = 10;
-    this.paddingY = 10;
-
-    this.setup();
-  };
-
-  extend(Statistics, GameObject);
-
-  Statistics.prototype.setup = function () {
-
-    var style = new PIXI.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 18,
-      fill: ['#ffffff'] // gradient
-    });
-    this.fps = new pixi.Text('FPS: ' + this.app.ticker.FPS.toFixed(2), style);
-
-    this.addChild(this.fps);
-    this.x = this.paddingX;
-    this.y = this.app.screen.height - this.height - this.paddingY;
-  };
-
-  Statistics.prototype.update = function (delta) {
-    this.fps.text = 'FPS: ' + this.app.ticker.FPS.toFixed(2);
-  };
-
-  return Statistics;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -54370,18 +54370,22 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Breakout/GameLevel": 538,
-	"./Breakout/GameLevel.js": 538,
-	"./Breakout/Level1": 539,
-	"./Breakout/Level1.js": 539,
+	"./Breakout/GameLevel": 539,
+	"./Breakout/GameLevel.js": 539,
+	"./Breakout/Level1": 540,
+	"./Breakout/Level1.js": 540,
+	"./Circles/GameLevel": 554,
+	"./Circles/GameLevel.js": 554,
+	"./Circles/Level1": 555,
+	"./Circles/Level1.js": 555,
 	"./FlappyBird/GameLevel": 536,
 	"./FlappyBird/GameLevel.js": 536,
-	"./FlappyBird/Level1": 540,
-	"./FlappyBird/Level1.js": 540,
-	"./MainMenu": 541,
-	"./MainMenu.js": 541,
-	"./SplashScene": 542,
-	"./SplashScene.js": 542
+	"./FlappyBird/Level1": 541,
+	"./FlappyBird/Level1.js": 541,
+	"./MainMenu": 542,
+	"./MainMenu.js": 542,
+	"./SplashScene": 543,
+	"./SplashScene.js": 543
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -54398,6 +54402,167 @@ webpackContext.keys = function webpackContextKeys() {
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
 webpackContext.id = 553;
+
+/***/ }),
+/* 554 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(546), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
+  var GameLevel = function (options) {
+    Scene.call(this, options);
+
+    this.on('mousemove', this.onMouseMove);
+    this.on('pointerdown', this.onPointerDown);
+
+    this.keyboardKeys = [];
+
+    this.scoreText = null;
+    this.livesText = null;
+
+    this.score = 0;
+    this.lives = 3;
+  };
+
+  extend(GameLevel, Scene);
+
+  GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
+    let key = new KeyboardInput(keycode);
+
+    key.press.bind(this);
+    key.release.bind(this);
+
+    key.press = keypress || self.onKeyPress.bind(self);
+    key.release = keyup || self.onKeyUp.bind(self);
+
+    this.keyboardKeys.push(key);
+  };
+
+  GameLevel.prototype.listenForKeyboardInputs = function (...keys) {
+    let self = this;
+    keys.forEach(function (keycode) {
+      let key = new KeyboardInput(keycode);
+
+      key.press = self.onKeyPress.bind(self);
+      key.release = self.onKeyUp.bind(self);
+
+      self.keyboardKeys.push(key);
+    });
+  };
+
+  GameLevel.prototype.onKeyPress = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyPress events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  GameLevel.prototype.onKeyUp = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyUp events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  GameLevel.prototype.onMouseMove = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive mouse move events.
+     */
+  };
+
+  GameLevel.prototype.onPointerDown = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive pointer down events.
+     */
+  };
+
+  GameLevel.prototype.onStart = function () {
+
+    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    background.width = this.app.screen.width;
+    background.height = this.app.screen.height;
+    background.alpha = 0;
+
+    this.addChild(background);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 555 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(554), __webpack_require__(221), __webpack_require__(547), __webpack_require__(548), __webpack_require__(545)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+  var Level1 = function (options) {
+    GameLevel.call(this, { backgroundColor: 0x1099bb });
+
+    this.setDisplayStats(true);
+
+    this.historyX = [];
+    this.historyY = [];
+    this.ropeSize = 100;
+  };
+
+  extend(Level1, GameLevel);
+
+  Level1.prototype.onKeyPress = function (event) {
+
+    console.log('key press ' + event.key);
+  };
+
+  Level1.prototype.onKeyUp = function (event) {
+    console.log('key up');
+  };
+
+  Level1.prototype.onStart = function () {
+    GameLevel.prototype.onStart.call(this);
+  };
+
+  Level1.prototype.onMouseMove = function (event) {};
+
+  Level1.prototype.onPointerDown = function (event) {};
+
+  Level1.prototype.update = function (delta) {
+    GameLevel.prototype.update.call(this, delta);
+
+    //Read mouse points, this could be done also in mousemove/touchmove update. For simplicity it is done here for now.
+    //When implemeting this properly, make sure to implement touchmove as interaction plugins mouse might not update on certain devices.
+    var mouseposition = app.renderer.plugins.interaction.mouse.global;
+
+    //Update the mouse values to history
+    this.historyX.pop();
+    this.historyX.unshift(mouseposition.x);
+    this.historyY.pop();
+    this.historyY.unshift(mouseposition.y);
+
+    //Update the points to correspond with history.
+    for (var i = 0; i < this.ropeSize; i++) {
+      var p = points[i];
+
+      //Smooth the curve with cubic interpolation to prevent sharp edges.
+      var ix = cubicInterpolation(historyX, i / this.ropeSize * historySize);
+      var iy = cubicInterpolation(historyY, i / this.ropeSize * historySize);
+
+      p.x = ix;
+      p.y = iy;
+    }
+  };
+
+  return Level1;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ })
 ]);
