@@ -18,7 +18,7 @@ exports.__esModule = true;
  * @name VERSION
  * @type {string}
  */
-var VERSION = exports.VERSION = '4.7.1';
+var VERSION = exports.VERSION = '4.7.3';
 
 /**
  * Two Pi.
@@ -792,7 +792,7 @@ var _ismobilejs = __webpack_require__(87);
 
 var isMobile = _interopRequireWildcard(_ismobilejs);
 
-var _removeArrayItems = __webpack_require__(318);
+var _removeArrayItems = __webpack_require__(319);
 
 var _removeArrayItems2 = _interopRequireDefault(_removeArrayItems);
 
@@ -5255,7 +5255,7 @@ Mesh.DRAW_MODES = {
 
 /* eslint-disable no-undef */
 
-var Loader = __webpack_require__(319).default;
+var Loader = __webpack_require__(320).default;
 var Resource = __webpack_require__(100).default;
 var async = __webpack_require__(178);
 var b64 = __webpack_require__(179);
@@ -5283,7 +5283,7 @@ module.exports.default = Loader;
 exports.__esModule = true;
 exports.loader = exports.prepare = exports.particles = exports.mesh = exports.loaders = exports.interaction = exports.filters = exports.extras = exports.extract = exports.accessibility = undefined;
 
-var _polyfill = __webpack_require__(308);
+var _polyfill = __webpack_require__(309);
 
 Object.keys(_polyfill).forEach(function (key) {
     if (key === "default" || key === "__esModule") return;
@@ -5343,7 +5343,7 @@ var _particles = __webpack_require__(302);
 
 var particles = _interopRequireWildcard(_particles);
 
-var _prepare = __webpack_require__(311);
+var _prepare = __webpack_require__(312);
 
 var prepare = _interopRequireWildcard(_prepare);
 
@@ -30629,8 +30629,8 @@ function encodeBinary(input) {
 
 
 
-var punycode = __webpack_require__(314);
-var util = __webpack_require__(323);
+var punycode = __webpack_require__(315);
+var util = __webpack_require__(324);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -30705,7 +30705,7 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
       'gopher:': true,
       'file:': true
     },
-    querystring = __webpack_require__(317);
+    querystring = __webpack_require__(318);
 
 function urlParse(url, parseQueryString, slashesDenoteHost) {
   if (url && util.isObject(url) && url instanceof Url) return url;
@@ -31356,17 +31356,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SoundSprite", function() { return SoundSprite; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "utils", function() { return SoundUtils; });
 /*!
- * pixi-sound - v2.0.1
+ * pixi-sound - v2.0.2
  * https://github.com/pixijs/pixi-sound
- * Compiled Sat, 16 Dec 2017 16:50:48 UTC
+ * Compiled Fri, 06 Apr 2018 20:16:11 UTC
  *
  * pixi-sound is licensed under the MIT license.
  * http://www.opensource.org/licenses/mit-license
  */
-function __extends(e,t){function n(){this.constructor=e}extendStatics(e,t),e.prototype=null===t?Object.create(t):(n.prototype=t.prototype,new n)}function createCommonjsModule(e,t){return t={exports:{}},e(t,t.exports),t.exports}if("undefined"==typeof PIXI)throw"PixiJS required";var Filterable=function(){function e(e,t){this._output=t,this._input=e}return Object.defineProperty(e.prototype,"destination",{get:function(){return this._input},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"filters",{get:function(){return this._filters},set:function(e){var t=this;if(this._filters&&(this._filters.forEach(function(e){e&&e.disconnect()}),this._filters=null,this._input.connect(this._output)),e&&e.length){this._filters=e.slice(0),this._input.disconnect();var n=null;e.forEach(function(e){null===n?t._input.connect(e.destination):n.connect(e.destination),n=e}),n.connect(this._output)}},enumerable:!0,configurable:!0}),e.prototype.destroy=function(){this.filters=null,this._input=null,this._output=null},e}(),extendStatics=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var n in t)t.hasOwnProperty(n)&&(e[n]=t[n])},id=0,HTMLAudioInstance=function(e){function t(t){var n=e.call(this)||this;return n.id=id++,n.init(t),n}return __extends(t,e),Object.defineProperty(t.prototype,"progress",{get:function(){return this._source.currentTime/this._duration},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"paused",{get:function(){return this._paused},set:function(e){this._paused=e,this.refreshPaused()},enumerable:!0,configurable:!0}),t.prototype._onPlay=function(){this._playing=!0},t.prototype._onPause=function(){this._playing=!1},t.prototype.init=function(e){this._playing=!1,this._duration=e.source.duration;var t=this._source=e.source.cloneNode(!1);t.src=e.parent.url,t.onplay=this._onPlay.bind(this),t.onpause=this._onPause.bind(this),e.context.on("refresh",this.refresh,this),e.context.on("refreshPaused",this.refreshPaused,this),this._media=e},t.prototype._internalStop=function(){this._source&&this._playing&&(this._source.onended=null,this._source.pause())},t.prototype.stop=function(){this._internalStop(),this._source&&this.emit("stop")},Object.defineProperty(t.prototype,"speed",{get:function(){return this._speed},set:function(e){this._speed=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"volume",{get:function(){return this._volume},set:function(e){this._volume=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"loop",{get:function(){return this._loop},set:function(e){this._loop=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"muted",{get:function(){return this._muted},set:function(e){this._muted=e,this.refresh()},enumerable:!0,configurable:!0}),t.prototype.refresh=function(){var e=this._media.context,t=this._media.parent;this._source.loop=this._loop||t.loop;var n=e.volume*(e.muted?0:1),o=t.volume*(t.muted?0:1),i=this._volume*(this._muted?0:1);this._source.volume=i*n*o,this._source.playbackRate=this._speed*e.speed*t.speed},t.prototype.refreshPaused=function(){var e=this._media.context,t=this._media.parent,n=this._paused||t.paused||e.paused;n!==this._pausedReal&&(this._pausedReal=n,n?(this._internalStop(),this.emit("paused")):(this.emit("resumed"),this.play({start:this._source.currentTime,end:this._end,volume:this._volume,speed:this._speed,loop:this._loop})),this.emit("pause",n))},t.prototype.play=function(e){var n=this,o=e.start,i=e.end,r=e.speed,s=e.loop,u=e.volume,a=e.muted;i&&console.assert(i>o,"End time is before start time"),this._speed=r,this._volume=u,this._loop=!!s,this._muted=a,this.refresh(),this.loop&&null!==i&&(console.warn('Looping not support when specifying an "end" time'),this.loop=!1),this._start=o,this._end=i||this._duration,this._start=Math.max(0,this._start-t.PADDING),this._end=Math.min(this._end+t.PADDING,this._duration),this._source.onloadedmetadata=function(){n._source&&(n._source.currentTime=o,n._source.onloadedmetadata=null,n.emit("progress",o,n._duration),PIXI.ticker.shared.add(n._onUpdate,n))},this._source.onended=this._onComplete.bind(this),this._source.play(),this.emit("start")},t.prototype._onUpdate=function(){this.emit("progress",this.progress,this._duration),this._source.currentTime>=this._end&&!this._source.loop&&this._onComplete()},t.prototype._onComplete=function(){PIXI.ticker.shared.remove(this._onUpdate,this),this._internalStop(),this.emit("progress",1,this._duration),this.emit("end",this)},t.prototype.destroy=function(){PIXI.ticker.shared.remove(this._onUpdate,this),this.removeAllListeners();var e=this._source;e&&(e.onended=null,e.onplay=null,e.onpause=null,this._internalStop()),this._source=null,this._speed=1,this._volume=1,this._loop=!1,this._end=null,this._start=0,this._duration=0,this._playing=!1,this._pausedReal=!1,this._paused=!1,this._muted=!1,this._media&&(this._media.context.off("refresh",this.refresh,this),this._media.context.off("refreshPaused",this.refreshPaused,this),this._media=null)},t.prototype.toString=function(){return"[HTMLAudioInstance id="+this.id+"]"},t.PADDING=.1,t}(PIXI.utils.EventEmitter),HTMLAudioMedia=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return __extends(t,e),t.prototype.init=function(e){this.parent=e,this._source=e.options.source||new Audio,e.url&&(this._source.src=e.url)},t.prototype.create=function(){return new HTMLAudioInstance(this)},Object.defineProperty(t.prototype,"isPlayable",{get:function(){return!!this._source&&4===this._source.readyState},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"duration",{get:function(){return this._source.duration},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"context",{get:function(){return this.parent.context},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"filters",{get:function(){return null},set:function(e){console.warn("HTML Audio does not support filters")},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){this.removeAllListeners(),this.parent=null,this._source&&(this._source.src="",this._source.load(),this._source=null)},Object.defineProperty(t.prototype,"source",{get:function(){return this._source},enumerable:!0,configurable:!0}),t.prototype.load=function(e){var t=this._source,n=this.parent;if(4===t.readyState){n.isLoaded=!0;var o=n.autoPlayStart();return void(e&&setTimeout(function(){e(null,n,o)},0))}if(!n.url)return e(new Error("sound.url or sound.source must be set"));t.src=n.url;var i=function(){t.removeEventListener("canplaythrough",r),t.removeEventListener("load",r),t.removeEventListener("abort",s),t.removeEventListener("error",u)},r=function(){i(),n.isLoaded=!0;var t=n.autoPlayStart();e&&e(null,n,t)},s=function(){i(),e&&e(new Error("Sound loading has been aborted"))},u=function(){i();var n="Failed to load audio element (code: "+t.error.code+")";e?e(new Error(n)):console.error(n)};t.addEventListener("canplaythrough",r,!1),t.addEventListener("load",r,!1),t.addEventListener("abort",s,!1),t.addEventListener("error",u,!1),t.load()},t}(PIXI.utils.EventEmitter),commonjsGlobal="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{},promise=createCommonjsModule(function(e){!function(t){function n(){}function o(e,t){return function(){e.apply(t,arguments)}}function i(e){if(!(this instanceof i))throw new TypeError("Promises must be constructed via new");if("function"!=typeof e)throw new TypeError("not a function");this._state=0,this._handled=!1,this._value=void 0,this._deferreds=[],l(e,this)}function r(e,t){for(;3===e._state;)e=e._value;if(0===e._state)return void e._deferreds.push(t);e._handled=!0,i._immediateFn(function(){var n=1===e._state?t.onFulfilled:t.onRejected;if(null===n)return void(1===e._state?s:u)(t.promise,e._value);var o;try{o=n(e._value)}catch(e){return void u(t.promise,e)}s(t.promise,o)})}function s(e,t){try{if(t===e)throw new TypeError("A promise cannot be resolved with itself.");if(t&&("object"==typeof t||"function"==typeof t)){var n=t.then;if(t instanceof i)return e._state=3,e._value=t,void a(e);if("function"==typeof n)return void l(o(n,t),e)}e._state=1,e._value=t,a(e)}catch(t){u(e,t)}}function u(e,t){e._state=2,e._value=t,a(e)}function a(e){2===e._state&&0===e._deferreds.length&&i._immediateFn(function(){e._handled||i._unhandledRejectionFn(e._value)});for(var t=0,n=e._deferreds.length;t<n;t++)r(e,e._deferreds[t]);e._deferreds=null}function c(e,t,n){this.onFulfilled="function"==typeof e?e:null,this.onRejected="function"==typeof t?t:null,this.promise=n}function l(e,t){var n=!1;try{e(function(e){n||(n=!0,s(t,e))},function(e){n||(n=!0,u(t,e))})}catch(e){if(n)return;n=!0,u(t,e)}}var d=setTimeout;i.prototype.catch=function(e){return this.then(null,e)},i.prototype.then=function(e,t){var o=new this.constructor(n);return r(this,new c(e,t,o)),o},i.all=function(e){return new i(function(t,n){function o(e,s){try{if(s&&("object"==typeof s||"function"==typeof s)){var u=s.then;if("function"==typeof u)return void u.call(s,function(t){o(e,t)},n)}i[e]=s,0==--r&&t(i)}catch(e){n(e)}}if(!e||void 0===e.length)throw new TypeError("Promise.all accepts an array");var i=Array.prototype.slice.call(e);if(0===i.length)return t([]);for(var r=i.length,s=0;s<i.length;s++)o(s,i[s])})},i.resolve=function(e){return e&&"object"==typeof e&&e.constructor===i?e:new i(function(t){t(e)})},i.reject=function(e){return new i(function(t,n){n(e)})},i.race=function(e){return new i(function(t,n){for(var o=0,i=e.length;o<i;o++)e[o].then(t,n)})},i._immediateFn="function"==typeof setImmediate&&function(e){setImmediate(e)}||function(e){d(e,0)},i._unhandledRejectionFn=function(e){"undefined"!=typeof console&&console&&console.warn("Possible Unhandled Promise Rejection:",e)},i._setImmediateFn=function(e){i._immediateFn=e},i._setUnhandledRejectionFn=function(e){i._unhandledRejectionFn=e},e.exports?e.exports=i:t.Promise||(t.Promise=i)}(commonjsGlobal)}),Filter=function(){function e(e,t){this.destination=e,this.source=t||e}return e.prototype.connect=function(e){this.source.connect(e)},e.prototype.disconnect=function(){this.source.disconnect()},e.prototype.destroy=function(){this.disconnect(),this.destination=null,this.source=null},e}(),WebAudioUtils=function(){function e(){}return e.setParamValue=function(e,t){if(e.setValueAtTime){var n=SoundLibrary.instance.context;e.setValueAtTime(t,n.audioContext.currentTime)}else e.value=t;return t},e}(),EqualizerFilter=function(e){function t(n,o,i,r,s,u,a,c,l,d){void 0===n&&(n=0),void 0===o&&(o=0),void 0===i&&(i=0),void 0===r&&(r=0),void 0===s&&(s=0),void 0===u&&(u=0),void 0===a&&(a=0),void 0===c&&(c=0),void 0===l&&(l=0),void 0===d&&(d=0);var p=this;if(SoundLibrary.instance.useLegacy)return void(p=e.call(this,null)||this);var h=[{f:t.F32,type:"lowshelf",gain:n},{f:t.F64,type:"peaking",gain:o},{f:t.F125,type:"peaking",gain:i},{f:t.F250,type:"peaking",gain:r},{f:t.F500,type:"peaking",gain:s},{f:t.F1K,type:"peaking",gain:u},{f:t.F2K,type:"peaking",gain:a},{f:t.F4K,type:"peaking",gain:c},{f:t.F8K,type:"peaking",gain:l},{f:t.F16K,type:"highshelf",gain:d}].map(function(e){var t=SoundLibrary.instance.context.audioContext.createBiquadFilter();return t.type=e.type,WebAudioUtils.setParamValue(t.gain,e.gain),WebAudioUtils.setParamValue(t.Q,1),WebAudioUtils.setParamValue(t.frequency,e.f),t});(p=e.call(this,h[0],h[h.length-1])||this).bands=h,p.bandsMap={};for(var f=0;f<p.bands.length;f++){var _=p.bands[f];f>0&&p.bands[f-1].connect(_),p.bandsMap[_.frequency.value]=_}return p}return __extends(t,e),t.prototype.setGain=function(e,t){if(void 0===t&&(t=0),!this.bandsMap[e])throw"No band found for frequency "+e;WebAudioUtils.setParamValue(this.bandsMap[e].gain,t)},t.prototype.getGain=function(e){if(!this.bandsMap[e])throw"No band found for frequency "+e;return this.bandsMap[e].gain.value},Object.defineProperty(t.prototype,"f32",{get:function(){return this.getGain(t.F32)},set:function(e){this.setGain(t.F32,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f64",{get:function(){return this.getGain(t.F64)},set:function(e){this.setGain(t.F64,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f125",{get:function(){return this.getGain(t.F125)},set:function(e){this.setGain(t.F125,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f250",{get:function(){return this.getGain(t.F250)},set:function(e){this.setGain(t.F250,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f500",{get:function(){return this.getGain(t.F500)},set:function(e){this.setGain(t.F500,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f1k",{get:function(){return this.getGain(t.F1K)},set:function(e){this.setGain(t.F1K,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f2k",{get:function(){return this.getGain(t.F2K)},set:function(e){this.setGain(t.F2K,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f4k",{get:function(){return this.getGain(t.F4K)},set:function(e){this.setGain(t.F4K,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f8k",{get:function(){return this.getGain(t.F8K)},set:function(e){this.setGain(t.F8K,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f16k",{get:function(){return this.getGain(t.F16K)},set:function(e){this.setGain(t.F16K,e)},enumerable:!0,configurable:!0}),t.prototype.reset=function(){this.bands.forEach(function(e){WebAudioUtils.setParamValue(e.gain,0)})},t.prototype.destroy=function(){this.bands.forEach(function(e){e.disconnect()}),this.bands=null,this.bandsMap=null},t.F32=32,t.F64=64,t.F125=125,t.F250=250,t.F500=500,t.F1K=1e3,t.F2K=2e3,t.F4K=4e3,t.F8K=8e3,t.F16K=16e3,t}(Filter),DistortionFilter=function(e){function t(t){void 0===t&&(t=0);var n=this;if(SoundLibrary.instance.useLegacy)return void(n=e.call(this,null)||this);var o=SoundLibrary.instance.context.audioContext.createWaveShaper();return n=e.call(this,o)||this,n._distortion=o,n.amount=t,n}return __extends(t,e),Object.defineProperty(t.prototype,"amount",{get:function(){return this._amount},set:function(e){e*=1e3,this._amount=e;for(var t,n=new Float32Array(44100),o=Math.PI/180,i=0;i<44100;++i)t=2*i/44100-1,n[i]=(3+e)*t*20*o/(Math.PI+e*Math.abs(t));this._distortion.curve=n,this._distortion.oversample="4x"},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){this._distortion=null,e.prototype.destroy.call(this)},t}(Filter),StereoFilter=function(e){function t(t){void 0===t&&(t=0);var n=this;if(SoundLibrary.instance.useLegacy)return void(n=e.call(this,null)||this);var o,i,r,s=SoundLibrary.instance.context.audioContext;return s.createStereoPanner?r=o=s.createStereoPanner():((i=s.createPanner()).panningModel="equalpower",r=i),n=e.call(this,r)||this,n._stereo=o,n._panner=i,n.pan=t,n}return __extends(t,e),Object.defineProperty(t.prototype,"pan",{get:function(){return this._pan},set:function(e){this._pan=e,this._stereo?WebAudioUtils.setParamValue(this._stereo.pan,e):this._panner.setPosition(e,0,1-Math.abs(e))},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){e.prototype.destroy.call(this),this._stereo=null,this._panner=null},t}(Filter),ReverbFilter=function(e){function t(t,n,o){void 0===t&&(t=3),void 0===n&&(n=2),void 0===o&&(o=!1);var i=this;if(SoundLibrary.instance.useLegacy)return void(i=e.call(this,null)||this);var r=SoundLibrary.instance.context.audioContext.createConvolver();return i=e.call(this,r)||this,i._convolver=r,i._seconds=i._clamp(t,1,50),i._decay=i._clamp(n,0,100),i._reverse=o,i._rebuild(),i}return __extends(t,e),t.prototype._clamp=function(e,t,n){return Math.min(n,Math.max(t,e))},Object.defineProperty(t.prototype,"seconds",{get:function(){return this._seconds},set:function(e){this._seconds=this._clamp(e,1,50),this._rebuild()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"decay",{get:function(){return this._decay},set:function(e){this._decay=this._clamp(e,0,100),this._rebuild()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"reverse",{get:function(){return this._reverse},set:function(e){this._reverse=e,this._rebuild()},enumerable:!0,configurable:!0}),t.prototype._rebuild=function(){for(var e,t=SoundLibrary.instance.context.audioContext,n=t.sampleRate,o=n*this._seconds,i=t.createBuffer(2,o,n),r=i.getChannelData(0),s=i.getChannelData(1),u=0;u<o;u++)e=this._reverse?o-u:u,r[u]=(2*Math.random()-1)*Math.pow(1-e/o,this._decay),s[u]=(2*Math.random()-1)*Math.pow(1-e/o,this._decay);this._convolver.buffer=i},t.prototype.destroy=function(){this._convolver=null,e.prototype.destroy.call(this)},t}(Filter),MonoFilter=function(e){function t(){var t=this;SoundLibrary.instance.useLegacy&&(t=e.call(this,null)||this);var n=SoundLibrary.instance.context.audioContext,o=n.createChannelSplitter(),i=n.createChannelMerger();return i.connect(o),t=e.call(this,i,o)||this,t._merger=i,t}return __extends(t,e),t.prototype.destroy=function(){this._merger.disconnect(),this._merger=null,e.prototype.destroy.call(this)},t}(Filter),TelephoneFilter=function(e){function t(){if(SoundLibrary.instance.useLegacy)return void(e.call(this,null)||this);var t=SoundLibrary.instance.context.audioContext,n=t.createBiquadFilter(),o=t.createBiquadFilter(),i=t.createBiquadFilter(),r=t.createBiquadFilter();return n.type="lowpass",WebAudioUtils.setParamValue(n.frequency,2e3),o.type="lowpass",WebAudioUtils.setParamValue(o.frequency,2e3),i.type="highpass",WebAudioUtils.setParamValue(i.frequency,500),r.type="highpass",WebAudioUtils.setParamValue(r.frequency,500),n.connect(o),o.connect(i),i.connect(r),e.call(this,n,r)||this}return __extends(t,e),t}(Filter),filters=Object.freeze({Filter:Filter,EqualizerFilter:EqualizerFilter,DistortionFilter:DistortionFilter,StereoFilter:StereoFilter,ReverbFilter:ReverbFilter,MonoFilter:MonoFilter,TelephoneFilter:TelephoneFilter}),HTMLAudioContext=function(e){function t(){var t=e.call(this)||this;return t.speed=1,t.volume=1,t.muted=!1,t.paused=!1,t}return __extends(t,e),t.prototype.refresh=function(){this.emit("refresh")},t.prototype.refreshPaused=function(){this.emit("refreshPaused")},Object.defineProperty(t.prototype,"filters",{get:function(){return console.warn("HTML Audio does not support filters"),null},set:function(e){console.warn("HTML Audio does not support filters")},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"audioContext",{get:function(){return console.warn("HTML Audio does not support audioContext"),null},enumerable:!0,configurable:!0}),t.prototype.toggleMute=function(){return this.muted=!this.muted,this.refresh(),this.muted},t.prototype.togglePause=function(){return this.paused=!this.paused,this.refreshPaused(),this.paused},t.prototype.destroy=function(){this.removeAllListeners()},t}(PIXI.utils.EventEmitter),htmlaudio=Object.freeze({HTMLAudioMedia:HTMLAudioMedia,HTMLAudioInstance:HTMLAudioInstance,HTMLAudioContext:HTMLAudioContext}),id$1=0,WebAudioInstance=function(e){function t(t){var n=e.call(this)||this;return n.id=id$1++,n._media=null,n._paused=!1,n._muted=!1,n._elapsed=0,n._updateListener=n._update.bind(n),n.init(t),n}return __extends(t,e),t.prototype.stop=function(){this._source&&(this._internalStop(),this.emit("stop"))},Object.defineProperty(t.prototype,"speed",{get:function(){return this._speed},set:function(e){this._speed=e,this.refresh(),this._update(!0)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"volume",{get:function(){return this._volume},set:function(e){this._volume=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"muted",{get:function(){return this._muted},set:function(e){this._muted=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"loop",{get:function(){return this._loop},set:function(e){this._loop=e,this.refresh()},enumerable:!0,configurable:!0}),t.prototype.refresh=function(){var e=this._media.context,t=this._media.parent;this._source.loop=this._loop||t.loop;var n=e.volume*(e.muted?0:1),o=t.volume*(t.muted?0:1),i=this._volume*(this._muted?0:1);WebAudioUtils.setParamValue(this._gain.gain,i*o*n),WebAudioUtils.setParamValue(this._source.playbackRate,this._speed*t.speed*e.speed)},t.prototype.refreshPaused=function(){var e=this._media.context,t=this._media.parent,n=this._paused||t.paused||e.paused;n!==this._pausedReal&&(this._pausedReal=n,n?(this._internalStop(),this.emit("paused")):(this.emit("resumed"),this.play({start:this._elapsed%this._duration,end:this._end,speed:this._speed,loop:this._loop,volume:this._volume})),this.emit("pause",n))},t.prototype.play=function(e){var t=e.start,n=e.end,o=e.speed,i=e.loop,r=e.volume,s=e.muted;n&&console.assert(n>t,"End time is before start time"),this._paused=!1;var u=this._media.nodes.cloneBufferSource(),a=u.source,c=u.gain;this._source=a,this._gain=c,this._speed=o,this._volume=r,this._loop=!!i,this._muted=s,this.refresh(),this.loop&&null!==n&&(console.warn('Looping not support when specifying an "end" time'),this.loop=!1),this._end=n;var l=this._source.buffer.duration;this._duration=l,this._lastUpdate=this._now(),this._elapsed=t,this._source.onended=this._onComplete.bind(this),n?this._source.start(0,t,n-t):this._source.start(0,t),this.emit("start"),this._update(!0),this._enabled=!0},t.prototype._toSec=function(e){return e>10&&(e/=1e3),e||0},Object.defineProperty(t.prototype,"_enabled",{set:function(e){var t=this._media.nodes.script;t.removeEventListener("audioprocess",this._updateListener),e&&t.addEventListener("audioprocess",this._updateListener)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"progress",{get:function(){return this._progress},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"paused",{get:function(){return this._paused},set:function(e){this._paused=e,this.refreshPaused()},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){this.removeAllListeners(),this._internalStop(),this._source&&(this._source.disconnect(),this._source=null),this._gain&&(this._gain.disconnect(),this._gain=null),this._media&&(this._media.context.events.off("refresh",this.refresh,this),this._media.context.events.off("refreshPaused",this.refreshPaused,this),this._media=null),this._end=null,this._speed=1,this._volume=1,this._loop=!1,this._elapsed=0,this._duration=0,this._paused=!1,this._muted=!1,this._pausedReal=!1},t.prototype.toString=function(){return"[WebAudioInstance id="+this.id+"]"},t.prototype._now=function(){return this._media.context.audioContext.currentTime},t.prototype._update=function(e){if(void 0===e&&(e=!1),this._source){var t=this._now(),n=t-this._lastUpdate;if(n>0||e){var o=this._source.playbackRate.value;this._elapsed+=n*o,this._lastUpdate=t;var i=this._duration,r=this._elapsed%i/i;this._progress=r,this.emit("progress",this._progress,i)}}},t.prototype.init=function(e){this._media=e,e.context.events.on("refresh",this.refresh,this),e.context.events.on("refreshPaused",this.refreshPaused,this)},t.prototype._internalStop=function(){this._source&&(this._enabled=!1,this._source.onended=null,this._source.stop(0),this._source=null)},t.prototype._onComplete=function(){this._source&&(this._enabled=!1,this._source.onended=null),this._source=null,this._progress=1,this.emit("progress",1,this._duration),this.emit("end",this)},t}(PIXI.utils.EventEmitter),WebAudioNodes=function(e){function t(n){var o=this,i=n.audioContext,r=i.createBufferSource(),s=i.createScriptProcessor(t.BUFFER_SIZE),u=i.createGain(),a=i.createAnalyser();return r.connect(a),a.connect(u),u.connect(n.destination),s.connect(n.destination),o=e.call(this,a,u)||this,o.context=n,o.bufferSource=r,o.script=s,o.gain=u,o.analyser=a,o}return __extends(t,e),t.prototype.destroy=function(){e.prototype.destroy.call(this),this.bufferSource.disconnect(),this.script.disconnect(),this.gain.disconnect(),this.analyser.disconnect(),this.bufferSource=null,this.script=null,this.gain=null,this.analyser=null,this.context=null},t.prototype.cloneBufferSource=function(){var e=this.bufferSource,t=this.context.audioContext.createBufferSource();t.buffer=e.buffer,WebAudioUtils.setParamValue(t.playbackRate,e.playbackRate.value),t.loop=e.loop;var n=this.context.audioContext.createGain();return t.connect(n),n.connect(this.destination),{source:t,gain:n}},t.BUFFER_SIZE=256,t}(Filterable),WebAudioMedia=function(){function e(){}return e.prototype.init=function(e){this.parent=e,this._nodes=new WebAudioNodes(this.context),this._source=this._nodes.bufferSource,this.source=e.options.source},e.prototype.destroy=function(){this.parent=null,this._nodes.destroy(),this._nodes=null,this._source=null,this.source=null},e.prototype.create=function(){return new WebAudioInstance(this)},Object.defineProperty(e.prototype,"context",{get:function(){return this.parent.context},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"isPlayable",{get:function(){return!!this._source&&!!this._source.buffer},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"filters",{get:function(){return this._nodes.filters},set:function(e){this._nodes.filters=e},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"duration",{get:function(){return console.assert(this.isPlayable,"Sound not yet playable, no duration"),this._source.buffer.duration},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"buffer",{get:function(){return this._source.buffer},set:function(e){this._source.buffer=e},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"nodes",{get:function(){return this._nodes},enumerable:!0,configurable:!0}),e.prototype.load=function(e){this.source?this._decode(this.source,e):this.parent.url?this._loadUrl(e):e?e(new Error("sound.url or sound.source must be set")):console.error("sound.url or sound.source must be set")},e.prototype._loadUrl=function(e){var t=this,n=new XMLHttpRequest,o=this.parent.url;n.open("GET",o,!0),n.responseType="arraybuffer",n.onload=function(){t.source=n.response,t._decode(n.response,e)},n.send()},e.prototype._decode=function(e,t){var n=this;this.parent.context.decode(e,function(e,o){if(e)t&&t(e);else{n.parent.isLoaded=!0,n.buffer=o;var i=n.parent.autoPlayStart();t&&t(null,n.parent,i)}})},e}(),SoundUtils=function(){function e(){}return e.resolveUrl=function(t){var n=e.FORMAT_PATTERN,o="string"==typeof t?t:t.url;if(n.test(o)){for(var i=n.exec(o),r=i[2].split(","),s=r[r.length-1],u=0,a=r.length;u<a;u++){var c=r[u];if(e.supported[c]){s=c;break}}var l=o.replace(i[1],s);return"string"!=typeof t&&(t.extension=s,t.url=l),l}return o},e.sineTone=function(e,t){void 0===e&&(e=200),void 0===t&&(t=1);var n=Sound.from({singleInstance:!0});if(!(n.media instanceof WebAudioMedia))return n;for(var o=n.media,i=n.context.audioContext.createBuffer(1,48e3*t,48e3),r=i.getChannelData(0),s=0;s<r.length;s++){var u=e*(s/i.sampleRate)*Math.PI;r[s]=2*Math.sin(u)}return o.buffer=i,n.isLoaded=!0,n},e.render=function(e,t){var n=document.createElement("canvas");t=Object.assign({width:512,height:128,fill:"black"},t||{}),n.width=t.width,n.height=t.height;var o=PIXI.BaseTexture.fromCanvas(n);if(!(e.media instanceof WebAudioMedia))return o;var i=e.media;console.assert(!!i.buffer,"No buffer found, load first");var r=n.getContext("2d");r.fillStyle=t.fill;for(var s=i.buffer.getChannelData(0),u=Math.ceil(s.length/t.width),a=t.height/2,c=0;c<t.width;c++){for(var l=1,d=-1,p=0;p<u;p++){var h=s[c*u+p];h<l&&(l=h),h>d&&(d=h)}r.fillRect(c,(1+l)*a,1,Math.max(1,(d-l)*a))}return o},e.playOnce=function(t,n){var o="alias"+e.PLAY_ID++;return SoundLibrary.instance.add(o,{url:t,preload:!0,autoPlay:!0,loaded:function(e){e&&(console.error(e),SoundLibrary.instance.remove(o),n&&n(e))},complete:function(){SoundLibrary.instance.remove(o),n&&n(null)}}),o},e.PLAY_ID=0,e.FORMAT_PATTERN=/\.(\{([^\}]+)\})(\?.*)?$/,e.extensions=["mp3","ogg","oga","opus","mpeg","wav","m4a","mp4","aiff","wma","mid"],e.supported=function(){var t={m4a:"mp4",oga:"ogg"},n=document.createElement("audio"),o={};return e.extensions.forEach(function(e){var i=t[e]||e,r=n.canPlayType("audio/"+e).replace(/^no$/,""),s=n.canPlayType("audio/"+i).replace(/^no$/,"");o[e]=!!r||!!s}),Object.freeze(o)}(),e}(),Loader=function(e){function t(t,n){var o=e.call(this,t,n)||this;return o.use(LoaderMiddleware.plugin),o.pre(LoaderMiddleware.resolve),o}return __extends(t,e),t.addPixiMiddleware=function(t){e.addPixiMiddleware.call(this,t)},t}(PIXI.loaders.Loader),LoaderMiddleware=function(){function e(){}return e.install=function(t){e._sound=t,e.legacy=t.useLegacy,PIXI.loaders.Loader=Loader,PIXI.loader.use(e.plugin),PIXI.loader.pre(e.resolve)},Object.defineProperty(e,"legacy",{set:function(e){var t=PIXI.loaders.Resource,n=SoundUtils.extensions;e?n.forEach(function(e){t.setExtensionXhrType(e,t.XHR_RESPONSE_TYPE.DEFAULT),t.setExtensionLoadType(e,t.LOAD_TYPE.AUDIO)}):n.forEach(function(e){t.setExtensionXhrType(e,t.XHR_RESPONSE_TYPE.BUFFER),t.setExtensionLoadType(e,t.LOAD_TYPE.XHR)})},enumerable:!0,configurable:!0}),e.resolve=function(e,t){SoundUtils.resolveUrl(e),t()},e.plugin=function(t,n){t.data&&SoundUtils.extensions.indexOf(t.extension)>-1?t.sound=e._sound.add(t.name,{loaded:n,preload:!0,url:t.url,source:t.data}):n()},e}(),SoundSprite=function(){function e(e,t){this.parent=e,Object.assign(this,t),this.duration=this.end-this.start,console.assert(this.duration>0,"End time must be after start time")}return e.prototype.play=function(e){return this.parent.play(Object.assign({complete:e,speed:this.speed||this.parent.speed,end:this.end,start:this.start}))},e.prototype.destroy=function(){this.parent=null},e}(),WebAudioContext=function(e){function t(){var n=this,o=new t.AudioContext,i=o.createDynamicsCompressor(),r=o.createAnalyser();return r.connect(i),i.connect(o.destination),n=e.call(this,r,i)||this,n._ctx=o,n._offlineCtx=new t.OfflineAudioContext(1,2,o.sampleRate),n._unlocked=!1,n.compressor=i,n.analyser=r,n.events=new PIXI.utils.EventEmitter,n.volume=1,n.speed=1,n.muted=!1,n.paused=!1,"ontouchstart"in window&&"running"!==o.state&&(n._unlock(),n._unlock=n._unlock.bind(n),document.addEventListener("mousedown",n._unlock,!0),document.addEventListener("touchstart",n._unlock,!0),document.addEventListener("touchend",n._unlock,!0)),n}return __extends(t,e),t.prototype._unlock=function(){this._unlocked||(this.playEmptySound(),"running"===this._ctx.state&&(document.removeEventListener("mousedown",this._unlock,!0),document.removeEventListener("touchend",this._unlock,!0),document.removeEventListener("touchstart",this._unlock,!0),this._unlocked=!0))},t.prototype.playEmptySound=function(){var e=this._ctx.createBufferSource();e.buffer=this._ctx.createBuffer(1,1,22050),e.connect(this._ctx.destination),e.start(0,0,0),"suspended"===e.context.state&&e.context.resume()},Object.defineProperty(t,"AudioContext",{get:function(){var e=window;return e.AudioContext||e.webkitAudioContext||null},enumerable:!0,configurable:!0}),Object.defineProperty(t,"OfflineAudioContext",{get:function(){var e=window;return e.OfflineAudioContext||e.webkitOfflineAudioContext||null},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){e.prototype.destroy.call(this);var t=this._ctx;void 0!==t.close&&t.close(),this.events.removeAllListeners(),this.analyser.disconnect(),this.compressor.disconnect(),this.analyser=null,this.compressor=null,this.events=null,this._offlineCtx=null,this._ctx=null},Object.defineProperty(t.prototype,"audioContext",{get:function(){return this._ctx},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"offlineContext",{get:function(){return this._offlineCtx},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"paused",{get:function(){return this._paused},set:function(e){e&&"running"===this._ctx.state?this._ctx.suspend():e||"suspended"!==this._ctx.state||this._ctx.resume(),this._paused=e},enumerable:!0,configurable:!0}),t.prototype.refresh=function(){this.events.emit("refresh")},t.prototype.refreshPaused=function(){this.events.emit("refreshPaused")},t.prototype.toggleMute=function(){return this.muted=!this.muted,this.refresh(),this.muted},t.prototype.togglePause=function(){return this.paused=!this.paused,this.refreshPaused(),this._paused},t.prototype.decode=function(e,t){this._offlineCtx.decodeAudioData(e,function(e){t(null,e)},function(){t(new Error("Unable to decode file"))})},t}(Filterable),webaudio=Object.freeze({WebAudioMedia:WebAudioMedia,WebAudioInstance:WebAudioInstance,WebAudioNodes:WebAudioNodes,WebAudioContext:WebAudioContext,WebAudioUtils:WebAudioUtils}),SoundLibrary=function(){function e(){this.init()}return e.prototype.init=function(){return this.supported&&(this._webAudioContext=new WebAudioContext),this._htmlAudioContext=new HTMLAudioContext,this._sounds={},this.useLegacy=!this.supported,this},Object.defineProperty(e.prototype,"context",{get:function(){return this._context},enumerable:!0,configurable:!0}),e.init=function(){if(e.instance)throw new Error("SoundLibrary is already created");var t=e.instance=new e;"undefined"==typeof Promise&&(window.Promise=promise),void 0!==PIXI.loaders&&LoaderMiddleware.install(t),void 0===window.__pixiSound&&delete window.__pixiSound;var n=PIXI;return n.sound||(Object.defineProperty(n,"sound",{get:function(){return t}}),Object.defineProperties(t,{filters:{get:function(){return filters}},htmlaudio:{get:function(){return htmlaudio}},webaudio:{get:function(){return webaudio}},utils:{get:function(){return SoundUtils}},Sound:{get:function(){return Sound}},SoundSprite:{get:function(){return SoundSprite}},Filterable:{get:function(){return Filterable}},SoundLibrary:{get:function(){return e}}})),t},Object.defineProperty(e.prototype,"filtersAll",{get:function(){return this.useLegacy?[]:this._context.filters},set:function(e){this.useLegacy||(this._context.filters=e)},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"supported",{get:function(){return null!==WebAudioContext.AudioContext},enumerable:!0,configurable:!0}),e.prototype.add=function(e,t){if("object"==typeof e){var n={};for(var o in e){i=this._getOptions(e[o],t);n[o]=this.add(o,i)}return n}if("string"==typeof e){if(console.assert(!this._sounds[e],"Sound with alias "+e+" already exists."),t instanceof Sound)return this._sounds[e]=t,t;var i=this._getOptions(t),r=Sound.from(i);return this._sounds[e]=r,r}},e.prototype._getOptions=function(e,t){var n;return n="string"==typeof e?{url:e}:e instanceof ArrayBuffer||e instanceof HTMLAudioElement?{source:e}:e,Object.assign(n,t||{})},Object.defineProperty(e.prototype,"useLegacy",{get:function(){return this._useLegacy},set:function(e){LoaderMiddleware.legacy=e,this._useLegacy=e,!e&&this.supported?this._context=this._webAudioContext:this._context=this._htmlAudioContext},enumerable:!0,configurable:!0}),e.prototype.remove=function(e){return this.exists(e,!0),this._sounds[e].destroy(),delete this._sounds[e],this},Object.defineProperty(e.prototype,"volumeAll",{get:function(){return this._context.volume},set:function(e){this._context.volume=e,this._context.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"speedAll",{get:function(){return this._context.speed},set:function(e){this._context.speed=e,this._context.refresh()},enumerable:!0,configurable:!0}),e.prototype.togglePauseAll=function(){return this._context.togglePause()},e.prototype.pauseAll=function(){return this._context.paused=!0,this._context.refresh(),this},e.prototype.resumeAll=function(){return this._context.paused=!1,this._context.refresh(),this},e.prototype.toggleMuteAll=function(){return this._context.toggleMute()},e.prototype.muteAll=function(){return this._context.muted=!0,this._context.refresh(),this},e.prototype.unmuteAll=function(){return this._context.muted=!1,this._context.refresh(),this},e.prototype.removeAll=function(){for(var e in this._sounds)this._sounds[e].destroy(),delete this._sounds[e];return this},e.prototype.stopAll=function(){for(var e in this._sounds)this._sounds[e].stop();return this},e.prototype.exists=function(e,t){void 0===t&&(t=!1);var n=!!this._sounds[e];return t&&console.assert(n,"No sound matching alias '"+e+"'."),n},e.prototype.find=function(e){return this.exists(e,!0),this._sounds[e]},e.prototype.play=function(e,t){return this.find(e).play(t)},e.prototype.stop=function(e){return this.find(e).stop()},e.prototype.pause=function(e){return this.find(e).pause()},e.prototype.resume=function(e){return this.find(e).resume()},e.prototype.volume=function(e,t){var n=this.find(e);return void 0!==t&&(n.volume=t),n.volume},e.prototype.speed=function(e,t){var n=this.find(e);return void 0!==t&&(n.speed=t),n.speed},e.prototype.duration=function(e){return this.find(e).duration},e.prototype.close=function(){return this.removeAll(),this._sounds=null,this._webAudioContext&&(this._webAudioContext.destroy(),this._webAudioContext=null),this._htmlAudioContext&&(this._htmlAudioContext.destroy(),this._htmlAudioContext=null),this._context=null,this},e}(),Sound=function(){function e(e,t){this.media=e,this.options=t,this._instances=[],this._sprites={},this.media.init(this);var n=t.complete;this._autoPlayOptions=n?{complete:n}:null,this.isLoaded=!1,this.isPlaying=!1,this.autoPlay=t.autoPlay,this.singleInstance=t.singleInstance,this.preload=t.preload||this.autoPlay,this.url=t.url,this.speed=t.speed,this.volume=t.volume,this.loop=t.loop,t.sprites&&this.addSprites(t.sprites),this.preload&&this._preload(t.loaded)}return e.from=function(t){var n={};return"string"==typeof t?n.url=t:t instanceof ArrayBuffer||t instanceof HTMLAudioElement?n.source=t:n=t,(n=Object.assign({autoPlay:!1,singleInstance:!1,url:null,source:null,preload:!1,volume:1,speed:1,complete:null,loaded:null,loop:!1},n)).url&&(n.url=SoundUtils.resolveUrl(n.url)),Object.freeze(n),new e(SoundLibrary.instance.useLegacy?new HTMLAudioMedia:new WebAudioMedia,n)},Object.defineProperty(e.prototype,"context",{get:function(){return SoundLibrary.instance.context},enumerable:!0,configurable:!0}),e.prototype.pause=function(){return this.isPlaying=!1,this.paused=!0,this},e.prototype.resume=function(){return this.isPlaying=this._instances.length>0,this.paused=!1,this},Object.defineProperty(e.prototype,"paused",{get:function(){return this._paused},set:function(e){this._paused=e,this.refreshPaused()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"speed",{get:function(){return this._speed},set:function(e){this._speed=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"filters",{get:function(){return this.media.filters},set:function(e){this.media.filters=e},enumerable:!0,configurable:!0}),e.prototype.addSprites=function(e,t){if("object"==typeof e){var n={};for(var o in e)n[o]=this.addSprites(o,e[o]);return n}if("string"==typeof e){console.assert(!this._sprites[e],"Alias "+e+" is already taken");var i=new SoundSprite(this,t);return this._sprites[e]=i,i}},e.prototype.destroy=function(){this._removeInstances(),this.removeSprites(),this.media.destroy(),this.media=null,this._sprites=null,this._instances=null},e.prototype.removeSprites=function(e){if(e){var t=this._sprites[e];void 0!==t&&(t.destroy(),delete this._sprites[e])}else for(var n in this._sprites)this.removeSprites(n);return this},Object.defineProperty(e.prototype,"isPlayable",{get:function(){return this.isLoaded&&this.media&&this.media.isPlayable},enumerable:!0,configurable:!0}),e.prototype.stop=function(){if(!this.isPlayable)return this.autoPlay=!1,this._autoPlayOptions=null,this;this.isPlaying=!1;for(var e=this._instances.length-1;e>=0;e--)this._instances[e].stop();return this},e.prototype.play=function(e,t){var n,o=this;if("string"==typeof e?n={sprite:r=e,complete:t}:"function"==typeof e?(n={}).complete=e:n=e,(n=Object.assign({complete:null,loaded:null,sprite:null,end:null,start:0,volume:1,speed:1,muted:!1,loop:!1},n||{})).sprite){var i=n.sprite;console.assert(!!this._sprites[i],"Alias "+i+" is not available");var r=this._sprites[i];n.start=r.start,n.end=r.end,n.speed=r.speed||1,delete n.sprite}if(n.offset&&(n.start=n.offset),!this.isLoaded)return new Promise(function(e,t){o.autoPlay=!0,o._autoPlayOptions=n,o._preload(function(o,i,r){o?t(o):(n.loaded&&n.loaded(o,i,r),e(r))})});this.singleInstance&&this._removeInstances();var s=this._createInstance();return this._instances.push(s),this.isPlaying=!0,s.once("end",function(){n.complete&&n.complete(o),o._onComplete(s)}),s.once("stop",function(){o._onComplete(s)}),s.play(n),s},e.prototype.refresh=function(){for(var e=this._instances.length,t=0;t<e;t++)this._instances[t].refresh()},e.prototype.refreshPaused=function(){for(var e=this._instances.length,t=0;t<e;t++)this._instances[t].refreshPaused()},Object.defineProperty(e.prototype,"volume",{get:function(){return this._volume},set:function(e){this._volume=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"muted",{get:function(){return this._muted},set:function(e){this._muted=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"loop",{get:function(){return this._loop},set:function(e){this._loop=e,this.refresh()},enumerable:!0,configurable:!0}),e.prototype._preload=function(e){this.media.load(e)},Object.defineProperty(e.prototype,"instances",{get:function(){return this._instances},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"sprites",{get:function(){return this._sprites},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"duration",{get:function(){return this.media.duration},enumerable:!0,configurable:!0}),e.prototype.autoPlayStart=function(){var e;return this.autoPlay&&(e=this.play(this._autoPlayOptions)),e},e.prototype._removeInstances=function(){for(var e=this._instances.length-1;e>=0;e--)this._poolInstance(this._instances[e]);this._instances.length=0},e.prototype._onComplete=function(e){if(this._instances){var t=this._instances.indexOf(e);t>-1&&this._instances.splice(t,1),this.isPlaying=this._instances.length>0}this._poolInstance(e)},e.prototype._createInstance=function(){if(e._pool.length>0){var t=e._pool.pop();return t.init(this.media),t}return this.media.create()},e.prototype._poolInstance=function(t){t.destroy(),e._pool.indexOf(t)<0&&e._pool.push(t)},e._pool=[],e}(),sound=SoundLibrary.init();
+function __extends(e,t){function n(){this.constructor=e}extendStatics(e,t),e.prototype=null===t?Object.create(t):(n.prototype=t.prototype,new n)}function createCommonjsModule(e,t){return t={exports:{}},e(t,t.exports),t.exports}if("undefined"==typeof PIXI)throw"PixiJS required";var Filterable=function(){function e(e,t){this._output=t,this._input=e}return Object.defineProperty(e.prototype,"destination",{get:function(){return this._input},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"filters",{get:function(){return this._filters},set:function(e){var t=this;if(this._filters&&(this._filters.forEach(function(e){e&&e.disconnect()}),this._filters=null,this._input.connect(this._output)),e&&e.length){this._filters=e.slice(0),this._input.disconnect();var n=null;e.forEach(function(e){null===n?t._input.connect(e.destination):n.connect(e.destination),n=e}),n.connect(this._output)}},enumerable:!0,configurable:!0}),e.prototype.destroy=function(){this.filters=null,this._input=null,this._output=null},e}(),extendStatics=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var n in t)t.hasOwnProperty(n)&&(e[n]=t[n])},id=0,HTMLAudioInstance=function(e){function t(t){var n=e.call(this)||this;return n.id=id++,n.init(t),n}return __extends(t,e),Object.defineProperty(t.prototype,"progress",{get:function(){return this._source.currentTime/this._duration},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"paused",{get:function(){return this._paused},set:function(e){this._paused=e,this.refreshPaused()},enumerable:!0,configurable:!0}),t.prototype._onPlay=function(){this._playing=!0},t.prototype._onPause=function(){this._playing=!1},t.prototype.init=function(e){this._playing=!1,this._duration=e.source.duration;var t=this._source=e.source.cloneNode(!1);t.src=e.parent.url,t.onplay=this._onPlay.bind(this),t.onpause=this._onPause.bind(this),e.context.on("refresh",this.refresh,this),e.context.on("refreshPaused",this.refreshPaused,this),this._media=e},t.prototype._internalStop=function(){this._source&&this._playing&&(this._source.onended=null,this._source.pause())},t.prototype.stop=function(){this._internalStop(),this._source&&this.emit("stop")},Object.defineProperty(t.prototype,"speed",{get:function(){return this._speed},set:function(e){this._speed=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"volume",{get:function(){return this._volume},set:function(e){this._volume=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"loop",{get:function(){return this._loop},set:function(e){this._loop=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"muted",{get:function(){return this._muted},set:function(e){this._muted=e,this.refresh()},enumerable:!0,configurable:!0}),t.prototype.refresh=function(){var e=this._media.context,t=this._media.parent;this._source.loop=this._loop||t.loop;var n=e.volume*(e.muted?0:1),o=t.volume*(t.muted?0:1),i=this._volume*(this._muted?0:1);this._source.volume=i*n*o,this._source.playbackRate=this._speed*e.speed*t.speed},t.prototype.refreshPaused=function(){var e=this._media.context,t=this._media.parent,n=this._paused||t.paused||e.paused;n!==this._pausedReal&&(this._pausedReal=n,n?(this._internalStop(),this.emit("paused")):(this.emit("resumed"),this.play({start:this._source.currentTime,end:this._end,volume:this._volume,speed:this._speed,loop:this._loop})),this.emit("pause",n))},t.prototype.play=function(e){var n=this,o=e.start,i=e.end,r=e.speed,s=e.loop,u=e.volume,a=e.muted;i&&console.assert(i>o,"End time is before start time"),this._speed=r,this._volume=u,this._loop=!!s,this._muted=a,this.refresh(),this.loop&&null!==i&&(console.warn('Looping not support when specifying an "end" time'),this.loop=!1),this._start=o,this._end=i||this._duration,this._start=Math.max(0,this._start-t.PADDING),this._end=Math.min(this._end+t.PADDING,this._duration),this._source.onloadedmetadata=function(){n._source&&(n._source.currentTime=o,n._source.onloadedmetadata=null,n.emit("progress",o,n._duration),PIXI.ticker.shared.add(n._onUpdate,n))},this._source.onended=this._onComplete.bind(this),this._source.play(),this.emit("start")},t.prototype._onUpdate=function(){this.emit("progress",this.progress,this._duration),this._source.currentTime>=this._end&&!this._source.loop&&this._onComplete()},t.prototype._onComplete=function(){PIXI.ticker.shared.remove(this._onUpdate,this),this._internalStop(),this.emit("progress",1,this._duration),this.emit("end",this)},t.prototype.destroy=function(){PIXI.ticker.shared.remove(this._onUpdate,this),this.removeAllListeners();var e=this._source;e&&(e.onended=null,e.onplay=null,e.onpause=null,this._internalStop()),this._source=null,this._speed=1,this._volume=1,this._loop=!1,this._end=null,this._start=0,this._duration=0,this._playing=!1,this._pausedReal=!1,this._paused=!1,this._muted=!1,this._media&&(this._media.context.off("refresh",this.refresh,this),this._media.context.off("refreshPaused",this.refreshPaused,this),this._media=null)},t.prototype.toString=function(){return"[HTMLAudioInstance id="+this.id+"]"},t.PADDING=.1,t}(PIXI.utils.EventEmitter),HTMLAudioMedia=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return __extends(t,e),t.prototype.init=function(e){this.parent=e,this._source=e.options.source||new Audio,e.url&&(this._source.src=e.url)},t.prototype.create=function(){return new HTMLAudioInstance(this)},Object.defineProperty(t.prototype,"isPlayable",{get:function(){return!!this._source&&4===this._source.readyState},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"duration",{get:function(){return this._source.duration},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"context",{get:function(){return this.parent.context},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"filters",{get:function(){return null},set:function(e){console.warn("HTML Audio does not support filters")},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){this.removeAllListeners(),this.parent=null,this._source&&(this._source.src="",this._source.load(),this._source=null)},Object.defineProperty(t.prototype,"source",{get:function(){return this._source},enumerable:!0,configurable:!0}),t.prototype.load=function(e){var t=this._source,n=this.parent;if(4===t.readyState){n.isLoaded=!0;var o=n.autoPlayStart();return void(e&&setTimeout(function(){e(null,n,o)},0))}if(!n.url)return e(new Error("sound.url or sound.source must be set"));t.src=n.url;var i=function(){t.removeEventListener("canplaythrough",r),t.removeEventListener("load",r),t.removeEventListener("abort",s),t.removeEventListener("error",u)},r=function(){i(),n.isLoaded=!0;var t=n.autoPlayStart();e&&e(null,n,t)},s=function(){i(),e&&e(new Error("Sound loading has been aborted"))},u=function(){i();var n="Failed to load audio element (code: "+t.error.code+")";e?e(new Error(n)):console.error(n)};t.addEventListener("canplaythrough",r,!1),t.addEventListener("load",r,!1),t.addEventListener("abort",s,!1),t.addEventListener("error",u,!1),t.load()},t}(PIXI.utils.EventEmitter),commonjsGlobal="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{},promise=createCommonjsModule(function(e){!function(t){function n(){}function o(e,t){return function(){e.apply(t,arguments)}}function i(e){if(!(this instanceof i))throw new TypeError("Promises must be constructed via new");if("function"!=typeof e)throw new TypeError("not a function");this._state=0,this._handled=!1,this._value=void 0,this._deferreds=[],l(e,this)}function r(e,t){for(;3===e._state;)e=e._value;if(0===e._state)return void e._deferreds.push(t);e._handled=!0,i._immediateFn(function(){var n=1===e._state?t.onFulfilled:t.onRejected;if(null===n)return void(1===e._state?s:u)(t.promise,e._value);var o;try{o=n(e._value)}catch(e){return void u(t.promise,e)}s(t.promise,o)})}function s(e,t){try{if(t===e)throw new TypeError("A promise cannot be resolved with itself.");if(t&&("object"==typeof t||"function"==typeof t)){var n=t.then;if(t instanceof i)return e._state=3,e._value=t,void a(e);if("function"==typeof n)return void l(o(n,t),e)}e._state=1,e._value=t,a(e)}catch(t){u(e,t)}}function u(e,t){e._state=2,e._value=t,a(e)}function a(e){2===e._state&&0===e._deferreds.length&&i._immediateFn(function(){e._handled||i._unhandledRejectionFn(e._value)});for(var t=0,n=e._deferreds.length;t<n;t++)r(e,e._deferreds[t]);e._deferreds=null}function c(e,t,n){this.onFulfilled="function"==typeof e?e:null,this.onRejected="function"==typeof t?t:null,this.promise=n}function l(e,t){var n=!1;try{e(function(e){n||(n=!0,s(t,e))},function(e){n||(n=!0,u(t,e))})}catch(e){if(n)return;n=!0,u(t,e)}}var d=setTimeout;i.prototype.catch=function(e){return this.then(null,e)},i.prototype.then=function(e,t){var o=new this.constructor(n);return r(this,new c(e,t,o)),o},i.all=function(e){return new i(function(t,n){function o(e,s){try{if(s&&("object"==typeof s||"function"==typeof s)){var u=s.then;if("function"==typeof u)return void u.call(s,function(t){o(e,t)},n)}i[e]=s,0==--r&&t(i)}catch(e){n(e)}}if(!e||void 0===e.length)throw new TypeError("Promise.all accepts an array");var i=Array.prototype.slice.call(e);if(0===i.length)return t([]);for(var r=i.length,s=0;s<i.length;s++)o(s,i[s])})},i.resolve=function(e){return e&&"object"==typeof e&&e.constructor===i?e:new i(function(t){t(e)})},i.reject=function(e){return new i(function(t,n){n(e)})},i.race=function(e){return new i(function(t,n){for(var o=0,i=e.length;o<i;o++)e[o].then(t,n)})},i._immediateFn="function"==typeof setImmediate&&function(e){setImmediate(e)}||function(e){d(e,0)},i._unhandledRejectionFn=function(e){"undefined"!=typeof console&&console&&console.warn("Possible Unhandled Promise Rejection:",e)},i._setImmediateFn=function(e){i._immediateFn=e},i._setUnhandledRejectionFn=function(e){i._unhandledRejectionFn=e},e.exports?e.exports=i:t.Promise||(t.Promise=i)}(commonjsGlobal)}),Filter=function(){function e(e,t){this.destination=e,this.source=t||e}return e.prototype.connect=function(e){this.source.connect(e)},e.prototype.disconnect=function(){this.source.disconnect()},e.prototype.destroy=function(){this.disconnect(),this.destination=null,this.source=null},e}(),WebAudioUtils=function(){function e(){}return e.setParamValue=function(e,t){if(e.setValueAtTime){var n=SoundLibrary.instance.context;e.setValueAtTime(t,n.audioContext.currentTime)}else e.value=t;return t},e}(),EqualizerFilter=function(e){function t(n,o,i,r,s,u,a,c,l,d){void 0===n&&(n=0),void 0===o&&(o=0),void 0===i&&(i=0),void 0===r&&(r=0),void 0===s&&(s=0),void 0===u&&(u=0),void 0===a&&(a=0),void 0===c&&(c=0),void 0===l&&(l=0),void 0===d&&(d=0);var p=this;if(SoundLibrary.instance.useLegacy)return void(p=e.call(this,null)||this);var h=[{f:t.F32,type:"lowshelf",gain:n},{f:t.F64,type:"peaking",gain:o},{f:t.F125,type:"peaking",gain:i},{f:t.F250,type:"peaking",gain:r},{f:t.F500,type:"peaking",gain:s},{f:t.F1K,type:"peaking",gain:u},{f:t.F2K,type:"peaking",gain:a},{f:t.F4K,type:"peaking",gain:c},{f:t.F8K,type:"peaking",gain:l},{f:t.F16K,type:"highshelf",gain:d}].map(function(e){var t=SoundLibrary.instance.context.audioContext.createBiquadFilter();return t.type=e.type,WebAudioUtils.setParamValue(t.gain,e.gain),WebAudioUtils.setParamValue(t.Q,1),WebAudioUtils.setParamValue(t.frequency,e.f),t});(p=e.call(this,h[0],h[h.length-1])||this).bands=h,p.bandsMap={};for(var f=0;f<p.bands.length;f++){var _=p.bands[f];f>0&&p.bands[f-1].connect(_),p.bandsMap[_.frequency.value]=_}return p}return __extends(t,e),t.prototype.setGain=function(e,t){if(void 0===t&&(t=0),!this.bandsMap[e])throw"No band found for frequency "+e;WebAudioUtils.setParamValue(this.bandsMap[e].gain,t)},t.prototype.getGain=function(e){if(!this.bandsMap[e])throw"No band found for frequency "+e;return this.bandsMap[e].gain.value},Object.defineProperty(t.prototype,"f32",{get:function(){return this.getGain(t.F32)},set:function(e){this.setGain(t.F32,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f64",{get:function(){return this.getGain(t.F64)},set:function(e){this.setGain(t.F64,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f125",{get:function(){return this.getGain(t.F125)},set:function(e){this.setGain(t.F125,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f250",{get:function(){return this.getGain(t.F250)},set:function(e){this.setGain(t.F250,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f500",{get:function(){return this.getGain(t.F500)},set:function(e){this.setGain(t.F500,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f1k",{get:function(){return this.getGain(t.F1K)},set:function(e){this.setGain(t.F1K,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f2k",{get:function(){return this.getGain(t.F2K)},set:function(e){this.setGain(t.F2K,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f4k",{get:function(){return this.getGain(t.F4K)},set:function(e){this.setGain(t.F4K,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f8k",{get:function(){return this.getGain(t.F8K)},set:function(e){this.setGain(t.F8K,e)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"f16k",{get:function(){return this.getGain(t.F16K)},set:function(e){this.setGain(t.F16K,e)},enumerable:!0,configurable:!0}),t.prototype.reset=function(){this.bands.forEach(function(e){WebAudioUtils.setParamValue(e.gain,0)})},t.prototype.destroy=function(){this.bands.forEach(function(e){e.disconnect()}),this.bands=null,this.bandsMap=null},t.F32=32,t.F64=64,t.F125=125,t.F250=250,t.F500=500,t.F1K=1e3,t.F2K=2e3,t.F4K=4e3,t.F8K=8e3,t.F16K=16e3,t}(Filter),DistortionFilter=function(e){function t(t){void 0===t&&(t=0);var n=this;if(SoundLibrary.instance.useLegacy)return void(n=e.call(this,null)||this);var o=SoundLibrary.instance.context.audioContext.createWaveShaper();return n=e.call(this,o)||this,n._distortion=o,n.amount=t,n}return __extends(t,e),Object.defineProperty(t.prototype,"amount",{get:function(){return this._amount},set:function(e){e*=1e3,this._amount=e;for(var t,n=new Float32Array(44100),o=Math.PI/180,i=0;i<44100;++i)t=2*i/44100-1,n[i]=(3+e)*t*20*o/(Math.PI+e*Math.abs(t));this._distortion.curve=n,this._distortion.oversample="4x"},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){this._distortion=null,e.prototype.destroy.call(this)},t}(Filter),StereoFilter=function(e){function t(t){void 0===t&&(t=0);var n=this;if(SoundLibrary.instance.useLegacy)return void(n=e.call(this,null)||this);var o,i,r,s=SoundLibrary.instance.context.audioContext;return s.createStereoPanner?r=o=s.createStereoPanner():((i=s.createPanner()).panningModel="equalpower",r=i),n=e.call(this,r)||this,n._stereo=o,n._panner=i,n.pan=t,n}return __extends(t,e),Object.defineProperty(t.prototype,"pan",{get:function(){return this._pan},set:function(e){this._pan=e,this._stereo?WebAudioUtils.setParamValue(this._stereo.pan,e):this._panner.setPosition(e,0,1-Math.abs(e))},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){e.prototype.destroy.call(this),this._stereo=null,this._panner=null},t}(Filter),ReverbFilter=function(e){function t(t,n,o){void 0===t&&(t=3),void 0===n&&(n=2),void 0===o&&(o=!1);var i=this;if(SoundLibrary.instance.useLegacy)return void(i=e.call(this,null)||this);var r=SoundLibrary.instance.context.audioContext.createConvolver();return i=e.call(this,r)||this,i._convolver=r,i._seconds=i._clamp(t,1,50),i._decay=i._clamp(n,0,100),i._reverse=o,i._rebuild(),i}return __extends(t,e),t.prototype._clamp=function(e,t,n){return Math.min(n,Math.max(t,e))},Object.defineProperty(t.prototype,"seconds",{get:function(){return this._seconds},set:function(e){this._seconds=this._clamp(e,1,50),this._rebuild()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"decay",{get:function(){return this._decay},set:function(e){this._decay=this._clamp(e,0,100),this._rebuild()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"reverse",{get:function(){return this._reverse},set:function(e){this._reverse=e,this._rebuild()},enumerable:!0,configurable:!0}),t.prototype._rebuild=function(){for(var e,t=SoundLibrary.instance.context.audioContext,n=t.sampleRate,o=n*this._seconds,i=t.createBuffer(2,o,n),r=i.getChannelData(0),s=i.getChannelData(1),u=0;u<o;u++)e=this._reverse?o-u:u,r[u]=(2*Math.random()-1)*Math.pow(1-e/o,this._decay),s[u]=(2*Math.random()-1)*Math.pow(1-e/o,this._decay);this._convolver.buffer=i},t.prototype.destroy=function(){this._convolver=null,e.prototype.destroy.call(this)},t}(Filter),MonoFilter=function(e){function t(){var t=this;SoundLibrary.instance.useLegacy&&(t=e.call(this,null)||this);var n=SoundLibrary.instance.context.audioContext,o=n.createChannelSplitter(),i=n.createChannelMerger();return i.connect(o),t=e.call(this,i,o)||this,t._merger=i,t}return __extends(t,e),t.prototype.destroy=function(){this._merger.disconnect(),this._merger=null,e.prototype.destroy.call(this)},t}(Filter),TelephoneFilter=function(e){function t(){if(SoundLibrary.instance.useLegacy)return void(e.call(this,null)||this);var t=SoundLibrary.instance.context.audioContext,n=t.createBiquadFilter(),o=t.createBiquadFilter(),i=t.createBiquadFilter(),r=t.createBiquadFilter();return n.type="lowpass",WebAudioUtils.setParamValue(n.frequency,2e3),o.type="lowpass",WebAudioUtils.setParamValue(o.frequency,2e3),i.type="highpass",WebAudioUtils.setParamValue(i.frequency,500),r.type="highpass",WebAudioUtils.setParamValue(r.frequency,500),n.connect(o),o.connect(i),i.connect(r),e.call(this,n,r)||this}return __extends(t,e),t}(Filter),filters=Object.freeze({Filter:Filter,EqualizerFilter:EqualizerFilter,DistortionFilter:DistortionFilter,StereoFilter:StereoFilter,ReverbFilter:ReverbFilter,MonoFilter:MonoFilter,TelephoneFilter:TelephoneFilter}),HTMLAudioContext=function(e){function t(){var t=e.call(this)||this;return t.speed=1,t.volume=1,t.muted=!1,t.paused=!1,t}return __extends(t,e),t.prototype.refresh=function(){this.emit("refresh")},t.prototype.refreshPaused=function(){this.emit("refreshPaused")},Object.defineProperty(t.prototype,"filters",{get:function(){return console.warn("HTML Audio does not support filters"),null},set:function(e){console.warn("HTML Audio does not support filters")},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"audioContext",{get:function(){return console.warn("HTML Audio does not support audioContext"),null},enumerable:!0,configurable:!0}),t.prototype.toggleMute=function(){return this.muted=!this.muted,this.refresh(),this.muted},t.prototype.togglePause=function(){return this.paused=!this.paused,this.refreshPaused(),this.paused},t.prototype.destroy=function(){this.removeAllListeners()},t}(PIXI.utils.EventEmitter),htmlaudio=Object.freeze({HTMLAudioMedia:HTMLAudioMedia,HTMLAudioInstance:HTMLAudioInstance,HTMLAudioContext:HTMLAudioContext}),id$1=0,WebAudioInstance=function(e){function t(t){var n=e.call(this)||this;return n.id=id$1++,n._media=null,n._paused=!1,n._muted=!1,n._elapsed=0,n._updateListener=n._update.bind(n),n.init(t),n}return __extends(t,e),t.prototype.stop=function(){this._source&&(this._internalStop(),this.emit("stop"))},Object.defineProperty(t.prototype,"speed",{get:function(){return this._speed},set:function(e){this._speed=e,this.refresh(),this._update(!0)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"volume",{get:function(){return this._volume},set:function(e){this._volume=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"muted",{get:function(){return this._muted},set:function(e){this._muted=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"loop",{get:function(){return this._loop},set:function(e){this._loop=e,this.refresh()},enumerable:!0,configurable:!0}),t.prototype.refresh=function(){var e=this._media.context,t=this._media.parent;this._source.loop=this._loop||t.loop;var n=e.volume*(e.muted?0:1),o=t.volume*(t.muted?0:1),i=this._volume*(this._muted?0:1);WebAudioUtils.setParamValue(this._gain.gain,i*o*n),WebAudioUtils.setParamValue(this._source.playbackRate,this._speed*t.speed*e.speed)},t.prototype.refreshPaused=function(){var e=this._media.context,t=this._media.parent,n=this._paused||t.paused||e.paused;n!==this._pausedReal&&(this._pausedReal=n,n?(this._internalStop(),this.emit("paused")):(this.emit("resumed"),this.play({start:this._elapsed%this._duration,end:this._end,speed:this._speed,loop:this._loop,volume:this._volume})),this.emit("pause",n))},t.prototype.play=function(e){var t=e.start,n=e.end,o=e.speed,i=e.loop,r=e.volume,s=e.muted;n&&console.assert(n>t,"End time is before start time"),this._paused=!1;var u=this._media.nodes.cloneBufferSource(),a=u.source,c=u.gain;this._source=a,this._gain=c,this._speed=o,this._volume=r,this._loop=!!i,this._muted=s,this.refresh(),this.loop&&null!==n&&(console.warn('Looping not support when specifying an "end" time'),this.loop=!1),this._end=n;var l=this._source.buffer.duration;this._duration=l,this._lastUpdate=this._now(),this._elapsed=t,this._source.onended=this._onComplete.bind(this),n?this._source.start(0,t,n-t):this._source.start(0,t),this.emit("start"),this._update(!0),this._enabled=!0},t.prototype._toSec=function(e){return e>10&&(e/=1e3),e||0},Object.defineProperty(t.prototype,"_enabled",{set:function(e){var t=this._media.nodes.script;t.removeEventListener("audioprocess",this._updateListener),e&&t.addEventListener("audioprocess",this._updateListener)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"progress",{get:function(){return this._progress},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"paused",{get:function(){return this._paused},set:function(e){this._paused=e,this.refreshPaused()},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){this.removeAllListeners(),this._internalStop(),this._source&&(this._source.disconnect(),this._source=null),this._gain&&(this._gain.disconnect(),this._gain=null),this._media&&(this._media.context.events.off("refresh",this.refresh,this),this._media.context.events.off("refreshPaused",this.refreshPaused,this),this._media=null),this._end=null,this._speed=1,this._volume=1,this._loop=!1,this._elapsed=0,this._duration=0,this._paused=!1,this._muted=!1,this._pausedReal=!1},t.prototype.toString=function(){return"[WebAudioInstance id="+this.id+"]"},t.prototype._now=function(){return this._media.context.audioContext.currentTime},t.prototype._update=function(e){if(void 0===e&&(e=!1),this._source){var t=this._now(),n=t-this._lastUpdate;if(n>0||e){var o=this._source.playbackRate.value;this._elapsed+=n*o,this._lastUpdate=t;var i=this._duration,r=this._elapsed%i/i;this._progress=r,this.emit("progress",this._progress,i)}}},t.prototype.init=function(e){this._media=e,e.context.events.on("refresh",this.refresh,this),e.context.events.on("refreshPaused",this.refreshPaused,this)},t.prototype._internalStop=function(){this._source&&(this._enabled=!1,this._source.onended=null,this._source.stop(0),this._source=null)},t.prototype._onComplete=function(){this._source&&(this._enabled=!1,this._source.onended=null),this._source=null,this._progress=1,this.emit("progress",1,this._duration),this.emit("end",this)},t}(PIXI.utils.EventEmitter),WebAudioNodes=function(e){function t(n){var o=this,i=n.audioContext,r=i.createBufferSource(),s=i.createScriptProcessor(t.BUFFER_SIZE),u=i.createGain(),a=i.createAnalyser();return r.connect(a),a.connect(u),u.connect(n.destination),s.connect(n.destination),o=e.call(this,a,u)||this,o.context=n,o.bufferSource=r,o.script=s,o.gain=u,o.analyser=a,o}return __extends(t,e),t.prototype.destroy=function(){e.prototype.destroy.call(this),this.bufferSource.disconnect(),this.script.disconnect(),this.gain.disconnect(),this.analyser.disconnect(),this.bufferSource=null,this.script=null,this.gain=null,this.analyser=null,this.context=null},t.prototype.cloneBufferSource=function(){var e=this.bufferSource,t=this.context.audioContext.createBufferSource();t.buffer=e.buffer,WebAudioUtils.setParamValue(t.playbackRate,e.playbackRate.value),t.loop=e.loop;var n=this.context.audioContext.createGain();return t.connect(n),n.connect(this.destination),{source:t,gain:n}},t.BUFFER_SIZE=256,t}(Filterable),WebAudioMedia=function(){function e(){}return e.prototype.init=function(e){this.parent=e,this._nodes=new WebAudioNodes(this.context),this._source=this._nodes.bufferSource,this.source=e.options.source},e.prototype.destroy=function(){this.parent=null,this._nodes.destroy(),this._nodes=null,this._source=null,this.source=null},e.prototype.create=function(){return new WebAudioInstance(this)},Object.defineProperty(e.prototype,"context",{get:function(){return this.parent.context},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"isPlayable",{get:function(){return!!this._source&&!!this._source.buffer},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"filters",{get:function(){return this._nodes.filters},set:function(e){this._nodes.filters=e},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"duration",{get:function(){return console.assert(this.isPlayable,"Sound not yet playable, no duration"),this._source.buffer.duration},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"buffer",{get:function(){return this._source.buffer},set:function(e){this._source.buffer=e},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"nodes",{get:function(){return this._nodes},enumerable:!0,configurable:!0}),e.prototype.load=function(e){this.source?this._decode(this.source,e):this.parent.url?this._loadUrl(e):e?e(new Error("sound.url or sound.source must be set")):console.error("sound.url or sound.source must be set")},e.prototype._loadUrl=function(e){var t=this,n=new XMLHttpRequest,o=this.parent.url;n.open("GET",o,!0),n.responseType="arraybuffer",n.onload=function(){t.source=n.response,t._decode(n.response,e)},n.send()},e.prototype._decode=function(e,t){var n=this;this.parent.context.decode(e,function(e,o){if(e)t&&t(e);else{n.parent.isLoaded=!0,n.buffer=o;var i=n.parent.autoPlayStart();t&&t(null,n.parent,i)}})},e}(),SoundUtils=function(){function e(){}return e.resolveUrl=function(t){var n=e.FORMAT_PATTERN,o="string"==typeof t?t:t.url;if(n.test(o)){for(var i=n.exec(o),r=i[2].split(","),s=r[r.length-1],u=0,a=r.length;u<a;u++){var c=r[u];if(e.supported[c]){s=c;break}}var l=o.replace(i[1],s);return"string"!=typeof t&&(t.extension=s,t.url=l),l}return o},e.sineTone=function(e,t){void 0===e&&(e=200),void 0===t&&(t=1);var n=Sound.from({singleInstance:!0});if(!(n.media instanceof WebAudioMedia))return n;for(var o=n.media,i=n.context.audioContext.createBuffer(1,48e3*t,48e3),r=i.getChannelData(0),s=0;s<r.length;s++){var u=e*(s/i.sampleRate)*Math.PI;r[s]=2*Math.sin(u)}return o.buffer=i,n.isLoaded=!0,n},e.render=function(e,t){var n=document.createElement("canvas");t=Object.assign({width:512,height:128,fill:"black"},t||{}),n.width=t.width,n.height=t.height;var o=PIXI.BaseTexture.fromCanvas(n);if(!(e.media instanceof WebAudioMedia))return o;var i=e.media;console.assert(!!i.buffer,"No buffer found, load first");var r=n.getContext("2d");r.fillStyle=t.fill;for(var s=i.buffer.getChannelData(0),u=Math.ceil(s.length/t.width),a=t.height/2,c=0;c<t.width;c++){for(var l=1,d=-1,p=0;p<u;p++){var h=s[c*u+p];h<l&&(l=h),h>d&&(d=h)}r.fillRect(c,(1+l)*a,1,Math.max(1,(d-l)*a))}return o},e.playOnce=function(t,n){var o="alias"+e.PLAY_ID++;return SoundLibrary.instance.add(o,{url:t,preload:!0,autoPlay:!0,loaded:function(e){e&&(console.error(e),SoundLibrary.instance.remove(o),n&&n(e))},complete:function(){SoundLibrary.instance.remove(o),n&&n(null)}}),o},e.PLAY_ID=0,e.FORMAT_PATTERN=/\.(\{([^\}]+)\})(\?.*)?$/,e.extensions=["mp3","ogg","oga","opus","mpeg","wav","m4a","mp4","aiff","wma","mid"],e.supported=function(){var t={m4a:"mp4",oga:"ogg"},n=document.createElement("audio"),o={};return e.extensions.forEach(function(e){var i=t[e]||e,r=n.canPlayType("audio/"+e).replace(/^no$/,""),s=n.canPlayType("audio/"+i).replace(/^no$/,"");o[e]=!!r||!!s}),Object.freeze(o)}(),e}(),Loader=function(e){function t(t,n){var o=e.call(this,t,n)||this;return o.use(LoaderMiddleware.plugin),o.pre(LoaderMiddleware.resolve),o}return __extends(t,e),t.addPixiMiddleware=function(t){e.addPixiMiddleware.call(this,t)},t}(PIXI.loaders.Loader),LoaderMiddleware=function(){function e(){}return e.install=function(t){e._sound=t,e.legacy=t.useLegacy,PIXI.loaders.Loader=Loader,PIXI.loader.use(e.plugin),PIXI.loader.pre(e.resolve)},Object.defineProperty(e,"legacy",{set:function(e){var t=PIXI.loaders.Resource,n=SoundUtils.extensions;e?n.forEach(function(e){t.setExtensionXhrType(e,t.XHR_RESPONSE_TYPE.DEFAULT),t.setExtensionLoadType(e,t.LOAD_TYPE.AUDIO)}):n.forEach(function(e){t.setExtensionXhrType(e,t.XHR_RESPONSE_TYPE.BUFFER),t.setExtensionLoadType(e,t.LOAD_TYPE.XHR)})},enumerable:!0,configurable:!0}),e.resolve=function(e,t){SoundUtils.resolveUrl(e),t()},e.plugin=function(t,n){t.data&&SoundUtils.extensions.indexOf(t.extension)>-1?t.sound=e._sound.add(t.name,{loaded:n,preload:!0,url:t.url,source:t.data}):n()},e}(),SoundSprite=function(){function e(e,t){this.parent=e,Object.assign(this,t),this.duration=this.end-this.start,console.assert(this.duration>0,"End time must be after start time")}return e.prototype.play=function(e){return this.parent.play(Object.assign({complete:e,speed:this.speed||this.parent.speed,end:this.end,start:this.start}))},e.prototype.destroy=function(){this.parent=null},e}(),WebAudioContext=function(e){function t(){var n=this,o=new t.AudioContext,i=o.createDynamicsCompressor(),r=o.createAnalyser();return r.connect(i),i.connect(o.destination),n=e.call(this,r,i)||this,n._ctx=o,n._offlineCtx=new t.OfflineAudioContext(1,2,o.sampleRate),n._unlocked=!1,n.compressor=i,n.analyser=r,n.events=new PIXI.utils.EventEmitter,n.volume=1,n.speed=1,n.muted=!1,n.paused=!1,"running"!==o.state&&(n._unlock(),n._unlock=n._unlock.bind(n),document.addEventListener("mousedown",n._unlock,!0),document.addEventListener("touchstart",n._unlock,!0),document.addEventListener("touchend",n._unlock,!0)),n}return __extends(t,e),t.prototype._unlock=function(){this._unlocked||(this.playEmptySound(),"running"===this._ctx.state&&(document.removeEventListener("mousedown",this._unlock,!0),document.removeEventListener("touchend",this._unlock,!0),document.removeEventListener("touchstart",this._unlock,!0),this._unlocked=!0))},t.prototype.playEmptySound=function(){var e=this._ctx.createBufferSource();e.buffer=this._ctx.createBuffer(1,1,22050),e.connect(this._ctx.destination),e.start(0,0,0),"suspended"===e.context.state&&e.context.resume()},Object.defineProperty(t,"AudioContext",{get:function(){var e=window;return e.AudioContext||e.webkitAudioContext||null},enumerable:!0,configurable:!0}),Object.defineProperty(t,"OfflineAudioContext",{get:function(){var e=window;return e.OfflineAudioContext||e.webkitOfflineAudioContext||null},enumerable:!0,configurable:!0}),t.prototype.destroy=function(){e.prototype.destroy.call(this);var t=this._ctx;void 0!==t.close&&t.close(),this.events.removeAllListeners(),this.analyser.disconnect(),this.compressor.disconnect(),this.analyser=null,this.compressor=null,this.events=null,this._offlineCtx=null,this._ctx=null},Object.defineProperty(t.prototype,"audioContext",{get:function(){return this._ctx},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"offlineContext",{get:function(){return this._offlineCtx},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"paused",{get:function(){return this._paused},set:function(e){e&&"running"===this._ctx.state?this._ctx.suspend():e||"suspended"!==this._ctx.state||this._ctx.resume(),this._paused=e},enumerable:!0,configurable:!0}),t.prototype.refresh=function(){this.events.emit("refresh")},t.prototype.refreshPaused=function(){this.events.emit("refreshPaused")},t.prototype.toggleMute=function(){return this.muted=!this.muted,this.refresh(),this.muted},t.prototype.togglePause=function(){return this.paused=!this.paused,this.refreshPaused(),this._paused},t.prototype.decode=function(e,t){this._offlineCtx.decodeAudioData(e,function(e){t(null,e)},function(){t(new Error("Unable to decode file"))})},t}(Filterable),webaudio=Object.freeze({WebAudioMedia:WebAudioMedia,WebAudioInstance:WebAudioInstance,WebAudioNodes:WebAudioNodes,WebAudioContext:WebAudioContext,WebAudioUtils:WebAudioUtils}),SoundLibrary=function(){function e(){this.init()}return e.prototype.init=function(){return this.supported&&(this._webAudioContext=new WebAudioContext),this._htmlAudioContext=new HTMLAudioContext,this._sounds={},this.useLegacy=!this.supported,this},Object.defineProperty(e.prototype,"context",{get:function(){return this._context},enumerable:!0,configurable:!0}),e.init=function(){if(e.instance)throw new Error("SoundLibrary is already created");var t=e.instance=new e;"undefined"==typeof Promise&&(window.Promise=promise),void 0!==PIXI.loaders&&LoaderMiddleware.install(t),void 0===window.__pixiSound&&delete window.__pixiSound;var n=PIXI;return n.sound||(Object.defineProperty(n,"sound",{get:function(){return t}}),Object.defineProperties(t,{filters:{get:function(){return filters}},htmlaudio:{get:function(){return htmlaudio}},webaudio:{get:function(){return webaudio}},utils:{get:function(){return SoundUtils}},Sound:{get:function(){return Sound}},SoundSprite:{get:function(){return SoundSprite}},Filterable:{get:function(){return Filterable}},SoundLibrary:{get:function(){return e}}})),t},Object.defineProperty(e.prototype,"filtersAll",{get:function(){return this.useLegacy?[]:this._context.filters},set:function(e){this.useLegacy||(this._context.filters=e)},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"supported",{get:function(){return null!==WebAudioContext.AudioContext},enumerable:!0,configurable:!0}),e.prototype.add=function(e,t){if("object"==typeof e){var n={};for(var o in e){i=this._getOptions(e[o],t);n[o]=this.add(o,i)}return n}if("string"==typeof e){if(console.assert(!this._sounds[e],"Sound with alias "+e+" already exists."),t instanceof Sound)return this._sounds[e]=t,t;var i=this._getOptions(t),r=Sound.from(i);return this._sounds[e]=r,r}},e.prototype._getOptions=function(e,t){var n;return n="string"==typeof e?{url:e}:e instanceof ArrayBuffer||e instanceof HTMLAudioElement?{source:e}:e,Object.assign(n,t||{})},Object.defineProperty(e.prototype,"useLegacy",{get:function(){return this._useLegacy},set:function(e){LoaderMiddleware.legacy=e,this._useLegacy=e,!e&&this.supported?this._context=this._webAudioContext:this._context=this._htmlAudioContext},enumerable:!0,configurable:!0}),e.prototype.remove=function(e){return this.exists(e,!0),this._sounds[e].destroy(),delete this._sounds[e],this},Object.defineProperty(e.prototype,"volumeAll",{get:function(){return this._context.volume},set:function(e){this._context.volume=e,this._context.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"speedAll",{get:function(){return this._context.speed},set:function(e){this._context.speed=e,this._context.refresh()},enumerable:!0,configurable:!0}),e.prototype.togglePauseAll=function(){return this._context.togglePause()},e.prototype.pauseAll=function(){return this._context.paused=!0,this._context.refresh(),this},e.prototype.resumeAll=function(){return this._context.paused=!1,this._context.refresh(),this},e.prototype.toggleMuteAll=function(){return this._context.toggleMute()},e.prototype.muteAll=function(){return this._context.muted=!0,this._context.refresh(),this},e.prototype.unmuteAll=function(){return this._context.muted=!1,this._context.refresh(),this},e.prototype.removeAll=function(){for(var e in this._sounds)this._sounds[e].destroy(),delete this._sounds[e];return this},e.prototype.stopAll=function(){for(var e in this._sounds)this._sounds[e].stop();return this},e.prototype.exists=function(e,t){void 0===t&&(t=!1);var n=!!this._sounds[e];return t&&console.assert(n,"No sound matching alias '"+e+"'."),n},e.prototype.find=function(e){return this.exists(e,!0),this._sounds[e]},e.prototype.play=function(e,t){return this.find(e).play(t)},e.prototype.stop=function(e){return this.find(e).stop()},e.prototype.pause=function(e){return this.find(e).pause()},e.prototype.resume=function(e){return this.find(e).resume()},e.prototype.volume=function(e,t){var n=this.find(e);return void 0!==t&&(n.volume=t),n.volume},e.prototype.speed=function(e,t){var n=this.find(e);return void 0!==t&&(n.speed=t),n.speed},e.prototype.duration=function(e){return this.find(e).duration},e.prototype.close=function(){return this.removeAll(),this._sounds=null,this._webAudioContext&&(this._webAudioContext.destroy(),this._webAudioContext=null),this._htmlAudioContext&&(this._htmlAudioContext.destroy(),this._htmlAudioContext=null),this._context=null,this},e}(),Sound=function(){function e(e,t){this.media=e,this.options=t,this._instances=[],this._sprites={},this.media.init(this);var n=t.complete;this._autoPlayOptions=n?{complete:n}:null,this.isLoaded=!1,this.isPlaying=!1,this.autoPlay=t.autoPlay,this.singleInstance=t.singleInstance,this.preload=t.preload||this.autoPlay,this.url=t.url,this.speed=t.speed,this.volume=t.volume,this.loop=t.loop,t.sprites&&this.addSprites(t.sprites),this.preload&&this._preload(t.loaded)}return e.from=function(t){var n={};return"string"==typeof t?n.url=t:t instanceof ArrayBuffer||t instanceof HTMLAudioElement?n.source=t:n=t,(n=Object.assign({autoPlay:!1,singleInstance:!1,url:null,source:null,preload:!1,volume:1,speed:1,complete:null,loaded:null,loop:!1},n)).url&&(n.url=SoundUtils.resolveUrl(n.url)),Object.freeze(n),new e(SoundLibrary.instance.useLegacy?new HTMLAudioMedia:new WebAudioMedia,n)},Object.defineProperty(e.prototype,"context",{get:function(){return SoundLibrary.instance.context},enumerable:!0,configurable:!0}),e.prototype.pause=function(){return this.isPlaying=!1,this.paused=!0,this},e.prototype.resume=function(){return this.isPlaying=this._instances.length>0,this.paused=!1,this},Object.defineProperty(e.prototype,"paused",{get:function(){return this._paused},set:function(e){this._paused=e,this.refreshPaused()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"speed",{get:function(){return this._speed},set:function(e){this._speed=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"filters",{get:function(){return this.media.filters},set:function(e){this.media.filters=e},enumerable:!0,configurable:!0}),e.prototype.addSprites=function(e,t){if("object"==typeof e){var n={};for(var o in e)n[o]=this.addSprites(o,e[o]);return n}if("string"==typeof e){console.assert(!this._sprites[e],"Alias "+e+" is already taken");var i=new SoundSprite(this,t);return this._sprites[e]=i,i}},e.prototype.destroy=function(){this._removeInstances(),this.removeSprites(),this.media.destroy(),this.media=null,this._sprites=null,this._instances=null},e.prototype.removeSprites=function(e){if(e){var t=this._sprites[e];void 0!==t&&(t.destroy(),delete this._sprites[e])}else for(var n in this._sprites)this.removeSprites(n);return this},Object.defineProperty(e.prototype,"isPlayable",{get:function(){return this.isLoaded&&this.media&&this.media.isPlayable},enumerable:!0,configurable:!0}),e.prototype.stop=function(){if(!this.isPlayable)return this.autoPlay=!1,this._autoPlayOptions=null,this;this.isPlaying=!1;for(var e=this._instances.length-1;e>=0;e--)this._instances[e].stop();return this},e.prototype.play=function(e,t){var n,o=this;if("string"==typeof e?n={sprite:r=e,complete:t}:"function"==typeof e?(n={}).complete=e:n=e,(n=Object.assign({complete:null,loaded:null,sprite:null,end:null,start:0,volume:1,speed:1,muted:!1,loop:!1},n||{})).sprite){var i=n.sprite;console.assert(!!this._sprites[i],"Alias "+i+" is not available");var r=this._sprites[i];n.start=r.start,n.end=r.end,n.speed=r.speed||1,delete n.sprite}if(n.offset&&(n.start=n.offset),!this.isLoaded)return new Promise(function(e,t){o.autoPlay=!0,o._autoPlayOptions=n,o._preload(function(o,i,r){o?t(o):(n.loaded&&n.loaded(o,i,r),e(r))})});this.singleInstance&&this._removeInstances();var s=this._createInstance();return this._instances.push(s),this.isPlaying=!0,s.once("end",function(){n.complete&&n.complete(o),o._onComplete(s)}),s.once("stop",function(){o._onComplete(s)}),s.play(n),s},e.prototype.refresh=function(){for(var e=this._instances.length,t=0;t<e;t++)this._instances[t].refresh()},e.prototype.refreshPaused=function(){for(var e=this._instances.length,t=0;t<e;t++)this._instances[t].refreshPaused()},Object.defineProperty(e.prototype,"volume",{get:function(){return this._volume},set:function(e){this._volume=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"muted",{get:function(){return this._muted},set:function(e){this._muted=e,this.refresh()},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"loop",{get:function(){return this._loop},set:function(e){this._loop=e,this.refresh()},enumerable:!0,configurable:!0}),e.prototype._preload=function(e){this.media.load(e)},Object.defineProperty(e.prototype,"instances",{get:function(){return this._instances},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"sprites",{get:function(){return this._sprites},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"duration",{get:function(){return this.media.duration},enumerable:!0,configurable:!0}),e.prototype.autoPlayStart=function(){var e;return this.autoPlay&&(e=this.play(this._autoPlayOptions)),e},e.prototype._removeInstances=function(){for(var e=this._instances.length-1;e>=0;e--)this._poolInstance(this._instances[e]);this._instances.length=0},e.prototype._onComplete=function(e){if(this._instances){var t=this._instances.indexOf(e);t>-1&&this._instances.splice(t,1),this.isPlaying=this._instances.length>0}this._poolInstance(e)},e.prototype._createInstance=function(){if(e._pool.length>0){var t=e._pool.pop();return t.init(this.media),t}return this.media.create()},e.prototype._poolInstance=function(t){t.destroy(),e._pool.indexOf(t)<0&&e._pool.push(t)},e._pool=[],e}(),sound=SoundLibrary.init();
 //# sourceMappingURL=pixi-sound.es.js.map
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(28), __webpack_require__(322).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(28), __webpack_require__(323).setImmediate))
 
 /***/ }),
 /* 182 */,
@@ -31444,7 +31444,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   var Scene = function (options) {
     GameObject.call(this, options);
 
@@ -40903,8 +40903,19 @@ exports.default = deprecation;
 // provide method to give a stack track for warnings
 // useful for tracking-down where deprecated methods/properties/classes
 // are being used within the code
+
+// A map of warning messages already fired
+var warnings = {};
+
+// provide method to give a stack track for warnings
+// useful for tracking-down where deprecated methods/properties/classes
+// are being used within the code
 function warn(msg) {
-    // @if DEBUG
+    // Ignore duplicat
+    if (warnings[msg]) {
+        return;
+    }
+
     /* eslint-disable no-console */
     var stack = new Error().stack;
 
@@ -40925,7 +40936,8 @@ function warn(msg) {
         }
     }
     /* eslint-enable no-console */
-    // @endif
+
+    warnings[msg] = true;
 }
 
 function deprecation(core) {
@@ -47772,7 +47784,7 @@ var _resourceLoader = __webpack_require__(62);
 
 var _resourceLoader2 = _interopRequireDefault(_resourceLoader);
 
-var _blob = __webpack_require__(320);
+var _blob = __webpack_require__(321);
 
 var _eventemitter = __webpack_require__(40);
 
@@ -50324,6 +50336,23 @@ if (!Math.sign) {
 "use strict";
 
 
+// References:
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger
+
+if (!Number.isInteger) {
+    Number.isInteger = function numberIsInteger(value) {
+        return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
+    };
+}
+//# sourceMappingURL=Number.isInteger.js.map
+
+/***/ }),
+/* 308 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _objectAssign = __webpack_require__(223);
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
@@ -50338,17 +50367,19 @@ if (!Object.assign) {
 //# sourceMappingURL=Object.assign.js.map
 
 /***/ }),
-/* 308 */
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(307);
+__webpack_require__(308);
 
-__webpack_require__(309);
+__webpack_require__(310);
 
 __webpack_require__(306);
+
+__webpack_require__(307);
 
 if (!window.ArrayBuffer) {
     window.ArrayBuffer = Array;
@@ -50368,7 +50399,7 @@ if (!window.Uint16Array) {
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 309 */
+/* 310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50449,7 +50480,7 @@ if (!global.cancelAnimationFrame) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
 
 /***/ }),
-/* 310 */
+/* 311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50574,7 +50605,7 @@ core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 //# sourceMappingURL=CanvasPrepare.js.map
 
 /***/ }),
-/* 311 */
+/* 312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50582,7 +50613,7 @@ core.CanvasRenderer.registerPlugin('prepare', CanvasPrepare);
 
 exports.__esModule = true;
 
-var _WebGLPrepare = __webpack_require__(313);
+var _WebGLPrepare = __webpack_require__(314);
 
 Object.defineProperty(exports, 'webgl', {
   enumerable: true,
@@ -50591,7 +50622,7 @@ Object.defineProperty(exports, 'webgl', {
   }
 });
 
-var _CanvasPrepare = __webpack_require__(310);
+var _CanvasPrepare = __webpack_require__(311);
 
 Object.defineProperty(exports, 'canvas', {
   enumerable: true,
@@ -50618,7 +50649,7 @@ Object.defineProperty(exports, 'CountLimiter', {
   }
 });
 
-var _TimeLimiter = __webpack_require__(312);
+var _TimeLimiter = __webpack_require__(313);
 
 Object.defineProperty(exports, 'TimeLimiter', {
   enumerable: true,
@@ -50631,7 +50662,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 312 */
+/* 313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50694,7 +50725,7 @@ exports.default = TimeLimiter;
 //# sourceMappingURL=TimeLimiter.js.map
 
 /***/ }),
-/* 313 */
+/* 314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -50821,7 +50852,7 @@ core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 //# sourceMappingURL=WebGLPrepare.js.map
 
 /***/ }),
-/* 314 */
+/* 315 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathias */
@@ -51357,10 +51388,10 @@ core.WebGLRenderer.registerPlugin('prepare', WebGLPrepare);
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(324)(module), __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(325)(module), __webpack_require__(28)))
 
 /***/ }),
-/* 315 */
+/* 316 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51451,7 +51482,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 316 */
+/* 317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51543,18 +51574,18 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 317 */
+/* 318 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(315);
-exports.encode = exports.stringify = __webpack_require__(316);
+exports.decode = exports.parse = __webpack_require__(316);
+exports.encode = exports.stringify = __webpack_require__(317);
 
 
 /***/ }),
-/* 318 */
+/* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -51589,7 +51620,7 @@ module.exports = function removeItems(arr, startIdx, removeCount)
 
 
 /***/ }),
-/* 319 */
+/* 320 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52247,7 +52278,7 @@ exports.default = Loader;
 //# sourceMappingURL=Loader.js.map
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52340,7 +52371,7 @@ function blobMiddlewareFactory() {
 //# sourceMappingURL=blob.js.map
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -52533,7 +52564,7 @@ function blobMiddlewareFactory() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(177)))
 
 /***/ }),
-/* 322 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
@@ -52586,7 +52617,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(321);
+__webpack_require__(322);
 // On some exotic environments, it's not clear which object `setimmeidate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -52600,7 +52631,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
 
 /***/ }),
-/* 323 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -52623,7 +52654,7 @@ module.exports = {
 
 
 /***/ }),
-/* 324 */
+/* 325 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -52651,10 +52682,10 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 325 */,
 /* 326 */,
 /* 327 */,
-/* 328 */
+/* 328 */,
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;__webpack_require__(181);
@@ -52680,84 +52711,83 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;__webpack_requir
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 329 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter) {
-    var PhysicsManager = function (options) {
-        const canvas = document.getElementById('canvas');
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter) {
+  var PhysicsManager = function (options) {
+    const canvas = document.getElementById('canvas');
 
-        this.engine = Matter.Engine.create({
-            render: {
-                element: document.body,
-                canvas: canvas,
-                options: {
-                    width: 800,
-                    height: 600,
-                    center: true,
-                    wireframes: true,
-                    wireframe: true
-                }
-            }
-        });
+    this.engine = Matter.Engine.create({
+      render: {
+        element: document.body,
+        canvas: canvas,
+        options: {
+          width: 800,
+          height: 600,
+          center: true,
+          wireframes: true,
+          wireframe: true
+        }
+      }
+    });
 
-        this.world = this.engine.world;
+    this.world = this.engine.world;
+  };
+
+  PhysicsManager.prototype.getEngine = function () {
+    return this.engine;
+  };
+
+  PhysicsManager.prototype.getWorld = function () {
+    return this.world;
+  };
+
+  PhysicsManager.prototype.add = function (body) {
+    Matter.World.add(this.world, body);
+  };
+
+  PhysicsManager.prototype.PixiToMatter = function (x, y, width, height) {
+    return {
+      x: x + width * 0.5,
+      y: y + height * 0.5
     };
+  };
 
-    PhysicsManager.prototype.getEngine = function () {
-        return this.engine;
-    };
+  PhysicsManager.prototype.applyForce = function (body, x, y, width, height) {
+    var coord = this.PixiToMatter(x, y, width, height);
+    return Matter.Body.applyForce(body, { x: body.position.x, y: body.position.y }, { x: 0, y: -0.05 });
+  };
 
-    PhysicsManager.prototype.getWorld = function () {
-        return this.world;
-    };
+  PhysicsManager.prototype.setPosition = function (body, x, y, width, height) {
+    var coord = this.PixiToMatter(x, y, width, height);
+    return Matter.Body.setPosition(body, { x: coord.x, y: coord.y });
+  };
 
-    PhysicsManager.prototype.add = function (body) {
-        Matter.World.add(this.world, body);
-    };
+  PhysicsManager.prototype.rectangle = function (x, y, width, height, options = null) {
+    var coord = this.PixiToMatter(x, y, width, height);
+    return Matter.Bodies.rectangle(coord.x, coord.y, width, height, options);
+  };
 
-    PhysicsManager.prototype.PixiToMatter = function (x, y, width, height) {
-        return {
-            x: x + width * 0.5,
-            y: y + height * 0.5
-        };
-    };
+  PhysicsManager.prototype.circle = function (x, y, width, options = null) {
+    var coord = this.PixiToMatter(x, y, width, height = width);
+    return Matter.Bodies.circle(coord.x, coord.y, width, options);
+  };
 
-    PhysicsManager.prototype.applyForce = function (body, x, y, width, height) {
-        var coord = this.PixiToMatter(x, y, width, height);
-        return Matter.Body.applyForce(body, { x: body.position.x, y: body.position.y }, { x: 0, y: -0.05 });
-    };
+  PhysicsManager.prototype.update = function (delta) {
+    return Matter.Engine.update(this.engine);
+  };
 
-    PhysicsManager.prototype.setPosition = function (body, x, y, width, height) {
-        var coord = this.PixiToMatter(x, y, width, height);
-        return Matter.Body.setPosition(body, { x: coord.x, y: coord.y });
-    };
+  PhysicsManager.prototype.run = function () {
+    return Matter.Engine.run(this.engine);
+  };
 
-    PhysicsManager.prototype.rectangle = function (x, y, width, height, options = null) {
-        var coord = this.PixiToMatter(x, y, width, height);
-        return Matter.Bodies.rectangle(coord.x, coord.y, width, height, options);
-    };
-
-    PhysicsManager.prototype.circle = function (x, y, width, options = null) {
-        var coord = this.PixiToMatter(x, y, width, height = width);
-        return Matter.Bodies.circle(coord.x, coord.y, width, options);
-    };
-
-    PhysicsManager.prototype.update = function (delta) {
-        return Matter.Engine.update(this.engine);
-    };
-
-    PhysicsManager.prototype.run = function () {
-        return Matter.Engine.run(this.engine);
-    };
-
-    return PhysicsManager;
+  return PhysicsManager;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 330 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
@@ -52774,7 +52804,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      var _scene = __webpack_require__(553)("./" + scene);
+      var _scene = __webpack_require__(556)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -52820,7 +52850,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 331 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -52845,7 +52875,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 332 */,
 /* 333 */,
 /* 334 */,
 /* 335 */,
@@ -53048,7 +53077,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 532 */,
 /* 533 */,
 /* 534 */,
-/* 535 */
+/* 535 */,
+/* 536 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
@@ -53071,10 +53101,470 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 536 */
+/* 537 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(546), __webpack_require__(544), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  var PhysicsSprite = function (texture) {
+    GameObject.call(this);
+
+    this.texture = texture;
+    this.sprite = new pixi.Sprite(texture);
+    this.body = null;
+    this._x = 0;
+    this._y = 0;
+
+    this._width = this.texture.width;
+    this._height = this.texture.height;
+
+    this.setupBody();
+  };
+
+  extend(PhysicsSprite, GameObject);
+
+  PhysicsSprite.prototype.setPosition = function (x = 0, y = 0) {
+
+    x = x || this._x;
+    y = y || this._y;
+
+    this.sprite.x = x;
+    this.sprite.y = y;
+
+    this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
+
+    return this;
+  };
+
+  PhysicsSprite.prototype.getPosition = function () {
+    return this.body.position;
+  };
+
+  PhysicsSprite.prototype.getX = function () {
+    return this.body.position.x;
+  };
+
+  PhysicsSprite.prototype.getY = function () {
+    return this.body.position.y;
+  };
+
+  PhysicsSprite.prototype.setX = function (x) {
+    //this.body.position.x = x
+    this.PhysicsManager.setPosition(this.body, x, this.getY(), this._width, this._height);
+  };
+
+  PhysicsSprite.prototype.setY = function (y) {
+    //this.body.position.y = y
+    this.PhysicsManager.setPosition(this.body, this.getX(), y, this._width, this._height);
+  };
+
+  PhysicsSprite.prototype.getProperty = function (key) {
+    return this.body[key];
+  };
+
+  PhysicsSprite.prototype.setProperty = function (key, val) {
+    this.body[key] = val;
+  };
+
+  PhysicsSprite.prototype.setupBody = function () {
+    /**
+     * You can overwrite this function if you need to add your
+     * own body shape and properties.
+     */
+    var options = {
+      friction: 0,
+      restitution: 0.95
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  return PhysicsSprite;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 538 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Ball = function (texture) {
+    PhysicsSprite.call(this, texture);
+  };
+
+  extend(Ball, PhysicsSprite);
+
+  Ball.prototype.setupBody = function () {
+    var options = {
+      friction: 10,
+      restitution: 0.95
+    };
+
+    this.body = this.PhysicsManager.circle(this.x, this.y, this._width, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  Ball.prototype.update = function () {
+    var pos = this.body.position;
+    var angle = this.body.angle;
+
+    this.sprite.x = pos.x;
+    this.sprite.y = pos.y;
+  };
+
+  return Ball;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 539 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Barrier = function (texture) {
+    PhysicsSprite.call(this, texture);
+
+    console.log(texture);
+  };
+
+  extend(Barrier, PhysicsSprite);
+
+  Barrier.prototype.setupBody = function () {
+    var options = {
+      friction: 0,
+      restitution: 0.95,
+      isStatic: true
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  return Barrier;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 540 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Brick = function (texture) {
+    PhysicsSprite.call(this, texture);
+  };
+
+  extend(Brick, PhysicsSprite);
+
+  Brick.prototype.setupBody = function () {
+    var options = {
+      friction: 0,
+      restitution: 0.95,
+      isStatic: true
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  Brick.prototype.update = function () {
+    var pos = this.body.position;
+    var angle = this.body.angle;
+
+    // this.sprite.x = pos.x
+    // this.sprite.y = pos.y
+  };
+
+  return Brick;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 541 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Pad = function (texture) {
+    PhysicsSprite.call(this, texture);
+  };
+
+  extend(Pad, PhysicsSprite);
+
+  Pad.prototype.setupBody = function () {
+    var options = {
+      // friction: 0,
+      // restitution: 0.95,
+      isStatic: true
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.PhysicsManager.add(this.body);
+  };
+
+  Pad.prototype.update = function (delta) {
+    // Required
+  };
+
+  return Pad;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 542 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(539), __webpack_require__(545), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
+  var GameLevel = function (options) {
+    Scene.call(this, options);
+
+    this.on('mousemove', this.onMouseMove);
+    this.on('pointerdown', this.onPointerDown);
+
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
+
+    this.keyboardKeys = [];
+
+    this.scoreText = null;
+    this.livesText = null;
+
+    this.score = 0;
+    this.lives = 3;
+
+    this.PhysicsManager.run();
+  };
+
+  extend(GameLevel, Scene);
+
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+  };
+
+  GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
+    let key = new KeyboardInput(keycode);
+
+    key.press.bind(this);
+    key.release.bind(this);
+
+    key.press = keypress || self.onKeyPress.bind(self);
+    key.release = keyup || self.onKeyUp.bind(self);
+
+    this.keyboardKeys.push(key);
+  };
+
+  GameLevel.prototype.listenForKeyboardInputs = function (...keys) {
+    let self = this;
+    keys.forEach(function (keycode) {
+      let key = new KeyboardInput(keycode);
+
+      key.press = self.onKeyPress.bind(self);
+      key.release = self.onKeyUp.bind(self);
+
+      self.keyboardKeys.push(key);
+    });
+  };
+
+  GameLevel.prototype.onKeyPress = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyPress events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  GameLevel.prototype.onKeyUp = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyUp events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  GameLevel.prototype.onMouseMove = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive mouse move events.
+     */
+  };
+
+  GameLevel.prototype.onPointerDown = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive pointer down events.
+     */
+  };
+
+  GameLevel.prototype.onStart = function () {
+
+    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    background.width = this.app.screen.width;
+    background.height = this.app.screen.height;
+    background.alpha = 0;
+
+    let inset = 1;
+
+    var ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, inset, { isStatic: true });
+    this.PhysicsManager.add(ceiling);
+
+    var floor = this.PhysicsManager.rectangle(0, this.app.screen.height - inset, this.app.screen.width, inset, { isStatic: true });
+    this.PhysicsManager.add(floor);
+
+    var leftwall = this.PhysicsManager.rectangle(0, 0, inset, this.app.screen.height, { isStatic: true });
+    this.PhysicsManager.add(leftwall);
+
+    var rightwall = this.PhysicsManager.rectangle(this.app.screen.width - inset, 0, inset, this.app.screen.height, { isStatic: true });
+    this.PhysicsManager.add(rightwall);
+
+    var style = new pixi.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 20,
+      // fontStyle: 'italic',
+      fontWeight: 'bold',
+      fill: ['#ffffff', '#00ff99'], // gradient
+      stroke: '#4a1850',
+      strokeThickness: 5,
+      dropShadow: true,
+      dropShadowColor: '#000000',
+      dropShadowBlur: 4,
+      dropShadowAngle: Math.PI / 6,
+      dropShadowDistance: 6,
+      wordWrap: true,
+      wordWrapWidth: 440
+    });
+
+    this.scoreText = new pixi.Text('SCORE: 0', style);
+    this.scoreText.x = this.app.screen.width - this.scoreText.width - 45;
+    this.scoreText.y = 10;
+
+    this.livesText = new pixi.Text('LIVES: 3', style);
+    this.livesText.x = 45;
+    this.livesText.y = 10;
+
+    this.addChild(background);
+    this.addChild(this.scoreText);
+    this.addChild(this.livesText);
+  };
+
+  GameLevel.prototype.setScore = function (score) {
+    this.score = score;
+    this.scoreText.text = 'SCORE: ' + this.score;
+  };
+
+  GameLevel.prototype.setLives = function (lives) {
+    this.lives = lives;
+    this.livesText.text = 'LIVES: ' + this.lives;
+  };
+
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 543 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(539), __webpack_require__(545)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
+  var GameLevel = function (options) {
+    Scene.call(this, options);
+
+    this.on('mousemove', this.onMouseMove);
+    this.on('pointerdown', this.onPointerDown);
+
+    this.keyboardKeys = [];
+
+    this.scoreText = null;
+    this.livesText = null;
+
+    this.score = 0;
+    this.lives = 3;
+  };
+
+  extend(GameLevel, Scene);
+
+  GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
+    let key = new KeyboardInput(keycode);
+
+    key.press.bind(this);
+    key.release.bind(this);
+
+    key.press = keypress || self.onKeyPress.bind(self);
+    key.release = keyup || self.onKeyUp.bind(self);
+
+    this.keyboardKeys.push(key);
+  };
+
+  GameLevel.prototype.listenForKeyboardInputs = function (...keys) {
+    let self = this;
+    keys.forEach(function (keycode) {
+      let key = new KeyboardInput(keycode);
+
+      key.press = self.onKeyPress.bind(self);
+      key.release = self.onKeyUp.bind(self);
+
+      self.keyboardKeys.push(key);
+    });
+  };
+
+  GameLevel.prototype.onKeyPress = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyPress events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  GameLevel.prototype.onKeyUp = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyUp events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  GameLevel.prototype.onMouseMove = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive mouse move events.
+     */
+  };
+
+  GameLevel.prototype.onPointerDown = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive pointer down events.
+     */
+  };
+
+  GameLevel.prototype.onStart = function () {
+
+    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    background.width = this.app.screen.width;
+    background.height = this.app.screen.height;
+    background.alpha = 0;
+
+    this.addChild(background);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 544 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(539), __webpack_require__(545), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -53227,91 +53717,82 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 537 */
+/* 545 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  var PhysicsSprite = function (texture) {
-    GameObject.call(this);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 
-    this.texture = texture;
-    this.sprite = new pixi.Sprite(texture);
-    this.body = null;
-    this._x = 0;
-    this._y = 0;
+  /**
+   * Take controle over Keyboard input by using this class.
+   * You construct the class with a keycode.
+   * See http://keycode.info/ for more information.
+   * @exports core/input/KeyboardInput
+   * @module KeyboardInput
+   * @example
+   * let char = 32 // spacebar
+   * const space = new KeyboardInput(char)
+   * space.press = function() {
+   *  console.log('spacebar pressed')
+   * }
+   * space.release = function() {
+   *     console.log('spacebar released')
+   * }
+   * @constructor
+   * @param {number} keyCode - The keycode to listen for
+   */
+  var KeyboardInput = function (keyCode) {
 
-    this._width = this.texture.width;
-    this._height = this.texture.height;
+    let key = {};
+    key.code = keyCode;
+    key.isDown = false;
+    key.isUp = true;
+    key.press = undefined;
+    key.release = undefined;
 
-    this.setupBody();
+    window.addEventListener('keydown', this.downHandler.bind(key), false);
+    window.addEventListener('keyup', this.upHandler.bind(key), false);
+
+    return key;
   };
 
-  extend(PhysicsSprite, GameObject);
+  /**
+   * The internal keyboard event handler for keydown.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.downHandler = function (event) {
 
-  PhysicsSprite.prototype.setPosition = function (x = 0, y = 0) {
-
-    x = x || this._x;
-    y = y || this._y;
-
-    this.sprite.x = x;
-    this.sprite.y = y;
-
-    this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
-    return this;
+    if (event.keyCode === this.code) {
+      if (this.isUp && this.press) this.press(event);
+      this.isDown = true;
+      this.isUp = false;
+    }
+    event.preventDefault();
   };
 
-  PhysicsSprite.prototype.getPosition = function () {
-    return this.body.position;
+  /**
+   * The internal keyboard event handler for keyup.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.upHandler = function (event) {
+    if (event.keyCode === this.code) {
+      if (this.isDown && this.release) this.release(event);
+      this.isDown = false;
+      this.isUp = true;
+    }
+    event.preventDefault();
   };
 
-  PhysicsSprite.prototype.getX = function () {
-    return this.body.position.x;
-  };
-
-  PhysicsSprite.prototype.getY = function () {
-    return this.body.position.y;
-  };
-
-  PhysicsSprite.prototype.setX = function (x) {
-    //this.body.position.x = x
-    this.PhysicsManager.setPosition(this.body, x, this.getY(), this._width, this._height);
-  };
-
-  PhysicsSprite.prototype.setY = function (y) {
-    //this.body.position.y = y
-    this.PhysicsManager.setPosition(this.body, this.getX(), y, this._width, this._height);
-  };
-
-  PhysicsSprite.prototype.getProperty = function (key) {
-    return this.body[key];
-  };
-
-  PhysicsSprite.prototype.setProperty = function (key, val) {
-    this.body[key] = val;
-  };
-
-  PhysicsSprite.prototype.setupBody = function () {
-    /**
-     * You can overwrite this function if you need to add your
-     * own body shape and properties.
-     */
-    var options = {
-      friction: 0,
-      restitution: 0.95
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  return PhysicsSprite;
+  return KeyboardInput;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 538 */
+/* 546 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   var Statistics = function (options) {
     GameObject.call(this, options);
     this.paddingX = 10;
@@ -53345,156 +53826,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 539 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(546), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
-  var GameLevel = function (options) {
-    Scene.call(this, options);
-
-    this.on('mousemove', this.onMouseMove);
-    this.on('pointerdown', this.onPointerDown);
-
-    this.keyboardKeys = [];
-
-    this.scoreText = null;
-    this.livesText = null;
-
-    this.score = 0;
-    this.lives = 3;
-  };
-
-  extend(GameLevel, Scene);
-
-  GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
-    let key = new KeyboardInput(keycode);
-
-    key.press.bind(this);
-    key.release.bind(this);
-
-    key.press = keypress || self.onKeyPress.bind(self);
-    key.release = keyup || self.onKeyUp.bind(self);
-
-    this.keyboardKeys.push(key);
-  };
-
-  GameLevel.prototype.listenForKeyboardInputs = function (...keys) {
-    let self = this;
-    keys.forEach(function (keycode) {
-      let key = new KeyboardInput(keycode);
-
-      key.press = self.onKeyPress.bind(self);
-      key.release = self.onKeyUp.bind(self);
-
-      self.keyboardKeys.push(key);
-    });
-  };
-
-  GameLevel.prototype.onKeyPress = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  GameLevel.prototype.onKeyUp = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyUp events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  GameLevel.prototype.onMouseMove = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive mouse move events.
-     */
-  };
-
-  GameLevel.prototype.onPointerDown = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive pointer down events.
-     */
-  };
-
-  GameLevel.prototype.onStart = function () {
-
-    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
-    background.width = this.app.screen.width;
-    background.height = this.app.screen.height;
-    background.alpha = 0;
-
-    var ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, 5, { isStatic: true });
-    this.PhysicsManager.add(ceiling);
-
-    var floor = this.PhysicsManager.rectangle(0, this.app.screen.height - 5, this.app.screen.width, 5, { isStatic: true });
-    this.PhysicsManager.add(floor);
-
-    var leftwall = this.PhysicsManager.rectangle(0, 0, 5, this.app.screen.height, { isStatic: true });
-    this.PhysicsManager.add(leftwall);
-
-    var rightwall = this.PhysicsManager.rectangle(this.app.screen.width - 5, 0, 5, this.app.screen.height, { isStatic: true });
-    this.PhysicsManager.add(rightwall);
-
-    var style = new pixi.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 20,
-      // fontStyle: 'italic',
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff99'], // gradient
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
-    });
-
-    this.scoreText = new pixi.Text('SCORE: 0', style);
-    this.scoreText.x = this.app.screen.width - this.scoreText.width - 45;
-    this.scoreText.y = 10;
-
-    this.livesText = new pixi.Text('LIVES: 3', style);
-    this.livesText.x = 45;
-    this.livesText.y = 10;
-
-    this.addChild(background);
-    this.addChild(this.scoreText);
-    this.addChild(this.livesText);
-  };
-
-  GameLevel.prototype.setScore = function (score) {
-    this.score = score;
-    this.scoreText.text = 'SCORE: ' + this.score;
-  };
-
-  GameLevel.prototype.setLives = function (lives) {
-    this.lives = lives;
-    this.livesText.text = 'LIVES: ' + this.lives;
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 540 */
+/* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(547), __webpack_require__(548), __webpack_require__(545)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(542), __webpack_require__(221), __webpack_require__(540), __webpack_require__(541), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -53502,7 +53838,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.num_bricks = 11;
     this.started = false;
     this.setDisplayStats(true);
-
+    this.didStart = false;
     this.objects = [];
   };
 
@@ -53569,7 +53905,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
     var tx = PIXI.Texture.fromFrame('ballBlue.png');
     this.ball = new Ball(tx);
-    this.ball.setPosition(this.pad.sprite.x / 2 - tx.width / 2 - 10, this.pad.sprite.y - this.pad.sprite.height - 10);
+    this.ball.setPosition(this.pad.sprite.x / 2 - tx.width / 2 - 10, this.pad.sprite.y - tx.height);
 
     this.objects.push(this.ball);
     this.objects.push(this.pad);
@@ -53594,8 +53930,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05);
     if (this.started == false) {
       for (var object of this.objects) {
-        if (object instanceof Ball) {
+        if (object instanceof Ball && this.didStart === false) {
           object.isStatic = false;
+          this.didStart = true;
         }
       }
       this.started = true;
@@ -53604,15 +53941,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta);
-    //this.PhysicsManager.update(delta);
+    this.PhysicsManager.update(delta);
 
     for (var object of this.objects) {
-      if (object instanceof Ball) {
-        if (object.getProperty('isStatic') == true) {
-          object.setX(this.pad.getX());
-        }
-      }
-      object.update(delta);
+      if (object instanceof Ball && this.didStart === false) {
+        object.setPosition(this.pad.sprite.x + this.pad.sprite.width / 2 - object.sprite.width / 2, object.sprite.y);
+      } else object.update(delta);
     }
   };
 
@@ -53621,11 +53955,76 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 541 */
+/* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536), __webpack_require__(221), __webpack_require__(547), __webpack_require__(548), __webpack_require__(545), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(543), __webpack_require__(221), __webpack_require__(540), __webpack_require__(541), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+  var Level1 = function (options) {
+    GameLevel.call(this, { backgroundColor: 0x1099bb });
+
+    this.setDisplayStats(true);
+
+    this.historyX = [];
+    this.historyY = [];
+    this.ropeSize = 100;
+  };
+
+  extend(Level1, GameLevel);
+
+  Level1.prototype.onKeyPress = function (event) {
+
+    console.log('key press ' + event.key);
+  };
+
+  Level1.prototype.onKeyUp = function (event) {
+    console.log('key up');
+  };
+
+  Level1.prototype.onStart = function () {
+    GameLevel.prototype.onStart.call(this);
+  };
+
+  Level1.prototype.onMouseMove = function (event) {};
+
+  Level1.prototype.onPointerDown = function (event) {};
+
+  Level1.prototype.update = function (delta) {
+    GameLevel.prototype.update.call(this, delta);
+
+    //Read mouse points, this could be done also in mousemove/touchmove update. For simplicity it is done here for now.
+    //When implemeting this properly, make sure to implement touchmove as interaction plugins mouse might not update on certain devices.
+    var mouseposition = app.renderer.plugins.interaction.mouse.global;
+
+    //Update the mouse values to history
+    this.historyX.pop();
+    this.historyX.unshift(mouseposition.x);
+    this.historyY.pop();
+    this.historyY.unshift(mouseposition.y);
+
+    //Update the points to correspond with history.
+    for (var i = 0; i < this.ropeSize; i++) {
+      var p = points[i];
+
+      //Smooth the curve with cubic interpolation to prevent sharp edges.
+      var ix = cubicInterpolation(historyX, i / this.ropeSize * historySize);
+      var iy = cubicInterpolation(historyY, i / this.ropeSize * historySize);
+
+      p.x = ix;
+      p.y = iy;
+    }
+  };
+
+  return Level1;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 549 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(544), __webpack_require__(221), __webpack_require__(540), __webpack_require__(541), __webpack_require__(538), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -53754,17 +54153,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 542 */
+/* 550 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(551);
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(554);
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
   var MainScreen = function (options) {
     Scene.call(this, options);
     this.backgrounds = [];
 
     this.statistics = new Statistics();
-    this.addChild(this.statistics);
   };
 
   extend(MainScreen, Scene);
@@ -53797,7 +54195,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
       tilingSprite.tilePosition.y = this.app.screen.height;
 
       this.backgrounds[textureName] = tilingSprite;
-      //    this.addChild(tilingSprite)
+      this.addChild(tilingSprite);
     }
 
     var richText = new pixi.Text('Pick your game', style);
@@ -53827,6 +54225,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
     //   this.resources.wave.play()
 
     this.addChild(richText);
+    this.addChild(this.statistics);
   };
 
   MainScreen.prototype.setDisplayStats = function (visible) {
@@ -53850,7 +54249,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 543 */
+/* 551 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
@@ -53937,219 +54336,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 544 */
+/* 552 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-
-  /**
-   * Take controle over Keyboard input by using this class.
-   * You construct the class with a keycode.
-   * See http://keycode.info/ for more information.
-   * @exports core/input/KeyboardInput
-   * @module KeyboardInput
-   * @example
-   * let char = 32 // spacebar
-   * const space = new KeyboardInput(char)
-   * space.press = function() {
-   *  console.log('spacebar pressed')
-   * }
-   * space.release = function() {
-   *     console.log('spacebar released')
-   * }
-   * @constructor
-   * @param {number} keyCode - The keycode to listen for
-   */
-  var KeyboardInput = function (keyCode) {
-
-    let key = {};
-    key.code = keyCode;
-    key.isDown = false;
-    key.isUp = true;
-    key.press = undefined;
-    key.release = undefined;
-
-    window.addEventListener('keydown', this.downHandler.bind(key), false);
-    window.addEventListener('keyup', this.upHandler.bind(key), false);
-
-    return key;
-  };
-
-  /**
-   * The internal keyboard event handler for keydown.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.downHandler = function (event) {
-
-    if (event.keyCode === this.code) {
-      if (this.isUp && this.press) this.press(event);
-      this.isDown = true;
-      this.isUp = false;
-    }
-    event.preventDefault();
-  };
-
-  /**
-   * The internal keyboard event handler for keyup.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.upHandler = function (event) {
-    if (event.keyCode === this.code) {
-      if (this.isDown && this.release) this.release(event);
-      this.isDown = false;
-      this.isUp = true;
-    }
-    event.preventDefault();
-  };
-
-  return KeyboardInput;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 545 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Ball = function (texture) {
-    PhysicsSprite.call(this, texture);
-  };
-
-  extend(Ball, PhysicsSprite);
-
-  Ball.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true,
-      isSleeping: true
-
-      // var options = {
-      //   isSleeping: false,
-      //   isStatic: true,
-      //   friction:0.0001,
-      //   restitution: 0.7,
-      //   density:0.001,
-      //   frictionAir: 0.0001,
-      //   inverseInertia: 0,
-      //   //render: color,
-      //   force: {//x:.005,
-      //     //y:-.005
-      //   }
-      // };
-
-    };this.body = this.PhysicsManager.circle(this.x, this.y, this._width, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  Ball.prototype.update = function () {
-    var pos = this.body.position;
-    var angle = this.body.angle;
-
-    this.sprite.x = pos.x;
-    this.sprite.y = pos.y;
-  };
-
-  return Ball;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 546 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Barrier = function (texture) {
-    PhysicsSprite.call(this, texture);
-
-    console.log(texture);
-  };
-
-  extend(Barrier, PhysicsSprite);
-
-  Barrier.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  return Barrier;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 547 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Brick = function (texture) {
-    PhysicsSprite.call(this, texture);
-  };
-
-  extend(Brick, PhysicsSprite);
-
-  Brick.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  Brick.prototype.update = function () {
-    var pos = this.body.position;
-    var angle = this.body.angle;
-
-    // this.sprite.x = pos.x
-    // this.sprite.y = pos.y
-  };
-
-  return Brick;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 548 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Pad = function (texture) {
-    PhysicsSprite.call(this, texture);
-  };
-
-  extend(Pad, PhysicsSprite);
-
-  Pad.prototype.setupBody = function () {
-    var options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.PhysicsManager.add(this.body);
-  };
-
-  Pad.prototype.update = function (delta) {
-    // Required
-  };
-
-  return Pad;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 549 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
 
   /**
    * @classdesc Abstract class representing a menu item.
@@ -54217,10 +54407,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 550 */
+/* 553 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(549)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(552)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemText module
@@ -54303,22 +54493,22 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 551 */
+/* 554 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
-const Menu = __webpack_require__(552);
-const MenuItemText = __webpack_require__(550);
+const Menu = __webpack_require__(555);
+const MenuItemText = __webpack_require__(553);
 
 
 /***/ }),
-/* 552 */
+/* 555 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(535)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   var Menu = function (options, ...items) {
     GameObject.call(this, options);
 
@@ -54366,26 +54556,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 553 */
+/* 556 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Breakout/GameLevel": 539,
-	"./Breakout/GameLevel.js": 539,
-	"./Breakout/Level1": 540,
-	"./Breakout/Level1.js": 540,
-	"./Circles/GameLevel": 554,
-	"./Circles/GameLevel.js": 554,
-	"./Circles/Level1": 555,
-	"./Circles/Level1.js": 555,
-	"./FlappyBird/GameLevel": 536,
-	"./FlappyBird/GameLevel.js": 536,
-	"./FlappyBird/Level1": 541,
-	"./FlappyBird/Level1.js": 541,
-	"./MainMenu": 542,
-	"./MainMenu.js": 542,
-	"./SplashScene": 543,
-	"./SplashScene.js": 543
+	"./Breakout/GameLevel": 542,
+	"./Breakout/GameLevel.js": 542,
+	"./Breakout/Level1": 547,
+	"./Breakout/Level1.js": 547,
+	"./Circles/GameLevel": 543,
+	"./Circles/GameLevel.js": 543,
+	"./Circles/Level1": 548,
+	"./Circles/Level1.js": 548,
+	"./FlappyBird/GameLevel": 544,
+	"./FlappyBird/GameLevel.js": 544,
+	"./FlappyBird/Level1": 549,
+	"./FlappyBird/Level1.js": 549,
+	"./MainMenu": 550,
+	"./MainMenu.js": 550,
+	"./SplashScene": 551,
+	"./SplashScene.js": 551
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -54401,168 +54591,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 553;
-
-/***/ }),
-/* 554 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(546), __webpack_require__(544)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
-  var GameLevel = function (options) {
-    Scene.call(this, options);
-
-    this.on('mousemove', this.onMouseMove);
-    this.on('pointerdown', this.onPointerDown);
-
-    this.keyboardKeys = [];
-
-    this.scoreText = null;
-    this.livesText = null;
-
-    this.score = 0;
-    this.lives = 3;
-  };
-
-  extend(GameLevel, Scene);
-
-  GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
-    let key = new KeyboardInput(keycode);
-
-    key.press.bind(this);
-    key.release.bind(this);
-
-    key.press = keypress || self.onKeyPress.bind(self);
-    key.release = keyup || self.onKeyUp.bind(self);
-
-    this.keyboardKeys.push(key);
-  };
-
-  GameLevel.prototype.listenForKeyboardInputs = function (...keys) {
-    let self = this;
-    keys.forEach(function (keycode) {
-      let key = new KeyboardInput(keycode);
-
-      key.press = self.onKeyPress.bind(self);
-      key.release = self.onKeyUp.bind(self);
-
-      self.keyboardKeys.push(key);
-    });
-  };
-
-  GameLevel.prototype.onKeyPress = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  GameLevel.prototype.onKeyUp = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyUp events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  GameLevel.prototype.onMouseMove = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive mouse move events.
-     */
-  };
-
-  GameLevel.prototype.onPointerDown = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive pointer down events.
-     */
-  };
-
-  GameLevel.prototype.onStart = function () {
-
-    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
-    background.width = this.app.screen.width;
-    background.height = this.app.screen.height;
-    background.alpha = 0;
-
-    this.addChild(background);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 555 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(554), __webpack_require__(221), __webpack_require__(547), __webpack_require__(548), __webpack_require__(545)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
-  var Level1 = function (options) {
-    GameLevel.call(this, { backgroundColor: 0x1099bb });
-
-    this.setDisplayStats(true);
-
-    this.historyX = [];
-    this.historyY = [];
-    this.ropeSize = 100;
-  };
-
-  extend(Level1, GameLevel);
-
-  Level1.prototype.onKeyPress = function (event) {
-
-    console.log('key press ' + event.key);
-  };
-
-  Level1.prototype.onKeyUp = function (event) {
-    console.log('key up');
-  };
-
-  Level1.prototype.onStart = function () {
-    GameLevel.prototype.onStart.call(this);
-  };
-
-  Level1.prototype.onMouseMove = function (event) {};
-
-  Level1.prototype.onPointerDown = function (event) {};
-
-  Level1.prototype.update = function (delta) {
-    GameLevel.prototype.update.call(this, delta);
-
-    //Read mouse points, this could be done also in mousemove/touchmove update. For simplicity it is done here for now.
-    //When implemeting this properly, make sure to implement touchmove as interaction plugins mouse might not update on certain devices.
-    var mouseposition = app.renderer.plugins.interaction.mouse.global;
-
-    //Update the mouse values to history
-    this.historyX.pop();
-    this.historyX.unshift(mouseposition.x);
-    this.historyY.pop();
-    this.historyY.unshift(mouseposition.y);
-
-    //Update the points to correspond with history.
-    for (var i = 0; i < this.ropeSize; i++) {
-      var p = points[i];
-
-      //Smooth the curve with cubic interpolation to prevent sharp edges.
-      var ix = cubicInterpolation(historyX, i / this.ropeSize * historySize);
-      var iy = cubicInterpolation(historyY, i / this.ropeSize * historySize);
-
-      p.x = ix;
-      p.y = iy;
-    }
-  };
-
-  return Level1;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+webpackContext.id = 556;
 
 /***/ })
 ]);

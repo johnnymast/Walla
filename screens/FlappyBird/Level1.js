@@ -1,5 +1,5 @@
 // https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects/Brick', 'core/objects/Pad', 'core/objects/Ball', 'gui/Statistics'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
+define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/../../objects/Breakout/Brick', 'core/../../objects/Breakout/Pad', 'core/../../objects/Breakout/Ball', 'gui/Statistics'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
   var Level1 = function (options) {
     GameLevel.call(this, {backgroundColor: 0x1099bb})
 

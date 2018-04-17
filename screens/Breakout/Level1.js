@@ -1,5 +1,5 @@
 // https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects/Brick', 'core/objects/Pad', 'core/objects/Ball'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breakout/Brick', 'objects/Breakout/Pad', 'objects/Breakout/Ball'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, {backgroundColor: 0x1099bb})
 
@@ -7,7 +7,7 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects
     this.num_bricks = 11
     this.started = false
     this.setDisplayStats(true)
-
+    this.didStart = false
     this.objects = []
   }
 
@@ -75,7 +75,7 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects
 
     var tx = PIXI.Texture.fromFrame('ballBlue.png')
     this.ball = new Ball(tx)
-    this.ball.setPosition(this.pad.sprite.x / 2 - tx.width / 2 - 10, this.pad.sprite.y - this.pad.sprite.height - 10)
+    this.ball.setPosition(this.pad.sprite.x / 2 - tx.width / 2 - 10, this.pad.sprite.y - tx.height)
 
     this.objects.push(this.ball)
     this.objects.push(this.pad)
@@ -100,8 +100,9 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects
     this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05)
     if (this.started == false) {
       for (var object of this.objects) {
-        if (object instanceof Ball) {
+        if (object instanceof Ball && this.didStart === false) {
           object.isStatic = false
+          this.didStart = true
         }
       }
       this.started = true
@@ -110,14 +111,12 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/objects
 
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta)
-    //this.PhysicsManager.update(delta);
+    this.PhysicsManager.update(delta);
 
     for (var object of this.objects) {
-      if (object instanceof Ball) {
-        if (object.getProperty('isStatic') == true) {
-           object.setX(this.pad.getX());
-        }
-      }
+      if (object instanceof Ball && this.didStart === false) {
+          object.setPosition(this.pad.sprite.x + this.pad.sprite.width/2 - object.sprite.width / 2, object.sprite.y);
+      } else
       object.update(delta)
     }
   }

@@ -1,46 +1,55 @@
-define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/KeyboardInput'], function (pixi, Matter, Scene, Barrier, KeyboardInput) {
+define(['pixi', 'matter-js', 'core/Scene', 'core/../../objects/Breakout/Barrier', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options)
 
     this.on('mousemove', this.onMouseMove)
     this.on('pointerdown', this.onPointerDown)
 
+    this.statistics = new Statistics()
+    this.addChild(this.statistics)
+
     this.keyboardKeys = []
 
-    this.scoreText = null;
-    this.livesText = null;
+    this.scoreText = null
+    this.livesText = null
 
     this.score = 0
     this.lives = 3
+
+    this.PhysicsManager.run();
   }
 
   extend(GameLevel, Scene)
 
-  GameLevel.prototype.listenSingleForKeyboardInput = function(keycode, keypress, keyup) {
-    let key = new KeyboardInput(keycode);
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible
+  }
 
-    key.press.bind(this);
-    key.release.bind(this);
+  GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
+    let key = new KeyboardInput(keycode)
+
+    key.press.bind(this)
+    key.release.bind(this)
 
     key.press = keypress || self.onKeyPress.bind(self)
     key.release = keyup || self.onKeyUp.bind(self)
 
-    this.keyboardKeys.push(key);
+    this.keyboardKeys.push(key)
   }
 
-  GameLevel.prototype.listenForKeyboardInputs = function(...keys) {
-    let self = this;
-    keys.forEach(function(keycode) {
-      let key = new KeyboardInput(keycode);
+  GameLevel.prototype.listenForKeyboardInputs = function (...keys) {
+    let self = this
+    keys.forEach(function (keycode) {
+      let key = new KeyboardInput(keycode)
 
       key.press = self.onKeyPress.bind(self)
       key.release = self.onKeyUp.bind(self)
 
-      self.keyboardKeys.push(key);
-    });
+      self.keyboardKeys.push(key)
+    })
   }
 
-  GameLevel.prototype.onKeyPress = function(event) {
+  GameLevel.prototype.onKeyPress = function (event) {
     /**
      * You can overwrite this function if you wish
      * to receive keyboard keyPress events.
@@ -51,7 +60,7 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
      */
   }
 
-  GameLevel.prototype.onKeyUp = function(event) {
+  GameLevel.prototype.onKeyUp = function (event) {
     /**
      * You can overwrite this function if you wish
      * to receive keyboard keyUp events.
@@ -62,14 +71,14 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
      */
   }
 
-  GameLevel.prototype.onMouseMove = function(event) {
+  GameLevel.prototype.onMouseMove = function (event) {
     /**
      * You can overwrite this function if you wish
      * to receive mouse move events.
      */
   }
 
-  GameLevel.prototype.onPointerDown = function(event) {
+  GameLevel.prototype.onPointerDown = function (event) {
     /**
      * You can overwrite this function if you wish
      * to receive pointer down events.
@@ -78,24 +87,26 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
 
   GameLevel.prototype.onStart = function () {
 
-    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
-    background.width = this.app.screen.width;
-    background.height = this.app.screen.height;
+    var background = new PIXI.Sprite(PIXI.Texture.WHITE)
+    background.width = this.app.screen.width
+    background.height = this.app.screen.height
     background.alpha = 0
-    
-    var ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, 5, { isStatic: true });
+
+    let inset = 1
+
+    var ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, inset, {isStatic: true})
     this.PhysicsManager.add(ceiling)
 
-    var floor = this.PhysicsManager.rectangle(0, this.app.screen.height - 5, this.app.screen.width, 5, { isStatic: true });
+    var floor = this.PhysicsManager.rectangle(0, this.app.screen.height - inset, this.app.screen.width, inset, {isStatic: true})
     this.PhysicsManager.add(floor)
 
-    var leftwall = this.PhysicsManager.rectangle(0, 0, 5, this.app.screen.height, { isStatic: true });
+    var leftwall = this.PhysicsManager.rectangle(0, 0, inset, this.app.screen.height, {isStatic: true})
     this.PhysicsManager.add(leftwall)
 
-    var rightwall = this.PhysicsManager.rectangle(this.app.screen.width-5, 0, 5, this.app.screen.height, { isStatic: true });
+    var rightwall = this.PhysicsManager.rectangle(this.app.screen.width - inset, 0, inset, this.app.screen.height, {isStatic: true})
     this.PhysicsManager.add(rightwall)
 
-    var style =new pixi.TextStyle({
+    var style = new pixi.TextStyle({
       fontFamily: 'Arial',
       fontSize: 20,
       // fontStyle: 'italic',
@@ -110,29 +121,33 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/objects/Barrier', 'core/input/K
       dropShadowDistance: 6,
       wordWrap: true,
       wordWrapWidth: 440
-    });
+    })
 
-    this.scoreText = new pixi.Text('SCORE: 0', style);
+    this.scoreText = new pixi.Text('SCORE: 0', style)
     this.scoreText.x = this.app.screen.width - this.scoreText.width - 45
-    this.scoreText.y = 10;
+    this.scoreText.y = 10
 
-    this.livesText = new pixi.Text('LIVES: 3', style);
-    this.livesText.x = 45;
+    this.livesText = new pixi.Text('LIVES: 3', style)
+    this.livesText.x = 45
     this.livesText.y = 10
 
-    this.addChild(background);
-    this.addChild(this.scoreText);
-    this.addChild(this.livesText);
+    this.addChild(background)
+    this.addChild(this.scoreText)
+    this.addChild(this.livesText)
   }
 
-  GameLevel.prototype.setScore = function(score) {
+  GameLevel.prototype.setScore = function (score) {
     this.score = score
-    this.scoreText.text = 'SCORE: '+this.score
+    this.scoreText.text = 'SCORE: ' + this.score
   }
 
-  GameLevel.prototype.setLives = function(lives) {
+  GameLevel.prototype.setLives = function (lives) {
     this.lives = lives
-    this.livesText.text = 'LIVES: '+this.lives
+    this.livesText.text = 'LIVES: ' + this.lives
+  }
+
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta)
   }
 
   return GameLevel

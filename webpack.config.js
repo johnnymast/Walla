@@ -77,7 +77,8 @@ const config = {
       //   'Cookies': path.resolve(__dirname, './lib/js-cookie/src/js.cookie'),
       'core': path.resolve(__dirname, 'src/core'),
       'gui': path.resolve(__dirname, 'src/gui'),
-      'screens': path.resolve(__dirname, 'screens')
+      'screens': path.resolve(__dirname, 'screens'),
+      'objects': path.resolve(__dirname, 'objects')
       //   'toolbar': path.resolve(__dirname, 'toolbar'),
       //   'game': path.resolve(__dirname, 'game'),
       //   'root': path.resolve(__dirname, './')

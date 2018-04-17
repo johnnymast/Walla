@@ -5,7 +5,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     this.backgrounds = []
 
     this.statistics = new Statistics()
-    this.addChild(this.statistics);
+
   }
 
   extend(MainScreen, Scene)
@@ -38,7 +38,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
       tilingSprite.tilePosition.y = this.app.screen.height
 
       this.backgrounds[textureName] = tilingSprite
-      //    this.addChild(tilingSprite)
+      this.addChild(tilingSprite)
     }
 
     var richText = new pixi.Text('Pick your game', style)
@@ -68,6 +68,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     //   this.resources.wave.play()
 
     this.addChild(richText)
+    this.addChild(this.statistics);
   }
 
   MainScreen.prototype.setDisplayStats = function (visible) {

@@ -25,6 +25,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.sprite.y = y
 
     this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height)
+
     return this
   }
 

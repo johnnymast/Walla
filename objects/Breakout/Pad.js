@@ -7,8 +7,8 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
 
   Pad.prototype.setupBody = function () {
     var options = {
-      friction: 0,
-      restitution: 0.95,
+      // friction: 0,
+      // restitution: 0.95,
       isStatic: true
     }
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
