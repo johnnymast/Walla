@@ -13,25 +13,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
   extend(Level1, GameLevel)
 
-  Level1.prototype.onKeyPress = function (event) {
-
-    console.log('gtrigger')
-    if (event.key == 'ArrowLeft') {
-      this.pad.setPosition(this.pad.sprite.x - 10, this.pad.sprite.y)
-      console.log('left')
-    } else if (event.key == 'ArrowRight') {
-      this.pad.setPosition(this.pad.sprite.x + 10, this.pad.sprite.y)
-
-      console.log('right')
-
-    }
-    console.log('key press ' + event.key)
-  }
-
-  Level1.prototype.onKeyUp = function (event) {
-    console.log('key up')
-  }
-
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this)
 
@@ -42,7 +23,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.setLives(this.lives)
     this.setScore(this.score)
 
-    this.textures = {
+    this.bricks = {
       'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
       'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
       'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
@@ -51,10 +32,10 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     var y = this.startY
 
-    for (let key of Object.keys(this.textures)) {
-      var texture = this.textures[key]
+    for (let key of Object.keys(this.bricks)) {
+      var texture = this.bricks[key]
       for (var x = 45; x < (this.num_bricks * texture.width); x += texture.width) {
-        var brick = new Brick(texture)
+        var brick = new Brick(key, texture)
         brick.setPosition(x, y)
 
         this.objects.push(brick)
@@ -63,6 +44,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
       y += texture.height + 1
     }
 
+    // Enable mouse interaction in this scene.
     this.interactive = true
 
     //

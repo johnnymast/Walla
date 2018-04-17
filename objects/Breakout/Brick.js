@@ -1,6 +1,12 @@
 define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
-  var Brick = function (texture) {
+  var Brick = function (type, texture) {
     PhysicsSprite.call(this, texture)
+    this.type = type
+    this.health = 1
+
+    if (type === 'green') {
+      this.health = 2
+    }
   }
 
   extend(Brick, PhysicsSprite)
@@ -13,6 +19,10 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
     }
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
     this.PhysicsManager.add(this.body)
+  }
+
+  Brick.prototype.decareaseHealth = function () {
+    this.health--
   }
 
   Brick.prototype.update = function () {

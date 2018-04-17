@@ -53186,6 +53186,43 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 538 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  var Statistics = function (options) {
+    GameObject.call(this, options);
+    this.paddingX = 10;
+    this.paddingY = 10;
+
+    this.setup();
+  };
+
+  extend(Statistics, GameObject);
+
+  Statistics.prototype.setup = function () {
+
+    var style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 18,
+      fill: ['#ffffff'] // gradient
+    });
+    this.fps = new pixi.Text('FPS: ' + this.app.ticker.FPS.toFixed(2), style);
+
+    this.addChild(this.fps);
+    this.x = this.paddingX;
+    this.y = this.app.screen.height - this.height - this.paddingY;
+  };
+
+  Statistics.prototype.update = function (delta) {
+    this.fps.text = 'FPS: ' + this.app.ticker.FPS.toFixed(2);
+  };
+
+  return Statistics;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 539 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
   var Ball = function (texture) {
     PhysicsSprite.call(this, texture);
@@ -53216,7 +53253,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 539 */
+/* 540 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -53243,12 +53280,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 540 */
+/* 541 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Brick = function (texture) {
+  var Brick = function (type, texture) {
     PhysicsSprite.call(this, texture);
+    this.type = type;
+    this.health = 1;
+
+    if (type === 'green') {
+      this.health = 2;
+    }
   };
 
   extend(Brick, PhysicsSprite);
@@ -53261,6 +53304,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     };
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
     this.PhysicsManager.add(this.body);
+  };
+
+  Brick.prototype.decareaseHealth = function () {
+    this.health--;
   };
 
   Brick.prototype.update = function () {
@@ -53276,7 +53323,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 541 */
+/* 542 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(537)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -53305,10 +53352,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 542 */
+/* 543 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(539), __webpack_require__(545), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(540), __webpack_require__(546), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -53465,10 +53512,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 543 */
+/* 544 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(539), __webpack_require__(545)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(540), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -53561,10 +53608,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 544 */
+/* 545 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(539), __webpack_require__(545), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(128), __webpack_require__(222), __webpack_require__(540), __webpack_require__(546), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -53717,7 +53764,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 545 */
+/* 546 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -53789,48 +53836,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 546 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(536)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  var Statistics = function (options) {
-    GameObject.call(this, options);
-    this.paddingX = 10;
-    this.paddingY = 10;
-
-    this.setup();
-  };
-
-  extend(Statistics, GameObject);
-
-  Statistics.prototype.setup = function () {
-
-    var style = new PIXI.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 18,
-      fill: ['#ffffff'] // gradient
-    });
-    this.fps = new pixi.Text('FPS: ' + this.app.ticker.FPS.toFixed(2), style);
-
-    this.addChild(this.fps);
-    this.x = this.paddingX;
-    this.y = this.app.screen.height - this.height - this.paddingY;
-  };
-
-  Statistics.prototype.update = function (delta) {
-    this.fps.text = 'FPS: ' + this.app.ticker.FPS.toFixed(2);
-  };
-
-  return Statistics;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
 /* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(542), __webpack_require__(221), __webpack_require__(540), __webpack_require__(541), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(543), __webpack_require__(221), __webpack_require__(541), __webpack_require__(542), __webpack_require__(539)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -53844,24 +53854,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
   extend(Level1, GameLevel);
 
-  Level1.prototype.onKeyPress = function (event) {
-
-    console.log('gtrigger');
-    if (event.key == 'ArrowLeft') {
-      this.pad.setPosition(this.pad.sprite.x - 10, this.pad.sprite.y);
-      console.log('left');
-    } else if (event.key == 'ArrowRight') {
-      this.pad.setPosition(this.pad.sprite.x + 10, this.pad.sprite.y);
-
-      console.log('right');
-    }
-    console.log('key press ' + event.key);
-  };
-
-  Level1.prototype.onKeyUp = function (event) {
-    console.log('key up');
-  };
-
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this);
 
@@ -53872,7 +53864,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.setLives(this.lives);
     this.setScore(this.score);
 
-    this.textures = {
+    this.bricks = {
       'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
       'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
       'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
@@ -53881,10 +53873,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
     var y = this.startY;
 
-    for (let key of Object.keys(this.textures)) {
-      var texture = this.textures[key];
+    for (let key of Object.keys(this.bricks)) {
+      var texture = this.bricks[key];
       for (var x = 45; x < this.num_bricks * texture.width; x += texture.width) {
-        var brick = new Brick(texture);
+        var brick = new Brick(key, texture);
         brick.setPosition(x, y);
 
         this.objects.push(brick);
@@ -53893,6 +53885,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
       y += texture.height + 1;
     }
 
+    // Enable mouse interaction in this scene.
     this.interactive = true;
 
     //
@@ -53959,7 +53952,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(543), __webpack_require__(221), __webpack_require__(540), __webpack_require__(541), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(544), __webpack_require__(221), __webpack_require__(541), __webpack_require__(542), __webpack_require__(539)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -54024,7 +54017,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(544), __webpack_require__(221), __webpack_require__(540), __webpack_require__(541), __webpack_require__(538), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(545), __webpack_require__(221), __webpack_require__(541), __webpack_require__(542), __webpack_require__(539), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -54157,7 +54150,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(554);
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221), __webpack_require__(546)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(66), __webpack_require__(222), __webpack_require__(221), __webpack_require__(538)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
   var MainScreen = function (options) {
     Scene.call(this, options);
     this.backgrounds = [];
@@ -54560,16 +54553,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Breakout/GameLevel": 542,
-	"./Breakout/GameLevel.js": 542,
+	"./Breakout/GameLevel": 543,
+	"./Breakout/GameLevel.js": 543,
 	"./Breakout/Level1": 547,
 	"./Breakout/Level1.js": 547,
-	"./Circles/GameLevel": 543,
-	"./Circles/GameLevel.js": 543,
+	"./Circles/GameLevel": 544,
+	"./Circles/GameLevel.js": 544,
 	"./Circles/Level1": 548,
 	"./Circles/Level1.js": 548,
-	"./FlappyBird/GameLevel": 544,
-	"./FlappyBird/GameLevel.js": 544,
+	"./FlappyBird/GameLevel": 545,
+	"./FlappyBird/GameLevel.js": 545,
 	"./FlappyBird/Level1": 549,
 	"./FlappyBird/Level1.js": 549,
 	"./MainMenu": 550,
