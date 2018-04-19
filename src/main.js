@@ -1,6 +1,7 @@
-import 'core/extentions'
+import 'core/polyfill'
 import 'core/geometry'
 import 'babel-polyfill'
+import 'core/polyfill'
 
 window.extend = function (a, b) {
   a.prototype = Object.create(b.prototype)

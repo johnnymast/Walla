@@ -10,7 +10,7 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=webpack.config.js",
     "watch": "webpack --config=webpack.config.js --progress --colors --watch",
     "prod": "npm run production",
-    "test": "mocha",
+    "test": "jest tests",
     "serve": "live-server",
     "predocs": "rimraf docs/**",
     "docs": "jsdoc  -c book.json -R README.md"
@@ -24,7 +24,6 @@
     "image-webpack-loader": "^3.3.1",
     "jsdoc": "^3.5.5",
     "live-server": "^1.2.0",
-    "mocha": "^5.1.0",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "^2.7.0",
     "webpack-chunk-hash": "^0.4.0"
@@ -34,6 +33,7 @@
     "cross-env": "^5.1.4",
     "eslint": "^4.19.1",
     "gitbook-plugin-theme-api": "^1.1.2",
+    "jest": "^22.4.3",
     "matter-js": "^0.14.1",
     "npm": "^5.8.0",
     "pixi-sound": "^2.0.2",
