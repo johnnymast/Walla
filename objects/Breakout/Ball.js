@@ -16,8 +16,8 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
   }
 
   Ball.prototype.update = function () {
-    var pos = this.body.position
-    var angle = this.body.angle
+    let pos = this.body.position
+    let angle = this.body.angle
 
     this.sprite.x = pos.x
     this.sprite.y = pos.y

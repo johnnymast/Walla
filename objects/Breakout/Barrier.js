@@ -8,7 +8,7 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
   extend(Barrier, PhysicsSprite)
 
   Barrier.prototype.setupBody = function() {
-    var options = {
+    let options = {
         friction: 0,
         restitution: 0.95,
         isStatic: true

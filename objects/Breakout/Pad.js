@@ -6,7 +6,7 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
   extend(Pad, PhysicsSprite)
 
   Pad.prototype.setupBody = function () {
-    var options = {
+    let options = {
       // friction: 0,
       // restitution: 0.95,
       isStatic: true
