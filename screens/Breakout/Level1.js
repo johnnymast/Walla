@@ -30,7 +30,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
       'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
     }
 
-    var y = this.startY
+    let y = this.startY
 
     for (let key of Object.keys(this.bricks)) {
       var texture = this.bricks[key]
@@ -81,7 +81,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
   Level1.prototype.onPointerDown = function (event) {
     this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05)
     if (this.started == false) {
-      for (var object of this.objects) {
+      for (let object of this.objects) {
         if (object instanceof Ball && this.didStart === false) {
           object.isStatic = false
           this.didStart = true

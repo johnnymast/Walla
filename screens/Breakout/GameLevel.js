@@ -87,26 +87,26 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/../../objects/Breakout/Barrier'
 
   GameLevel.prototype.onStart = function () {
 
-    var background = new PIXI.Sprite(PIXI.Texture.WHITE)
+    let background = new PIXI.Sprite(PIXI.Texture.WHITE)
     background.width = this.app.screen.width
     background.height = this.app.screen.height
     background.alpha = 0
 
     let inset = 1
 
-    var ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, inset, {isStatic: true})
+    let ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, inset, {isStatic: true})
     this.PhysicsManager.add(ceiling)
 
-    var floor = this.PhysicsManager.rectangle(0, this.app.screen.height - inset, this.app.screen.width, inset, {isStatic: true})
+    let floor = this.PhysicsManager.rectangle(0, this.app.screen.height - inset, this.app.screen.width, inset, {isStatic: true})
     this.PhysicsManager.add(floor)
 
-    var leftwall = this.PhysicsManager.rectangle(0, 0, inset, this.app.screen.height, {isStatic: true})
+    let leftwall = this.PhysicsManager.rectangle(0, 0, inset, this.app.screen.height, {isStatic: true})
     this.PhysicsManager.add(leftwall)
 
-    var rightwall = this.PhysicsManager.rectangle(this.app.screen.width - inset, 0, inset, this.app.screen.height, {isStatic: true})
+    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width - inset, 0, inset, this.app.screen.height, {isStatic: true})
     this.PhysicsManager.add(rightwall)
 
-    var style = new pixi.TextStyle({
+    let style = new pixi.TextStyle({
       fontFamily: 'Arial',
       fontSize: 20,
       // fontStyle: 'italic',

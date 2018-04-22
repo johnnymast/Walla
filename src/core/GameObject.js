@@ -1,5 +1,5 @@
 define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
-  var GameObject = function (options) {
+  let GameObject = function (options) {
     pixi.Container.call(this, options)
 
     this.ge = GameEngine.get()

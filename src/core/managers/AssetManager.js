@@ -2,7 +2,7 @@ require('pixi-sound')
 
 define(['pixi', 'core/GameEngine'], function (pixi) {
 
-  var AssetManager = function () {
+  let AssetManager = function () {
     PIXI.loaders.Loader.call(this)
   }
 

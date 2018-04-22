@@ -1,5 +1,5 @@
 define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
-  var Scene = function (options) {
+  let Scene = function (options) {
     GameObject.call(this, options)
 
     this.paused = false

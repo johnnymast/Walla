@@ -39,22 +39,22 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
   }
 
   PhysicsManager.prototype.applyForce = function (body, x, y, width, height) {
-    var coord = this.PixiToMatter(x, y, width, height)
+    let coord = this.PixiToMatter(x, y, width, height)
     return Matter.Body.applyForce(body, {x: body.position.x, y: body.position.y}, {x: 0, y: -0.05})
   }
 
   PhysicsManager.prototype.setPosition = function (body, x, y, width, height) {
-    var coord = this.PixiToMatter(x, y, width, height)
+    let coord = this.PixiToMatter(x, y, width, height)
     return Matter.Body.setPosition(body, {x: coord.x, y: coord.y})
   }
 
   PhysicsManager.prototype.rectangle = function (x, y, width, height, options = null) {
-    var coord = this.PixiToMatter(x, y, width, height)
+    let coord = this.PixiToMatter(x, y, width, height)
     return Matter.Bodies.rectangle(coord.x, coord.y, width, height, options)
   }
 
   PhysicsManager.prototype.circle = function (x, y, width, options = null) {
-    var coord = this.PixiToMatter(x, y, width, height = width)
+    let coord = this.PixiToMatter(x, y, width, height = width)
     return Matter.Bodies.circle(coord.x, coord.y, width, options)
   }
 

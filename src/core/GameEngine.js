@@ -1,5 +1,5 @@
 define(['pixi'], function (PIXI) {
-  var GameEngine = function () {
+  let GameEngine = function () {
     PIXI.utils.EventEmitter.call(this)
   }
 

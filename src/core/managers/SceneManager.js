@@ -1,5 +1,5 @@
 define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
-  var SceneManager = function (scene = '') {
+  let SceneManager = function (scene = '') {
     this.scenes = []
     this.currentScene = null
     this.app = GameEngine.get().get('App')
@@ -12,14 +12,14 @@ define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
 
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      var _scene = require('screens/' + scene)
+      let _scene = require('screens/' + scene)
       this.scenes[scene] = new _scene(options)
     }
     return this
   }
 
   SceneManager.prototype.preloadScene = function (scene) {
-    var thatScene = this.getScene(scene)
+    let thatScene = this.getScene(scene)
 
     if (thatScene) {
       thatScene.preload()

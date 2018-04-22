@@ -1,5 +1,5 @@
 define([], function () {
-  var StateManager = function () {
+  let StateManager = function () {
     this.container = []
   }
 

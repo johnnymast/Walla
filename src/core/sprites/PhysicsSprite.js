@@ -64,7 +64,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
      * You can overwrite this function if you need to add your
      * own body shape and properties.
      */
-    var options = {
+    let options = {
       friction: 0,
       restitution: 0.95,
     }
