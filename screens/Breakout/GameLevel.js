@@ -1,4 +1,4 @@
-define(['pixi', 'matter-js', 'core/Scene', 'core/../../objects/Breakout/Barrier', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
+define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options)
 
@@ -92,18 +92,22 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/../../objects/Breakout/Barrier'
     background.height = this.app.screen.height
     background.alpha = 0
 
-    let inset = 1
+    let inset = 10
 
     let ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, inset, {isStatic: true})
+    ceiling.label = 'ceiling'
     this.PhysicsManager.add(ceiling)
 
     let floor = this.PhysicsManager.rectangle(0, this.app.screen.height - inset, this.app.screen.width, inset, {isStatic: true})
+    floor.label = 'floor'
     this.PhysicsManager.add(floor)
 
-    let leftwall = this.PhysicsManager.rectangle(0, 0, inset, this.app.screen.height, {isStatic: true})
+    let leftwall = this.PhysicsManager.rectangle(0, 0, inset, this.app.screen.height, {isStatic: true, isSleeping: true})
+    leftwall.label = 'leftwall'
     this.PhysicsManager.add(leftwall)
 
     let rightwall = this.PhysicsManager.rectangle(this.app.screen.width - inset, 0, inset, this.app.screen.height, {isStatic: true})
+    rightwall.label = 'rightwall'
     this.PhysicsManager.add(rightwall)
 
     let style = new pixi.TextStyle({

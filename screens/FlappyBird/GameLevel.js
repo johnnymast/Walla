@@ -1,4 +1,4 @@
-define(['pixi', 'matter-js', 'core/Scene', 'core/../../objects/Breakout/Barrier', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, Barrier, KeyboardInput, Statistics) {
+define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options)
 

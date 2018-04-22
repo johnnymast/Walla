@@ -59,6 +59,12 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.ball = new Ball(tx)
     this.ball.setPosition(this.pad.sprite.x / 2 - tx.width / 2 - 10, this.pad.sprite.y - tx.height)
 
+    this.pad.onCollisionWith  = (withOnbject) => {
+      // console.log('hi with pad', withOnbject)
+        this.PhysicsManager.setVelocity(this.ball.body, { x: 0, y: -100 });
+    }
+
+
     this.objects.push(this.ball)
     this.objects.push(this.pad)
 
@@ -79,12 +85,13 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
   }
 
   Level1.prototype.onPointerDown = function (event) {
-    this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05)
+   this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05)
     if (this.started == false) {
       for (let object of this.objects) {
         if (object instanceof Ball && this.didStart === false) {
           object.isStatic = false
           this.didStart = true
+          object.fire()
         }
       }
       this.started = true
@@ -95,7 +102,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     GameLevel.prototype.update.call(this, delta)
     this.PhysicsManager.update(delta);
 
-    for (var object of this.objects) {
+    for (let object of this.objects) {
       if (object instanceof Ball && this.didStart === false) {
           object.setPosition(this.pad.sprite.x + this.pad.sprite.width/2 - object.sprite.width / 2, object.sprite.y);
       } else

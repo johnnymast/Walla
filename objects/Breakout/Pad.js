@@ -12,6 +12,7 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
       isStatic: true
     }
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
+    this.body.label = Object.getPrototypeOf(this).constructor.name
     this.PhysicsManager.add(this.body)
   }
 

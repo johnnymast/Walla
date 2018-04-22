@@ -12,11 +12,16 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
           center: true,
           wireframes: true,
           wireframe: true,
+         // showIds: true,
         }
       }
     })
 
     this.world = this.engine.world
+  }
+
+  PhysicsManager.prototype.getEventHandler = function() {
+    return Matter.Events
   }
 
   PhysicsManager.prototype.getEngine = function () {
@@ -31,11 +36,23 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
     Matter.World.add(this.world, body)
   }
 
+  PhysicsManager.prototype.remove = function (body) {
+    Matter.World.remove(this.world, body)
+  }
+
   PhysicsManager.prototype.PixiToMatter = function (x, y, width, height) {
     return {
       x: x + (width * 0.5),
       y: y + (height * 0.5),
     }
+  }
+
+  PhysicsManager.prototype.setVelocity = function (body, options) {
+    return Matter.Body.setVelocity(body, options)
+  }
+
+  PhysicsManager.prototype.setAngularVelocity = function (body, velocity) {
+    return Matter.Body.setVelocity(body, velocity)
   }
 
   PhysicsManager.prototype.applyForce = function (body, x, y, width, height) {

@@ -11,26 +11,27 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
 
   extend(Brick, PhysicsSprite)
 
+  Brick.prototype.onCollisionWith = function(withObject) {
+    if (this.health === 0 && this.type === 'blue') {
+      this.PhysicsManager.remove(this.body);
+      this.sprite.visible = false
+      console.log(this.childClass, 'collides with', withObject.label)
+      console.log('Removed', this.body.id)
+    } else
+    this.decareaseHealth()
+  }
+
   Brick.prototype.setupBody = function () {
     let options = {
-      friction: 0,
-      restitution: 0.95,
-      isStatic: true
+      isStatic: true,
     }
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
+    this.body.label = Object.getPrototypeOf(this).constructor.name
     this.PhysicsManager.add(this.body)
   }
 
   Brick.prototype.decareaseHealth = function () {
     this.health--
-  }
-
-  Brick.prototype.update = function () {
-    let pos = this.body.position
-    let angle = this.body.angle
-
-    // this.sprite.x = pos.x
-    // this.sprite.y = pos.y
   }
 
   return Brick
