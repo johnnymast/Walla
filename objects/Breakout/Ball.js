@@ -1,22 +1,35 @@
+const filters = require('pixi-filters');
+
 define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
   var Ball = function (texture) {
     PhysicsSprite.call(this, texture)
+
+    this.sprite.filters = [new filters.OutlineFilter(2, 0x99ff99)]
   }
 
   extend(Ball, PhysicsSprite)
 
   Ball.prototype.setupBody = function () {
-    let options = {}
+    let radius = this._width
 
-    let width = this._width
-    // width = 12
-    this.body = this.PhysicsManager.circle(this.x, this.y, width, options)
+    let options = {
+      isSleeping: true,
+      // isStatic: true,
+     //  inertia: Infinity,
+     //  isSensor: true,
+     //  label: this._id,
+      mass: 1,
+      restitution: 1,
+    }
+
+    this.body = this.PhysicsManager.circle(this.x, this.y, radius, options)
     this.body.label = Object.getPrototypeOf(this).constructor.name
     this.PhysicsManager.add(this.body)
   }
 
   Ball.prototype.fire = function () {
     this.PhysicsManager.setVelocity(this.body, {x: 0, y:  rand(-2, 2)})
+    this.PhysicsManager.setAngularVelocity(this.body, 0);
   }
 
   Ball.prototype.update = function () {

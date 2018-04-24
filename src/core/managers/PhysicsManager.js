@@ -12,7 +12,11 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
           center: true,
           wireframes: true,
           wireframe: true,
+          pixelRatio: window.devicePixelRatio,
          // showIds: true,
+          showAngleIndicator: true,
+          showCollisions: true,
+          showVelocity: true
         }
       }
     })
@@ -52,7 +56,7 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
   }
 
   PhysicsManager.prototype.setAngularVelocity = function (body, velocity) {
-    return Matter.Body.setVelocity(body, velocity)
+    return Matter.Body.setAngularVelocity(body, velocity)
   }
 
   PhysicsManager.prototype.applyForce = function (body, x, y, width, height) {
@@ -70,9 +74,11 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
     return Matter.Bodies.rectangle(coord.x, coord.y, width, height, options)
   }
 
-  PhysicsManager.prototype.circle = function (x, y, width, options = null) {
-    let coord = this.PixiToMatter(x, y, width, height = width)
-    return Matter.Bodies.circle(coord.x, coord.y, width, options)
+  PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
+  //  let coord = this.PixiToMatter(x, y, width, height = width)
+    console.log('circle options', options)
+    return Matter.Bodies.circle(x, y, radius, options)
+    // return Matter.Bodies.circle(coord.x, coord.y, width, options)
   }
 
   PhysicsManager.prototype.update = function (delta) {

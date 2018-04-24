@@ -24,6 +24,7 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
   Brick.prototype.setupBody = function () {
     let options = {
       isStatic: true,
+      restitution: 1.5
     }
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
     this.body.label = Object.getPrototypeOf(this).constructor.name

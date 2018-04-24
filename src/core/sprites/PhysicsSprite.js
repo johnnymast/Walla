@@ -4,6 +4,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
     this.texture = texture
     this.sprite = new pixi.Sprite(texture)
+
     this.childClass = Object.getPrototypeOf(this).constructor.name
     this.body = null
     this._x = 0
@@ -21,6 +22,14 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   }
 
   extend(PhysicsSprite, GameObject)
+
+  PhysicsSprite.prototype.sleep = function() {
+    this.setProperty('isSleeping', true);
+  }
+
+  PhysicsSprite.prototype.wakeUp = function() {
+    this.setProperty('isSleeping', false);
+  }
 
   PhysicsSprite.prototype.setupCollition = function() {
     this.PhysicsManager.getEventHandler().on(this.PhysicsManager.getEngine(), 'collisionActive', (e) => {
@@ -68,8 +77,8 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   }
 
   PhysicsSprite.prototype.setX = function (x) {
-    //this.body.position.x = x
-    this.PhysicsManager.setPosition(this.body, x, this.getY(), this._width, this._height)
+    // this.body.position.x = x
+    this.PhysicsManager.setPosition(this.body, x, this.body.position.y, this._width, this._height)
   }
 
   PhysicsSprite.prototype.setY = function (y) {

@@ -24,7 +24,7 @@ if (PROD) {
 const config = {
   entry: {
     build: path.resolve(__dirname, './src/main.js'),
-    vendor: ['underscore', 'pixi', 'pixi-sound', 'require','matter-js']
+    vendor: ['underscore', 'pixi', 'pixi-sound', 'pixi-filters', 'require','matter-js']
 
   },
   output: {
@@ -71,6 +71,7 @@ const config = {
       'require': path.resolve(__dirname, './node_modules/require.js'),
       'pixi': path.resolve(__dirname, './node_modules/pixi.js'),
       'pixi-sound': path.resolve(__dirname, './node_modules/pixi-sound'),
+      'pixi-filters': path.resolve(__dirname, './node_modules/pixi-filters'),
       'underscore': path.resolve(__dirname, './node_modules/underscore/underscore.js'),
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
       //   'Howler': path.resolve(__dirname, './lib/howler.js/howler'),
