@@ -16,7 +16,7 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.score = 0
     this.lives = 3
 
-    this.PhysicsManager.run();
+//    this.PhysicsManager.run();
   }
 
   extend(GameLevel, Scene)

@@ -2,29 +2,43 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
   var PhysicsManager = function (options) {
     const canvas = document.getElementById('canvas')
 
-    this.engine = Matter.Engine.create({
-      render: {
-        element: document.body,
-        canvas: canvas,
-        options: {
-          width: 800,
-          height: 600,
-          center: true,
-          wireframes: true,
-          wireframe: true,
-          pixelRatio: window.devicePixelRatio,
-         // showIds: true,
-          showAngleIndicator: true,
-          showCollisions: true,
-          showVelocity: true
-        }
+    this.engine = Matter.Engine.create()
+    this.world = this.engine.world
+
+    this.render = Matter.Render.create({
+      element: document.body,
+      canvas: canvas,
+      engine: this.engine,
+      options: {
+        width: 800,
+        height: 600,
+        center: true,
+        wireframes: true,
+        wireframe: true,
+        pixelRatio: window.devicePixelRatio,
+        // showIds: true,
+        showAngleIndicator: true,
+        showCollisions: true,
+        showVelocity: true
       }
     })
 
-    this.world = this.engine.world
+    // add mouse control
+    var mouse = Matter.Mouse.create(this.render.canvas),
+      mouseConstraint = Matter.MouseConstraint.create(this.engine, {
+        mouse: mouse,
+        constraint: {
+          stiffness: 0.2,
+          render: {
+            visible: false
+          }
+        }
+      })
+
+    Matter.World.add(this.world, mouseConstraint)
   }
 
-  PhysicsManager.prototype.getEventHandler = function() {
+  PhysicsManager.prototype.getEventHandler = function () {
     return Matter.Events
   }
 
@@ -75,7 +89,7 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
   }
 
   PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
-  //  let coord = this.PixiToMatter(x, y, width, height = width)
+    //  let coord = this.PixiToMatter(x, y, width, height = width)
     console.log('circle options', options)
     return Matter.Bodies.circle(x, y, radius, options)
     // return Matter.Bodies.circle(coord.x, coord.y, width, options)
@@ -86,7 +100,7 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
   }
 
   PhysicsManager.prototype.run = function () {
-    return Matter.Engine.run(this.engine)
+    return Matter.Render.run(this.render)
   }
 
   return PhysicsManager

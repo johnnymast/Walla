@@ -12,11 +12,9 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
   extend(Brick, PhysicsSprite)
 
   Brick.prototype.onCollisionWith = function(withObject) {
-    if (this.health === 0 && this.type === 'blue') {
+    if (this.health === 0) {
       this.PhysicsManager.remove(this.body);
       this.sprite.visible = false
-      console.log(this.childClass, 'collides with', withObject.label)
-      console.log('Removed', this.body.id)
     } else
     this.decareaseHealth()
   }
@@ -33,6 +31,15 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
 
   Brick.prototype.decareaseHealth = function () {
     this.health--
+  }
+
+  Brick.prototype.update = function (delta) {
+    let pos = this.body.position
+    let angle = this.body.angle
+
+    this.sprite.angle = angle
+    this.sprite.x = pos.x
+    this.sprite.y = pos.y
   }
 
   return Brick

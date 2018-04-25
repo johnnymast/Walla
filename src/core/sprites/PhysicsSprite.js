@@ -4,7 +4,8 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
     this.texture = texture
     this.sprite = new pixi.Sprite(texture)
-
+    this.sprite.anchor.x = 0.5
+    this.sprite.anchor.y = 0.5
     this.childClass = Object.getPrototypeOf(this).constructor.name
     this.body = null
     this._x = 0
@@ -23,28 +24,28 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
   extend(PhysicsSprite, GameObject)
 
-  PhysicsSprite.prototype.sleep = function() {
-    this.setProperty('isSleeping', true);
+  PhysicsSprite.prototype.sleep = function () {
+    this.setProperty('isSleeping', true)
   }
 
-  PhysicsSprite.prototype.wakeUp = function() {
-    this.setProperty('isSleeping', false);
+  PhysicsSprite.prototype.wakeUp = function () {
+    this.setProperty('isSleeping', false)
   }
 
-  PhysicsSprite.prototype.setupCollition = function() {
+  PhysicsSprite.prototype.setupCollition = function () {
     this.PhysicsManager.getEventHandler().on(this.PhysicsManager.getEngine(), 'collisionActive', (e) => {
-      for(let pair of e.pairs) {
+      for (let pair of e.pairs) {
         let bodyA = pair.bodyA
         let bodyB = pair.bodyB
 
         if (bodyA === this.body) {
-           this.onCollisionWith(bodyB);
+          this.onCollisionWith(bodyB)
         }
       }
-    });
+    })
   }
 
-  PhysicsSprite.prototype.onCollisionWith = function(withObject) {
+  PhysicsSprite.prototype.onCollisionWith = function (withObject) {
     /**
      * You can overwrite this function if you wish
      * to receive collision events for this sprite.
@@ -55,9 +56,6 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
     x = x || this._x
     y = y || this._y
-
-    this.sprite.x = x
-    this.sprite.y = y
 
     this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height)
 
@@ -77,12 +75,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   }
 
   PhysicsSprite.prototype.setX = function (x) {
-    // this.body.position.x = x
-    this.PhysicsManager.setPosition(this.body, x, this.body.position.y, this._width, this._height)
+    this.PhysicsManager.setPosition(this.body, x, this.getY(), this._width, this._height)
   }
 
   PhysicsSprite.prototype.setY = function (y) {
-    //this.body.position.y = y
     this.PhysicsManager.setPosition(this.body, this.getX(), y, this._width, this._height)
   }
 
@@ -107,7 +103,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.PhysicsManager.add(this.body)
   }
 
-  PhysicsSprite.prototype.update = function() {
+  PhysicsSprite.prototype.update = function () {
 
   }
 

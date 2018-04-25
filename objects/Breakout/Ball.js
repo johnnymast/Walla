@@ -13,26 +13,26 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
     let radius = this._width
 
     let options = {
-      isSleeping: true,
+      // isSleeping: true,
       // isStatic: true,
      //  inertia: Infinity,
      //  isSensor: true,
      //  label: this._id,
-      mass: 1,
-      restitution: 1,
+     //  mass: 1,
+     //  restitution: 1,
     }
 
-    this.body = this.PhysicsManager.circle(this.x, this.y, radius, options)
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
     this.body.label = Object.getPrototypeOf(this).constructor.name
     this.PhysicsManager.add(this.body)
   }
 
   Ball.prototype.fire = function () {
-    this.PhysicsManager.setVelocity(this.body, {x: 0, y:  rand(-2, 2)})
-    this.PhysicsManager.setAngularVelocity(this.body, 0);
+    // this.PhysicsManager.setVelocity(this.body, {x: 0, y:  rand(-2, 2)})
+    // this.PhysicsManager.setAngularVelocity(this.body, 0);
   }
 
-  Ball.prototype.update = function () {
+  Ball.prototype.update = function (delta) {
     let pos = this.body.position
     let angle = this.body.angle
 

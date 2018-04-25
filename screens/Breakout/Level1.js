@@ -30,7 +30,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
       'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
     }
 
-    this.PhysicsManager.getWorld().gravity.y =  0.75
+    this.PhysicsManager.getWorld().gravity.y = 0.75
     let y = this.startY
 
     for (let key of Object.keys(this.bricks)) {
@@ -52,23 +52,21 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     // PIXI.sound.play('level1_music');
     // PIXI.sound.play('game_over');
 
-    this.resources = this.ge.get('StateManager').get('resources')
     this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'))
-    this.pad.setPosition(this.app.screen.width / 2, this.app.screen.height - 100)
+    this.pad.setPosition(this.app.screen.width / 2, this.app.screen.height / 2 - 100)
 
     var tx = PIXI.Texture.fromFrame('ballBlue.png')
     this.ball = new Ball(tx)
-    this.ball.setPosition(this.pad.sprite.x / 2 - tx.width / 2 - 10, this.pad.sprite.y - tx.height)
+    this.ball.setPosition(this.pad.body.position.x / 2 - tx.width / 2, 300)
     //
-    this.pad.onCollisionWith = (withOnbject) => {
-      let MAX_VELOCITY = 50
-      console.log('hi with pad', withOnbject)
-      this.PhysicsManager.setVelocity(this.ball.body, {
-        x: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
-        y: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
-      })
-    }
-
+    // this.pad.onCollisionWith = (withOnbject) => {
+    //   let MAX_VELOCITY = 50
+    //   console.log('hi with pad', withOnbject)
+    //   this.PhysicsManager.setVelocity(this.ball.body, {
+    //     x: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
+    //     y: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
+    //   })
+    // }
 
     this.objects.push(this.ball)
     this.objects.push(this.pad)
@@ -86,8 +84,8 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     } else if (coords.x <= 0) {
       coords.x = 0
     }
-    this.pad.setPosition(coords.x, this.pad.sprite.position.y)
-    // this.pad.setX(coords.x)
+    console.log('pad x', coords.x, this.pad.body)
+    this.pad.setX(coords.x)
   }
 
   Level1.prototype.onPointerDown = function (event) {
@@ -110,9 +108,10 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     for (let object of this.objects) {
       if (object instanceof Ball && this.didStart === false) {
-        object.setPosition(this.pad.sprite.x + this.pad.sprite.width / 2 - object.sprite.width / 2, object.sprite.y)
-      } else
-        object.update(delta)
+        //  object.setPosition(this.pad.sprite.x + this.pad.sprite.width / 2 - object.sprite.width / 2, object.sprite.y)
+      }
+
+      object.update(delta)
     }
   }
 
