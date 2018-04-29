@@ -1,9 +1,9 @@
 /**
- * Class for Vector2D math calculations.
+ * Class for Vector2d math calculations.
  *
  * @class
  */
-class Vector2D {
+class Vector2d {
   constructor (x, y) {
     this.x = x
     this.y = y
@@ -11,7 +11,7 @@ class Vector2D {
 
   /**
    * @example
-   * let vector = new Vector2D(1,3);
+   * let vector = new Vector2d(1,3);
    *
    * // Our vector looks like this
    * // { x: 1, y: 3 }
@@ -24,7 +24,7 @@ class Vector2D {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2D} n Add a number to the matrix or add a an other Matrix object
+   * @param {number|Vector2d} n Add a number to the matrix or add a an other Matrix object
    * @returns {object}
    */
   toObject () {
@@ -34,17 +34,17 @@ class Vector2D {
   /**
    * Clone the matrix into a new Matrix object.
    *
-   * @returns {Vector2D}
+   * @returns {Vector2d}
    */
   clone () {
-    return new Vector2D(this.x, this.y)
+    return new Vector2d(this.x, this.y)
   }
 
   // element wise
 
   /**
    * @example
-   * let vector = new Vector2D(1,3);
+   * let vector = new Vector2d(1,3);
    *
    * // Our vector looks like this
    * // { x: 1, y: 3 }
@@ -57,11 +57,11 @@ class Vector2D {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2D} n Add a number to the matrix or add a an other Matrix object
-   * @returns {Vector2D}
+   * @param {number|Vector2d} n Add a number to the matrix or add a an other Matrix object
+   * @returns {Vector2d}
    */
   add (n) {
-    if (n instanceof Vector2D) {
+    if (n instanceof Vector2d) {
       this.x += n.x
       this.y += n.y
     } else {
@@ -73,7 +73,7 @@ class Vector2D {
 
   /**
    * @example
-   * let vector = new Vector2D(1,3);
+   * let vector = new Vector2d(1,3);
    *
    * // Our vector looks like this
    * // { x: 1, y: 3 }
@@ -86,11 +86,11 @@ class Vector2D {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2D} n Add a number to the matrix or add a an other Matrix object
-   * @returns {Vector2D}
+   * @param {number|Vector2d} n Add a number to the matrix or add a an other Matrix object
+   * @returns {Vector2d}
    */
   subtract (n) {
-    if (n instanceof Vector2D) {
+    if (n instanceof Vector2d) {
       this.x -= n.x
       this.y -= n.y
     } else {
@@ -102,7 +102,7 @@ class Vector2D {
 
   /**
    * @example
-   * let vector = new Vector2D(1,3);
+   * let vector = new Vector2d(1,3);
    *
    * // Our vector looks like this
    * // { x: 1, y: 3 }
@@ -115,11 +115,11 @@ class Vector2D {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2D} n Add a number to the matrix or add a an other Matrix object
-   * @returns {Vector2D}
+   * @param {number|Vector2d} n Add a number to the matrix or add a an other Matrix object
+   * @returns {Vector2d}
    */
   multiply (n) {
-    if (n instanceof Vector2D) {
+    if (n instanceof Vector2d) {
       this.x *= n.x
       this.y *= n.y
     } else {
@@ -150,5 +150,5 @@ class Vector2D {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = Vector2D
+  module.exports = Vector2d
 }
