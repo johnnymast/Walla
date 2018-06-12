@@ -5,7 +5,6 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     this.backgrounds = []
 
     this.statistics = new Statistics()
-
   }
 
   extend(MainScreen, Scene)
@@ -55,24 +54,31 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     this.addChild(menu)
 
     var item1 = new Menus.MenuItemText('Breakout', this.breakoutClicked)
-    var item2 = new Menus.MenuItemText('Circles')
+    var item2 = new Menus.MenuItemText('PixelShooter', this.pixelShooterClicked)
+    var item3 = new Menus.MenuItemText('Circles')
 
     item1.setPosition(menu.x, menu.y)
     item2.setPosition(menu.x, item1.y + item1.height + 5)
+    item3.setPosition(menu.x, item2.y + item2.height + 5)
 
     menu.addMenuItem(item1)
-//    menu.addMenuItem(item2);
+    menu.addMenuItem(item2)
+    menu.addMenuItem(item3)
 
     menu.x = this.app.screen.width / 2 - menu.width / 2
     menu.y = richText.y + 80
     //   this.resources.wave.play()
 
     this.addChild(richText)
-    this.addChild(this.statistics);
+    this.addChild(this.statistics)
   }
 
   MainScreen.prototype.setDisplayStats = function (visible) {
     this.statistics.visible = visible
+  }
+
+  MainScreen.prototype.pixelShooterClicked = function (event) {
+    this.SceneManager.switchTo('PixelShooter/Level1')
   }
 
   MainScreen.prototype.breakoutClicked = function (event) {

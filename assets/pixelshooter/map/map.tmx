@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="128" tileheight="128" infinite="0" nextobjectid="18">
+ <tileset firstgid="1" name="Decor" tilewidth="128" tileheight="128" tilecount="64" columns="8">
+  <image source="../images/ground.png" width="1024" height="1024"/>
+ </tileset>
+ <tileset firstgid="65" name="Water" tilewidth="128" tileheight="128" tilecount="1" columns="1">
+  <image source="../images/water.png" width="128" height="128"/>
+ </tileset>
+ <layer name="Water" width="10" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxzZGBgcBzFgwYDAAukGWU=
+  </data>
+ </layer>
+ <layer name="Ground" width="10" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAeCDAwHGAF0tgwUC4Bpg7IT2AE0tgwUG7BcFMH9PsCVkjYYGABIsMWBgD+UQ0d
+  </data>
+ </layer>
+ <objectgroup name="Player Spawns">
+  <object id="1" name="Spawn1" x="291" y="424">
+   <point/>
+  </object>
+  <object id="5" name="Spawn2" x="984" y="433">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup name="Bot spawns">
+  <object id="6" name="Spawn1" x="291" y="424">
+   <point/>
+  </object>
+  <object id="7" name="Spawn2" x="984" y="433">
+   <point/>
+  </object>
+  <object id="8" name="Spawn9" type="enamy_spawn" x="433" y="967">
+   <point/>
+  </object>
+  <object id="9" name="Spawn8" type="enamy_spawn" x="601" y="962">
+   <point/>
+  </object>
+  <object id="10" name="Spawn7" type="enamy_spawn" x="782" y="965">
+   <point/>
+  </object>
+  <object id="11" name="Spawn6" type="enamy_spawn" x="952" y="974">
+   <point/>
+  </object>
+  <object id="12" name="Spawn1" type="enamy_spawn" x="313" y="695">
+   <point/>
+  </object>
+  <object id="13" name="Spawn2" type="enamy_spawn" x="559" y="704">
+   <point/>
+  </object>
+  <object id="14" name="Spawn5" type="enamy_spawn" x="617" y="848">
+   <point/>
+  </object>
+  <object id="15" name="Spawn4" type="enamy_spawn" x="951" y="687">
+   <point/>
+  </object>
+  <object id="16" name="Spawn3" type="enamy_spawn" x="767" y="583">
+   <point/>
+  </object>
+ </objectgroup>
+</map>

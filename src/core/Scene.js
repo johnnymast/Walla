@@ -2,7 +2,6 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   let Scene = function (options) {
     GameObject.call(this, options)
 
-    this.paused = false
     this.childClass = Object.getPrototypeOf(this).constructor.name
 
     if (typeof this.update === 'undefined') {

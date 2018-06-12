@@ -67,10 +67,18 @@ define(['pixi', 'core/Scene', 'core/GameEngine'], function (pixi, Scene, GameEng
       {name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png'},
       {name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png'},
       {name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png'},
-    ])
 
+      // // PixelShooter
+      // {name: 'Decor', src: 'assets/pixelshooter/images/ground.png'},
+      // {name: 'Water', src: 'assets/pixelshooter/images/water.png'},
+      {name: 'pixelshooter_map', src: 'assets/pixelshooter/map/map.tmx'},
+      {name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/pixelshooter/spritesheets/game-0.json'},
+    ])
+    //
     this.AssetManager.once('complete', this._preloadready, this)
     this.AssetManager.on('progress', this._preloadProgress, this)
+    // PIXI.loader.once('complete', this._preloadready, this)
+    // PIXI.loader.on('progress', this._preloadProgress, this)
   }
 
   SplashScene.prototype._preloadProgress = function (event) {
