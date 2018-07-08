@@ -9,6 +9,8 @@ define(['pixi', 'core/GameEngine'], function (pixi, GameEngine) {
     this.SceneManager = this.ge.get('SceneManager')
     this.StateManager = this.ge.get('StateManager')
     this.PhysicsManager = this.ge.get('PhysicsManager')
+
+    this.InteractionManager = this.app.renderer.plugins.interaction
   }
 
   extend(GameObject, pixi.Container)

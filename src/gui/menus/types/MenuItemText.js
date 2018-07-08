@@ -1,4 +1,4 @@
-define(['pixi', 'gui/menu/MenuItem'], function (pixi,  MenuItem) {
+define(['pixi', 'gui/menus/MenuItem'], function (pixi,  MenuItem) {
 
   /**
    * @classdesc MenuItemText module

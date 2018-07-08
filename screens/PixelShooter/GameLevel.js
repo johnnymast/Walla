@@ -2,7 +2,6 @@ define([ 'core/Level', 'gui/Statistics'], function (Level, Statistics) {
   var GameLevel = function (options) {
     Level.call(this, options)
 
-
     /**
      * Add the FPS counter.
      */

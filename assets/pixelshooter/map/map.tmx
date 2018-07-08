@@ -16,6 +16,11 @@
    eJxjYCAeCDAwHGAF0tgwUC4Bpg7IT2AE0tgwUG7BcFMH9PsCVkjYYGABIsMWBgD+UQ0d
   </data>
  </layer>
+ <layer name="Tile Layer 3" width="10" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFgwkAAAGQAAE=
+  </data>
+ </layer>
  <objectgroup name="Player Spawns">
   <object id="1" name="Spawn1" x="291" y="424">
    <point/>

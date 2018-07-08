@@ -11,7 +11,7 @@
     "watch": "webpack --config=webpack.config.js --progress --colors --watch",
     "prod": "npm run production",
     "test": "jest tests",
-    "serve": "live-server",
+    "serve": "live-server --host=0.0.0.0",
     "predocs": "rimraf docs/**",
     "docs": "jsdoc  -c book.json -R README.md"
   },
@@ -38,11 +38,13 @@
     "matter-js": "^0.14.1",
     "npm": "^5.8.0",
     "pixi-filters": "^2.6.0",
+    "pixi-simple-gesture": "^0.2.2",
     "pixi-sound": "^2.0.2",
     "pixi-tiledmap": "^1.9.3",
     "pixi.js": "^4.7.3",
     "require.js": "^1.0.0",
     "rimraf": "^2.6.2",
+    "standard": "^11.0.1",
     "underscore": "^1.8.3"
   },
   "jest": {

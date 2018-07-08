@@ -37864,7 +37864,1561 @@ PIXI.loader.use(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__tiledMapLoade
 /* 242 */,
 /* 243 */,
 /* 244 */,
-/* 245 */,
+/* 245 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
+//     http://underscorejs.org
+//     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+//     Underscore may be freely distributed under the MIT license.
+
+(function() {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `exports` on the server.
+  var root = this;
+
+  // Save the previous value of the `_` variable.
+  var previousUnderscore = root._;
+
+  // Save bytes in the minified (but not gzipped) version:
+  var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
+
+  // Create quick reference variables for speed access to core prototypes.
+  var
+    push             = ArrayProto.push,
+    slice            = ArrayProto.slice,
+    toString         = ObjProto.toString,
+    hasOwnProperty   = ObjProto.hasOwnProperty;
+
+  // All **ECMAScript 5** native function implementations that we hope to use
+  // are declared here.
+  var
+    nativeIsArray      = Array.isArray,
+    nativeKeys         = Object.keys,
+    nativeBind         = FuncProto.bind,
+    nativeCreate       = Object.create;
+
+  // Naked function reference for surrogate-prototype-swapping.
+  var Ctor = function(){};
+
+  // Create a safe reference to the Underscore object for use below.
+  var _ = function(obj) {
+    if (obj instanceof _) return obj;
+    if (!(this instanceof _)) return new _(obj);
+    this._wrapped = obj;
+  };
+
+  // Export the Underscore object for **Node.js**, with
+  // backwards-compatibility for the old `require()` API. If we're in
+  // the browser, add `_` as a global object.
+  if (true) {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = _;
+    }
+    exports._ = _;
+  } else {
+    root._ = _;
+  }
+
+  // Current version.
+  _.VERSION = '1.8.3';
+
+  // Internal function that returns an efficient (for current engines) version
+  // of the passed-in callback, to be repeatedly applied in other Underscore
+  // functions.
+  var optimizeCb = function(func, context, argCount) {
+    if (context === void 0) return func;
+    switch (argCount == null ? 3 : argCount) {
+      case 1: return function(value) {
+        return func.call(context, value);
+      };
+      case 2: return function(value, other) {
+        return func.call(context, value, other);
+      };
+      case 3: return function(value, index, collection) {
+        return func.call(context, value, index, collection);
+      };
+      case 4: return function(accumulator, value, index, collection) {
+        return func.call(context, accumulator, value, index, collection);
+      };
+    }
+    return function() {
+      return func.apply(context, arguments);
+    };
+  };
+
+  // A mostly-internal function to generate callbacks that can be applied
+  // to each element in a collection, returning the desired result — either
+  // identity, an arbitrary callback, a property matcher, or a property accessor.
+  var cb = function(value, context, argCount) {
+    if (value == null) return _.identity;
+    if (_.isFunction(value)) return optimizeCb(value, context, argCount);
+    if (_.isObject(value)) return _.matcher(value);
+    return _.property(value);
+  };
+  _.iteratee = function(value, context) {
+    return cb(value, context, Infinity);
+  };
+
+  // An internal function for creating assigner functions.
+  var createAssigner = function(keysFunc, undefinedOnly) {
+    return function(obj) {
+      var length = arguments.length;
+      if (length < 2 || obj == null) return obj;
+      for (var index = 1; index < length; index++) {
+        var source = arguments[index],
+            keys = keysFunc(source),
+            l = keys.length;
+        for (var i = 0; i < l; i++) {
+          var key = keys[i];
+          if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
+        }
+      }
+      return obj;
+    };
+  };
+
+  // An internal function for creating a new object that inherits from another.
+  var baseCreate = function(prototype) {
+    if (!_.isObject(prototype)) return {};
+    if (nativeCreate) return nativeCreate(prototype);
+    Ctor.prototype = prototype;
+    var result = new Ctor;
+    Ctor.prototype = null;
+    return result;
+  };
+
+  var property = function(key) {
+    return function(obj) {
+      return obj == null ? void 0 : obj[key];
+    };
+  };
+
+  // Helper for collection methods to determine whether a collection
+  // should be iterated as an array or as an object
+  // Related: http://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength
+  // Avoids a very nasty iOS 8 JIT bug on ARM-64. #2094
+  var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+  var getLength = property('length');
+  var isArrayLike = function(collection) {
+    var length = getLength(collection);
+    return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+  };
+
+  // Collection Functions
+  // --------------------
+
+  // The cornerstone, an `each` implementation, aka `forEach`.
+  // Handles raw objects in addition to array-likes. Treats all
+  // sparse array-likes as if they were dense.
+  _.each = _.forEach = function(obj, iteratee, context) {
+    iteratee = optimizeCb(iteratee, context);
+    var i, length;
+    if (isArrayLike(obj)) {
+      for (i = 0, length = obj.length; i < length; i++) {
+        iteratee(obj[i], i, obj);
+      }
+    } else {
+      var keys = _.keys(obj);
+      for (i = 0, length = keys.length; i < length; i++) {
+        iteratee(obj[keys[i]], keys[i], obj);
+      }
+    }
+    return obj;
+  };
+
+  // Return the results of applying the iteratee to each element.
+  _.map = _.collect = function(obj, iteratee, context) {
+    iteratee = cb(iteratee, context);
+    var keys = !isArrayLike(obj) && _.keys(obj),
+        length = (keys || obj).length,
+        results = Array(length);
+    for (var index = 0; index < length; index++) {
+      var currentKey = keys ? keys[index] : index;
+      results[index] = iteratee(obj[currentKey], currentKey, obj);
+    }
+    return results;
+  };
+
+  // Create a reducing function iterating left or right.
+  function createReduce(dir) {
+    // Optimized iterator function as using arguments.length
+    // in the main function will deoptimize the, see #1991.
+    function iterator(obj, iteratee, memo, keys, index, length) {
+      for (; index >= 0 && index < length; index += dir) {
+        var currentKey = keys ? keys[index] : index;
+        memo = iteratee(memo, obj[currentKey], currentKey, obj);
+      }
+      return memo;
+    }
+
+    return function(obj, iteratee, memo, context) {
+      iteratee = optimizeCb(iteratee, context, 4);
+      var keys = !isArrayLike(obj) && _.keys(obj),
+          length = (keys || obj).length,
+          index = dir > 0 ? 0 : length - 1;
+      // Determine the initial value if none is provided.
+      if (arguments.length < 3) {
+        memo = obj[keys ? keys[index] : index];
+        index += dir;
+      }
+      return iterator(obj, iteratee, memo, keys, index, length);
+    };
+  }
+
+  // **Reduce** builds up a single result from a list of values, aka `inject`,
+  // or `foldl`.
+  _.reduce = _.foldl = _.inject = createReduce(1);
+
+  // The right-associative version of reduce, also known as `foldr`.
+  _.reduceRight = _.foldr = createReduce(-1);
+
+  // Return the first value which passes a truth test. Aliased as `detect`.
+  _.find = _.detect = function(obj, predicate, context) {
+    var key;
+    if (isArrayLike(obj)) {
+      key = _.findIndex(obj, predicate, context);
+    } else {
+      key = _.findKey(obj, predicate, context);
+    }
+    if (key !== void 0 && key !== -1) return obj[key];
+  };
+
+  // Return all the elements that pass a truth test.
+  // Aliased as `select`.
+  _.filter = _.select = function(obj, predicate, context) {
+    var results = [];
+    predicate = cb(predicate, context);
+    _.each(obj, function(value, index, list) {
+      if (predicate(value, index, list)) results.push(value);
+    });
+    return results;
+  };
+
+  // Return all the elements for which a truth test fails.
+  _.reject = function(obj, predicate, context) {
+    return _.filter(obj, _.negate(cb(predicate)), context);
+  };
+
+  // Determine whether all of the elements match a truth test.
+  // Aliased as `all`.
+  _.every = _.all = function(obj, predicate, context) {
+    predicate = cb(predicate, context);
+    var keys = !isArrayLike(obj) && _.keys(obj),
+        length = (keys || obj).length;
+    for (var index = 0; index < length; index++) {
+      var currentKey = keys ? keys[index] : index;
+      if (!predicate(obj[currentKey], currentKey, obj)) return false;
+    }
+    return true;
+  };
+
+  // Determine if at least one element in the object matches a truth test.
+  // Aliased as `any`.
+  _.some = _.any = function(obj, predicate, context) {
+    predicate = cb(predicate, context);
+    var keys = !isArrayLike(obj) && _.keys(obj),
+        length = (keys || obj).length;
+    for (var index = 0; index < length; index++) {
+      var currentKey = keys ? keys[index] : index;
+      if (predicate(obj[currentKey], currentKey, obj)) return true;
+    }
+    return false;
+  };
+
+  // Determine if the array or object contains a given item (using `===`).
+  // Aliased as `includes` and `include`.
+  _.contains = _.includes = _.include = function(obj, item, fromIndex, guard) {
+    if (!isArrayLike(obj)) obj = _.values(obj);
+    if (typeof fromIndex != 'number' || guard) fromIndex = 0;
+    return _.indexOf(obj, item, fromIndex) >= 0;
+  };
+
+  // Invoke a method (with arguments) on every item in a collection.
+  _.invoke = function(obj, method) {
+    var args = slice.call(arguments, 2);
+    var isFunc = _.isFunction(method);
+    return _.map(obj, function(value) {
+      var func = isFunc ? method : value[method];
+      return func == null ? func : func.apply(value, args);
+    });
+  };
+
+  // Convenience version of a common use case of `map`: fetching a property.
+  _.pluck = function(obj, key) {
+    return _.map(obj, _.property(key));
+  };
+
+  // Convenience version of a common use case of `filter`: selecting only objects
+  // containing specific `key:value` pairs.
+  _.where = function(obj, attrs) {
+    return _.filter(obj, _.matcher(attrs));
+  };
+
+  // Convenience version of a common use case of `find`: getting the first object
+  // containing specific `key:value` pairs.
+  _.findWhere = function(obj, attrs) {
+    return _.find(obj, _.matcher(attrs));
+  };
+
+  // Return the maximum element (or element-based computation).
+  _.max = function(obj, iteratee, context) {
+    var result = -Infinity, lastComputed = -Infinity,
+        value, computed;
+    if (iteratee == null && obj != null) {
+      obj = isArrayLike(obj) ? obj : _.values(obj);
+      for (var i = 0, length = obj.length; i < length; i++) {
+        value = obj[i];
+        if (value > result) {
+          result = value;
+        }
+      }
+    } else {
+      iteratee = cb(iteratee, context);
+      _.each(obj, function(value, index, list) {
+        computed = iteratee(value, index, list);
+        if (computed > lastComputed || computed === -Infinity && result === -Infinity) {
+          result = value;
+          lastComputed = computed;
+        }
+      });
+    }
+    return result;
+  };
+
+  // Return the minimum element (or element-based computation).
+  _.min = function(obj, iteratee, context) {
+    var result = Infinity, lastComputed = Infinity,
+        value, computed;
+    if (iteratee == null && obj != null) {
+      obj = isArrayLike(obj) ? obj : _.values(obj);
+      for (var i = 0, length = obj.length; i < length; i++) {
+        value = obj[i];
+        if (value < result) {
+          result = value;
+        }
+      }
+    } else {
+      iteratee = cb(iteratee, context);
+      _.each(obj, function(value, index, list) {
+        computed = iteratee(value, index, list);
+        if (computed < lastComputed || computed === Infinity && result === Infinity) {
+          result = value;
+          lastComputed = computed;
+        }
+      });
+    }
+    return result;
+  };
+
+  // Shuffle a collection, using the modern version of the
+  // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
+  _.shuffle = function(obj) {
+    var set = isArrayLike(obj) ? obj : _.values(obj);
+    var length = set.length;
+    var shuffled = Array(length);
+    for (var index = 0, rand; index < length; index++) {
+      rand = _.random(0, index);
+      if (rand !== index) shuffled[index] = shuffled[rand];
+      shuffled[rand] = set[index];
+    }
+    return shuffled;
+  };
+
+  // Sample **n** random values from a collection.
+  // If **n** is not specified, returns a single random element.
+  // The internal `guard` argument allows it to work with `map`.
+  _.sample = function(obj, n, guard) {
+    if (n == null || guard) {
+      if (!isArrayLike(obj)) obj = _.values(obj);
+      return obj[_.random(obj.length - 1)];
+    }
+    return _.shuffle(obj).slice(0, Math.max(0, n));
+  };
+
+  // Sort the object's values by a criterion produced by an iteratee.
+  _.sortBy = function(obj, iteratee, context) {
+    iteratee = cb(iteratee, context);
+    return _.pluck(_.map(obj, function(value, index, list) {
+      return {
+        value: value,
+        index: index,
+        criteria: iteratee(value, index, list)
+      };
+    }).sort(function(left, right) {
+      var a = left.criteria;
+      var b = right.criteria;
+      if (a !== b) {
+        if (a > b || a === void 0) return 1;
+        if (a < b || b === void 0) return -1;
+      }
+      return left.index - right.index;
+    }), 'value');
+  };
+
+  // An internal function used for aggregate "group by" operations.
+  var group = function(behavior) {
+    return function(obj, iteratee, context) {
+      var result = {};
+      iteratee = cb(iteratee, context);
+      _.each(obj, function(value, index) {
+        var key = iteratee(value, index, obj);
+        behavior(result, value, key);
+      });
+      return result;
+    };
+  };
+
+  // Groups the object's values by a criterion. Pass either a string attribute
+  // to group by, or a function that returns the criterion.
+  _.groupBy = group(function(result, value, key) {
+    if (_.has(result, key)) result[key].push(value); else result[key] = [value];
+  });
+
+  // Indexes the object's values by a criterion, similar to `groupBy`, but for
+  // when you know that your index values will be unique.
+  _.indexBy = group(function(result, value, key) {
+    result[key] = value;
+  });
+
+  // Counts instances of an object that group by a certain criterion. Pass
+  // either a string attribute to count by, or a function that returns the
+  // criterion.
+  _.countBy = group(function(result, value, key) {
+    if (_.has(result, key)) result[key]++; else result[key] = 1;
+  });
+
+  // Safely create a real, live array from anything iterable.
+  _.toArray = function(obj) {
+    if (!obj) return [];
+    if (_.isArray(obj)) return slice.call(obj);
+    if (isArrayLike(obj)) return _.map(obj, _.identity);
+    return _.values(obj);
+  };
+
+  // Return the number of elements in an object.
+  _.size = function(obj) {
+    if (obj == null) return 0;
+    return isArrayLike(obj) ? obj.length : _.keys(obj).length;
+  };
+
+  // Split a collection into two arrays: one whose elements all satisfy the given
+  // predicate, and one whose elements all do not satisfy the predicate.
+  _.partition = function(obj, predicate, context) {
+    predicate = cb(predicate, context);
+    var pass = [], fail = [];
+    _.each(obj, function(value, key, obj) {
+      (predicate(value, key, obj) ? pass : fail).push(value);
+    });
+    return [pass, fail];
+  };
+
+  // Array Functions
+  // ---------------
+
+  // Get the first element of an array. Passing **n** will return the first N
+  // values in the array. Aliased as `head` and `take`. The **guard** check
+  // allows it to work with `_.map`.
+  _.first = _.head = _.take = function(array, n, guard) {
+    if (array == null) return void 0;
+    if (n == null || guard) return array[0];
+    return _.initial(array, array.length - n);
+  };
+
+  // Returns everything but the last entry of the array. Especially useful on
+  // the arguments object. Passing **n** will return all the values in
+  // the array, excluding the last N.
+  _.initial = function(array, n, guard) {
+    return slice.call(array, 0, Math.max(0, array.length - (n == null || guard ? 1 : n)));
+  };
+
+  // Get the last element of an array. Passing **n** will return the last N
+  // values in the array.
+  _.last = function(array, n, guard) {
+    if (array == null) return void 0;
+    if (n == null || guard) return array[array.length - 1];
+    return _.rest(array, Math.max(0, array.length - n));
+  };
+
+  // Returns everything but the first entry of the array. Aliased as `tail` and `drop`.
+  // Especially useful on the arguments object. Passing an **n** will return
+  // the rest N values in the array.
+  _.rest = _.tail = _.drop = function(array, n, guard) {
+    return slice.call(array, n == null || guard ? 1 : n);
+  };
+
+  // Trim out all falsy values from an array.
+  _.compact = function(array) {
+    return _.filter(array, _.identity);
+  };
+
+  // Internal implementation of a recursive `flatten` function.
+  var flatten = function(input, shallow, strict, startIndex) {
+    var output = [], idx = 0;
+    for (var i = startIndex || 0, length = getLength(input); i < length; i++) {
+      var value = input[i];
+      if (isArrayLike(value) && (_.isArray(value) || _.isArguments(value))) {
+        //flatten current level of array or arguments object
+        if (!shallow) value = flatten(value, shallow, strict);
+        var j = 0, len = value.length;
+        output.length += len;
+        while (j < len) {
+          output[idx++] = value[j++];
+        }
+      } else if (!strict) {
+        output[idx++] = value;
+      }
+    }
+    return output;
+  };
+
+  // Flatten out an array, either recursively (by default), or just one level.
+  _.flatten = function(array, shallow) {
+    return flatten(array, shallow, false);
+  };
+
+  // Return a version of the array that does not contain the specified value(s).
+  _.without = function(array) {
+    return _.difference(array, slice.call(arguments, 1));
+  };
+
+  // Produce a duplicate-free version of the array. If the array has already
+  // been sorted, you have the option of using a faster algorithm.
+  // Aliased as `unique`.
+  _.uniq = _.unique = function(array, isSorted, iteratee, context) {
+    if (!_.isBoolean(isSorted)) {
+      context = iteratee;
+      iteratee = isSorted;
+      isSorted = false;
+    }
+    if (iteratee != null) iteratee = cb(iteratee, context);
+    var result = [];
+    var seen = [];
+    for (var i = 0, length = getLength(array); i < length; i++) {
+      var value = array[i],
+          computed = iteratee ? iteratee(value, i, array) : value;
+      if (isSorted) {
+        if (!i || seen !== computed) result.push(value);
+        seen = computed;
+      } else if (iteratee) {
+        if (!_.contains(seen, computed)) {
+          seen.push(computed);
+          result.push(value);
+        }
+      } else if (!_.contains(result, value)) {
+        result.push(value);
+      }
+    }
+    return result;
+  };
+
+  // Produce an array that contains the union: each distinct element from all of
+  // the passed-in arrays.
+  _.union = function() {
+    return _.uniq(flatten(arguments, true, true));
+  };
+
+  // Produce an array that contains every item shared between all the
+  // passed-in arrays.
+  _.intersection = function(array) {
+    var result = [];
+    var argsLength = arguments.length;
+    for (var i = 0, length = getLength(array); i < length; i++) {
+      var item = array[i];
+      if (_.contains(result, item)) continue;
+      for (var j = 1; j < argsLength; j++) {
+        if (!_.contains(arguments[j], item)) break;
+      }
+      if (j === argsLength) result.push(item);
+    }
+    return result;
+  };
+
+  // Take the difference between one array and a number of other arrays.
+  // Only the elements present in just the first array will remain.
+  _.difference = function(array) {
+    var rest = flatten(arguments, true, true, 1);
+    return _.filter(array, function(value){
+      return !_.contains(rest, value);
+    });
+  };
+
+  // Zip together multiple lists into a single array -- elements that share
+  // an index go together.
+  _.zip = function() {
+    return _.unzip(arguments);
+  };
+
+  // Complement of _.zip. Unzip accepts an array of arrays and groups
+  // each array's elements on shared indices
+  _.unzip = function(array) {
+    var length = array && _.max(array, getLength).length || 0;
+    var result = Array(length);
+
+    for (var index = 0; index < length; index++) {
+      result[index] = _.pluck(array, index);
+    }
+    return result;
+  };
+
+  // Converts lists into objects. Pass either a single array of `[key, value]`
+  // pairs, or two parallel arrays of the same length -- one of keys, and one of
+  // the corresponding values.
+  _.object = function(list, values) {
+    var result = {};
+    for (var i = 0, length = getLength(list); i < length; i++) {
+      if (values) {
+        result[list[i]] = values[i];
+      } else {
+        result[list[i][0]] = list[i][1];
+      }
+    }
+    return result;
+  };
+
+  // Generator function to create the findIndex and findLastIndex functions
+  function createPredicateIndexFinder(dir) {
+    return function(array, predicate, context) {
+      predicate = cb(predicate, context);
+      var length = getLength(array);
+      var index = dir > 0 ? 0 : length - 1;
+      for (; index >= 0 && index < length; index += dir) {
+        if (predicate(array[index], index, array)) return index;
+      }
+      return -1;
+    };
+  }
+
+  // Returns the first index on an array-like that passes a predicate test
+  _.findIndex = createPredicateIndexFinder(1);
+  _.findLastIndex = createPredicateIndexFinder(-1);
+
+  // Use a comparator function to figure out the smallest index at which
+  // an object should be inserted so as to maintain order. Uses binary search.
+  _.sortedIndex = function(array, obj, iteratee, context) {
+    iteratee = cb(iteratee, context, 1);
+    var value = iteratee(obj);
+    var low = 0, high = getLength(array);
+    while (low < high) {
+      var mid = Math.floor((low + high) / 2);
+      if (iteratee(array[mid]) < value) low = mid + 1; else high = mid;
+    }
+    return low;
+  };
+
+  // Generator function to create the indexOf and lastIndexOf functions
+  function createIndexFinder(dir, predicateFind, sortedIndex) {
+    return function(array, item, idx) {
+      var i = 0, length = getLength(array);
+      if (typeof idx == 'number') {
+        if (dir > 0) {
+            i = idx >= 0 ? idx : Math.max(idx + length, i);
+        } else {
+            length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
+        }
+      } else if (sortedIndex && idx && length) {
+        idx = sortedIndex(array, item);
+        return array[idx] === item ? idx : -1;
+      }
+      if (item !== item) {
+        idx = predicateFind(slice.call(array, i, length), _.isNaN);
+        return idx >= 0 ? idx + i : -1;
+      }
+      for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
+        if (array[idx] === item) return idx;
+      }
+      return -1;
+    };
+  }
+
+  // Return the position of the first occurrence of an item in an array,
+  // or -1 if the item is not included in the array.
+  // If the array is large and already in sort order, pass `true`
+  // for **isSorted** to use binary search.
+  _.indexOf = createIndexFinder(1, _.findIndex, _.sortedIndex);
+  _.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
+
+  // Generate an integer Array containing an arithmetic progression. A port of
+  // the native Python `range()` function. See
+  // [the Python documentation](http://docs.python.org/library/functions.html#range).
+  _.range = function(start, stop, step) {
+    if (stop == null) {
+      stop = start || 0;
+      start = 0;
+    }
+    step = step || 1;
+
+    var length = Math.max(Math.ceil((stop - start) / step), 0);
+    var range = Array(length);
+
+    for (var idx = 0; idx < length; idx++, start += step) {
+      range[idx] = start;
+    }
+
+    return range;
+  };
+
+  // Function (ahem) Functions
+  // ------------------
+
+  // Determines whether to execute a function as a constructor
+  // or a normal function with the provided arguments
+  var executeBound = function(sourceFunc, boundFunc, context, callingContext, args) {
+    if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
+    var self = baseCreate(sourceFunc.prototype);
+    var result = sourceFunc.apply(self, args);
+    if (_.isObject(result)) return result;
+    return self;
+  };
+
+  // Create a function bound to a given object (assigning `this`, and arguments,
+  // optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
+  // available.
+  _.bind = function(func, context) {
+    if (nativeBind && func.bind === nativeBind) return nativeBind.apply(func, slice.call(arguments, 1));
+    if (!_.isFunction(func)) throw new TypeError('Bind must be called on a function');
+    var args = slice.call(arguments, 2);
+    var bound = function() {
+      return executeBound(func, bound, context, this, args.concat(slice.call(arguments)));
+    };
+    return bound;
+  };
+
+  // Partially apply a function by creating a version that has had some of its
+  // arguments pre-filled, without changing its dynamic `this` context. _ acts
+  // as a placeholder, allowing any combination of arguments to be pre-filled.
+  _.partial = function(func) {
+    var boundArgs = slice.call(arguments, 1);
+    var bound = function() {
+      var position = 0, length = boundArgs.length;
+      var args = Array(length);
+      for (var i = 0; i < length; i++) {
+        args[i] = boundArgs[i] === _ ? arguments[position++] : boundArgs[i];
+      }
+      while (position < arguments.length) args.push(arguments[position++]);
+      return executeBound(func, bound, this, this, args);
+    };
+    return bound;
+  };
+
+  // Bind a number of an object's methods to that object. Remaining arguments
+  // are the method names to be bound. Useful for ensuring that all callbacks
+  // defined on an object belong to it.
+  _.bindAll = function(obj) {
+    var i, length = arguments.length, key;
+    if (length <= 1) throw new Error('bindAll must be passed function names');
+    for (i = 1; i < length; i++) {
+      key = arguments[i];
+      obj[key] = _.bind(obj[key], obj);
+    }
+    return obj;
+  };
+
+  // Memoize an expensive function by storing its results.
+  _.memoize = function(func, hasher) {
+    var memoize = function(key) {
+      var cache = memoize.cache;
+      var address = '' + (hasher ? hasher.apply(this, arguments) : key);
+      if (!_.has(cache, address)) cache[address] = func.apply(this, arguments);
+      return cache[address];
+    };
+    memoize.cache = {};
+    return memoize;
+  };
+
+  // Delays a function for the given number of milliseconds, and then calls
+  // it with the arguments supplied.
+  _.delay = function(func, wait) {
+    var args = slice.call(arguments, 2);
+    return setTimeout(function(){
+      return func.apply(null, args);
+    }, wait);
+  };
+
+  // Defers a function, scheduling it to run after the current call stack has
+  // cleared.
+  _.defer = _.partial(_.delay, _, 1);
+
+  // Returns a function, that, when invoked, will only be triggered at most once
+  // during a given window of time. Normally, the throttled function will run
+  // as much as it can, without ever going more than once per `wait` duration;
+  // but if you'd like to disable the execution on the leading edge, pass
+  // `{leading: false}`. To disable execution on the trailing edge, ditto.
+  _.throttle = function(func, wait, options) {
+    var context, args, result;
+    var timeout = null;
+    var previous = 0;
+    if (!options) options = {};
+    var later = function() {
+      previous = options.leading === false ? 0 : _.now();
+      timeout = null;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    };
+    return function() {
+      var now = _.now();
+      if (!previous && options.leading === false) previous = now;
+      var remaining = wait - (now - previous);
+      context = this;
+      args = arguments;
+      if (remaining <= 0 || remaining > wait) {
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        previous = now;
+        result = func.apply(context, args);
+        if (!timeout) context = args = null;
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+  };
+
+  // Returns a function, that, as long as it continues to be invoked, will not
+  // be triggered. The function will be called after it stops being called for
+  // N milliseconds. If `immediate` is passed, trigger the function on the
+  // leading edge, instead of the trailing.
+  _.debounce = function(func, wait, immediate) {
+    var timeout, args, context, timestamp, result;
+
+    var later = function() {
+      var last = _.now() - timestamp;
+
+      if (last < wait && last >= 0) {
+        timeout = setTimeout(later, wait - last);
+      } else {
+        timeout = null;
+        if (!immediate) {
+          result = func.apply(context, args);
+          if (!timeout) context = args = null;
+        }
+      }
+    };
+
+    return function() {
+      context = this;
+      args = arguments;
+      timestamp = _.now();
+      var callNow = immediate && !timeout;
+      if (!timeout) timeout = setTimeout(later, wait);
+      if (callNow) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+
+      return result;
+    };
+  };
+
+  // Returns the first function passed as an argument to the second,
+  // allowing you to adjust arguments, run code before and after, and
+  // conditionally execute the original function.
+  _.wrap = function(func, wrapper) {
+    return _.partial(wrapper, func);
+  };
+
+  // Returns a negated version of the passed-in predicate.
+  _.negate = function(predicate) {
+    return function() {
+      return !predicate.apply(this, arguments);
+    };
+  };
+
+  // Returns a function that is the composition of a list of functions, each
+  // consuming the return value of the function that follows.
+  _.compose = function() {
+    var args = arguments;
+    var start = args.length - 1;
+    return function() {
+      var i = start;
+      var result = args[start].apply(this, arguments);
+      while (i--) result = args[i].call(this, result);
+      return result;
+    };
+  };
+
+  // Returns a function that will only be executed on and after the Nth call.
+  _.after = function(times, func) {
+    return function() {
+      if (--times < 1) {
+        return func.apply(this, arguments);
+      }
+    };
+  };
+
+  // Returns a function that will only be executed up to (but not including) the Nth call.
+  _.before = function(times, func) {
+    var memo;
+    return function() {
+      if (--times > 0) {
+        memo = func.apply(this, arguments);
+      }
+      if (times <= 1) func = null;
+      return memo;
+    };
+  };
+
+  // Returns a function that will be executed at most one time, no matter how
+  // often you call it. Useful for lazy initialization.
+  _.once = _.partial(_.before, 2);
+
+  // Object Functions
+  // ----------------
+
+  // Keys in IE < 9 that won't be iterated by `for key in ...` and thus missed.
+  var hasEnumBug = !{toString: null}.propertyIsEnumerable('toString');
+  var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString',
+                      'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
+
+  function collectNonEnumProps(obj, keys) {
+    var nonEnumIdx = nonEnumerableProps.length;
+    var constructor = obj.constructor;
+    var proto = (_.isFunction(constructor) && constructor.prototype) || ObjProto;
+
+    // Constructor is a special case.
+    var prop = 'constructor';
+    if (_.has(obj, prop) && !_.contains(keys, prop)) keys.push(prop);
+
+    while (nonEnumIdx--) {
+      prop = nonEnumerableProps[nonEnumIdx];
+      if (prop in obj && obj[prop] !== proto[prop] && !_.contains(keys, prop)) {
+        keys.push(prop);
+      }
+    }
+  }
+
+  // Retrieve the names of an object's own properties.
+  // Delegates to **ECMAScript 5**'s native `Object.keys`
+  _.keys = function(obj) {
+    if (!_.isObject(obj)) return [];
+    if (nativeKeys) return nativeKeys(obj);
+    var keys = [];
+    for (var key in obj) if (_.has(obj, key)) keys.push(key);
+    // Ahem, IE < 9.
+    if (hasEnumBug) collectNonEnumProps(obj, keys);
+    return keys;
+  };
+
+  // Retrieve all the property names of an object.
+  _.allKeys = function(obj) {
+    if (!_.isObject(obj)) return [];
+    var keys = [];
+    for (var key in obj) keys.push(key);
+    // Ahem, IE < 9.
+    if (hasEnumBug) collectNonEnumProps(obj, keys);
+    return keys;
+  };
+
+  // Retrieve the values of an object's properties.
+  _.values = function(obj) {
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var values = Array(length);
+    for (var i = 0; i < length; i++) {
+      values[i] = obj[keys[i]];
+    }
+    return values;
+  };
+
+  // Returns the results of applying the iteratee to each element of the object
+  // In contrast to _.map it returns an object
+  _.mapObject = function(obj, iteratee, context) {
+    iteratee = cb(iteratee, context);
+    var keys =  _.keys(obj),
+          length = keys.length,
+          results = {},
+          currentKey;
+      for (var index = 0; index < length; index++) {
+        currentKey = keys[index];
+        results[currentKey] = iteratee(obj[currentKey], currentKey, obj);
+      }
+      return results;
+  };
+
+  // Convert an object into a list of `[key, value]` pairs.
+  _.pairs = function(obj) {
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var pairs = Array(length);
+    for (var i = 0; i < length; i++) {
+      pairs[i] = [keys[i], obj[keys[i]]];
+    }
+    return pairs;
+  };
+
+  // Invert the keys and values of an object. The values must be serializable.
+  _.invert = function(obj) {
+    var result = {};
+    var keys = _.keys(obj);
+    for (var i = 0, length = keys.length; i < length; i++) {
+      result[obj[keys[i]]] = keys[i];
+    }
+    return result;
+  };
+
+  // Return a sorted list of the function names available on the object.
+  // Aliased as `methods`
+  _.functions = _.methods = function(obj) {
+    var names = [];
+    for (var key in obj) {
+      if (_.isFunction(obj[key])) names.push(key);
+    }
+    return names.sort();
+  };
+
+  // Extend a given object with all the properties in passed-in object(s).
+  _.extend = createAssigner(_.allKeys);
+
+  // Assigns a given object with all the own properties in the passed-in object(s)
+  // (https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+  _.extendOwn = _.assign = createAssigner(_.keys);
+
+  // Returns the first key on an object that passes a predicate test
+  _.findKey = function(obj, predicate, context) {
+    predicate = cb(predicate, context);
+    var keys = _.keys(obj), key;
+    for (var i = 0, length = keys.length; i < length; i++) {
+      key = keys[i];
+      if (predicate(obj[key], key, obj)) return key;
+    }
+  };
+
+  // Return a copy of the object only containing the whitelisted properties.
+  _.pick = function(object, oiteratee, context) {
+    var result = {}, obj = object, iteratee, keys;
+    if (obj == null) return result;
+    if (_.isFunction(oiteratee)) {
+      keys = _.allKeys(obj);
+      iteratee = optimizeCb(oiteratee, context);
+    } else {
+      keys = flatten(arguments, false, false, 1);
+      iteratee = function(value, key, obj) { return key in obj; };
+      obj = Object(obj);
+    }
+    for (var i = 0, length = keys.length; i < length; i++) {
+      var key = keys[i];
+      var value = obj[key];
+      if (iteratee(value, key, obj)) result[key] = value;
+    }
+    return result;
+  };
+
+   // Return a copy of the object without the blacklisted properties.
+  _.omit = function(obj, iteratee, context) {
+    if (_.isFunction(iteratee)) {
+      iteratee = _.negate(iteratee);
+    } else {
+      var keys = _.map(flatten(arguments, false, false, 1), String);
+      iteratee = function(value, key) {
+        return !_.contains(keys, key);
+      };
+    }
+    return _.pick(obj, iteratee, context);
+  };
+
+  // Fill in a given object with default properties.
+  _.defaults = createAssigner(_.allKeys, true);
+
+  // Creates an object that inherits from the given prototype object.
+  // If additional properties are provided then they will be added to the
+  // created object.
+  _.create = function(prototype, props) {
+    var result = baseCreate(prototype);
+    if (props) _.extendOwn(result, props);
+    return result;
+  };
+
+  // Create a (shallow-cloned) duplicate of an object.
+  _.clone = function(obj) {
+    if (!_.isObject(obj)) return obj;
+    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
+  };
+
+  // Invokes interceptor with the obj, and then returns obj.
+  // The primary purpose of this method is to "tap into" a method chain, in
+  // order to perform operations on intermediate results within the chain.
+  _.tap = function(obj, interceptor) {
+    interceptor(obj);
+    return obj;
+  };
+
+  // Returns whether an object has a given set of `key:value` pairs.
+  _.isMatch = function(object, attrs) {
+    var keys = _.keys(attrs), length = keys.length;
+    if (object == null) return !length;
+    var obj = Object(object);
+    for (var i = 0; i < length; i++) {
+      var key = keys[i];
+      if (attrs[key] !== obj[key] || !(key in obj)) return false;
+    }
+    return true;
+  };
+
+
+  // Internal recursive comparison function for `isEqual`.
+  var eq = function(a, b, aStack, bStack) {
+    // Identical objects are equal. `0 === -0`, but they aren't identical.
+    // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
+    if (a === b) return a !== 0 || 1 / a === 1 / b;
+    // A strict comparison is necessary because `null == undefined`.
+    if (a == null || b == null) return a === b;
+    // Unwrap any wrapped objects.
+    if (a instanceof _) a = a._wrapped;
+    if (b instanceof _) b = b._wrapped;
+    // Compare `[[Class]]` names.
+    var className = toString.call(a);
+    if (className !== toString.call(b)) return false;
+    switch (className) {
+      // Strings, numbers, regular expressions, dates, and booleans are compared by value.
+      case '[object RegExp]':
+      // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
+      case '[object String]':
+        // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+        // equivalent to `new String("5")`.
+        return '' + a === '' + b;
+      case '[object Number]':
+        // `NaN`s are equivalent, but non-reflexive.
+        // Object(NaN) is equivalent to NaN
+        if (+a !== +a) return +b !== +b;
+        // An `egal` comparison is performed for other numeric values.
+        return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+      case '[object Date]':
+      case '[object Boolean]':
+        // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+        // millisecond representations. Note that invalid dates with millisecond representations
+        // of `NaN` are not equivalent.
+        return +a === +b;
+    }
+
+    var areArrays = className === '[object Array]';
+    if (!areArrays) {
+      if (typeof a != 'object' || typeof b != 'object') return false;
+
+      // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+      // from different frames are.
+      var aCtor = a.constructor, bCtor = b.constructor;
+      if (aCtor !== bCtor && !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
+                               _.isFunction(bCtor) && bCtor instanceof bCtor)
+                          && ('constructor' in a && 'constructor' in b)) {
+        return false;
+      }
+    }
+    // Assume equality for cyclic structures. The algorithm for detecting cyclic
+    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+
+    // Initializing stack of traversed objects.
+    // It's done here since we only need them for objects and arrays comparison.
+    aStack = aStack || [];
+    bStack = bStack || [];
+    var length = aStack.length;
+    while (length--) {
+      // Linear search. Performance is inversely proportional to the number of
+      // unique nested structures.
+      if (aStack[length] === a) return bStack[length] === b;
+    }
+
+    // Add the first object to the stack of traversed objects.
+    aStack.push(a);
+    bStack.push(b);
+
+    // Recursively compare objects and arrays.
+    if (areArrays) {
+      // Compare array lengths to determine if a deep comparison is necessary.
+      length = a.length;
+      if (length !== b.length) return false;
+      // Deep compare the contents, ignoring non-numeric properties.
+      while (length--) {
+        if (!eq(a[length], b[length], aStack, bStack)) return false;
+      }
+    } else {
+      // Deep compare objects.
+      var keys = _.keys(a), key;
+      length = keys.length;
+      // Ensure that both objects contain the same number of properties before comparing deep equality.
+      if (_.keys(b).length !== length) return false;
+      while (length--) {
+        // Deep compare each member
+        key = keys[length];
+        if (!(_.has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
+      }
+    }
+    // Remove the first object from the stack of traversed objects.
+    aStack.pop();
+    bStack.pop();
+    return true;
+  };
+
+  // Perform a deep comparison to check if two objects are equal.
+  _.isEqual = function(a, b) {
+    return eq(a, b);
+  };
+
+  // Is a given array, string, or object empty?
+  // An "empty" object has no enumerable own-properties.
+  _.isEmpty = function(obj) {
+    if (obj == null) return true;
+    if (isArrayLike(obj) && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
+    return _.keys(obj).length === 0;
+  };
+
+  // Is a given value a DOM element?
+  _.isElement = function(obj) {
+    return !!(obj && obj.nodeType === 1);
+  };
+
+  // Is a given value an array?
+  // Delegates to ECMA5's native Array.isArray
+  _.isArray = nativeIsArray || function(obj) {
+    return toString.call(obj) === '[object Array]';
+  };
+
+  // Is a given variable an object?
+  _.isObject = function(obj) {
+    var type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
+  };
+
+  // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError.
+  _.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function(name) {
+    _['is' + name] = function(obj) {
+      return toString.call(obj) === '[object ' + name + ']';
+    };
+  });
+
+  // Define a fallback version of the method in browsers (ahem, IE < 9), where
+  // there isn't any inspectable "Arguments" type.
+  if (!_.isArguments(arguments)) {
+    _.isArguments = function(obj) {
+      return _.has(obj, 'callee');
+    };
+  }
+
+  // Optimize `isFunction` if appropriate. Work around some typeof bugs in old v8,
+  // IE 11 (#1621), and in Safari 8 (#1929).
+  if (typeof /./ != 'function' && typeof Int8Array != 'object') {
+    _.isFunction = function(obj) {
+      return typeof obj == 'function' || false;
+    };
+  }
+
+  // Is a given object a finite number?
+  _.isFinite = function(obj) {
+    return isFinite(obj) && !isNaN(parseFloat(obj));
+  };
+
+  // Is the given value `NaN`? (NaN is the only number which does not equal itself).
+  _.isNaN = function(obj) {
+    return _.isNumber(obj) && obj !== +obj;
+  };
+
+  // Is a given value a boolean?
+  _.isBoolean = function(obj) {
+    return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
+  };
+
+  // Is a given value equal to null?
+  _.isNull = function(obj) {
+    return obj === null;
+  };
+
+  // Is a given variable undefined?
+  _.isUndefined = function(obj) {
+    return obj === void 0;
+  };
+
+  // Shortcut function for checking if an object has a given property directly
+  // on itself (in other words, not on a prototype).
+  _.has = function(obj, key) {
+    return obj != null && hasOwnProperty.call(obj, key);
+  };
+
+  // Utility Functions
+  // -----------------
+
+  // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
+  // previous owner. Returns a reference to the Underscore object.
+  _.noConflict = function() {
+    root._ = previousUnderscore;
+    return this;
+  };
+
+  // Keep the identity function around for default iteratees.
+  _.identity = function(value) {
+    return value;
+  };
+
+  // Predicate-generating functions. Often useful outside of Underscore.
+  _.constant = function(value) {
+    return function() {
+      return value;
+    };
+  };
+
+  _.noop = function(){};
+
+  _.property = property;
+
+  // Generates a function for a given object that returns a given property.
+  _.propertyOf = function(obj) {
+    return obj == null ? function(){} : function(key) {
+      return obj[key];
+    };
+  };
+
+  // Returns a predicate for checking whether an object has a given set of
+  // `key:value` pairs.
+  _.matcher = _.matches = function(attrs) {
+    attrs = _.extendOwn({}, attrs);
+    return function(obj) {
+      return _.isMatch(obj, attrs);
+    };
+  };
+
+  // Run a function **n** times.
+  _.times = function(n, iteratee, context) {
+    var accum = Array(Math.max(0, n));
+    iteratee = optimizeCb(iteratee, context, 1);
+    for (var i = 0; i < n; i++) accum[i] = iteratee(i);
+    return accum;
+  };
+
+  // Return a random integer between min and max (inclusive).
+  _.random = function(min, max) {
+    if (max == null) {
+      max = min;
+      min = 0;
+    }
+    return min + Math.floor(Math.random() * (max - min + 1));
+  };
+
+  // A (possibly faster) way to get the current timestamp as an integer.
+  _.now = Date.now || function() {
+    return new Date().getTime();
+  };
+
+   // List of HTML entities for escaping.
+  var escapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;'
+  };
+  var unescapeMap = _.invert(escapeMap);
+
+  // Functions for escaping and unescaping strings to/from HTML interpolation.
+  var createEscaper = function(map) {
+    var escaper = function(match) {
+      return map[match];
+    };
+    // Regexes for identifying a key that needs to be escaped
+    var source = '(?:' + _.keys(map).join('|') + ')';
+    var testRegexp = RegExp(source);
+    var replaceRegexp = RegExp(source, 'g');
+    return function(string) {
+      string = string == null ? '' : '' + string;
+      return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+    };
+  };
+  _.escape = createEscaper(escapeMap);
+  _.unescape = createEscaper(unescapeMap);
+
+  // If the value of the named `property` is a function then invoke it with the
+  // `object` as context; otherwise, return it.
+  _.result = function(object, property, fallback) {
+    var value = object == null ? void 0 : object[property];
+    if (value === void 0) {
+      value = fallback;
+    }
+    return _.isFunction(value) ? value.call(object) : value;
+  };
+
+  // Generate a unique integer id (unique within the entire client session).
+  // Useful for temporary DOM ids.
+  var idCounter = 0;
+  _.uniqueId = function(prefix) {
+    var id = ++idCounter + '';
+    return prefix ? prefix + id : id;
+  };
+
+  // By default, Underscore uses ERB-style template delimiters, change the
+  // following template settings to use alternative delimiters.
+  _.templateSettings = {
+    evaluate    : /<%([\s\S]+?)%>/g,
+    interpolate : /<%=([\s\S]+?)%>/g,
+    escape      : /<%-([\s\S]+?)%>/g
+  };
+
+  // When customizing `templateSettings`, if you don't want to define an
+  // interpolation, evaluation or escaping regex, we need one that is
+  // guaranteed not to match.
+  var noMatch = /(.)^/;
+
+  // Certain characters need to be escaped so that they can be put into a
+  // string literal.
+  var escapes = {
+    "'":      "'",
+    '\\':     '\\',
+    '\r':     'r',
+    '\n':     'n',
+    '\u2028': 'u2028',
+    '\u2029': 'u2029'
+  };
+
+  var escaper = /\\|'|\r|\n|\u2028|\u2029/g;
+
+  var escapeChar = function(match) {
+    return '\\' + escapes[match];
+  };
+
+  // JavaScript micro-templating, similar to John Resig's implementation.
+  // Underscore templating handles arbitrary delimiters, preserves whitespace,
+  // and correctly escapes quotes within interpolated code.
+  // NB: `oldSettings` only exists for backwards compatibility.
+  _.template = function(text, settings, oldSettings) {
+    if (!settings && oldSettings) settings = oldSettings;
+    settings = _.defaults({}, settings, _.templateSettings);
+
+    // Combine delimiters into one regular expression via alternation.
+    var matcher = RegExp([
+      (settings.escape || noMatch).source,
+      (settings.interpolate || noMatch).source,
+      (settings.evaluate || noMatch).source
+    ].join('|') + '|$', 'g');
+
+    // Compile the template source, escaping string literals appropriately.
+    var index = 0;
+    var source = "__p+='";
+    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
+      source += text.slice(index, offset).replace(escaper, escapeChar);
+      index = offset + match.length;
+
+      if (escape) {
+        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+      } else if (interpolate) {
+        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+      } else if (evaluate) {
+        source += "';\n" + evaluate + "\n__p+='";
+      }
+
+      // Adobe VMs need the match returned to produce the correct offest.
+      return match;
+    });
+    source += "';\n";
+
+    // If a variable is not specified, place data values in local scope.
+    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+
+    source = "var __t,__p='',__j=Array.prototype.join," +
+      "print=function(){__p+=__j.call(arguments,'');};\n" +
+      source + 'return __p;\n';
+
+    try {
+      var render = new Function(settings.variable || 'obj', '_', source);
+    } catch (e) {
+      e.source = source;
+      throw e;
+    }
+
+    var template = function(data) {
+      return render.call(this, data, _);
+    };
+
+    // Provide the compiled source as a convenience for precompilation.
+    var argument = settings.variable || 'obj';
+    template.source = 'function(' + argument + '){\n' + source + '}';
+
+    return template;
+  };
+
+  // Add a "chain" function. Start chaining a wrapped Underscore object.
+  _.chain = function(obj) {
+    var instance = _(obj);
+    instance._chain = true;
+    return instance;
+  };
+
+  // OOP
+  // ---------------
+  // If Underscore is called as a function, it returns a wrapped object that
+  // can be used OO-style. This wrapper holds altered versions of all the
+  // underscore functions. Wrapped objects may be chained.
+
+  // Helper function to continue chaining intermediate results.
+  var result = function(instance, obj) {
+    return instance._chain ? _(obj).chain() : obj;
+  };
+
+  // Add your own custom functions to the Underscore object.
+  _.mixin = function(obj) {
+    _.each(_.functions(obj), function(name) {
+      var func = _[name] = obj[name];
+      _.prototype[name] = function() {
+        var args = [this._wrapped];
+        push.apply(args, arguments);
+        return result(this, func.apply(_, args));
+      };
+    });
+  };
+
+  // Add all of the Underscore functions to the wrapper object.
+  _.mixin(_);
+
+  // Add all mutator Array functions to the wrapper.
+  _.each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
+    var method = ArrayProto[name];
+    _.prototype[name] = function() {
+      var obj = this._wrapped;
+      method.apply(obj, arguments);
+      if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
+      return result(this, obj);
+    };
+  });
+
+  // Add all accessor Array functions to the wrapper.
+  _.each(['concat', 'join', 'slice'], function(name) {
+    var method = ArrayProto[name];
+    _.prototype[name] = function() {
+      return result(this, method.apply(this._wrapped, arguments));
+    };
+  });
+
+  // Extracts the result from a wrapped and chained object.
+  _.prototype.value = function() {
+    return this._wrapped;
+  };
+
+  // Provide unwrapping proxy for some methods used in engine operations
+  // such as arithmetic and JSON stringification.
+  _.prototype.valueOf = _.prototype.toJSON = _.prototype.value;
+
+  _.prototype.toString = function() {
+    return '' + this._wrapped;
+  };
+
+  // AMD registration happens at the end for compatibility with AMD loaders
+  // that may not enforce next-turn semantics on modules. Even though general
+  // practice for AMD registration is to be anonymous, underscore registers
+  // as a named module because, like jQuery, it is a base library that is
+  // popular enough to be bundled in a third party lib, but not be part of
+  // an AMD load request. Those cases could generate an error when an
+  // anonymous define() is called outside of a loader request.
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function() {
+      return _;
+    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  }
+}.call(this));
+
+
+/***/ }),
 /* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -37901,7 +39455,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = __webpack_require__(657).default;
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   let Scene = function (options) {
     GameObject.call(this, options);
 
@@ -37911,20 +39467,91 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
       console.warn('Please add the update method to ' + this.childClass);
     }
 
+    gesture.pinchable(this, true);
+
+    this.on('panmove', e => {
+      sprite.x += e.deltaX;
+      sprite.y += e.deltaY;
+    });
+
+    this.on('panstart', () => {
+      console.log('panstart');
+    });
+
+    this.on('panend', () => {
+      console.log('panend');
+    });
+
+    this.on('pinchmove', e => {
+      sprite.scale.x = Math.max(0.5, sprite.scale.x * e.scale);
+      sprite.scale.y = Math.max(0.5, sprite.scale.y * e.scale);
+    });
+
+    this.on('pinchstart', () => {
+      console.log('pinchstart');
+    });
+
+    this.on('pinchend', () => {
+      console.log('pinchend');
+    });
+
+    this.on('simpletap', () => {
+      console.log('simpletap');
+    });
+
     this.resources = {};
 
+    this.cursor_sprite = new PIXI.Sprite();
+    this.cursor_sprite.interactive = false;
+    this.cursor_sprite.buttonMode = false;
+    this.cursor_sprite.cursor = "none";
+    this.cursor_sprite.anchor.set(0.5);
+
+    this.on('pointerover', function () {
+      this.cursor_sprite.visible = true;
+    }.bind(this));
+
+    this.on('pointerout', function () {
+      this.cursor_sprite.visible = false;
+    }.bind(this));
+
+    this.on('pointermove', function (event) {
+      this.cursor_sprite.position = event.data.global;
+    }.bind(this));
+
     /**
-     * Every Scene loaded by default untill onStart until switching to the Scene.
+     * Every Scene loaded by default until onStart until switching to the Scene.
      */
     this.paused = true;
 
-    this.app.ticker = this.app.ticker;
     this.app.ticker.add(delta => {
       this._update(delta);
     });
   };
 
   extend(Scene, GameObject);
+
+  Scene.prototype.hideCursor = function () {
+    this.cursor = 'none';
+  };
+
+  Scene.prototype.addCursor = function (name = '', texture_name = '') {
+    this.InteractionManager.cursorStyles[name] = () => {
+      this.cursor_sprite.texture = PIXI.Texture.fromFrame(texture_name);
+    };
+  };
+
+  Scene.prototype.setCursor = function (name = '') {
+
+    if (this.cursor_sprite.parent) {
+      this.removeChild(this.cursor_sprite);
+    }
+
+    this.hideCursor();
+
+    this.addChild(this.cursor_sprite);
+    this.cursor = name;
+  };
 
   Scene.prototype.preload = function () {
     /**
@@ -69712,7 +71339,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(647)("./" + scene);
+      let _scene = __webpack_require__(658)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -70002,6 +71629,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.SceneManager = this.ge.get('SceneManager');
     this.StateManager = this.ge.get('StateManager');
     this.PhysicsManager = this.ge.get('PhysicsManager');
+
+    this.InteractionManager = this.app.renderer.plugins.interaction;
   };
 
   extend(GameObject, pixi.Container);
@@ -70071,19 +71700,20 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @constructor
    * @param {number} keyCode - The keycode to listen for
    */
-  var KeyboardInput = function (keyCode) {
+  let KeyboardInput = function (key) {
 
-    let key = {};
-    key.code = keyCode;
-    key.isDown = false;
-    key.isUp = true;
-    key.press = undefined;
-    key.release = undefined;
+    let info = {};
+    info.key = key;
+    info.isDown = false;
+    info.isUp = true;
+    info.down = undefined;
+    info.up = undefined;
 
-    window.addEventListener('keydown', this.downHandler.bind(key), false);
-    window.addEventListener('keyup', this.upHandler.bind(key), false);
+    window.addEventListener('keydown', this.downHandler.bind(info), false);
 
-    return key;
+    window.addEventListener('keyup', this.upHandler.bind(info), false);
+
+    return info;
   };
 
   /**
@@ -70092,9 +71722,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   KeyboardInput.prototype.downHandler = function (event) {
-
-    if (event.keyCode === this.code) {
-      if (this.isUp && this.press) this.press(event);
+    if (event.key === this.key) {
+      if (this.isUp && this.down) this.down(event);
       this.isDown = true;
       this.isUp = false;
     }
@@ -70107,8 +71736,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   KeyboardInput.prototype.upHandler = function (event) {
-    if (event.keyCode === this.code) {
-      if (this.isDown && this.release) this.release(event);
+    if (event.key === this.key) {
+      if (this.isDown && this.up) this.up(event);
       this.isDown = false;
       this.isUp = true;
     }
@@ -70121,11 +71750,30 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 627 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+const DIALOG_TYPE = {
+  DEFAULT: 'default'
+};
+/* harmony export (immutable) */ __webpack_exports__["DIALOG_TYPE"] = DIALOG_TYPE;
+
+
+const DIALOG_STATE = {
+  OPEN: 'open',
+  OPENING: 'opening'
+};
+/* harmony export (immutable) */ __webpack_exports__["DIALOG_STATE"] = DIALOG_STATE;
+
+
+/***/ }),
+/* 628 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = __webpack_require__(204);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
   var Ball = function (texture) {
     PhysicsSprite.call(this, texture);
 
@@ -70171,10 +71819,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 628 */
+/* 629 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
   var Brick = function (type, texture) {
     PhysicsSprite.call(this, texture);
     this.type = type;
@@ -70222,10 +71870,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 629 */
+/* 630 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
   var Pad = function (texture) {
     PhysicsSprite.call(this, texture);
   };
@@ -70267,7 +71915,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 630 */
+/* 631 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(141), __webpack_require__(247), __webpack_require__(626), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput, Statistics) {
@@ -70431,7 +72079,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 631 */
+/* 632 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(141), __webpack_require__(247), __webpack_require__(626)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput) {
@@ -70527,7 +72175,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 632 */
+/* 633 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(141), __webpack_require__(247), __webpack_require__(626), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput, Statistics) {
@@ -70683,10 +72331,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 633 */
+/* 634 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(642), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(644), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
   var GameLevel = function (options) {
     Level.call(this, options);
 
@@ -70712,7 +72360,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 634 */
+/* 635 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -70827,11 +72475,32 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 635 */
+/* 636 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+  return {
+    DIRECTIONS: {
+      UP: 'up',
+      DOWN: 'down',
+      RIGHT: 'right',
+      LEFT: 'left',
+      DIAGUP_RIGHT: 'diagup_right',
+      DIAGUP_LEFT: 'diagup_left',
+      DIAGDOWN_RIGHT: 'diagdown_right',
+      DIAGDOWN_LEFT: 'diagdown_left',
+      ANY: 'any'
+    }
+  };
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 637 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(630), __webpack_require__(246), __webpack_require__(628), __webpack_require__(629), __webpack_require__(627)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(631), __webpack_require__(246), __webpack_require__(629), __webpack_require__(630), __webpack_require__(628)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -70952,11 +72621,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 636 */
+/* 638 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(631), __webpack_require__(246), __webpack_require__(628), __webpack_require__(629), __webpack_require__(627)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(632), __webpack_require__(246), __webpack_require__(629), __webpack_require__(630), __webpack_require__(628)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -71017,11 +72686,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 637 */
+/* 639 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(632), __webpack_require__(246), __webpack_require__(628), __webpack_require__(629), __webpack_require__(627), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(633), __webpack_require__(246), __webpack_require__(629), __webpack_require__(630), __webpack_require__(628), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -71150,12 +72819,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 638 */
+/* 640 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(645);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(651);
+const Dialogs = __webpack_require__(648);
+const Buttons = __webpack_require__(661);
+
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(247), __webpack_require__(246), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
-  var MainScreen = function (options) {
+  let MainScreen = function (options) {
     Scene.call(this, options);
     this.backgrounds = [];
 
@@ -71165,7 +72837,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
   extend(MainScreen, Scene);
 
   MainScreen.prototype.onStart = function () {
-
     var style = new pixi.TextStyle({
       fontFamily: 'Arial',
       fontSize: 36,
@@ -71206,7 +72877,36 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
         paddingTop: 10
       }
     });
-    this.addChild(menu);
+
+    let dialog = new Dialogs.Dialog({
+      type: Dialogs.TYPE.DEFAULT,
+      option: 'value'
+    });
+
+    let button = new Buttons.BaseButton({
+      text: 'Hello World',
+      width: 250,
+      height: 50,
+      state: {
+        hover: {
+          text: 'You are hovering'
+        },
+        clicked: {
+          text: 'You clicked'
+        }
+      }
+    });
+
+    button.onClick = function (e) {
+      console.log('Button clicked');
+    };
+
+    button.onHover = function (e) {
+      console.log('Button hovered');
+    };
+    button.onRestore = function (e) {
+      console.log('Button restored');
+    };
 
     var item1 = new Menus.MenuItemText('Breakout', this.breakoutClicked);
     var item2 = new Menus.MenuItemText('PixelShooter', this.pixelShooterClicked);
@@ -71226,6 +72926,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
 
     this.addChild(richText);
     this.addChild(this.statistics);
+
+    button.activate();
+    dialog.addChild(button);
+    dialog.addChild(menu);
+    this.addChild(dialog);
   };
 
   MainScreen.prototype.setDisplayStats = function (visible) {
@@ -71253,59 +72958,163 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 639 */
+/* 641 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(633), __webpack_require__(246), __webpack_require__(641)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
+const DIRECTIONS = __webpack_require__(636).DIRECTIONS;
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(634), __webpack_require__(246), __webpack_require__(643), __webpack_require__(645)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character, Matrix) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
-    // s: 83
-    // a: 65
-    // w: 87
-    // d: 68
-    this.listenForKeyboardInputs(83, 65, 87, 68);
+    this.interactive = true;
+    // this.buttonMode = false
+
+    this.listenForKeyboardInputs('w', 'a', 's', 'd');
     this.map = new PIXI.extras.TiledMap('pixelshooter_map');
+    this.character = new Character(1);
+    this.character.anchor = 0.5;
+
     this.enemies = [];
+
+    this.downkey = null;
   };
 
   extend(Level1, GameLevel);
 
-  Level1.prototype.onKeyPress = function (event) {
+  Level1.prototype.onMouseMove = function (event) {
+
+    function calculateAngle(mx, my, px, py) {
+      var self = this;
+      var dist_Y = my - py;
+      var dist_X = mx - px;
+      var angle = Math.atan2(dist_Y, dist_X);
+      //var degrees = angle * 180/ Math.PI;
+      // radians = Math.atan2(y2-y1,x2-x1);
+      return angle;
+    }
+
     /**
      * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
+     * to receive mouse move events.
      */
-    console.log('event', event);
+    let mousePos = event.data.global;
+    let angle = calculateAngle(mousePos.x, mousePos.y, this.character.x, this.character.y);
+    let degrees = Math.floor(angle * 90 / Math.PI);
+    // this.character.rotation = angle
+
+    // for(var b=bullets.length-1;b>=0;b--){
+    //   bullets[b].position.x += Math.cos(bullets[b].rotation)*bulletSpeed;
+    //   bullets[b].position.y += Math.sin(bullets[b].rotation)*bulletSpeed;
+    // }
+
+    let test = degrees.denormalize(0, 80);
+
+    // console.log('denormalize: ', test)
+    let direction_mapping = [{ mouseX: DIRECTIONS.LEFT, mouseY: DIRECTIONS.UP, direction: DIRECTIONS.DIAGUP_LEFT }, { mouseX: DIRECTIONS.RIGHT, mouseY: DIRECTIONS.UP, direction: DIRECTIONS.DIAGUP_RIGHT }, { mouseX: DIRECTIONS.RIGHT, mouseY: DIRECTIONS.DOWN, direction: DIRECTIONS.DIAGDOWN_RIGHT }, { mouseX: DIRECTIONS.LEFT, mouseY: DIRECTIONS.DOWN, direction: DIRECTIONS.DIAGDOWN_LEFT }];
+
+    let direction = null;
+
+    for (map of direction_mapping) {
+      let mx = mousePos.x > this.character.position.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
+      let my = mousePos.y > this.character.position.y ? DIRECTIONS.DOWN : DIRECTIONS.UP;
+
+      /*
+       * Detect diagonal directions
+       */
+      if (map.mouseX === mx && map.mouseY === my) {
+        direction = map.direction;
+      }
+
+      if (direction) break;
+    }
+
+    // w: 87
+    if (this.downkey === 87) direction = DIRECTIONS.UP;
+
+    // s: 83
+    if (this.downkey == 83) direction = DIRECTIONS.DOWN;
+
+    // a: 65
+    if (this.downkey === 65) direction = DIRECTIONS.LEFT;
+
+    // d: 68
+    if (this.downkey === 68) direction = DIRECTIONS.RIGHT;
+
+    // console.log('Detected', direction, 'at')
+    this.character.setDirection(direction);
+
+    // console.log(degrees)
+
+    // else if (degrees > 45 && degrees <= 90) {
+    //   this.character.setDirection(DIRECTIONS.DIAGDOWN_RIGHT)
+    // }  else if (degrees > 90 && degrees <= 135) {
+    //   this.character.setDirection(DIRECTIONS.DOWN);
+    // } else if (degrees > 135 && degrees <= 180) {
+    //   this.character.setDirection(DIRECTIONS.DIAGDOWN_LEFT);
+    // }
+  };
+
+  Level1.prototype.onKeyDown = function (event) {
+    this.downkey = event.key;
+  };
+
+  Level1.prototype.onKeyUp = function (event) {
+    this.downkey = null;
   };
 
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this);
+    this.addCursor('attack', '1crosshair');
 
     /**
      * Add the map to the screen
      */
     this.addChild(this.map);
 
-    let character = new Character();
+    this.character.position.set(430, 443);
+    this.character.setDirection(DIRECTIONS.RIGHT);
 
-    this.addChild(character);
+    /**
+     * Add the character to the screen
+     */
+    this.addChild(this.character);
 
     /**
      * Show the FPS counterO
      */
     this.setDisplayStats(true);
+
+    /**
+     * Set the attack cursor
+     */
+    this.setCursor('attack');
   };
 
   Level1.prototype.spawnEnamy = function () {};
 
+  Level1.prototype.updateGameLogic = function (delta) {
+
+    /**
+     * Moving the character.
+     */
+    if (this.downkey === 'a') {
+      this.character.position.x -= 5;
+    } else if (this.downkey === 'd') {
+      this.character.position.x += 5;
+    } else if (this.downkey === 'w') {
+      this.character.position.y -= 5;
+    } else if (this.downkey === 's') {
+      this.character.position.y += 5;
+    }
+
+    this.character.update(delta);
+  };
+
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta);
+    this.updateGameLogic(delta);
   };
 
   return Level1;
@@ -71313,7 +73122,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 640 */
+/* 642 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(247), __webpack_require__(246)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
@@ -71378,9 +73187,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     { name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png' }, { name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png' }, { name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png' }, { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' }, { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
 
     // // PixelShooter
-    // {name: 'Decor', src: 'assets/pixelshooter/images/ground.png'},
-    // {name: 'Water', src: 'assets/pixelshooter/images/water.png'},
-    { name: 'pixelshooter_map', src: 'assets/pixelshooter/map/map.tmx' }, { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/pixelshooter/spritesheets/game-0.json' }]);
+    // {name: 'Decor', src: 'assets/Pixelshooter/images/ground.png'},
+    // {name: 'Water', src: 'assets/Pixelshooter/images/water.png'},
+    { name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx' }, { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json' }, { name: 'pixelshooter_character_animations', type: 'json', src: 'assets/Pixelshooter/data/character_animations.json' }]);
     //
     this.AssetManager.once('complete', this._preloadready, this);
     this.AssetManager.on('progress', this._preloadProgress, this);
@@ -71407,77 +73216,96 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 641 */
+/* 643 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
-  let Character = function () {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(636).DIRECTIONS;
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
+  let Character = function (playerId = 1) {
     GameObject.call(this, null);
 
     /**
      * Character number
      */
-    this.cn = 1;
-
-    this.animations = {
-      north: {
-        animation: null,
-        frameWidth: 20,
-        frameHeight: 21,
-        frames: 4
-      },
-      side: {
-        animation: null,
-        frameWidth: 20,
-        frameHeight: 24,
-        frames: 4
-      }
-    };
+    this.cn = playerId;
+    this.animations = PIXI.loader.resources['pixelshooter_character_animations'].data;
+    this.animationspeed = 0.3;
+    this.direction = DIRECTIONS.DOWN;
 
     this.setupAnimations();
+    this.setDirection(this.direction);
   };
 
   extend(Character, GameObject);
 
+  /**
+   *
+   * @param direction
+   * @returns {boolean}
+   */
+  Character.prototype.setDirection = function (direction) {
+    if (this.animations[direction]) {
+      if (typeof this.animation !== 'undefined') {
+        this.removeChild(this.animation);
+      }
+
+      this.animation = this.animations[direction]['animation'];
+      this.animation.animationSpeed = this.animationspeed;
+      // this.animation.position = this.position
+      this.animation.play();
+
+      this.direction = direction;
+      this.addChild(this.animation);
+      return true;
+    }
+    return false;
+  };
+
+  /**
+   *
+   */
   Character.prototype.setupAnimations = function () {
 
-    let step = 0;
     for (let name in this.animations) {
       let info = this.animations[name];
-      let frameId = this.cn + '_' + name;
+      let frameId = this.cn + '_' + info.key;
       let sourceTexture = PIXI.Texture.fromFrame(frameId);
       let frames = [];
 
-      let x = sourceTexture.frame.x - 2;
+      let x = sourceTexture.frame.x;
       let y = sourceTexture.frame.y;
+      let spacer = 1;
+
       for (let i = 0; i < info.frames; i++) {
-        let subTexture = new PIXI.Texture(sourceTexture.baseTexture, new PIXI.Rectangle(x, y, info.frameWidth, info.frameHeight), new PIXI.Rectangle(0, 0, info.frameWidth, info.frameHeight));
+        let size = {
+          w: Math.floor(sourceTexture.frame.width / info.frames) + spacer,
+          h: sourceTexture.frame.height
+        };
+
+        let subTexture = new PIXI.Texture(sourceTexture.baseTexture, new PIXI.Rectangle(x, y, size.w - spacer, size.h), new PIXI.Rectangle(0, 0, size.w - spacer, size.h));
 
         frames.push(subTexture);
-        x += info.frameWidth;
+        x += size.w;
       }
 
-      info.animation = new PIXI.extras.AnimatedSprite(frames);
-      info.animation.x = 400 + step * 100;
-      info.animation.y = 400 + step * 100;
+      let animation = new PIXI.extras.AnimatedSprite(frames);
 
-      info.animation.scaleX = 2.5;
-      info.animation.scaleY = 2.5;
+      if (typeof info.flipx !== 'undefined') {
+        animation.scale.x = info.flipx;
+      }
 
-      info.animation.animationSpeed = 0.3;
-      info.animation.play();
-
-      this.addChild(info.animation);
-      step++;
+      this.animations[name]['animation'] = animation;
     }
   };
+
+  GameObject.prototype.update = function (delta) {};
 
   return Character;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 642 */
+/* 644 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(247), __webpack_require__(626)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
@@ -71492,27 +73320,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   extend(Level, Scene);
 
-  Level.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
-    let key = new KeyboardInput(keycode);
-
-    key.press.bind(this);
-    key.release.bind(this);
-
-    key.press = keypress || self.onKeyPress.bind(self);
-    key.release = keyup || self.onKeyUp.bind(self);
-
-    this.keyboardKeys.push(key);
-  };
-
   Level.prototype.listenForKeyboardInputs = function (...keys) {
     let self = this;
-    keys.forEach(function (keycode) {
-      let key = new KeyboardInput(keycode);
+    keys.forEach(function (key) {
+      let info = new KeyboardInput(key);
 
-      key.press = self.onKeyPress.bind(self);
-      key.release = self.onKeyUp.bind(self);
+      info.down = self.onKeyDown.bind(self);
+      info.up = self.onKeyUp.bind(self);
 
-      self.keyboardKeys.push(key);
+      self.keyboardKeys.push(info);
     });
   };
 
@@ -71520,6 +73336,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     /**
      * You can overwrite this function if you wish
      * to receive keyboard keyPress events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  Level.prototype.onKeyDown = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard onKeyDown events.
      *
      * Please note: These events will only be triggered
      * by registered keys. See listenForKeyboardInputs
@@ -71559,11 +73386,368 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 643 */
+/* 645 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Class for Matrix math calculations. Please be aware
+ * of the fact that the rows and columns start of by 0 and
+ * not at 1.
+ *
+ * @class
+ */
+class Matrix {
+
+  /* Instantiate a new Matrix Object.
+   *
+   * @constructor
+   * @param {number} rows The number of rows in the matrix
+   * @param {number} cols The number of columns in the matrix
+   * @param {number} [fill=0] The initial fill for the matrix
+   */
+  constructor(rows = 0, cols = 0, fill = 0) {
+    this.rows = rows;
+    this.cols = cols;
+    this.fill = fill;
+    this.data = Array(this.rows).fill().map(() => Array(this.cols).fill(this.fill));
+  }
+
+  /**
+   * Get the matrix data.
+   * @example
+   * let matrix = new Matrix(4,4, 2);
+   *
+   * // this will output
+   * // [ [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ] ]
+   * console.log(matrix.valueOf())
+   *
+   * @returns {Array}
+   */
+  valueOf() {
+    return this.data;
+  }
+
+  /**
+   * Clone the matrix into a new Matrix object.
+   *
+   * @returns {Matrix}
+   */
+  clone() {
+    let clone = new Matrix(this.rows, this.cols, this.fill);
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        clone.data[i][j] = this.data[i][j];
+      }
+    }
+    return clone;
+  }
+
+  /**
+   * Set the value inside the matrix
+   *
+   * @example
+   * let matrix = new Matrix(1,1, 1);
+   * matrix.setValue(0, 0, 2)
+   * matrix.setValue(0, 1, 3)
+   *
+   * // Our matrix now looks like
+   * // [ [ 1, 2, 3 ] ]
+   *
+   * // This will return
+   * // [ [ 2, 4, 6 ] ]
+   *
+   * console.table(matrix.valueOf())
+   *
+   * @param {number} row The row on which to set the value
+   * @param {number} col The column on which to set the value
+   * @param {number} value The value to set on the coordinates
+   * @returns {Matrix} The matrix object it self
+   */
+  setValue(row, col, value) {
+    this.data[row][col] = value;
+    return this;
+  }
+
+  /**
+   * Return a value stored in the Matrix at row and column
+   *
+   * @example
+   * let matrix = new Matrix(1,1, 10);
+   * matrix.setValue(0, 0, 9)
+   * matrix.setValue(0, 1, 8)
+   *
+   * // Our matrix looks like this
+   * // [ [ 9, 8 ] ]
+   *
+   * // This will output 8
+   * console.log(matrix.valueAt(0, 1))
+   *
+   * @param {number} row The row on which to get the value
+   * @param {number} col The column on which to get the value
+   * @returns {number} value at this position
+   */
+  valueAt(row, col) {
+    return this.data[row][col];
+  }
+
+  /**
+   * @example
+   * let matrix = new Matrix(1,3, 0);
+   * matrix.add(1)
+   *
+   * // Our matrix looks like this
+   * // [ [ 1, 1, 1 ] ]
+   *
+   * // Lets add 2 to all values
+   * let result = matrix.add(2);
+   *
+   * // Our resulting matrix now looks like this
+   * // [ [ 3, 3, 3 ] ]
+   *
+   * console.table(result.valueOf())
+   *
+   * @param {number|Matrix} n Add a number to the matrix or add a an other Matrix object
+   * @returns {Matrix}
+   */
+  add(n) {
+
+    if (n instanceof Matrix) {
+      if (n.rows !== this.rows || n.cols !== this.cols) {
+        throw 'Cannot add matrices together that don\'t share the same size.';
+      }
+
+      let src = n;
+
+      for (let i = 0; i < src.rows; i++) {
+        for (let j = 0; j < src.cols; j++) {
+          this.data[i][j] += n.data[i][j];
+        }
+      }
+    } else {
+      for (let i = 0; i < this.rows; i++) {
+        this.data[i] = this.data[i].map(v => v + n);
+      }
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let matrix = new Matrix(1,3);
+   * matrix.setValue(0, 0, 1)
+   * .setValue(0, 1, 2)
+   * .setValue(0, 2, 3)
+   *
+   * // Our matrix looks like this
+   * // [ [ 1, 2, 3 ] ]
+   *
+   * // Lets add 2 to all values
+   * let result = matrix.add(2);
+   *
+   * // Our resulting matrix now looks like this
+   * // [ [ 3, 4, 5 ] ]
+   *
+   * console.table(result.valueOf())
+   *
+   * @param {number|Matrix} n Add a number to the matrix or add a an other Matrix object
+   * @returns {Matrix}
+   */
+  subtract(n) {
+    if (n instanceof Matrix) {
+      if (n.rows !== this.rows || n.cols !== this.cols) {
+        throw 'Cannot subtract matrices from each other that don\'t share the same size.';
+      }
+
+      let src = n;
+
+      for (let i = 0; i < src.rows; i++) {
+        for (let j = 0; j < src.cols; j++) {
+          this.data[i][j] -= n.data[i][j];
+        }
+      }
+    } else {
+      for (let i = 0; i < this.rows; i++) {
+        this.data[i] = this.data[i].map(v => v - n);
+      }
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let matrix = new Matrix(1,3);
+   * matrix.setValue(0, 0, 1)
+   * .setValue(0, 1, 2)
+   * .setValue(0, 2, 3)
+   *
+   * // Our matrix looks like this
+   * // [ [ 1, 2, 3 ] ]
+   *
+   * // Lets add 2 to all values
+   * let result = matrix.multiply(2);
+   *
+   * // Our resulting matrix now looks like this
+   * // [ [ 2, 4, 6 ] ]
+   *
+   * console.table(result.valueOf())
+   *
+   * @param {number|Matrix} n Add a number to the matrix or add a an other Matrix object
+   * @returns {Matrix}
+   */
+  multiply(n) {
+    if (n instanceof Matrix) {
+      if (n.rows !== this.rows || n.cols !== this.cols) {
+        throw 'Cannot multiply matrices with each other that don\'t share the same size.';
+      }
+
+      let src = n;
+
+      for (let i = 0; i < src.rows; i++) {
+        for (let j = 0; j < src.cols; j++) {
+          this.data[i][j] *= n.data[i][j];
+        }
+      }
+    } else {
+      for (let i = 0; i < this.rows; i++) {
+        this.data[i] = this.data[i].map(v => v * n);
+      }
+    }
+    return this;
+  }
+}
+
+if (true) {
+  module.exports = Matrix;
+}
+
+/***/ }),
+/* 646 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(627).DIALOG_TYPE;
+const STATE = __webpack_require__(627).DIALOG_STATE;
+
+const DefaultDialog = __webpack_require__(649);
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  let Dialog = function (options, ...items) {
+    GameObject.call(this, options);
+
+    this.STATE_OPEN = 'open';
+    this.STATE_CLOSED = 'closed';
+
+    console.log('DIALOG_TYPE', DIALOG_TYPE);
+    this.options = {
+      type: DIALOG_TYPE.DEFAULT,
+      state: STATE.CLOSED
+    };
+
+    this.options = merge(this.options, options);
+    this.items = [];
+
+    this.state = this.options.state;
+    this.instance = null;
+
+    this.init();
+  };
+
+  extend(Dialog, GameObject);
+
+  Dialog.prototype.init = function () {
+    console.log(this.options);
+    switch (this.options.type) {
+      case DIALOG_TYPE.DEFAULT:
+        this.instance = new DefaultDialog(this.options);
+        break;
+      default:
+        throw new Error(`Dialog type unknown: Unable to reconize ${this.options.type}`);
+    }
+  };
+
+  Dialog.prototype.open = function () {};
+
+  Dialog.prototype.close = function () {};
+
+  /**
+   * Check if the Dialog is open or not.
+   *
+   * @returns {boolean} true if the Dialog is open
+   */
+  Dialog.prototype.isOpen = function () {
+    return this.state === STATE.OPEN;
+  };
+
+  /**
+   * Check if the Dialog is closed or not.
+   *
+   * @returns {boolean} true if the Dialog is closed
+   */
+  Dialog.prototype.isClosed = function () {
+    return this.state === STATE.CLOSED;
+  };
+
+  Dialog.prototype.update = function (delta) {
+    for (let item of this.items) {
+      item.update(delta);
+    }
+  };
+
+  return Dialog;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 647 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  let DialogType = function (options) {
+    GameObject.call(this, options);
+    this.options = [];
+  };
 
+  extend(DialogType, GameObject);
+
+  return DialogType;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 648 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Dialog", function() { return Dialog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TYPE", function() { return TYPE; });
+const TYPE = __webpack_require__(627).DIALOG_TYPE;
+const STATE = __webpack_require__(627).DIALOG_STATE;
+
+const Dialog = __webpack_require__(646);
+
+
+
+/***/ }),
+/* 649 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, DialogType) {
+  let DefaultDialog = function (options) {
+    DialogType.call(this, options);
+    console.log('loaded');
+  };
+
+  extend(DefaultDialog, DialogType);
+
+  return DefaultDialog;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 650 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   /**
    * @classdesc Abstract class representing a menu item.
    * @exports gui/menu/MenuItem
@@ -71571,7 +73755,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @param {callback} callback - Callback for when the item has been clicked
    * @param {mixed} [options] - Options to pass to GameObject
    */
-  var MenuItem = function (callback, options) {
+  let MenuItem = function (callback, options) {
     GameObject.call(this, options);
 
     this.buttonMode = true;
@@ -71630,10 +73814,75 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 644 */
+/* 651 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
+const Menu = __webpack_require__(652);
+const MenuItemText = __webpack_require__(653);
+
+
+/***/ }),
+/* 652 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  var Menu = function (options, ...items) {
+    GameObject.call(this, options);
+
+    this.options = {
+      items: {
+        paddingTop: 0,
+        paddingBottom: 5
+      }
+    };
+
+    this.options = merge(this.options, options);
+    this.items = [];
+  };
+
+  extend(Menu, GameObject);
+
+  Menu.prototype.addMenuItem = function (item) {
+    this.items.push(item);
+    this.addChild(item);
+    this.arangeItems();
+  };
+
+  Menu.prototype.arangeItems = function () {
+    // TODO: Add code here
+  };
+
+  Menu.prototype.addMenuItemAt = function (item, index) {
+    if (index < 0 || index > this.items.length) {
+      throw new Error(`${item}addChildAt: The index ${index} supplied is out of bounds ${this.items.length}`);
+    }
+
+    this.items.splice(index, 0, child);
+
+    var ret = this.addChildAt(item.index);
+    this.arangeItems();
+    return ret;
+  };
+
+  Menu.prototype.update = function (delta) {
+    for (item of this.items) {
+      this.item.update(delta);
+    }
+  };
+
+  return Menu;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 653 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(650)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemText module
@@ -71716,93 +73965,308 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 645 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
-const Menu = __webpack_require__(646);
-const MenuItemText = __webpack_require__(644);
-
-
-/***/ }),
-/* 646 */
+/* 654 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  var Menu = function (options, ...items) {
-    GameObject.call(this, options);
+"use strict";
 
-    this.options = {
-      items: {
-        paddingTop: 0,
-        paddingBottom: 5
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = panable;
+function panable(sprite) {
+  function mouseDown(e) {
+    start(e, e.data.originalEvent);
+  }
+
+  function touchStart(e) {
+    start(e, e.data.originalEvent.targetTouches[0]);
+  }
+
+  // possibly be called twice or more
+  function start(e, t) {
+    if (e.target._pan) {
+      return;
+    }
+    e.target._pan = {
+      p: {
+        x: t.clientX,
+        y: t.clientY,
+        date: new Date()
       }
+    };
+    e.target.on('mousemove', mouseMove).on('touchmove', touchMove);
+  }
 
-      // TODO: Fix this shit so it fixes all the sup items
-    };this.options = merge(this.options, options);
-    this.items = [];
-  };
+  function mouseMove(e) {
+    move(e, e.data.originalEvent);
+  }
 
-  extend(Menu, GameObject);
-
-  Menu.prototype.addMenuItem = function (item) {
-    this.items.push(item);
-    this.addChild(item);
-    this.arangeItems();
-  };
-
-  Menu.prototype.arangeItems = function () {};
-
-  Menu.prototype.addMenuItemAt = function (item, index) {
-    if (index < 0 || index > this.items.length) {
-      throw new Error(`${item}addChildAt: The index ${index} supplied is out of bounds ${this.items.length}`);
+  function touchMove(e) {
+    var t = e.data.originalEvent.targetTouches;
+    if (!t || t.length > 1) {
+      end(e);
+      return;
     }
+    move(e, t[0]);
+  }
 
-    this.items.splice(index, 0, child);
-
-    var ret = this.addChildAt(item.index);
-    this.arangeItems();
-    return ret;
-  };
-
-  Menu.prototype.update = function (delta) {
-    for (item of this.items) {
-      this.item.update(delta);
+  function move(e, t) {
+    var now = new Date();
+    var interval = now - e.target._pan.p.date;
+    if (interval < 12) {
+      return;
     }
-  };
+    var dx = t.clientX - e.target._pan.p.x;
+    var dy = t.clientY - e.target._pan.p.y;
+    var distance = Math.sqrt(dx * dx + dy * dy);
+    if (!e.target._pan.pp) {
+      var threshold = t instanceof window.MouseEvent ? 2 : 7;
+      if (distance > threshold) {
+        e.target.emit('panstart');
+        e.target._pan.pp = {};
+      }
+      return;
+    }
+    var event = {
+      deltaX: dx,
+      deltaY: dy,
+      velocity: distance / interval,
+      data: e.data
+    };
+    e.target.emit('panmove', event);
+    e.target._pan.pp = {
+      x: e.target._pan.p.x,
+      y: e.target._pan.p.y,
+      date: e.target._pan.p.date
+    };
+    e.target._pan.p = {
+      x: t.clientX,
+      y: t.clientY,
+      date: now
+    };
+  }
 
-  return Menu;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  // TODO: Inertia Mode
+  // possibly be called twice or more
+  function end(e) {
+    if (e.target._pan && e.target._pan.pp) {
+      e.target.emit('panend');
+    }
+    e.target._pan = null;
+    e.target.removeListener('mousemove', mouseMove).removeListener('touchmove', touchMove);
+  }
+
+  sprite.interactive = true;
+  sprite.on('mousedown', mouseDown).on('touchstart', touchStart).on('mouseup', end).on('mouseupoutside', end).on('touchend', end).on('touchendoutside', end);
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy9wYW4uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQXdCLE9BQU87QUFBaEIsU0FBUyxPQUFPLENBQUUsTUFBTSxFQUFFO0FBQ3ZDLFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixTQUFLLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDL0I7O0FBRUQsV0FBUyxVQUFVLENBQUUsQ0FBQyxFQUFFO0FBQ3RCLFNBQUssQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7R0FDaEQ7OztBQUFBLEFBR0QsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNwQixRQUFJLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO0FBQ2pCLGFBQU07S0FDUDtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxHQUFHO0FBQ2QsT0FBQyxFQUFFO0FBQ0QsU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osWUFBSSxFQUFFLElBQUksSUFBSSxFQUFFO09BQ2pCO0tBQ0YsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQ0wsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDMUIsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FBQTtHQUM5Qjs7QUFFRCxXQUFTLFNBQVMsQ0FBRSxDQUFDLEVBQUU7QUFDckIsUUFBSSxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxDQUFBO0dBQzlCOztBQUVELFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixRQUFJLENBQUMsR0FBRyxDQUFDLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxhQUFhLENBQUE7QUFDMUMsUUFBSSxDQUFDLENBQUMsSUFBSSxDQUFDLENBQUMsTUFBTSxHQUFHLENBQUMsRUFBRTtBQUN0QixTQUFHLENBQUMsQ0FBQyxDQUFDLENBQUE7QUFDTixhQUFNO0tBQ1A7QUFDRCxRQUFJLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0dBQ2Q7O0FBRUQsV0FBUyxJQUFJLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNuQixRQUFJLEdBQUcsR0FBRyxJQUFJLElBQUksRUFBRSxDQUFBO0FBQ3BCLFFBQUksUUFBUSxHQUFHLEdBQUcsR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFBO0FBQ3pDLFFBQUksUUFBUSxHQUFHLEVBQUUsRUFBRTtBQUNqQixhQUFNO0tBQ1A7QUFDRCxRQUFJLEVBQUUsR0FBRyxDQUFDLENBQUMsT0FBTyxHQUFHLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7QUFDdEMsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ3RDLFFBQUksUUFBUSxHQUFHLElBQUksQ0FBQyxJQUFJLENBQUMsRUFBRSxHQUFHLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxDQUFDLENBQUE7QUFDM0MsUUFBSSxDQUFDLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLEVBQUUsRUFBRTtBQUNyQixVQUFJLFNBQVMsR0FBRyxBQUFDLENBQUMsWUFBWSxNQUFNLENBQUMsVUFBVSxHQUFJLENBQUMsR0FBRyxDQUFDLENBQUE7QUFDeEQsVUFBSSxRQUFRLEdBQUcsU0FBUyxFQUFFO0FBQ3hCLFNBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxDQUFBO0FBQ3pCLFNBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLENBQUE7T0FDdEI7QUFDRCxhQUFNO0tBQ1A7QUFDRCxRQUFJLEtBQUssR0FBRztBQUNWLFlBQU0sRUFBRSxFQUFFO0FBQ1YsWUFBTSxFQUFFLEVBQUU7QUFDVixjQUFRLEVBQUUsUUFBUSxHQUFHLFFBQVE7QUFDN0IsVUFBSSxFQUFFLENBQUMsQ0FBQyxJQUFJO0tBQ2IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFNBQVMsRUFBRSxLQUFLLENBQUMsQ0FBQTtBQUMvQixLQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxFQUFFLEdBQUc7QUFDakIsT0FBQyxFQUFFLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDO0FBQ3BCLE9BQUMsRUFBRSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUNwQixVQUFJLEVBQUUsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLElBQUk7S0FDM0IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsR0FBRztBQUNoQixPQUFDLEVBQUUsQ0FBQyxDQUFDLE9BQU87QUFDWixPQUFDLEVBQUUsQ0FBQyxDQUFDLE9BQU87QUFDWixVQUFJLEVBQUUsR0FBRztLQUNWLENBQUE7R0FDRjs7OztBQUFBLEFBSUQsV0FBUyxHQUFHLENBQUUsQ0FBQyxFQUFFO0FBQ2YsUUFBSSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksSUFBSSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUU7QUFDckMsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsUUFBUSxDQUFDLENBQUE7S0FDeEI7QUFDRCxLQUFDLENBQUMsTUFBTSxDQUFDLElBQUksR0FBRyxJQUFJLENBQUE7QUFDcEIsS0FBQyxDQUFDLE1BQU0sQ0FDTCxjQUFjLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUN0QyxjQUFjLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUFBO0dBQzFDOztBQUVELFFBQU0sQ0FBQyxXQUFXLEdBQUcsSUFBSSxDQUFBO0FBQ3pCLFFBQU0sQ0FDSCxFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUMxQixFQUFFLENBQUMsWUFBWSxFQUFFLFVBQVUsQ0FBQyxDQUM1QixFQUFFLENBQUMsU0FBUyxFQUFFLEdBQUcsQ0FBQyxDQUNsQixFQUFFLENBQUMsZ0JBQWdCLEVBQUUsR0FBRyxDQUFDLENBQ3pCLEVBQUUsQ0FBQyxVQUFVLEVBQUUsR0FBRyxDQUFDLENBQ25CLEVBQUUsQ0FBQyxpQkFBaUIsRUFBRSxHQUFHLENBQUMsQ0FBQTtDQUM5QiIsImZpbGUiOiJwYW4uanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwYW5hYmxlIChzcHJpdGUpIHtcbiAgZnVuY3Rpb24gbW91c2VEb3duIChlKSB7XG4gICAgc3RhcnQoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQpXG4gIH1cblxuICBmdW5jdGlvbiB0b3VjaFN0YXJ0IChlKSB7XG4gICAgc3RhcnQoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1swXSlcbiAgfVxuXG4gIC8vIHBvc3NpYmx5IGJlIGNhbGxlZCB0d2ljZSBvciBtb3JlXG4gIGZ1bmN0aW9uIHN0YXJ0IChlLCB0KSB7XG4gICAgaWYgKGUudGFyZ2V0Ll9wYW4pIHtcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBlLnRhcmdldC5fcGFuID0ge1xuICAgICAgcDoge1xuICAgICAgICB4OiB0LmNsaWVudFgsXG4gICAgICAgIHk6IHQuY2xpZW50WSxcbiAgICAgICAgZGF0ZTogbmV3IERhdGUoKVxuICAgICAgfVxuICAgIH1cbiAgICBlLnRhcmdldFxuICAgICAgLm9uKCdtb3VzZW1vdmUnLCBtb3VzZU1vdmUpXG4gICAgICAub24oJ3RvdWNobW92ZScsIHRvdWNoTW92ZSlcbiAgfVxuXG4gIGZ1bmN0aW9uIG1vdXNlTW92ZSAoZSkge1xuICAgIG1vdmUoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQpXG4gIH1cblxuICBmdW5jdGlvbiB0b3VjaE1vdmUgKGUpIHtcbiAgICBsZXQgdCA9IGUuZGF0YS5vcmlnaW5hbEV2ZW50LnRhcmdldFRvdWNoZXNcbiAgICBpZiAoIXQgfHwgdC5sZW5ndGggPiAxKSB7XG4gICAgICBlbmQoZSlcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBtb3ZlKGUsIHRbMF0pXG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlIChlLCB0KSB7XG4gICAgbGV0IG5vdyA9IG5ldyBEYXRlKClcbiAgICBsZXQgaW50ZXJ2YWwgPSBub3cgLSBlLnRhcmdldC5fcGFuLnAuZGF0ZVxuICAgIGlmIChpbnRlcnZhbCA8IDEyKSB7XG4gICAgICByZXR1cm5cbiAgICB9XG4gICAgbGV0IGR4ID0gdC5jbGllbnRYIC0gZS50YXJnZXQuX3Bhbi5wLnhcbiAgICBsZXQgZHkgPSB0LmNsaWVudFkgLSBlLnRhcmdldC5fcGFuLnAueVxuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSlcbiAgICBpZiAoIWUudGFyZ2V0Ll9wYW4ucHApIHtcbiAgICAgIGxldCB0aHJlc2hvbGQgPSAodCBpbnN0YW5jZW9mIHdpbmRvdy5Nb3VzZUV2ZW50KSA/IDIgOiA3XG4gICAgICBpZiAoZGlzdGFuY2UgPiB0aHJlc2hvbGQpIHtcbiAgICAgICAgZS50YXJnZXQuZW1pdCgncGFuc3RhcnQnKVxuICAgICAgICBlLnRhcmdldC5fcGFuLnBwID0ge31cbiAgICAgIH1cbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgZXZlbnQgPSB7XG4gICAgICBkZWx0YVg6IGR4LFxuICAgICAgZGVsdGFZOiBkeSxcbiAgICAgIHZlbG9jaXR5OiBkaXN0YW5jZSAvIGludGVydmFsLFxuICAgICAgZGF0YTogZS5kYXRhXG4gICAgfVxuICAgIGUudGFyZ2V0LmVtaXQoJ3Bhbm1vdmUnLCBldmVudClcbiAgICBlLnRhcmdldC5fcGFuLnBwID0ge1xuICAgICAgeDogZS50YXJnZXQuX3Bhbi5wLngsXG4gICAgICB5OiBlLnRhcmdldC5fcGFuLnAueSxcbiAgICAgIGRhdGU6IGUudGFyZ2V0Ll9wYW4ucC5kYXRlXG4gICAgfVxuICAgIGUudGFyZ2V0Ll9wYW4ucCA9IHtcbiAgICAgIHg6IHQuY2xpZW50WCxcbiAgICAgIHk6IHQuY2xpZW50WSxcbiAgICAgIGRhdGU6IG5vd1xuICAgIH1cbiAgfVxuXG4gIC8vIFRPRE86IEluZXJ0aWEgTW9kZVxuICAvLyBwb3NzaWJseSBiZSBjYWxsZWQgdHdpY2Ugb3IgbW9yZVxuICBmdW5jdGlvbiBlbmQgKGUpIHtcbiAgICBpZiAoZS50YXJnZXQuX3BhbiAmJiBlLnRhcmdldC5fcGFuLnBwKSB7XG4gICAgICBlLnRhcmdldC5lbWl0KCdwYW5lbmQnKVxuICAgIH1cbiAgICBlLnRhcmdldC5fcGFuID0gbnVsbFxuICAgIGUudGFyZ2V0XG4gICAgICAucmVtb3ZlTGlzdGVuZXIoJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5yZW1vdmVMaXN0ZW5lcigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgc3ByaXRlLmludGVyYWN0aXZlID0gdHJ1ZVxuICBzcHJpdGVcbiAgICAub24oJ21vdXNlZG93bicsIG1vdXNlRG93bilcbiAgICAub24oJ3RvdWNoc3RhcnQnLCB0b3VjaFN0YXJ0KVxuICAgIC5vbignbW91c2V1cCcsIGVuZClcbiAgICAub24oJ21vdXNldXBvdXRzaWRlJywgZW5kKVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 647 */
+/* 655 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = pinchable;
+function pinchable(sprite) {
+  function start(e) {
+    e.target.on('touchmove', move);
+  }
+
+  function move(e) {
+    var t = e.data.originalEvent.targetTouches;
+    if (!t || t.length < 2) {
+      return;
+    }
+    var dx = t[0].clientX - t[1].clientX;
+    var dy = t[0].clientY - t[1].clientY;
+    var distance = Math.sqrt(dx * dx + dy * dy);
+    if (!e.target._pinch) {
+      e.target._pinch = {
+        p: { distance: distance, date: new Date() },
+        pp: {}
+      };
+      e.target.emit('pinchstart');
+      return;
+    }
+    var center = {
+      x: (t[0].clientX + t[1].clientX) / 2,
+      y: (t[0].clientY + t[1].clientY) / 2
+    };
+    var now = new Date();
+    var interval = now - e.target._pinch.p.date;
+    if (interval < 12) {
+      return;
+    }
+    var event = {
+      scale: distance / e.target._pinch.p.distance,
+      velocity: distance / interval,
+      center: center,
+      data: e.data
+    };
+    e.target.emit('pinchmove', event);
+    e.target._pinch.pp = {
+      distance: e.target._pinch.p.distance,
+      date: e.target._pinch.p.date
+    };
+    e.target._pinch.p = {
+      distance: distance,
+      date: now
+    };
+  }
+
+  // TODO: Inertia Mode
+  function end(e) {
+    if (e.target._pinch) {
+      e.target.emit('pinchend');
+    }
+    e.target._pinch = null;
+    e.target.removeListener('touchmove', move);
+  }
+
+  sprite.interactive = true;
+  sprite.on('touchstart', start).on('touchend', end).on('touchendoutside', end);
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy9waW5jaC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztrQkFBd0IsU0FBUztBQUFsQixTQUFTLFNBQVMsQ0FBRSxNQUFNLEVBQUU7QUFDekMsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFO0FBQ2pCLEtBQUMsQ0FBQyxNQUFNLENBQUMsRUFBRSxDQUFDLFdBQVcsRUFBRSxJQUFJLENBQUMsQ0FBQTtHQUMvQjs7QUFFRCxXQUFTLElBQUksQ0FBRSxDQUFDLEVBQUU7QUFDaEIsUUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFBO0FBQzFDLFFBQUksQ0FBQyxDQUFDLElBQUksQ0FBQyxDQUFDLE1BQU0sR0FBRyxDQUFDLEVBQUU7QUFDdEIsYUFBTTtLQUNQO0FBQ0QsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxDQUFBO0FBQ3BDLFFBQUksRUFBRSxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxPQUFPLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sQ0FBQTtBQUNwQyxRQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxHQUFHLEVBQUUsQ0FBQyxDQUFBO0FBQzNDLFFBQUksQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sRUFBRTtBQUNwQixPQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sR0FBRztBQUNoQixTQUFDLEVBQUUsRUFBRSxRQUFRLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRSxJQUFJLElBQUksRUFBRSxFQUFFO0FBQzNDLFVBQUUsRUFBRSxFQUFFO09BQ1AsQ0FBQTtBQUNELE9BQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFlBQVksQ0FBQyxDQUFBO0FBQzNCLGFBQU07S0FDUDtBQUNELFFBQUksTUFBTSxHQUFHO0FBQ1gsT0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxDQUFBLEdBQUksQ0FBQztBQUNwQyxPQUFDLEVBQUUsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxPQUFPLENBQUEsR0FBSSxDQUFDO0tBQ3JDLENBQUE7QUFDRCxRQUFJLEdBQUcsR0FBRyxJQUFJLElBQUksRUFBRSxDQUFBO0FBQ3BCLFFBQUksUUFBUSxHQUFHLEdBQUcsR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFBO0FBQzNDLFFBQUksUUFBUSxHQUFHLEVBQUUsRUFBRTtBQUNqQixhQUFNO0tBQ1A7QUFDRCxRQUFJLEtBQUssR0FBRztBQUNWLFdBQUssRUFBRSxRQUFRLEdBQUcsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxDQUFDLFFBQVE7QUFDNUMsY0FBUSxFQUFFLFFBQVEsR0FBRyxRQUFRO0FBQzdCLFlBQU0sRUFBRSxNQUFNO0FBQ2QsVUFBSSxFQUFFLENBQUMsQ0FBQyxJQUFJO0tBQ2IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFdBQVcsRUFBRSxLQUFLLENBQUMsQ0FBQTtBQUNqQyxLQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxFQUFFLEdBQUc7QUFDbkIsY0FBUSxFQUFFLENBQUMsQ0FBQyxNQUFNLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQyxRQUFRO0FBQ3BDLFVBQUksRUFBRSxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsSUFBSTtLQUM3QixDQUFBO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxHQUFHO0FBQ2xCLGNBQVEsRUFBRSxRQUFRO0FBQ2xCLFVBQUksRUFBRSxHQUFHO0tBQ1YsQ0FBQTtHQUNGOzs7QUFBQSxBQUdELFdBQVMsR0FBRyxDQUFFLENBQUMsRUFBRTtBQUNmLFFBQUksQ0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLEVBQUU7QUFDbkIsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsVUFBVSxDQUFDLENBQUE7S0FDMUI7QUFDRCxLQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sR0FBRyxJQUFJLENBQUE7QUFDdEIsS0FBQyxDQUFDLE1BQU0sQ0FBQyxjQUFjLENBQUMsV0FBVyxFQUFFLElBQUksQ0FBQyxDQUFBO0dBQzNDOztBQUVELFFBQU0sQ0FBQyxXQUFXLEdBQUcsSUFBSSxDQUFBO0FBQ3pCLFFBQU0sQ0FDSCxFQUFFLENBQUMsWUFBWSxFQUFFLEtBQUssQ0FBQyxDQUN2QixFQUFFLENBQUMsVUFBVSxFQUFFLEdBQUcsQ0FBQyxDQUNuQixFQUFFLENBQUMsaUJBQWlCLEVBQUUsR0FBRyxDQUFDLENBQUE7Q0FDOUIiLCJmaWxlIjoicGluY2guanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwaW5jaGFibGUgKHNwcml0ZSkge1xuICBmdW5jdGlvbiBzdGFydCAoZSkge1xuICAgIGUudGFyZ2V0Lm9uKCd0b3VjaG1vdmUnLCBtb3ZlKVxuICB9XG5cbiAgZnVuY3Rpb24gbW92ZSAoZSkge1xuICAgIGxldCB0ID0gZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1xuICAgIGlmICghdCB8fCB0Lmxlbmd0aCA8IDIpIHtcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgZHggPSB0WzBdLmNsaWVudFggLSB0WzFdLmNsaWVudFhcbiAgICBsZXQgZHkgPSB0WzBdLmNsaWVudFkgLSB0WzFdLmNsaWVudFlcbiAgICBsZXQgZGlzdGFuY2UgPSBNYXRoLnNxcnQoZHggKiBkeCArIGR5ICogZHkpXG4gICAgaWYgKCFlLnRhcmdldC5fcGluY2gpIHtcbiAgICAgIGUudGFyZ2V0Ll9waW5jaCA9IHtcbiAgICAgICAgcDogeyBkaXN0YW5jZTogZGlzdGFuY2UsIGRhdGU6IG5ldyBEYXRlKCkgfSxcbiAgICAgICAgcHA6IHt9XG4gICAgICB9XG4gICAgICBlLnRhcmdldC5lbWl0KCdwaW5jaHN0YXJ0JylcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgY2VudGVyID0ge1xuICAgICAgeDogKHRbMF0uY2xpZW50WCArIHRbMV0uY2xpZW50WCkgLyAyLFxuICAgICAgeTogKHRbMF0uY2xpZW50WSArIHRbMV0uY2xpZW50WSkgLyAyXG4gICAgfVxuICAgIGxldCBub3cgPSBuZXcgRGF0ZSgpXG4gICAgbGV0IGludGVydmFsID0gbm93IC0gZS50YXJnZXQuX3BpbmNoLnAuZGF0ZVxuICAgIGlmIChpbnRlcnZhbCA8IDEyKSB7XG4gICAgICByZXR1cm5cbiAgICB9XG4gICAgbGV0IGV2ZW50ID0ge1xuICAgICAgc2NhbGU6IGRpc3RhbmNlIC8gZS50YXJnZXQuX3BpbmNoLnAuZGlzdGFuY2UsXG4gICAgICB2ZWxvY2l0eTogZGlzdGFuY2UgLyBpbnRlcnZhbCxcbiAgICAgIGNlbnRlcjogY2VudGVyLFxuICAgICAgZGF0YTogZS5kYXRhXG4gICAgfVxuICAgIGUudGFyZ2V0LmVtaXQoJ3BpbmNobW92ZScsIGV2ZW50KVxuICAgIGUudGFyZ2V0Ll9waW5jaC5wcCA9IHtcbiAgICAgIGRpc3RhbmNlOiBlLnRhcmdldC5fcGluY2gucC5kaXN0YW5jZSxcbiAgICAgIGRhdGU6IGUudGFyZ2V0Ll9waW5jaC5wLmRhdGVcbiAgICB9XG4gICAgZS50YXJnZXQuX3BpbmNoLnAgPSB7XG4gICAgICBkaXN0YW5jZTogZGlzdGFuY2UsXG4gICAgICBkYXRlOiBub3dcbiAgICB9XG4gIH1cblxuICAvLyBUT0RPOiBJbmVydGlhIE1vZGVcbiAgZnVuY3Rpb24gZW5kIChlKSB7XG4gICAgaWYgKGUudGFyZ2V0Ll9waW5jaCkge1xuICAgICAgZS50YXJnZXQuZW1pdCgncGluY2hlbmQnKVxuICAgIH1cbiAgICBlLnRhcmdldC5fcGluY2ggPSBudWxsXG4gICAgZS50YXJnZXQucmVtb3ZlTGlzdGVuZXIoJ3RvdWNobW92ZScsIG1vdmUpXG4gIH1cblxuICBzcHJpdGUuaW50ZXJhY3RpdmUgPSB0cnVlXG4gIHNwcml0ZVxuICAgIC5vbigndG91Y2hzdGFydCcsIHN0YXJ0KVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
+
+/***/ }),
+/* 656 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = tappable;
+function tappable(sprite) {
+  function mouseDown(e) {
+    start(e, e.data.originalEvent);
+  }
+
+  function touchStart(e) {
+    start(e, e.data.originalEvent.targetTouches[0]);
+  }
+
+  // possibly be called twice or more
+  function start(e, t) {
+    if (e.target._tap) {
+      return;
+    }
+    e.target._tap = {
+      p: {
+        x: t.clientX,
+        y: t.clientY
+      }
+    };
+    e.target.on('mousemove', mouseMove).on('touchmove', touchMove);
+  }
+
+  function mouseMove(e) {
+    move(e, e.data.originalEvent);
+  }
+
+  function touchMove(e) {
+    var t = e.data.originalEvent.targetTouches;
+    if (!t || t.length > 1) {
+      e.target._tap.canceled = true;
+      end(e);
+      return;
+    }
+    move(e, t[0]);
+  }
+
+  function move(e, t) {
+    var dx = t.clientX - e.target._tap.p.x;
+    var dy = t.clientY - e.target._tap.p.y;
+    var distance = Math.sqrt(dx * dx + dy * dy);
+    var threshold = t instanceof window.MouseEvent ? 2 : 7;
+    if (distance > threshold) {
+      e.target._tap.canceled = true;
+    }
+  }
+
+  // possibly be called twice or more
+  function end(e) {
+    if (e.target._tap && !e.target._tap.canceled) {
+      var event = {
+        data: e.data
+      };
+      e.target.emit('simpletap', event);
+    }
+    e.target._tap = null;
+    e.target.removeListener('mousemove', mouseMove).removeListener('touchmove', touchMove);
+  }
+
+  sprite.interactive = true;
+  sprite.on('mousedown', mouseDown).on('touchstart', touchStart).on('mouseup', end).on('mouseupoutside', end).on('touchend', end).on('touchendoutside', end);
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy90YXAuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQXdCLFFBQVE7QUFBakIsU0FBUyxRQUFRLENBQUUsTUFBTSxFQUFFO0FBQ3hDLFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixTQUFLLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDL0I7O0FBRUQsV0FBUyxVQUFVLENBQUUsQ0FBQyxFQUFFO0FBQ3RCLFNBQUssQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7R0FDaEQ7OztBQUFBLEFBR0QsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNwQixRQUFJLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO0FBQ2pCLGFBQU07S0FDUDtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxHQUFHO0FBQ2QsT0FBQyxFQUFFO0FBQ0QsU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO09BQ2I7S0FDRixDQUFBO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FDTCxFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUMxQixFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUFBO0dBQzlCOztBQUVELFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixRQUFJLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDOUI7O0FBRUQsV0FBUyxTQUFTLENBQUUsQ0FBQyxFQUFFO0FBQ3JCLFFBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLGFBQWEsQ0FBQTtBQUMxQyxRQUFJLENBQUMsQ0FBQyxJQUFJLENBQUMsQ0FBQyxNQUFNLEdBQUcsQ0FBQyxFQUFFO0FBQ3RCLE9BQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFFBQVEsR0FBRyxJQUFJLENBQUE7QUFDN0IsU0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ04sYUFBTTtLQUNQO0FBQ0QsUUFBSSxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQTtHQUNkOztBQUVELFdBQVMsSUFBSSxDQUFFLENBQUMsRUFBRSxDQUFDLEVBQUU7QUFDbkIsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ3RDLFFBQUksRUFBRSxHQUFHLENBQUMsQ0FBQyxPQUFPLEdBQUcsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQTtBQUN0QyxRQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxHQUFHLEVBQUUsQ0FBQyxDQUFBO0FBQzNDLFFBQUksU0FBUyxHQUFHLEFBQUMsQ0FBQyxZQUFZLE1BQU0sQ0FBQyxVQUFVLEdBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQTtBQUN4RCxRQUFJLFFBQVEsR0FBRyxTQUFTLEVBQUU7QUFDeEIsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsUUFBUSxHQUFHLElBQUksQ0FBQTtLQUM5QjtHQUNGOzs7QUFBQSxBQUdELFdBQVMsR0FBRyxDQUFFLENBQUMsRUFBRTtBQUNmLFFBQUksQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLElBQUksQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxRQUFRLEVBQUU7QUFDNUMsVUFBSSxLQUFLLEdBQUc7QUFDVixZQUFJLEVBQUUsQ0FBQyxDQUFDLElBQUk7T0FDYixDQUFBO0FBQ0QsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsV0FBVyxFQUFFLEtBQUssQ0FBQyxDQUFBO0tBQ2xDO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLEdBQUcsSUFBSSxDQUFBO0FBQ3BCLEtBQUMsQ0FBQyxNQUFNLENBQ0wsY0FBYyxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDdEMsY0FBYyxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FBQTtHQUMxQzs7QUFFRCxRQUFNLENBQUMsV0FBVyxHQUFHLElBQUksQ0FBQTtBQUN6QixRQUFNLENBQ0gsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDMUIsRUFBRSxDQUFDLFlBQVksRUFBRSxVQUFVLENBQUMsQ0FDNUIsRUFBRSxDQUFDLFNBQVMsRUFBRSxHQUFHLENBQUMsQ0FDbEIsRUFBRSxDQUFDLGdCQUFnQixFQUFFLEdBQUcsQ0FBQyxDQUN6QixFQUFFLENBQUMsVUFBVSxFQUFFLEdBQUcsQ0FBQyxDQUNuQixFQUFFLENBQUMsaUJBQWlCLEVBQUUsR0FBRyxDQUFDLENBQUE7Q0FDOUIiLCJmaWxlIjoidGFwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gdGFwcGFibGUgKHNwcml0ZSkge1xuICBmdW5jdGlvbiBtb3VzZURvd24gKGUpIHtcbiAgICBzdGFydChlLCBlLmRhdGEub3JpZ2luYWxFdmVudClcbiAgfVxuXG4gIGZ1bmN0aW9uIHRvdWNoU3RhcnQgKGUpIHtcbiAgICBzdGFydChlLCBlLmRhdGEub3JpZ2luYWxFdmVudC50YXJnZXRUb3VjaGVzWzBdKVxuICB9XG5cbiAgLy8gcG9zc2libHkgYmUgY2FsbGVkIHR3aWNlIG9yIG1vcmVcbiAgZnVuY3Rpb24gc3RhcnQgKGUsIHQpIHtcbiAgICBpZiAoZS50YXJnZXQuX3RhcCkge1xuICAgICAgcmV0dXJuXG4gICAgfVxuICAgIGUudGFyZ2V0Ll90YXAgPSB7XG4gICAgICBwOiB7XG4gICAgICAgIHg6IHQuY2xpZW50WCxcbiAgICAgICAgeTogdC5jbGllbnRZXG4gICAgICB9XG4gICAgfVxuICAgIGUudGFyZ2V0XG4gICAgICAub24oJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5vbigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgZnVuY3Rpb24gbW91c2VNb3ZlIChlKSB7XG4gICAgbW92ZShlLCBlLmRhdGEub3JpZ2luYWxFdmVudClcbiAgfVxuXG4gIGZ1bmN0aW9uIHRvdWNoTW92ZSAoZSkge1xuICAgIGxldCB0ID0gZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1xuICAgIGlmICghdCB8fCB0Lmxlbmd0aCA+IDEpIHtcbiAgICAgIGUudGFyZ2V0Ll90YXAuY2FuY2VsZWQgPSB0cnVlXG4gICAgICBlbmQoZSlcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBtb3ZlKGUsIHRbMF0pXG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlIChlLCB0KSB7XG4gICAgbGV0IGR4ID0gdC5jbGllbnRYIC0gZS50YXJnZXQuX3RhcC5wLnhcbiAgICBsZXQgZHkgPSB0LmNsaWVudFkgLSBlLnRhcmdldC5fdGFwLnAueVxuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSlcbiAgICBsZXQgdGhyZXNob2xkID0gKHQgaW5zdGFuY2VvZiB3aW5kb3cuTW91c2VFdmVudCkgPyAyIDogN1xuICAgIGlmIChkaXN0YW5jZSA+IHRocmVzaG9sZCkge1xuICAgICAgZS50YXJnZXQuX3RhcC5jYW5jZWxlZCA9IHRydWVcbiAgICB9XG4gIH1cblxuICAvLyBwb3NzaWJseSBiZSBjYWxsZWQgdHdpY2Ugb3IgbW9yZVxuICBmdW5jdGlvbiBlbmQgKGUpIHtcbiAgICBpZiAoZS50YXJnZXQuX3RhcCAmJiAhZS50YXJnZXQuX3RhcC5jYW5jZWxlZCkge1xuICAgICAgbGV0IGV2ZW50ID0ge1xuICAgICAgICBkYXRhOiBlLmRhdGFcbiAgICAgIH1cbiAgICAgIGUudGFyZ2V0LmVtaXQoJ3NpbXBsZXRhcCcsIGV2ZW50KVxuICAgIH1cbiAgICBlLnRhcmdldC5fdGFwID0gbnVsbFxuICAgIGUudGFyZ2V0XG4gICAgICAucmVtb3ZlTGlzdGVuZXIoJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5yZW1vdmVMaXN0ZW5lcigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgc3ByaXRlLmludGVyYWN0aXZlID0gdHJ1ZVxuICBzcHJpdGVcbiAgICAub24oJ21vdXNlZG93bicsIG1vdXNlRG93bilcbiAgICAub24oJ3RvdWNoc3RhcnQnLCB0b3VjaFN0YXJ0KVxuICAgIC5vbignbW91c2V1cCcsIGVuZClcbiAgICAub24oJ21vdXNldXBvdXRzaWRlJywgZW5kKVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
+
+/***/ }),
+/* 657 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _pinch = __webpack_require__(655);
+
+var _pinch2 = _interopRequireDefault(_pinch);
+
+var _pan = __webpack_require__(654);
+
+var _pan2 = _interopRequireDefault(_pan);
+
+var _tap = __webpack_require__(656);
+
+var _tap2 = _interopRequireDefault(_tap);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  pinchable: _pinch2.default,
+  panable: _pan2.default,
+  tappable: _tap2.default
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9pbmRleC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7OztrQkFJZTtBQUNiLFdBQVMsaUJBQUE7QUFDVCxTQUFPLGVBQUE7QUFDUCxVQUFRLGVBQUE7Q0FDVCIsImZpbGUiOiJpbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBwaW5jaGFibGUgZnJvbSAnLi9nZXN0dXJlcy9waW5jaCdcbmltcG9ydCBwYW5hYmxlIGZyb20gJy4vZ2VzdHVyZXMvcGFuJ1xuaW1wb3J0IHRhcHBhYmxlIGZyb20gJy4vZ2VzdHVyZXMvdGFwJ1xuXG5leHBvcnQgZGVmYXVsdCB7XG4gIHBpbmNoYWJsZSxcbiAgcGFuYWJsZSxcbiAgdGFwcGFibGVcbn1cbiJdfQ==
+
+/***/ }),
+/* 658 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Breakout/GameLevel": 630,
-	"./Breakout/GameLevel.js": 630,
-	"./Breakout/Level1": 635,
-	"./Breakout/Level1.js": 635,
-	"./Circles/GameLevel": 631,
-	"./Circles/GameLevel.js": 631,
-	"./Circles/Level1": 636,
-	"./Circles/Level1.js": 636,
-	"./FlappyBird/GameLevel": 632,
-	"./FlappyBird/GameLevel.js": 632,
-	"./FlappyBird/Level1": 637,
-	"./FlappyBird/Level1.js": 637,
-	"./MainMenu": 638,
-	"./MainMenu.js": 638,
-	"./PixelShooter/GameLevel": 633,
-	"./PixelShooter/GameLevel.js": 633,
-	"./PixelShooter/Level1": 639,
-	"./PixelShooter/Level1.js": 639,
-	"./SplashScene": 640,
-	"./SplashScene.js": 640
+	"./Breakout/GameLevel": 631,
+	"./Breakout/GameLevel.js": 631,
+	"./Breakout/Level1": 637,
+	"./Breakout/Level1.js": 637,
+	"./Circles/GameLevel": 632,
+	"./Circles/GameLevel.js": 632,
+	"./Circles/Level1": 638,
+	"./Circles/Level1.js": 638,
+	"./FlappyBird/GameLevel": 633,
+	"./FlappyBird/GameLevel.js": 633,
+	"./FlappyBird/Level1": 639,
+	"./FlappyBird/Level1.js": 639,
+	"./MainMenu": 640,
+	"./MainMenu.js": 640,
+	"./PixelShooter/GameLevel": 634,
+	"./PixelShooter/GameLevel.js": 634,
+	"./PixelShooter/Level1": 641,
+	"./PixelShooter/Level1.js": 641,
+	"./SplashScene": 642,
+	"./SplashScene.js": 642
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -71818,7 +74282,348 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 647;
+webpackContext.id = 658;
+
+/***/ }),
+/* 659 */,
+/* 660 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+const BUTTON_STATE = {
+  OPEN: 'open',
+  OPENING: 'opening'
+};
+/* harmony export (immutable) */ __webpack_exports__["BUTTON_STATE"] = BUTTON_STATE;
+
+
+const BUTTON_TYPE = {
+  BASE: 'base'
+};
+/* harmony export (immutable) */ __webpack_exports__["BUTTON_TYPE"] = BUTTON_TYPE;
+
+
+/***/ }),
+/* 661 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Button", function() { return Button; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "State", function() { return State; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Type", function() { return Type; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseButton", function() { return BaseButton; });
+const State = __webpack_require__(660).BUTTON_STATE;
+const Type = __webpack_require__(660).BUTTON_TYPE;
+const BaseButton = __webpack_require__(664);
+const Button = __webpack_require__(663);
+
+
+
+/***/ }),
+/* 662 */,
+/* 663 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(660).BUTTON_STATE;
+const Type = __webpack_require__(660).BUTTON_TYPE;
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  let Button = function (options, ...items) {
+    GameObject.call(this, options);
+
+    this.options = {};
+
+    this.options = merge(this.options, options);
+    this.items = [];
+
+    this.on('pointerdown', this._onPointerDown.bind(this));
+    this.on('pointerup', this._onPointerUp.bind(this));
+    this.on('pointerout', this._onPointerOut.bind(this));
+    this.on('pointerover', this._onPointerOver.bind(this));
+  };
+
+  extend(Button, GameObject);
+
+  Button.prototype.onRestore = function () {
+    // Overwrite this
+  };
+
+  Button.prototype.onClick = function () {
+    // Overwrite this
+  };
+
+  Button.prototype.onHover = function () {}
+  // Overwrite this
+
+
+  /**
+   * Activate the button
+   */
+  ;Button.prototype.activate = function () {
+    this.interactive = true;
+    this.buttonMode = true;
+  };
+
+  /**
+   * Deactivate the button
+   */
+  Button.prototype.deactivate = function () {
+    this.interactive = false;
+    this.buttonMode = true;
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the button click is released.
+   *
+   * @param {event} event - The event object
+   */
+  Button.prototype._onPointerUp = function (event) {}
+  // Function body
+
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the button is clicked.
+   *
+   * @param {event} event - The event object
+   */
+  ;Button.prototype._onPointerDown = function (event) {}
+  // Function body
+
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the mouse cursor leaves the
+   * button.
+   *
+   * @param {event} event - The event object
+   */
+  ;Button.prototype._onPointerOut = function (event) {}
+  // Function body
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the button is hovered.
+   *
+   * @param {event} event - The event object
+   */
+  ;Button.prototype._onPointerOver = function (event) {
+    // Function body
+  };
+
+  return Button;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 664 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(663);
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(245), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
+  let BaseButton = function (options) {
+
+    this.textStyle = new pixi.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 16,
+      fill: ['#000000'] // gradient
+    });
+
+    this.options = {
+      text: '',
+      x: 0,
+      y: 0,
+      width: 300,
+      height: 100,
+      state: {
+        default: {
+          textstyle: this.textStyle,
+          bordercolor: 0xd0d3d8,
+          bordersize: 2,
+          borderopacity: 1,
+          fillcolor: 0xdbd6d6,
+          fillopacity: 1,
+          radius: 15,
+          text: ''
+        },
+        hover: {
+          textstyle: this.textStyle,
+          bordercolor: 0xabaeb2,
+          bordersize: 2,
+          borderopacity: 1,
+          fillcolor: 0x9e9999, // 0xFF00BB,
+          fillopacity: 1,
+          radius: 20,
+          text: ''
+        },
+        clicked: {
+          textstyle: this.textStyle,
+          bordercolor: 0xFF00FF,
+          bordersize: 2,
+          borderopacity: 1,
+          fillcolor: 0x777575,
+          fillopacity: 1,
+          radius: 20,
+          text: ''
+        }
+      }
+    };
+
+    this.options = extend2(true, this.options, options);
+    this.options.state.default.text = options.text;
+
+    Button.call(this, this.options);
+
+    this.states = {
+      default: null,
+      hover: null,
+      clicked: null
+    };
+    this.init();
+  };
+
+  extend(BaseButton, Button);
+
+  BaseButton.prototype.init = function () {
+
+    let options = this.options;
+    let state_default = new PIXI.Graphics();
+    let state_hover = new PIXI.Graphics();
+    let state_clicked = new PIXI.Graphics();
+
+    state_default.lineStyle(options.state.default.bordersize, options.state.default.bordercolor, options.state.default.borderopacity);
+    state_default.beginFill(options.state.default.fillcolor, options.state.default.fillopacity);
+    state_default.drawRoundedRect(options.x, options.y, options.width, options.height, options.state.default.radius);
+    state_default.endFill();
+
+    if (options.state.hover) {
+      state_hover.lineStyle(options.state.hover.bordersize, options.state.hover.bordercolor, options.state.hover.borderopacity);
+      state_hover.beginFill(options.state.hover.fillcolor, options.state.hover.fillopacity);
+      state_hover.drawRoundedRect(options.x, options.y, options.width, options.height, options.state.default.radius);
+      state_hover.endFill();
+    }
+
+    if (options.state.clicked) {
+      state_clicked.lineStyle(options.state.clicked.bordersize, options.state.clicked.bordercolor, options.state.clicked.borderopacity);
+      state_clicked.beginFill(options.state.clicked.fillcolor, options.state.clicked.fillopacity);
+      state_clicked.drawRoundedRect(options.x, options.y, options.width, options.height, options.state.clicked.radius);
+      state_clicked.endFill();
+    }
+
+    this.textLabel = new pixi.Text(this.options.text, options.state.default.textstyle);
+
+    state_default.visible = true;
+    state_clicked.visible = false;
+    state_hover.visible = false;
+
+    this.states.default = state_default;
+    this.states.hover = state_hover;
+    this.states.clicked = state_clicked;
+
+    this.addChild(this.states.default);
+    this.addChild(this.states.hover);
+    this.addChild(this.states.clicked);
+    this.addChild(this.textLabel);
+
+    this.textLabel.x = this.width / 2 - this.textLabel.width / 2;
+    this.textLabel.y = this.height / 2 - this.textLabel.height / 2;
+  };
+
+  BaseButton.prototype.setText = function (text) {
+    this.options.text = text;
+    this.textLabel.text = this.options.text;
+
+    this.textLabel.x = this.width / 2 - this.textLabel.width / 2;
+    this.textLabel.y = this.height / 2 - this.textLabel.height / 2;
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the button is no longer hovered.
+   *
+   * @param {event} event - The event object
+   */
+  Button.prototype._onPointerOut = function (event) {
+    this.states.default.visible = true;
+    this.states.hover.visible = false;
+    this.states.clicked.visible = false;
+
+    if (typeof this.options.state.default.text !== 'undefined' && this.options.state.default.text.length > 0) {
+      if (typeof this.options.state.default.textstyle !== 'undefined') {
+        this.textLabel.style = this.options.state.default.textstyle;
+      }
+      this.setText(this.options.state.default.text);
+      this.onRestore();
+    }
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the button is hovered.
+   *
+   * @param {event} event - The event object
+   */
+  Button.prototype._onPointerOver = function (event) {
+    this.states.default.visible = false;
+    this.states.hover.visible = true;
+    this.states.clicked.visible = false;
+
+    if (typeof this.options.state.hover.text !== 'undefined' && this.options.state.hover.text.length > 0) {
+      if (typeof this.options.state.hover.textstyle !== 'undefined') {
+        this.textLabel.style = this.options.state.hover.textstyle;
+      }
+      this.setText(this.options.state.hover.text);
+      this.onHover();
+    }
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the button clicke is released.
+   *
+   * @param {event} event - The event object
+   */
+  BaseButton.prototype._onPointerUp = function (event) {
+    this.states.default.visible = true;
+    this.states.hover.visible = false;
+    this.states.clicked.visible = false;
+
+    if (typeof this.options.state.default.text !== 'undefined' && this.options.state.default.text.length > 0) {
+      if (typeof this.options.state.default.textstyle !== 'undefined') {
+        this.textLabel.style = this.options.state.default.textstyle;
+      }
+      this.setText(this.options.state.default.text);
+      this.onRestore();
+    }
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the button is clicked.
+   *
+   * @param {event} event - The event object
+   */
+  BaseButton.prototype._onPointerDown = function (event) {
+    this.states.default.visible = false;
+    this.states.hover.visible = false;
+    this.states.clicked.visible = true;
+
+    if (typeof this.options.state.clicked.text !== 'undefined' && this.options.state.clicked.text.length > 0) {
+      if (typeof this.options.state.clicked.textstyle !== 'undefined') {
+        this.textLabel.style = this.options.state.clicked.textstyle;
+      }
+      this.setText(this.options.state.clicked.text);
+      this.onClick();
+    }
+  };
+
+  return BaseButton;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ })
 ]);

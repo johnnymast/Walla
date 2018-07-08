@@ -69,10 +69,11 @@ define(['pixi', 'core/Scene', 'core/GameEngine'], function (pixi, Scene, GameEng
       {name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png'},
 
       // // PixelShooter
-      // {name: 'Decor', src: 'assets/pixelshooter/images/ground.png'},
-      // {name: 'Water', src: 'assets/pixelshooter/images/water.png'},
-      {name: 'pixelshooter_map', src: 'assets/pixelshooter/map/map.tmx'},
-      {name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/pixelshooter/spritesheets/game-0.json'},
+      // {name: 'Decor', src: 'assets/Pixelshooter/images/ground.png'},
+      // {name: 'Water', src: 'assets/Pixelshooter/images/water.png'},
+      {name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx'},
+      {name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json'},
+      {name: 'pixelshooter_character_animations', type: 'json', src: 'assets/Pixelshooter/data/character_animations.json'},
     ])
     //
     this.AssetManager.once('complete', this._preloadready, this)

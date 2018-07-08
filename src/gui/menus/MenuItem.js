@@ -1,5 +1,4 @@
 define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
-
   /**
    * @classdesc Abstract class representing a menu item.
    * @exports gui/menu/MenuItem
@@ -7,11 +6,11 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    * @param {callback} callback - Callback for when the item has been clicked
    * @param {mixed} [options] - Options to pass to GameObject
    */
-  var MenuItem = function (callback, options) {
+  let MenuItem = function (callback, options) {
     GameObject.call(this, options)
 
-    this.buttonMode = true;
-    this.interactive = true;
+    this.buttonMode = true
+    this.interactive = true 
     this.callback = callback
 
     this.on('pointerdown', this.onPointerDown.bind(this))
@@ -26,7 +25,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    * @param {number} x - Set the x position
    * @param {number} y - Set the y position
    */
-  MenuItem.prototype.setPosition = function(x, y) {
+  MenuItem.prototype.setPosition = function (x, y) {
     this.x = x
     this.y = y
   }
@@ -37,7 +36,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {event} event - The event object
    */
-  MenuItem.prototype.onPointerDown = function(event) {
+  MenuItem.prototype.onPointerDown = function (event) {
     this.callback()
   }
 
@@ -48,7 +47,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {event} event - The event object
    */
-  MenuItem.prototype.onPointerOut = function(event) {
+  MenuItem.prototype.onPointerOut = function (event) {
     // Function body
   }
   /**
@@ -57,9 +56,9 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {event} event - The event object
    */
-  MenuItem.prototype.onPointerOver = function(event) {
+  MenuItem.prototype.onPointerOver = function (event) {
     // Function body
   }
 
   return MenuItem
-});
+})

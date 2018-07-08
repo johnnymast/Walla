@@ -1,6 +1,9 @@
-const Menus = require('gui/menu')
+const Menus = require('gui/menus')
+const Dialogs = require('gui/dialogs')
+const Buttons = require('gui/buttons')
+
 define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pixi, Scene, GameEngine, Statistics) {
-  var MainScreen = function (options) {
+  let MainScreen = function (options) {
     Scene.call(this, options)
     this.backgrounds = []
 
@@ -10,7 +13,6 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
   extend(MainScreen, Scene)
 
   MainScreen.prototype.onStart = function () {
-
     var style = new pixi.TextStyle({
       fontFamily: 'Arial',
       fontSize: 36,
@@ -51,7 +53,36 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
         paddingTop: 10
       }
     })
-    this.addChild(menu)
+
+    let dialog = new Dialogs.Dialog({
+      type: Dialogs.TYPE.DEFAULT,
+      option: 'value'
+    })
+
+    let button = new Buttons.BaseButton({
+      text: 'Hello World',
+      width: 250,
+      height: 50,
+      state: {
+        hover: {
+          text: 'You are hovering'
+        },
+        clicked: {
+          text: 'You clicked'
+        },
+      }
+    });
+
+    button.onClick = function(e) {
+      console.log('Button clicked')
+    }
+
+    button.onHover = function(e) {
+      console.log('Button hovered')
+    }
+    button.onRestore = function(e) {
+      console.log('Button restored')
+    }
 
     var item1 = new Menus.MenuItemText('Breakout', this.breakoutClicked)
     var item2 = new Menus.MenuItemText('PixelShooter', this.pixelShooterClicked)
@@ -71,6 +102,13 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
 
     this.addChild(richText)
     this.addChild(this.statistics)
+
+    button.activate()
+    dialog.addChild(button)
+    dialog.addChild(menu)
+    this.addChild(dialog)
+
+
   }
 
   MainScreen.prototype.setDisplayStats = function (visible) {

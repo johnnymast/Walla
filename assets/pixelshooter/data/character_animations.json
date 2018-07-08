@@ -1,0 +1,45 @@
+{
+  "up": {
+    "key": "north",
+    "animation": null,
+    "frames": 4
+  },
+  "down": {
+    "key": "south",
+    "animation": null,
+    "frames": 4
+  },
+  "right": {
+    "key": "side",
+    "animation": null,
+    "frames": 4
+  },
+  "left": {
+    "key": "side",
+    "animation": null,
+    "flipx": -1,
+    "frames": 4
+  },
+  "diagup_right": {
+    "key": "diagup",
+    "animation": null,
+    "frames": 4
+  },
+  "diagup_left": {
+    "key": "diagup",
+    "animation": null,
+    "flipx": -1,
+    "frames": 4
+  },
+  "diagdown_right": {
+    "key": "diagdown",
+    "animation": null,
+    "frames": 4
+  },
+  "diagdown_left": {
+    "key": "diagdown",
+    "animation": null,
+    "flipx": -1,
+    "frames": 4
+  }
+}

@@ -1,3 +1,5 @@
+const gesture = require('pixi-simple-gesture').default
+
 define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   let Scene = function (options) {
     GameObject.call(this, options)
@@ -8,20 +10,91 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
       console.warn('Please add the update method to ' + this.childClass)
     }
 
+    gesture.pinchable(this, true)
+
+    this.on('panmove', e => {
+      sprite.x += e.deltaX
+      sprite.y += e.deltaY
+    })
+
+    this.on('panstart', () => {
+      console.log('panstart')
+    })
+
+    this.on('panend', () => {
+      console.log('panend')
+    })
+
+    this.on('pinchmove', e => {
+      sprite.scale.x = Math.max(0.5, sprite.scale.x * e.scale)
+      sprite.scale.y = Math.max(0.5, sprite.scale.y * e.scale)
+    })
+
+    this.on('pinchstart', () => {
+      console.log('pinchstart')
+    })
+
+    this.on('pinchend', () => {
+      console.log('pinchend')
+    })
+
+    this.on('simpletap', () => {
+      console.log('simpletap')
+    })
+
     this.resources = {}
 
+    this.cursor_sprite = new PIXI.Sprite()
+    this.cursor_sprite.interactive = false
+    this.cursor_sprite.buttonMode = false
+    this.cursor_sprite.cursor = "none"
+    this.cursor_sprite.anchor.set(0.5)
+
+    this.on('pointerover', function () {
+      this.cursor_sprite.visible = true
+    }.bind(this))
+
+    this.on('pointerout', function () {
+      this.cursor_sprite.visible = false
+    }.bind(this))
+
+    this.on('pointermove', function (event) {
+      this.cursor_sprite.position = event.data.global
+    }.bind(this))
+
     /**
-     * Every Scene loaded by default untill onStart until switching to the Scene.
+     * Every Scene loaded by default until onStart until switching to the Scene.
      */
     this.paused = true
 
-    this.app.ticker = this.app.ticker
     this.app.ticker.add((delta) => {
       this._update(delta)
     })
   }
 
   extend(Scene, GameObject)
+
+  Scene.prototype.hideCursor = function () {
+    this.cursor = 'none'
+  }
+
+  Scene.prototype.addCursor = function(name = '', texture_name = '') {
+    this.InteractionManager.cursorStyles[name] = () => {
+      this.cursor_sprite.texture = PIXI.Texture.fromFrame(texture_name)
+    }
+  }
+
+  Scene.prototype.setCursor = function (name = '') {
+
+    if (this.cursor_sprite.parent) {
+      this.removeChild(this.cursor_sprite)
+    }
+
+    this.hideCursor()
+
+    this.addChild(this.cursor_sprite)
+    this.cursor = name
+  }
 
   Scene.prototype.preload = function () {
     /**

@@ -10,27 +10,15 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
 
   extend(Level, Scene)
 
-  Level.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
-    let key = new KeyboardInput(keycode)
-
-    key.press.bind(this)
-    key.release.bind(this)
-
-    key.press = keypress || self.onKeyPress.bind(self)
-    key.release = keyup || self.onKeyUp.bind(self)
-
-    this.keyboardKeys.push(key)
-  }
-
   Level.prototype.listenForKeyboardInputs = function (...keys) {
     let self = this
-    keys.forEach(function (keycode) {
-      let key = new KeyboardInput(keycode)
+    keys.forEach(function (key) {
+      let info = new KeyboardInput(key)
 
-      key.press = self.onKeyPress.bind(self)
-      key.release = self.onKeyUp.bind(self)
+      info.down = self.onKeyDown.bind(self)
+      info.up = self.onKeyUp.bind(self)
 
-      self.keyboardKeys.push(key)
+      self.keyboardKeys.push(info)
     })
   }
 
@@ -38,6 +26,17 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
     /**
      * You can overwrite this function if you wish
      * to receive keyboard keyPress events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  }
+
+  Level.prototype.onKeyDown = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard onKeyDown events.
      *
      * Please note: These events will only be triggered
      * by registered keys. See listenForKeyboardInputs

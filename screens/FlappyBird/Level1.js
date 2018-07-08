@@ -11,6 +11,8 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/../../o
     this.addChild(this.statistics);
 
     this.objects = []
+
+
   }
 
   extend(Level1, GameLevel)
@@ -45,7 +47,7 @@ define(['pixi', 'screens/FlappyBird/GameLevel', 'core/GameEngine', 'core/../../o
     this.setScore(this.score)
 
     this.textures = {
-      'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
+      'red':  PIXI.Texture.fromFrame('element_red_rectangle.png'),
       'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
       'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
       'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
