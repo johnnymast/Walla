@@ -54,6 +54,10 @@ define(['pixi', 'core/Scene', 'core/GameEngine'], function (pixi, Scene, GameEng
 
   SplashScene.prototype.preload = function () {
     this.ge.get('AssetManager').loadManifest([
+
+      // Core
+      {name: 'core_ui', type: 'spritesheet', src: 'assets/core/ui/core_ui.json'},
+
       // Breakout
       {name: 'level1_music', src: 'assets/breakout/sounds/music/level1.mp3'},
       {name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3'},

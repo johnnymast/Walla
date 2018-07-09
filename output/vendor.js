@@ -37920,82 +37920,7 @@ PIXI.loader.use(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__tiledMapLoade
 /* harmony default export */ __webpack_exports__["default"] = (PIXI.extras.TiledMap = __WEBPACK_IMPORTED_MODULE_1__TiledMap__["a" /* default */]);
 
 /***/ }),
-/* 207 */,
-/* 208 */,
-/* 209 */,
-/* 210 */,
-/* 211 */,
-/* 212 */,
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */,
-/* 219 */,
-/* 220 */,
-/* 221 */,
-/* 222 */,
-/* 223 */,
-/* 224 */,
-/* 225 */,
-/* 226 */,
-/* 227 */,
-/* 228 */,
-/* 229 */,
-/* 230 */,
-/* 231 */,
-/* 232 */,
-/* 233 */,
-/* 234 */,
-/* 235 */,
-/* 236 */,
-/* 237 */,
-/* 238 */,
-/* 239 */,
-/* 240 */,
-/* 241 */,
-/* 242 */,
-/* 243 */,
-/* 244 */
-/***/ (function(module, exports, __webpack_require__) {
-
-if (false) {
-	(function() {
-		var defs = {},
-			resolved = {};
-
-		define = function(id, deps, factory) {
-			if (defs[id]) {
-				throw new Error('Duplicate definition for ' + id);
-			}
-			defs[id] = [deps, factory];
-		}
-
-		define.amd = {
-			bundle: true, // this implementation works only with bundled amd modules
-			dynamic: false, // does not support dynamic or async loading
-		};
-
-		require = function(id) {
-			if (!resolved[id]) {
-				if (!defs[id]) {
-					throw new Error('No definition for ' + id);
-				}
-				var deps = defs[id][0];
-				var factory = defs[id][1];
-				var args = deps.map(require);
-				resolved[id] = factory.apply(null, args);
-				delete defs[id];
-			}
-			return resolved[id];
-		}
-	})();
-}
-
-
-/***/ }),
-/* 245 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscore.js 1.8.3
@@ -39547,6 +39472,81 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;//     Underscor
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   }
 }.call(this));
+
+
+/***/ }),
+/* 208 */,
+/* 209 */,
+/* 210 */,
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */,
+/* 224 */,
+/* 225 */,
+/* 226 */,
+/* 227 */,
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */,
+/* 233 */,
+/* 234 */,
+/* 235 */,
+/* 236 */,
+/* 237 */,
+/* 238 */,
+/* 239 */,
+/* 240 */,
+/* 241 */,
+/* 242 */,
+/* 243 */,
+/* 244 */,
+/* 245 */
+/***/ (function(module, exports, __webpack_require__) {
+
+if (false) {
+	(function() {
+		var defs = {},
+			resolved = {};
+
+		define = function(id, deps, factory) {
+			if (defs[id]) {
+				throw new Error('Duplicate definition for ' + id);
+			}
+			defs[id] = [deps, factory];
+		}
+
+		define.amd = {
+			bundle: true, // this implementation works only with bundled amd modules
+			dynamic: false, // does not support dynamic or async loading
+		};
+
+		require = function(id) {
+			if (!resolved[id]) {
+				if (!defs[id]) {
+					throw new Error('No definition for ' + id);
+				}
+				var deps = defs[id][0];
+				var factory = defs[id][1];
+				var args = deps.map(require);
+				resolved[id] = factory.apply(null, args);
+				delete defs[id];
+			}
+			return resolved[id];
+		}
+	})();
+}
 
 
 /***/ }),
@@ -71324,12 +71324,12 @@ module.exports = function(module) {
 /* 623 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(245);
+__webpack_require__(207);
 __webpack_require__(2);
 __webpack_require__(205);
 __webpack_require__(206);
 __webpack_require__(204);
-__webpack_require__(244);
+__webpack_require__(245);
 module.exports = __webpack_require__(141);
 
 
