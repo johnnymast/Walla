@@ -1,5 +1,6 @@
 export const DIALOG_TYPE = {
-  DEFAULT: 'default'
+  DEFAULT: 'default',
+  CLOSEABLE: 'closeable'
 }
 
 export const DIALOG_STATE = {

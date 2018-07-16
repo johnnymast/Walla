@@ -5,12 +5,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   let Button = function (options, ...items) {
     GameObject.call(this, options)
 
-    this.options = {
+    this._options = options
+    this.x = this._options.x
+    this.y = this._options.y
 
-    }
-
-    this.options = merge(this.options, options)
-    this.items = []
 
     this.on('pointerdown', this._onPointerDown.bind(this))
     this.on('pointerup', this._onPointerUp.bind(this))
@@ -26,6 +24,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
   Button.prototype.onClick = function() {
     // Overwrite this
+    console.log('internal onclick')
   }
 
   Button.prototype.onHover = function() {

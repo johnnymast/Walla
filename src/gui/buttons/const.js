@@ -4,5 +4,6 @@ export const BUTTON_STATE = {
 }
 
 export const BUTTON_TYPE = {
-  BASE: 'base'
+  BASE: 'base',
+  IMAGE: 'image'
 }

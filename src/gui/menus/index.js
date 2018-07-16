@@ -1,3 +1,4 @@
 const Menu = require('./menu');
 const MenuItemText = require('./types/MenuItemText')
-export { Menu, MenuItemText }
+const MenuItemImageButton = require('./types/MenuItemImageButton')
+export { Menu, MenuItemText, MenuItemImageButton }

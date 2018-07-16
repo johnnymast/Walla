@@ -1,10 +1,10 @@
-define(['pixi', 'gui/dialogs/DialogType'], function (pixi, DialogType) {
+define(['pixi', 'gui/dialogs/types/BaseDialog'], function (pixi, BaseDialog) {
   let DefaultDialog = function (options) {
-    DialogType.call(this, options)
+    BaseDialog.call(this, options)
     console.log('loaded')
   }
 
-  extend(DefaultDialog, DialogType)
+  extend(DefaultDialog, BaseDialog)
 
   return DefaultDialog
 })

@@ -1,6 +1,5 @@
 const Menus = require('gui/menus')
 const Dialogs = require('gui/dialogs')
-const Buttons = require('gui/buttons')
 
 define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pixi, Scene, GameEngine, Statistics) {
   let MainScreen = function (options) {
@@ -55,38 +54,24 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     })
 
     let dialog = new Dialogs.Dialog({
-      type: Dialogs.TYPE.DEFAULT,
-      option: 'value'
+      type: Dialogs.TYPE.CLOSEABLE,
+      width: 400,
+      height: 400,
+      x: this.app.screen.width /2 - 200,
+      y: this.app.screen.height / 2 - 200
     })
 
-    let button = new Buttons.BaseButton({
-      text: 'Hello World',
-      width: 250,
-      height: 50,
-      state: {
-        hover: {
-          text: 'You are hovering'
-        },
-        clicked: {
-          text: 'You clicked'
-        },
-      }
-    });
-
-    button.onClick = function(e) {
-      console.log('Button clicked')
+    dialog.onClose = function() {
+      alert('Dialog onclose called')
     }
 
-    button.onHover = function(e) {
-      console.log('Button hovered')
-    }
-    button.onRestore = function(e) {
-      console.log('Button restored')
-    }
+    console.log(dialog.width, dialog.height)
 
-    var item1 = new Menus.MenuItemText('Breakout', this.breakoutClicked)
-    var item2 = new Menus.MenuItemText('PixelShooter', this.pixelShooterClicked)
-    var item3 = new Menus.MenuItemText('Circles')
+
+
+    var item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked)
+    var item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked)
+    var item3 = new Menus.MenuItemImageButton('Circles')
 
     item1.setPosition(menu.x, menu.y)
     item2.setPosition(menu.x, item1.y + item1.height + 5)
@@ -96,19 +81,15 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     menu.addMenuItem(item2)
     menu.addMenuItem(item3)
 
-    menu.x = this.app.screen.width / 2 - menu.width / 2
-    menu.y = richText.y + 80
+    menu.x = dialog.width / 2 - menu.width / 2
+    menu.y =  80
     //   this.resources.wave.play()
 
     this.addChild(richText)
     this.addChild(this.statistics)
 
-    button.activate()
-    dialog.addChild(button)
-    dialog.addChild(menu)
+    dialog.addContent(menu)
     this.addChild(dialog)
-
-
   }
 
   MainScreen.prototype.setDisplayStats = function (visible) {

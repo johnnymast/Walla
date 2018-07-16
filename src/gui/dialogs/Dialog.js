@@ -2,6 +2,7 @@ const DIALOG_TYPE = require('./const').DIALOG_TYPE
 const STATE = require('./const').DIALOG_STATE
 
 const DefaultDialog = require('gui/dialogs/types/DefaultDialog')
+const CloseableDialog = require('gui/dialogs/types/CloseableDialog')
 
 define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   let Dialog = function (options, ...items) {
@@ -27,23 +28,54 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
   extend(Dialog, GameObject)
 
+  /**
+   *
+   * @param {GameObject} content
+   */
+  Dialog.prototype.addContent = function(content) {
+    if (content && this.instance) {
+      this.instance.addContent(content)
+    }
+  }
+
+
+  Dialog.prototype.getContent = function () {
+    if (this.instance) {
+      return this.instance.content
+    }
+    return null
+  }
+
   Dialog.prototype.init = function () {
-    console.log(this.options)
     switch (this.options.type) {
       case DIALOG_TYPE.DEFAULT:
         this.instance = new DefaultDialog(this.options)
         break
+      case DIALOG_TYPE.CLOSEABLE:
+        this.instance = new CloseableDialog(this.options)
+        break
       default:
         throw new Error(`Dialog type unknown: Unable to reconize ${this.options.type}`)
     }
+
+    this.on('internal.state.closing', this._closing)
+
+    if (this.instance) {
+
+      this.addChild(this.instance)
+    }
   }
 
-  Dialog.prototype.open = function () {
-
+  Dialog.prototype._closing = function() {
+    this.onClose()
   }
 
-  Dialog.prototype.close = function () {
+  Dialog.prototype.onOpen = function () {
+    // overwrite
+  }
 
+  Dialog.prototype.onClose = function () {
+    // overwrite
   }
 
   /**
