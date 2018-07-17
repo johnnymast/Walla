@@ -12,22 +12,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
   extend(MainScreen, Scene)
 
   MainScreen.prototype.onStart = function () {
-    var style = new pixi.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 36,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff00'], // gradient
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
-    })
+    //
 
     for (var i = 5; i > 0; i--) {
       var textureName = 'main_bg_0' + i
@@ -41,15 +26,10 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
       this.addChild(tilingSprite)
     }
 
-    var richText = new pixi.Text('Pick your game', style)
-    richText.x = (this.app.screen.width / 2) - richText.width / 2
-    richText.y = 120
-    /* 180 is padding spade */
-
     var menu = new Menus.Menu({
       items: {
-        paddingBottom: 1,
-        paddingTop: 10
+        // paddingBottom: 1,
+        // paddingTop: 10
       }
     })
 
@@ -85,7 +65,6 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     menu.y =  40
     //   this.resources.wave.play()
 
-    this.addChild(richText)
     this.addChild(this.statistics)
 
     dialog.addContent(menu)
