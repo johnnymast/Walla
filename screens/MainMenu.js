@@ -51,7 +51,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
 
     var item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked)
     var item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked)
-    var item3 = new Menus.MenuItemImageButton('Circles')
+    var item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked)
 
     item1.setPosition(menu.x, menu.y)
     item2.setPosition(menu.x, item1.y + item1.height + 5)
@@ -65,28 +65,44 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     menu.y =  40
     //   this.resources.wave.play()
 
-    this.addChild(this.statistics)
+  //  this.addChild(this.statistics)
 
     dialog.addContent(menu)
     this.addChild(dialog)
+    this.addChild(this.statistics)
   }
 
-  MainScreen.prototype.setDisplayStats = function (visible) {
-    this.statistics.visible = visible
-  }
-
-  MainScreen.prototype.pixelShooterClicked = function (event) {
-    this.SceneManager.switchTo('PixelShooter/Level1')
-  }
-
-  MainScreen.prototype.breakoutClicked = function (event) {
+  /**
+   * Breakout menu option callback
+   */
+  MainScreen.prototype.breakoutClicked = function () {
     this.SceneManager.switchTo('Breakout/Level1')
   }
 
+  /**
+   * PixelShooter menu option callback
+   */
+  MainScreen.prototype.pixelShooterClicked = function () {
+    console.log('EVENT', event)
+    this.SceneManager.switchTo('PixelShooter/Level1')
+  }
+
+  /**
+   * RoundedRects menu option callback
+   */
+  MainScreen.prototype.roundedRectsClicked = function () {
+    this.SceneManager.switchTo('RoundedRects/Level1')
+  }
+
+  /**
+   * Animate the background scrolling/
+   *
+   * @param {number} delta
+   */
   MainScreen.prototype.update = function (delta) {
-    for (var i = 5; i > 0; i--) {
-      var textureName = 'main_bg_0' + i
-      this.backgrounds[textureName].tilePosition.x -= 1 / (i * 1.5)
+    for (let i = 5; i > 0; i--) {
+      let texture = 'main_bg_0' + i
+      this.backgrounds[texture].tilePosition.x -= 1 / (i * 1.5)
     }
     this.statistics.update(delta)
   }

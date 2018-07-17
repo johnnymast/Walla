@@ -71644,8 +71644,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  var Statistics = function (options) {
-    GameObject.call(this, options);
+  /**
+   * Statistics constructor
+   *
+   * @constructor
+   */
+  let Statistics = function () {
+    GameObject.call(this);
     this.paddingX = 10;
     this.paddingY = 10;
 
@@ -71654,6 +71659,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   extend(Statistics, GameObject);
 
+  /**
+   * Setup the Statistics view
+   */
   Statistics.prototype.setup = function () {
 
     var style = new PIXI.TextStyle({
@@ -72100,102 +72108,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 633 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(141), __webpack_require__(247), __webpack_require__(626)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput) {
-  var GameLevel = function (options) {
-    Scene.call(this, options);
-
-    this.on('mousemove', this.onMouseMove);
-    this.on('pointerdown', this.onPointerDown);
-
-    this.keyboardKeys = [];
-
-    this.scoreText = null;
-    this.livesText = null;
-
-    this.score = 0;
-    this.lives = 3;
-  };
-
-  extend(GameLevel, Scene);
-
-  GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
-    let key = new KeyboardInput(keycode);
-
-    key.press.bind(this);
-    key.release.bind(this);
-
-    key.press = keypress || self.onKeyPress.bind(self);
-    key.release = keyup || self.onKeyUp.bind(self);
-
-    this.keyboardKeys.push(key);
-  };
-
-  GameLevel.prototype.listenForKeyboardInputs = function (...keys) {
-    let self = this;
-    keys.forEach(function (keycode) {
-      let key = new KeyboardInput(keycode);
-
-      key.press = self.onKeyPress.bind(self);
-      key.release = self.onKeyUp.bind(self);
-
-      self.keyboardKeys.push(key);
-    });
-  };
-
-  GameLevel.prototype.onKeyPress = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  GameLevel.prototype.onKeyUp = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyUp events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  GameLevel.prototype.onMouseMove = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive mouse move events.
-     */
-  };
-
-  GameLevel.prototype.onPointerDown = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive pointer down events.
-     */
-  };
-
-  GameLevel.prototype.onStart = function () {
-
-    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
-    background.width = this.app.screen.width;
-    background.height = this.app.screen.height;
-    background.alpha = 0;
-
-    this.addChild(background);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
+/* 633 */,
 /* 634 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -72738,71 +72651,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 640 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(633), __webpack_require__(246), __webpack_require__(630), __webpack_require__(631), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
-  var Level1 = function (options) {
-    GameLevel.call(this, { backgroundColor: 0x1099bb });
-
-    this.setDisplayStats(true);
-
-    this.historyX = [];
-    this.historyY = [];
-    this.ropeSize = 100;
-  };
-
-  extend(Level1, GameLevel);
-
-  Level1.prototype.onKeyPress = function (event) {
-
-    console.log('key press ' + event.key);
-  };
-
-  Level1.prototype.onKeyUp = function (event) {
-    console.log('key up');
-  };
-
-  Level1.prototype.onStart = function () {
-    GameLevel.prototype.onStart.call(this);
-  };
-
-  Level1.prototype.onMouseMove = function (event) {};
-
-  Level1.prototype.onPointerDown = function (event) {};
-
-  Level1.prototype.update = function (delta) {
-    GameLevel.prototype.update.call(this, delta);
-
-    //Read mouse points, this could be done also in mousemove/touchmove update. For simplicity it is done here for now.
-    //When implemeting this properly, make sure to implement touchmove as interaction plugins mouse might not update on certain devices.
-    var mouseposition = app.renderer.plugins.interaction.mouse.global;
-
-    //Update the mouse values to history
-    this.historyX.pop();
-    this.historyX.unshift(mouseposition.x);
-    this.historyY.pop();
-    this.historyY.unshift(mouseposition.y);
-
-    //Update the points to correspond with history.
-    for (var i = 0; i < this.ropeSize; i++) {
-      var p = points[i];
-
-      //Smooth the curve with cubic interpolation to prevent sharp edges.
-      var ix = cubicInterpolation(historyX, i / this.ropeSize * historySize);
-      var iy = cubicInterpolation(historyY, i / this.ropeSize * historySize);
-
-      p.x = ix;
-      p.y = iy;
-    }
-  };
-
-  return Level1;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
+/* 640 */,
 /* 641 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -72953,22 +72802,7 @@ const Dialogs = __webpack_require__(654);
   extend(MainScreen, Scene);
 
   MainScreen.prototype.onStart = function () {
-    var style = new pixi.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 36,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff00'], // gradient
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
-    });
+    //
 
     for (var i = 5; i > 0; i--) {
       var textureName = 'main_bg_0' + i;
@@ -72982,15 +72816,10 @@ const Dialogs = __webpack_require__(654);
       this.addChild(tilingSprite);
     }
 
-    var richText = new pixi.Text('Pick your game', style);
-    richText.x = this.app.screen.width / 2 - richText.width / 2;
-    richText.y = 120;
-    /* 180 is padding spade */
-
     var menu = new Menus.Menu({
       items: {
-        paddingBottom: 1,
-        paddingTop: 10
+        // paddingBottom: 1,
+        // paddingTop: 10
       }
     });
 
@@ -73010,7 +72839,7 @@ const Dialogs = __webpack_require__(654);
 
     var item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked);
     var item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked);
-    var item3 = new Menus.MenuItemImageButton('Circles');
+    var item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked);
 
     item1.setPosition(menu.x, menu.y);
     item2.setPosition(menu.x, item1.y + item1.height + 5);
@@ -73024,29 +72853,44 @@ const Dialogs = __webpack_require__(654);
     menu.y = 40;
     //   this.resources.wave.play()
 
-    this.addChild(richText);
-    this.addChild(this.statistics);
+    //  this.addChild(this.statistics)
 
     dialog.addContent(menu);
     this.addChild(dialog);
+    this.addChild(this.statistics);
   };
 
-  MainScreen.prototype.setDisplayStats = function (visible) {
-    this.statistics.visible = visible;
-  };
-
-  MainScreen.prototype.pixelShooterClicked = function (event) {
-    this.SceneManager.switchTo('PixelShooter/Level1');
-  };
-
-  MainScreen.prototype.breakoutClicked = function (event) {
+  /**
+   * Breakout menu option callback
+   */
+  MainScreen.prototype.breakoutClicked = function () {
     this.SceneManager.switchTo('Breakout/Level1');
   };
 
+  /**
+   * PixelShooter menu option callback
+   */
+  MainScreen.prototype.pixelShooterClicked = function () {
+    console.log('EVENT', event);
+    this.SceneManager.switchTo('PixelShooter/Level1');
+  };
+
+  /**
+   * RoundedRects menu option callback
+   */
+  MainScreen.prototype.roundedRectsClicked = function () {
+    this.SceneManager.switchTo('RoundedRects/Level1');
+  };
+
+  /**
+   * Animate the background scrolling/
+   *
+   * @param {number} delta
+   */
   MainScreen.prototype.update = function (delta) {
-    for (var i = 5; i > 0; i--) {
-      var textureName = 'main_bg_0' + i;
-      this.backgrounds[textureName].tilePosition.x -= 1 / (i * 1.5);
+    for (let i = 5; i > 0; i--) {
+      let texture = 'main_bg_0' + i;
+      this.backgrounds[texture].tilePosition.x -= 1 / (i * 1.5);
     }
     this.statistics.update(delta);
   };
@@ -73558,6 +73402,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
     this.on('mousemove', this.onMouseMove);
     this.on('pointerdown', this.onPointerDown);
+    this.on('pointerup', this.onPointerUp);
   };
 
   extend(Level, Scene);
@@ -73618,6 +73463,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     /**
      * You can overwrite this function if you wish
      * to receive pointer down events.
+     */
+  };
+
+  Level.prototype.onPointerUp = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive pointer up events.
      */
   };
 
@@ -75025,10 +74877,6 @@ var map = {
 	"./Breakout/GameLevel.js": 632,
 	"./Breakout/Level1": 639,
 	"./Breakout/Level1.js": 639,
-	"./Circles/GameLevel": 633,
-	"./Circles/GameLevel.js": 633,
-	"./Circles/Level1": 640,
-	"./Circles/Level1.js": 640,
 	"./FlappyBird/GameLevel": 634,
 	"./FlappyBird/GameLevel.js": 634,
 	"./FlappyBird/Level1": 641,
@@ -75039,6 +74887,10 @@ var map = {
 	"./PixelShooter/GameLevel.js": 635,
 	"./PixelShooter/Level1": 643,
 	"./PixelShooter/Level1.js": 643,
+	"./RoundedRects/GameLevel": 669,
+	"./RoundedRects/GameLevel.js": 669,
+	"./RoundedRects/Level1": 670,
+	"./RoundedRects/Level1.js": 670,
 	"./SplashScene": 644,
 	"./SplashScene.js": 644
 };
@@ -75057,6 +74909,330 @@ webpackContext.keys = function webpackContextKeys() {
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
 webpackContext.id = 665;
+
+/***/ }),
+/* 666 */,
+/* 667 */,
+/* 668 */,
+/* 669 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(649), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+  /**
+   * GameLevel Constructor
+   *
+   * @constructor
+   */
+  let GameLevel = function () {
+    Level.call(this);
+
+    /**
+     * Add the FPS counter.
+     */
+    this.statistics = new Statistics();
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * The onStart callback
+   */
+  GameLevel.prototype.onStart = function () {
+    let background = new PIXI.Graphics();
+    background.name = 'background';
+
+    background.lineStyle(2, 0xFF0000, 1);
+    background.beginFill(0xFFFFFF, 0);
+    background.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
+
+    this.addChild(background);
+    this.setDisplayStats(true);
+  };
+
+  /**
+   * Enable or disable the onscreen FPS counter.
+   *
+   * @param {boolean) visible - The FPS counter visibility flag true|false
+   */
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+    this.addChild(this.statistics);
+  };
+
+  /**
+   * Update the GameLevel scene.
+   *
+   * @param delta
+   */
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 670 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(669), __webpack_require__(671), __webpack_require__(672)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
+
+  /**
+   * Level1 constructor
+   *
+   * @constructor
+   */
+  let Level1 = function () {
+    GameLevel.call(this);
+
+    /**
+     *
+     * @type {Array}
+     */
+    this.rectangles = [];
+
+    /**
+     *
+     * @type {number}
+     */
+    this.delay = 0.5;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.time_passed = 0;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.alpha_decay = 0.05;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.scale_decay = 0.05;
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.mouse_down = false;
+  };
+
+  extend(Level1, GameLevel);
+
+  /**
+   * onStart callback
+   */
+  Level1.prototype.onStart = function () {
+    GameLevel.prototype.onStart.call(this);
+
+    this.text = new Text('Click and drag');
+    this.text.x = this.app.screen.width / 2 - this.text.width / 2;
+    this.text.y = this.app.screen.height / 2 - this.text.height / 2;
+
+    this.addChild(this.text);
+
+    var style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 18,
+      fill: ['#ffffff']
+    });
+    this.rect_count = new pixi.Text('Rects: ' + this.rectangles.length, style);
+    this.rect_count.x = this.statistics.x;
+    this.rect_count.y = this.statistics.y - this.statistics.height; //- 5
+
+    this.addChild(this.rect_count);
+  };
+
+  /**
+   * Handle the mousemove event
+   *
+   * @param {InteractionEvent} event - The event for mousemove
+   */
+  Level1.prototype.onMouseMove = function (event) {
+    if (this.mouse_down) {
+      let pos = event.data.global;
+
+      let rect = new RoundedRect();
+      rect.position.set(pos.x, pos.y);
+
+      this.rectangles.push(rect);
+      this.addChild(rect);
+    }
+  };
+
+  /**
+   * Handle the pointerdowm event
+   * @param {InteractionEvent} event - The event for pointerdown
+   */
+  Level1.prototype.onPointerDown = function (event) {
+    this.mouse_down = true;
+  };
+
+  /**
+   * Handle the pointerup event
+   * @param {InteractionEvent} event - The event for pointerup
+   */
+  Level1.prototype.onPointerUp = function (event) {
+    this.mouse_down = false;
+  };
+
+  /**
+   * Update the GameObjects
+   *
+   * @param {number} delta
+   */
+  Level1.prototype.update = function (delta) {
+    GameLevel.prototype.update.call(this, delta);
+
+    this.time_passed += delta;
+    if (this.time_passed > this.delay) {
+
+      /**
+       * Reset the time that has passed
+       * since the last update.
+       *
+       * @type {number}
+       */
+      this.time_passed = 0;
+
+      for (let i = 0; i < this.rectangles.length; i++) {
+        let item = this.rectangles[i];
+
+        /**
+         * If the item is invisible remove
+         * it from the array.
+         */
+        if (item.alpha < 0) {
+          this.removeChild(item);
+          this.rectangles.splice(i, 1);
+        }
+
+        item.alpha -= this.alpha_decay;
+      }
+
+      if (this.mouse_down) {
+        let new_scale = this.text.scale.x - this.scale_decay;
+        if (new_scale < 0) new_scale = 0;
+
+        this.text.visible = new_scale > 0;
+        this.text.scale.set(new_scale);
+      } else {
+
+        if (this.text.scale.x < 1) {
+          let new_scale = this.text.scale.x + this.scale_decay;
+          if (new_scale > 1) new_scale = 1;
+
+          this.text.visible = new_scale > 0;
+          this.text.scale.set(new_scale);
+        }
+      }
+
+      this.rect_count.text = 'Rects: ' + this.rectangles.length;
+    }
+  };
+
+  return Level1;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 671 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameObject = __webpack_require__(624);
+
+class RoundedRect extends GameObject {
+    constructor() {
+        super();
+
+        /**
+         *
+         * @type {number}
+         */
+        this.alpha = 1;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.radius = 5;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.rectangle_width = 45;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.rectangle_height = 45;
+
+        /**
+         *
+         * @type {number[]}
+         */
+        this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
+
+        this.init();
+    }
+
+    /**
+     * Create the RoundedRect.
+     */
+    init() {
+        let lineColor = this.randomColors[Math.round(rand(0, this.randomColors.length - 1))];
+        let rect = new PIXI.Graphics();
+        rect.name = 'circle';
+
+        rect.lineStyle(2, lineColor, content_outline_alpha = 1);
+        rect.beginFill(0xFFFFFF, 0);
+        rect.drawRoundedRect(0, 0, this.rectangle_width, this.rectangle_height, this.radius);
+
+        this.addChild(rect);
+    }
+
+}
+
+module.exports = RoundedRect;
+
+/***/ }),
+/* 672 */
+/***/ (function(module, exports) {
+
+class Text extends PIXI.Container {
+  constructor(text = '') {
+    super();
+
+    /**
+     * @type {PIXI.TextStyle}
+     */
+    this.textStyle = new PIXI.TextStyle({
+      fontFamily: 'Helvetica',
+      fontSize: 120,
+      fill: ['#ffffff']
+    });
+
+    /**
+     * @type {PIXI.Text}
+     */
+    this.richText = new PIXI.Text(text, this.textStyle);
+
+    /**
+     * Add the text object to the stage
+     */
+    this.addChild(this.richText);
+  }
+}
+
+module.exports = Text;
 
 /***/ })
 ]);

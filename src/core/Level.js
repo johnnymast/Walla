@@ -6,6 +6,7 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
 
     this.on('mousemove', this.onMouseMove)
     this.on('pointerdown', this.onPointerDown)
+    this.on('pointerup', this.onPointerUp)
   }
 
   extend(Level, Scene)
@@ -66,6 +67,13 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
     /**
      * You can overwrite this function if you wish
      * to receive pointer down events.
+     */
+  }
+
+  Level.prototype.onPointerUp = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive pointer up events.
      */
   }
 
