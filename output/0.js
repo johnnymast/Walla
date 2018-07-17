@@ -39455,7 +39455,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = __webpack_require__(663).default;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = __webpack_require__(664).default;
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   let Scene = function (options) {
@@ -71339,7 +71339,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(664)("./" + scene);
+      let _scene = __webpack_require__(665)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -72355,7 +72355,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 635 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(647), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(649), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
   var GameLevel = function (options) {
     Level.call(this, options);
 
@@ -72940,7 +72940,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(657);
-const Dialogs = __webpack_require__(653);
+const Dialogs = __webpack_require__(654);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(247), __webpack_require__(246), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
   let MainScreen = function (options) {
@@ -73021,7 +73021,7 @@ const Dialogs = __webpack_require__(653);
     menu.addMenuItem(item3);
 
     menu.x = dialog.width / 2 - menu.width / 2;
-    menu.y = 80;
+    menu.y = 40;
     //   this.resources.wave.play()
 
     this.addChild(richText);
@@ -73062,7 +73062,7 @@ const Dialogs = __webpack_require__(653);
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
 const DIRECTIONS = __webpack_require__(638).DIRECTIONS;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(635), __webpack_require__(246), __webpack_require__(646), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character, Matrix) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(635), __webpack_require__(246), __webpack_require__(648), __webpack_require__(650)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character, Matrix) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -73319,6 +73319,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 645 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Button", function() { return Button; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "State", function() { return State; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Type", function() { return Type; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseButton", function() { return BaseButton; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
+const State = __webpack_require__(627).BUTTON_STATE;
+const Type = __webpack_require__(627).BUTTON_TYPE;
+const BaseButton = __webpack_require__(651);
+const ImageButton = __webpack_require__(652);
+const Button = __webpack_require__(637);
+
+
+
+/***/ }),
+/* 646 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -73369,7 +73388,77 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 646 */
+/* 647 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  /**
+   * @classdesc Abstract class representing a menu item.
+   * @exports gui/menu/MenuItem
+   * @class
+   * @param {callback} callback - Callback for when the item has been clicked
+   * @param {mixed} [options] - Options to pass to GameObject
+   */
+  let MenuItem = function (callback, options) {
+    GameObject.call(this, options);
+
+    this.buttonMode = true;
+    this.interactive = true;
+    this.callback = callback;
+
+    this.on('pointerdown', this.onPointerDown.bind(this));
+    this.on('pointerout', this.onPointerOut.bind(this));
+    this.on('pointerover', this.onPointerOver.bind(this));
+  };
+
+  extend(MenuItem, GameObject);
+
+  /**
+   * Set the x and y properties of this menu item.
+   * @param {number} x - Set the x position
+   * @param {number} y - Set the y position
+   */
+  MenuItem.prototype.setPosition = function (x, y) {
+    this.x = x;
+    this.y = y;
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the menu item is clicked.
+   *
+   * @param {event} event - The event object
+   */
+  MenuItem.prototype.onPointerDown = function (event) {
+    this.callback();
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the menu item mouse cursor leaves the
+   * item.
+   *
+   * @param {event} event - The event object
+   */
+  MenuItem.prototype.onPointerOut = function (event) {}
+  // Function body
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the menu item is hovered.
+   *
+   * @param {event} event - The event object
+   */
+  ;MenuItem.prototype.onPointerOver = function (event) {
+    // Function body
+  };
+
+  return MenuItem;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 648 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(638).DIRECTIONS;
@@ -73458,7 +73547,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 647 */
+/* 649 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(247), __webpack_require__(626)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
@@ -73539,7 +73628,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 648 */
+/* 650 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -73774,26 +73863,7 @@ if (true) {
 }
 
 /***/ }),
-/* 649 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Button", function() { return Button; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "State", function() { return State; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Type", function() { return Type; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseButton", function() { return BaseButton; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
-const State = __webpack_require__(627).BUTTON_STATE;
-const Type = __webpack_require__(627).BUTTON_TYPE;
-const BaseButton = __webpack_require__(650);
-const ImageButton = __webpack_require__(651);
-const Button = __webpack_require__(637);
-
-
-
-/***/ }),
-/* 650 */
+/* 651 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(637);
@@ -74000,7 +74070,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 651 */
+/* 652 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(637);
@@ -74200,14 +74270,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 652 */
+/* 653 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(628).DIALOG_TYPE;
 const STATE = __webpack_require__(628).DIALOG_STATE;
 
-const DefaultDialog = __webpack_require__(655);
-const CloseableDialog = __webpack_require__(654);
+const DefaultDialog = __webpack_require__(656);
+const CloseableDialog = __webpack_require__(655);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   let Dialog = function (options, ...items) {
@@ -74311,7 +74381,7 @@ const CloseableDialog = __webpack_require__(654);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 653 */
+/* 654 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -74321,17 +74391,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 const TYPE = __webpack_require__(628).DIALOG_TYPE;
 const STATE = __webpack_require__(628).DIALOG_STATE;
 
-const Dialog = __webpack_require__(652);
+const Dialog = __webpack_require__(653);
 
 
 
 /***/ }),
-/* 654 */
+/* 655 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(649);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(645);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(645)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(646)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
   let CloseableDialog = function (options) {
 
     this.options = {
@@ -74402,10 +74472,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 655 */
+/* 656 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(645)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(646)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
   let DefaultDialog = function (options) {
     BaseDialog.call(this, options);
     console.log('loaded');
@@ -74414,76 +74484,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   extend(DefaultDialog, BaseDialog);
 
   return DefaultDialog;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 656 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  /**
-   * @classdesc Abstract class representing a menu item.
-   * @exports gui/menu/MenuItem
-   * @class
-   * @param {callback} callback - Callback for when the item has been clicked
-   * @param {mixed} [options] - Options to pass to GameObject
-   */
-  let MenuItem = function (callback, options) {
-    GameObject.call(this, options);
-
-    this.buttonMode = true;
-    this.interactive = true;
-    this.callback = callback;
-
-    this.on('pointerdown', this.onPointerDown.bind(this));
-    this.on('pointerout', this.onPointerOut.bind(this));
-    this.on('pointerover', this.onPointerOver.bind(this));
-  };
-
-  extend(MenuItem, GameObject);
-
-  /**
-   * Set the x and y properties of this menu item.
-   * @param {number} x - Set the x position
-   * @param {number} y - Set the y position
-   */
-  MenuItem.prototype.setPosition = function (x, y) {
-    this.x = x;
-    this.y = y;
-  };
-
-  /**
-   * You can overwrite this function if you wish
-   * to handle if the menu item is clicked.
-   *
-   * @param {event} event - The event object
-   */
-  MenuItem.prototype.onPointerDown = function (event) {
-    this.callback();
-  };
-
-  /**
-   * You can overwrite this function if you wish
-   * to handle if the menu item mouse cursor leaves the
-   * item.
-   *
-   * @param {event} event - The event object
-   */
-  MenuItem.prototype.onPointerOut = function (event) {}
-  // Function body
-
-  /**
-   * You can overwrite this function if you wish
-   * to handle if the menu item is hovered.
-   *
-   * @param {event} event - The event object
-   */
-  ;MenuItem.prototype.onPointerOver = function (event) {
-    // Function body
-  };
-
-  return MenuItem;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -74497,8 +74497,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
 const Menu = __webpack_require__(658);
-const MenuItemText = __webpack_require__(659);
-const MenuItemImageButton = __webpack_require__(667);
+const MenuItemText = __webpack_require__(660);
+const MenuItemImageButton = __webpack_require__(659);
 
 
 /***/ }),
@@ -74558,7 +74558,105 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 659 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(656)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(645);
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+
+  /**
+   * @classdesc MenuItemImageButton module
+   * @exports  gui/menu/MenuItemButton
+   * @class
+   * @param {string} text - Text for the menu item
+   * @param {mixed} [options] - Options to pass to GameObject
+   * @param {callback} callback - Callback for when the item has been clicked
+   */
+  let MenuItemImageButton = function (text, callback, options) {
+    MenuItem.call(this, callback, options);
+
+    this._options = {
+      background_texture: 'panel_woodWear.png',
+      text: text
+    };
+
+    this.options = extend2(true, this._options, options);
+
+    let style = new pixi.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 36,
+      fontStyle: 'italic',
+      fontWeight: 'bold',
+      fill: ['#ffffff', '#00ff00'],
+      stroke: '#4a1850',
+      strokeThickness: 5,
+      dropShadow: true,
+      dropShadowColor: '#000000',
+      dropShadowBlur: 4,
+      dropShadowAngle: Math.PI / 6,
+      dropShadowDistance: 6,
+      wordWrap: true,
+      wordWrapWidth: 440
+    });
+
+    let style_hover = style;
+    style_hover.fontSize += 2;
+
+    this.button = new Buttons.ImageButton({
+      state: {
+        default: {
+          texture: this.options.background_texture
+        },
+        hover: {
+          texture: this.options.background_texture,
+          textstyle: style_hover
+        },
+        clicked: {
+          texture: this.options.background_texture,
+          textstyle: style_hover
+        }
+      }
+    });
+
+    this.button.setText(this.options.text);
+
+    this.addChild(this.button);
+  };
+
+  extend(MenuItemImageButton, MenuItem);
+
+  /**
+   * Set the text for the menu item.
+   * @param {string} text - Text for the menu item.
+   */
+  MenuItemImageButton.prototype.setText = function (text) {
+    this.button.setText(text);
+  };
+
+  /**
+   * The default behavior is to restore the fontsize
+   * when the mouse pointer is leaving the menu item. You
+   * can overwrite this if you extend this class with your own
+   * class and overwrite the onPointerOut method.
+   *
+   * @override
+   * @param {event} event - The event object
+   */
+  MenuItemImageButton.prototype.onPointerOut = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to handle if the mouse is leaving the menu option.
+     */
+    this.button._onPointerOut();
+  };
+
+  return MenuItemImageButton;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 660 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemText module
@@ -74641,7 +74739,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 660 */
+/* 661 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74740,7 +74838,7 @@ function panable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy9wYW4uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQXdCLE9BQU87QUFBaEIsU0FBUyxPQUFPLENBQUUsTUFBTSxFQUFFO0FBQ3ZDLFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixTQUFLLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDL0I7O0FBRUQsV0FBUyxVQUFVLENBQUUsQ0FBQyxFQUFFO0FBQ3RCLFNBQUssQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7R0FDaEQ7OztBQUFBLEFBR0QsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNwQixRQUFJLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO0FBQ2pCLGFBQU07S0FDUDtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxHQUFHO0FBQ2QsT0FBQyxFQUFFO0FBQ0QsU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osWUFBSSxFQUFFLElBQUksSUFBSSxFQUFFO09BQ2pCO0tBQ0YsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQ0wsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDMUIsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FBQTtHQUM5Qjs7QUFFRCxXQUFTLFNBQVMsQ0FBRSxDQUFDLEVBQUU7QUFDckIsUUFBSSxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxDQUFBO0dBQzlCOztBQUVELFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixRQUFJLENBQUMsR0FBRyxDQUFDLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxhQUFhLENBQUE7QUFD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LFNBQVMsQ0FBQyxDQUFBO0dBQzFDOztBQUVELFFBQU0sQ0FBQyxXQUFXLEdBQUcsSUFBSSxDQUFBO0FBQ3pCLFFBQU0sQ0FDSCxFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUMxQixFQUFFLENBQUMsWUFBWSxFQUFFLFVBQVUsQ0FBQyxDQUM1QixFQUFFLENBQUMsU0FBUyxFQUFFLEdBQUcsQ0FBQyxDQUNsQixFQUFFLENBQUMsZ0JBQWdCLEVBQUUsR0FBRyxDQUFDLENBQ3pCLEVBQUUsQ0FBQyxVQUFVLEVBQUUsR0FBRyxDQUFDLENBQ25CLEVBQUUsQ0FBQyxpQkFBaUIsRUFBRSxHQUFHLENBQUMsQ0FBQTtDQUM5QiIsImZpbGUiOiJwYW4uanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwYW5hYmxlIChzcHJpdGUpIHtcbiAgZnVuY3Rpb24gbW91c2VEb3duIChlKSB7XG4gICAgc3RhcnQoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQpXG4gIH1cblxuICBmdW5jdGlvbiB0b3VjaFN0YXJ0IChlKSB7XG4gICAgc3RhcnQoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1swXSlcbiAgfVxuXG4gIC8vIHBvc3NpYmx5IGJlIGNhbGxlZCB0d2ljZSBvciBtb3JlXG4gIGZ1bmN0aW9uIHN0YXJ0IChlLCB0KSB7XG4gICAgaWYgKGUudGFyZ2V0Ll9wYW4pIHtcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBlLnRhcmdldC5fcGFuID0ge1xuICAgICAgcDoge1xuICAgICAgICB4OiB0LmNsaWVudFgsXG4gICAgICAgIHk6IHQuY2xpZW50WSxcbiAgICAgICAgZGF0ZTogbmV3IERhdGUoKVxuICAgICAgfVxuICAgIH1cbiAgICBlLnRhcmdldFxuICAgICAgLm9uKCdtb3VzZW1vdmUnLCBtb3VzZU1vdmUpXG4gICAgICAub24oJ3RvdWNobW92ZScsIHRvdWNoTW92ZSlcbiAgfVxuXG4gIGZ1bmN0aW9uIG1vdXNlTW92ZSAoZSkge1xuICAgIG1vdmUoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQpXG4gIH1cblxuICBmdW5jdGlvbiB0b3VjaE1vdmUgKGUpIHtcbiAgICBsZXQgdCA9IGUuZGF0YS5vcmlnaW5hbEV2ZW50LnRhcmdldFRvdWNoZXNcbiAgICBpZiAoIXQgfHwgdC5sZW5ndGggPiAxKSB7XG4gICAgICBlbmQoZSlcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBtb3ZlKGUsIHRbMF0pXG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlIChlLCB0KSB7XG4gICAgbGV0IG5vdyA9IG5ldyBEYXRlKClcbiAgICBsZXQgaW50ZXJ2YWwgPSBub3cgLSBlLnRhcmdldC5fcGFuLnAuZGF0ZVxuICAgIGlmIChpbnRlcnZhbCA8IDEyKSB7XG4gICAgICByZXR1cm5cbiAgICB9XG4gICAgbGV0IGR4ID0gdC5jbGllbnRYIC0gZS50YXJnZXQuX3Bhbi5wLnhcbiAgICBsZXQgZHkgPSB0LmNsaWVudFkgLSBlLnRhcmdldC5fcGFuLnAueVxuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSlcbiAgICBpZiAoIWUudGFyZ2V0Ll9wYW4ucHApIHtcbiAgICAgIGxldCB0aHJlc2hvbGQgPSAodCBpbnN0YW5jZW9mIHdpbmRvdy5Nb3VzZUV2ZW50KSA/IDIgOiA3XG4gICAgICBpZiAoZGlzdGFuY2UgPiB0aHJlc2hvbGQpIHtcbiAgICAgICAgZS50YXJnZXQuZW1pdCgncGFuc3RhcnQnKVxuICAgICAgICBlLnRhcmdldC5fcGFuLnBwID0ge31cbiAgICAgIH1cbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgZXZlbnQgPSB7XG4gICAgICBkZWx0YVg6IGR4LFxuICAgICAgZGVsdGFZOiBkeSxcbiAgICAgIHZlbG9jaXR5OiBkaXN0YW5jZSAvIGludGVydmFsLFxuICAgICAgZGF0YTogZS5kYXRhXG4gICAgfVxuICAgIGUudGFyZ2V0LmVtaXQoJ3Bhbm1vdmUnLCBldmVudClcbiAgICBlLnRhcmdldC5fcGFuLnBwID0ge1xuICAgICAgeDogZS50YXJnZXQuX3Bhbi5wLngsXG4gICAgICB5OiBlLnRhcmdldC5fcGFuLnAueSxcbiAgICAgIGRhdGU6IGUudGFyZ2V0Ll9wYW4ucC5kYXRlXG4gICAgfVxuICAgIGUudGFyZ2V0Ll9wYW4ucCA9IHtcbiAgICAgIHg6IHQuY2xpZW50WCxcbiAgICAgIHk6IHQuY2xpZW50WSxcbiAgICAgIGRhdGU6IG5vd1xuICAgIH1cbiAgfVxuXG4gIC8vIFRPRE86IEluZXJ0aWEgTW9kZVxuICAvLyBwb3NzaWJseSBiZSBjYWxsZWQgdHdpY2Ugb3IgbW9yZVxuICBmdW5jdGlvbiBlbmQgKGUpIHtcbiAgICBpZiAoZS50YXJnZXQuX3BhbiAmJiBlLnRhcmdldC5fcGFuLnBwKSB7XG4gICAgICBlLnRhcmdldC5lbWl0KCdwYW5lbmQnKVxuICAgIH1cbiAgICBlLnRhcmdldC5fcGFuID0gbnVsbFxuICAgIGUudGFyZ2V0XG4gICAgICAucmVtb3ZlTGlzdGVuZXIoJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5yZW1vdmVMaXN0ZW5lcigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgc3ByaXRlLmludGVyYWN0aXZlID0gdHJ1ZVxuICBzcHJpdGVcbiAgICAub24oJ21vdXNlZG93bicsIG1vdXNlRG93bilcbiAgICAub24oJ3RvdWNoc3RhcnQnLCB0b3VjaFN0YXJ0KVxuICAgIC5vbignbW91c2V1cCcsIGVuZClcbiAgICAub24oJ21vdXNldXBvdXRzaWRlJywgZW5kKVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 661 */
+/* 662 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74812,7 +74910,7 @@ function pinchable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy9waW5jaC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztrQkFBd0IsU0FBUztBQUFsQixTQUFTLFNBQVMsQ0FBRSxNQUFNLEVBQUU7QUFDekMsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFO0FBQ2pCLEtBQUMsQ0FBQyxNQUFNLENBQUMsRUFBRSxDQUFDLFdBQVcsRUFBRSxJQUFJLENBQUMsQ0FBQTtHQUMvQjs7QUFFRCxXQUFTLElBQUksQ0FBRSxDQUFDLEVBQUU7QUFDaEIsUUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFBO0FBQzFDLFFBQUksQ0FBQyxDQUFDLElBQUksQ0FBQyxDQUFDLE1BQU0sR0FBRyxDQUFDLEVBQUU7QUFDdEIsYUFBTTtLQUNQO0FBQ0QsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxDQUFBO0FBQ3BDLFFBQUksRUFBRSxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxPQUFPLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sQ0FBQTtBQUNwQyxRQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxHQUFHLEVBQUUsQ0FBQyxDQUFBO0FBQzNDLFFBQUksQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sRUFBRTtBQUNwQixPQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sR0FBRztBQUNoQixTQUFDLEVBQUUsRUFBRSxRQUFRLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRSxJQUFJLElBQUksRUFBRSxFQUFFO0FBQzNDLFVBQUUsRUFBRSxFQUFFO09BQ1AsQ0FBQTtBQUNELE9BQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFlBQVksQ0FBQyxDQUFBO0FBQzNCLGFBQU07S0FDUDtBQUNELFFBQUksTUFBTSxHQUFHO0FBQ1gsT0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxDQUFBLEdBQUksQ0FBQztBQUNwQyxPQUFDLEVBQUUsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxPQUFPLENBQUEsR0FBSSxDQUFDO0tBQ3JDLENBQUE7QUFDRCxRQUFJLEdBQUcsR0FBRyxJQUFJLElBQUksRUFBRSxDQUFBO0FBQ3BCLFFBQUksUUFBUSxHQUFHLEdBQUcsR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFBO0FBQzNDLFFBQUksUUFBUSxHQUFHLEVBQUUsRUFBRTtBQUNqQixhQUFNO0tBQ1A7QUFDRCxRQUFJLEtBQUssR0FBRztBQUNWLFdBQUssRUFBRSxRQUFRLEdBQUcsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxDQUFDLFFBQVE7QUFDNUMsY0FBUSxFQUFFLFFBQVEsR0FBRyxRQUFRO0FBQzdCLFlBQU0sRUFBRSxNQUFNO0FBQ2QsVUFBSSxFQUFFLENBQUMsQ0FBQyxJQUFJO0tBQ2IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFdBQVcsRUFBRSxLQUFLLENBQUMsQ0FBQTtBQUNqQyxLQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxFQUFFLEdBQUc7QUFDbkIsY0FBUSxFQUFFLENBQUMsQ0FBQyxNQUFNLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQyxRQUFRO0FBQ3BDLFVBQUksRUFBRSxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsSUFBSTtLQUM3QixDQUFBO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxHQUFHO0FBQ2xCLGNBQVEsRUFBRSxRQUFRO0FBQ2xCLFVBQUksRUFBRSxHQUFHO0tBQ1YsQ0FBQTtHQUNGOzs7QUFBQSxBQUdELFdBQVMsR0FBRyxDQUFFLENBQUMsRUFBRTtBQUNmLFFBQUksQ0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLEVBQUU7QUFDbkIsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsVUFBVSxDQUFDLENBQUE7S0FDMUI7QUFDRCxLQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sR0FBRyxJQUFJLENBQUE7QUFDdEIsS0FBQyxDQUFDLE1BQU0sQ0FBQyxjQUFjLENBQUMsV0FBVyxFQUFFLElBQUksQ0FBQyxDQUFBO0dBQzNDOztBQUVELFFBQU0sQ0FBQyxXQUFXLEdBQUcsSUFBSSxDQUFBO0FBQ3pCLFFBQU0sQ0FDSCxFQUFFLENBQUMsWUFBWSxFQUFFLEtBQUssQ0FBQyxDQUN2QixFQUFFLENBQUMsVUFBVSxFQUFFLEdBQUcsQ0FBQyxDQUNuQixFQUFFLENBQUMsaUJBQWlCLEVBQUUsR0FBRyxDQUFDLENBQUE7Q0FDOUIiLCJmaWxlIjoicGluY2guanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwaW5jaGFibGUgKHNwcml0ZSkge1xuICBmdW5jdGlvbiBzdGFydCAoZSkge1xuICAgIGUudGFyZ2V0Lm9uKCd0b3VjaG1vdmUnLCBtb3ZlKVxuICB9XG5cbiAgZnVuY3Rpb24gbW92ZSAoZSkge1xuICAgIGxldCB0ID0gZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1xuICAgIGlmICghdCB8fCB0Lmxlbmd0aCA8IDIpIHtcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgZHggPSB0WzBdLmNsaWVudFggLSB0WzFdLmNsaWVudFhcbiAgICBsZXQgZHkgPSB0WzBdLmNsaWVudFkgLSB0WzFdLmNsaWVudFlcbiAgICBsZXQgZGlzdGFuY2UgPSBNYXRoLnNxcnQoZHggKiBkeCArIGR5ICogZHkpXG4gICAgaWYgKCFlLnRhcmdldC5fcGluY2gpIHtcbiAgICAgIGUudGFyZ2V0Ll9waW5jaCA9IHtcbiAgICAgICAgcDogeyBkaXN0YW5jZTogZGlzdGFuY2UsIGRhdGU6IG5ldyBEYXRlKCkgfSxcbiAgICAgICAgcHA6IHt9XG4gICAgICB9XG4gICAgICBlLnRhcmdldC5lbWl0KCdwaW5jaHN0YXJ0JylcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgY2VudGVyID0ge1xuICAgICAgeDogKHRbMF0uY2xpZW50WCArIHRbMV0uY2xpZW50WCkgLyAyLFxuICAgICAgeTogKHRbMF0uY2xpZW50WSArIHRbMV0uY2xpZW50WSkgLyAyXG4gICAgfVxuICAgIGxldCBub3cgPSBuZXcgRGF0ZSgpXG4gICAgbGV0IGludGVydmFsID0gbm93IC0gZS50YXJnZXQuX3BpbmNoLnAuZGF0ZVxuICAgIGlmIChpbnRlcnZhbCA8IDEyKSB7XG4gICAgICByZXR1cm5cbiAgICB9XG4gICAgbGV0IGV2ZW50ID0ge1xuICAgICAgc2NhbGU6IGRpc3RhbmNlIC8gZS50YXJnZXQuX3BpbmNoLnAuZGlzdGFuY2UsXG4gICAgICB2ZWxvY2l0eTogZGlzdGFuY2UgLyBpbnRlcnZhbCxcbiAgICAgIGNlbnRlcjogY2VudGVyLFxuICAgICAgZGF0YTogZS5kYXRhXG4gICAgfVxuICAgIGUudGFyZ2V0LmVtaXQoJ3BpbmNobW92ZScsIGV2ZW50KVxuICAgIGUudGFyZ2V0Ll9waW5jaC5wcCA9IHtcbiAgICAgIGRpc3RhbmNlOiBlLnRhcmdldC5fcGluY2gucC5kaXN0YW5jZSxcbiAgICAgIGRhdGU6IGUudGFyZ2V0Ll9waW5jaC5wLmRhdGVcbiAgICB9XG4gICAgZS50YXJnZXQuX3BpbmNoLnAgPSB7XG4gICAgICBkaXN0YW5jZTogZGlzdGFuY2UsXG4gICAgICBkYXRlOiBub3dcbiAgICB9XG4gIH1cblxuICAvLyBUT0RPOiBJbmVydGlhIE1vZGVcbiAgZnVuY3Rpb24gZW5kIChlKSB7XG4gICAgaWYgKGUudGFyZ2V0Ll9waW5jaCkge1xuICAgICAgZS50YXJnZXQuZW1pdCgncGluY2hlbmQnKVxuICAgIH1cbiAgICBlLnRhcmdldC5fcGluY2ggPSBudWxsXG4gICAgZS50YXJnZXQucmVtb3ZlTGlzdGVuZXIoJ3RvdWNobW92ZScsIG1vdmUpXG4gIH1cblxuICBzcHJpdGUuaW50ZXJhY3RpdmUgPSB0cnVlXG4gIHNwcml0ZVxuICAgIC5vbigndG91Y2hzdGFydCcsIHN0YXJ0KVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 662 */
+/* 663 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74887,7 +74985,7 @@ function tappable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy90YXAuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQXdCLFFBQVE7QUFBakIsU0FBUyxRQUFRLENBQUUsTUFBTSxFQUFFO0FBQ3hDLFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixTQUFLLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDL0I7O0FBRUQsV0FBUyxVQUFVLENBQUUsQ0FBQyxFQUFFO0FBQ3RCLFNBQUssQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7R0FDaEQ7OztBQUFBLEFBR0QsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNwQixRQUFJLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO0FBQ2pCLGFBQU07S0FDUDtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxHQUFHO0FBQ2QsT0FBQyxFQUFFO0FBQ0QsU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO09BQ2I7S0FDRixDQUFBO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FDTCxFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUMxQixFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUFBO0dBQzlCOztBQUVELFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixRQUFJLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDOUI7O0FBRUQsV0FBUyxTQUFTLENBQUUsQ0FBQyxFQUFFO0FBQ3JCLFFBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLGFBQWEsQ0FBQTtBQUMxQyxRQUFJLENBQUMsQ0FBQyxJQUFJLENBQUMsQ0FBQyxNQUFNLEdBQUcsQ0FBQyxFQUFFO0FBQ3RCLE9BQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFFBQVEsR0FBRyxJQUFJLENBQUE7QUFDN0IsU0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ04sYUFBTTtLQUNQO0FBQ0QsUUFBSSxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQTtHQUNkOztBQUVELFdBQVMsSUFBSSxDQUFFLENBQUMsRUFBRSxDQUFDLEVBQUU7QUFDbkIsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ3RDLFFBQUksRUFBRSxHQUFHLENBQUMsQ0FBQyxPQUFPLEdBQUcsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQTtBQUN0QyxRQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxHQUFHLEVBQUUsQ0FBQyxDQUFBO0FBQzNDLFFBQUksU0FBUyxHQUFHLEFBQUMsQ0FBQyxZQUFZLE1BQU0sQ0FBQyxVQUFVLEdBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQTtBQUN4RCxRQUFJLFFBQVEsR0FBRyxTQUFTLEVBQUU7QUFDeEIsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsUUFBUSxHQUFHLElBQUksQ0FBQTtLQUM5QjtHQUNGOzs7QUFBQSxBQUdELFdBQVMsR0FBRyxDQUFFLENBQUMsRUFBRTtBQUNmLFFBQUksQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLElBQUksQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxRQUFRLEVBQUU7QUFDNUMsVUFBSSxLQUFLLEdBQUc7QUFDVixZQUFJLEVBQUUsQ0FBQyxDQUFDLElBQUk7T0FDYixDQUFBO0FBQ0QsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsV0FBVyxFQUFFLEtBQUssQ0FBQyxDQUFBO0tBQ2xDO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLEdBQUcsSUFBSSxDQUFBO0FBQ3BCLEtBQUMsQ0FBQyxNQUFNLENBQ0wsY0FBYyxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDdEMsY0FBYyxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FBQTtHQUMxQzs7QUFFRCxRQUFNLENBQUMsV0FBVyxHQUFHLElBQUksQ0FBQTtBQUN6QixRQUFNLENBQ0gsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDMUIsRUFBRSxDQUFDLFlBQVksRUFBRSxVQUFVLENBQUMsQ0FDNUIsRUFBRSxDQUFDLFNBQVMsRUFBRSxHQUFHLENBQUMsQ0FDbEIsRUFBRSxDQUFDLGdCQUFnQixFQUFFLEdBQUcsQ0FBQyxDQUN6QixFQUFFLENBQUMsVUFBVSxFQUFFLEdBQUcsQ0FBQyxDQUNuQixFQUFFLENBQUMsaUJBQWlCLEVBQUUsR0FBRyxDQUFDLENBQUE7Q0FDOUIiLCJmaWxlIjoidGFwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gdGFwcGFibGUgKHNwcml0ZSkge1xuICBmdW5jdGlvbiBtb3VzZURvd24gKGUpIHtcbiAgICBzdGFydChlLCBlLmRhdGEub3JpZ2luYWxFdmVudClcbiAgfVxuXG4gIGZ1bmN0aW9uIHRvdWNoU3RhcnQgKGUpIHtcbiAgICBzdGFydChlLCBlLmRhdGEub3JpZ2luYWxFdmVudC50YXJnZXRUb3VjaGVzWzBdKVxuICB9XG5cbiAgLy8gcG9zc2libHkgYmUgY2FsbGVkIHR3aWNlIG9yIG1vcmVcbiAgZnVuY3Rpb24gc3RhcnQgKGUsIHQpIHtcbiAgICBpZiAoZS50YXJnZXQuX3RhcCkge1xuICAgICAgcmV0dXJuXG4gICAgfVxuICAgIGUudGFyZ2V0Ll90YXAgPSB7XG4gICAgICBwOiB7XG4gICAgICAgIHg6IHQuY2xpZW50WCxcbiAgICAgICAgeTogdC5jbGllbnRZXG4gICAgICB9XG4gICAgfVxuICAgIGUudGFyZ2V0XG4gICAgICAub24oJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5vbigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgZnVuY3Rpb24gbW91c2VNb3ZlIChlKSB7XG4gICAgbW92ZShlLCBlLmRhdGEub3JpZ2luYWxFdmVudClcbiAgfVxuXG4gIGZ1bmN0aW9uIHRvdWNoTW92ZSAoZSkge1xuICAgIGxldCB0ID0gZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1xuICAgIGlmICghdCB8fCB0Lmxlbmd0aCA+IDEpIHtcbiAgICAgIGUudGFyZ2V0Ll90YXAuY2FuY2VsZWQgPSB0cnVlXG4gICAgICBlbmQoZSlcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBtb3ZlKGUsIHRbMF0pXG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlIChlLCB0KSB7XG4gICAgbGV0IGR4ID0gdC5jbGllbnRYIC0gZS50YXJnZXQuX3RhcC5wLnhcbiAgICBsZXQgZHkgPSB0LmNsaWVudFkgLSBlLnRhcmdldC5fdGFwLnAueVxuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSlcbiAgICBsZXQgdGhyZXNob2xkID0gKHQgaW5zdGFuY2VvZiB3aW5kb3cuTW91c2VFdmVudCkgPyAyIDogN1xuICAgIGlmIChkaXN0YW5jZSA+IHRocmVzaG9sZCkge1xuICAgICAgZS50YXJnZXQuX3RhcC5jYW5jZWxlZCA9IHRydWVcbiAgICB9XG4gIH1cblxuICAvLyBwb3NzaWJseSBiZSBjYWxsZWQgdHdpY2Ugb3IgbW9yZVxuICBmdW5jdGlvbiBlbmQgKGUpIHtcbiAgICBpZiAoZS50YXJnZXQuX3RhcCAmJiAhZS50YXJnZXQuX3RhcC5jYW5jZWxlZCkge1xuICAgICAgbGV0IGV2ZW50ID0ge1xuICAgICAgICBkYXRhOiBlLmRhdGFcbiAgICAgIH1cbiAgICAgIGUudGFyZ2V0LmVtaXQoJ3NpbXBsZXRhcCcsIGV2ZW50KVxuICAgIH1cbiAgICBlLnRhcmdldC5fdGFwID0gbnVsbFxuICAgIGUudGFyZ2V0XG4gICAgICAucmVtb3ZlTGlzdGVuZXIoJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5yZW1vdmVMaXN0ZW5lcigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgc3ByaXRlLmludGVyYWN0aXZlID0gdHJ1ZVxuICBzcHJpdGVcbiAgICAub24oJ21vdXNlZG93bicsIG1vdXNlRG93bilcbiAgICAub24oJ3RvdWNoc3RhcnQnLCB0b3VjaFN0YXJ0KVxuICAgIC5vbignbW91c2V1cCcsIGVuZClcbiAgICAub24oJ21vdXNldXBvdXRzaWRlJywgZW5kKVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 663 */
+/* 664 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74897,15 +74995,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _pinch = __webpack_require__(661);
+var _pinch = __webpack_require__(662);
 
 var _pinch2 = _interopRequireDefault(_pinch);
 
-var _pan = __webpack_require__(660);
+var _pan = __webpack_require__(661);
 
 var _pan2 = _interopRequireDefault(_pan);
 
-var _tap = __webpack_require__(662);
+var _tap = __webpack_require__(663);
 
 var _tap2 = _interopRequireDefault(_tap);
 
@@ -74919,7 +75017,7 @@ exports.default = {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9pbmRleC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7OztrQkFJZTtBQUNiLFdBQVMsaUJBQUE7QUFDVCxTQUFPLGVBQUE7QUFDUCxVQUFRLGVBQUE7Q0FDVCIsImZpbGUiOiJpbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBwaW5jaGFibGUgZnJvbSAnLi9nZXN0dXJlcy9waW5jaCdcbmltcG9ydCBwYW5hYmxlIGZyb20gJy4vZ2VzdHVyZXMvcGFuJ1xuaW1wb3J0IHRhcHBhYmxlIGZyb20gJy4vZ2VzdHVyZXMvdGFwJ1xuXG5leHBvcnQgZGVmYXVsdCB7XG4gIHBpbmNoYWJsZSxcbiAgcGFuYWJsZSxcbiAgdGFwcGFibGVcbn1cbiJdfQ==
 
 /***/ }),
-/* 664 */
+/* 665 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -74958,107 +75056,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 664;
-
-/***/ }),
-/* 665 */,
-/* 666 */,
-/* 667 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(649);
-
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(656)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
-
-  /**
-   * @classdesc MenuItemImageButton module
-   * @exports  gui/menu/MenuItemButton
-   * @class
-   * @param {string} text - Text for the menu item
-   * @param {mixed} [options] - Options to pass to GameObject
-   * @param {callback} callback - Callback for when the item has been clicked
-   */
-  let MenuItemImageButton = function (text, callback, options) {
-    MenuItem.call(this, callback, options);
-
-    this._options = {
-      background_texture: 'panel_woodWear.png',
-      text: text
-    };
-
-    this.options = extend2(true, this._options, options);
-
-    let style = new pixi.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 36,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff00'],
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
-    });
-
-    let style_hover = style;
-    style_hover.fontSize += 2;
-
-    this.button = new Buttons.ImageButton({
-      state: {
-        default: {
-          texture: this.options.background_texture
-        },
-        hover: {
-          texture: this.options.background_texture,
-          textstyle: style_hover
-        },
-        clicked: {
-          texture: this.options.background_texture,
-          textstyle: style_hover
-        }
-      }
-    });
-
-    this.button.setText(this.options.text);
-
-    this.addChild(this.button);
-  };
-
-  extend(MenuItemImageButton, MenuItem);
-
-  /**
-   * Set the text for the menu item.
-   * @param {string} text - Text for the menu item.
-   */
-  MenuItemImageButton.prototype.setText = function (text) {
-    this.button.setText(text);
-  };
-
-  /**
-   * The default behavior is to restore the fontsize
-   * when the mouse pointer is leaving the menu item. You
-   * can overwrite this if you extend this class with your own
-   * class and overwrite the onPointerOut method.
-   *
-   * @override
-   * @param {event} event - The event object
-   */
-  MenuItemImageButton.prototype.onPointerOut = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to handle if the mouse is leaving the menu option.
-     */
-    this.button._onPointerOut();
-  };
-
-  return MenuItemImageButton;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+webpackContext.id = 665;
 
 /***/ })
 ]);

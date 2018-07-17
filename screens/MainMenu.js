@@ -82,7 +82,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     menu.addMenuItem(item3)
 
     menu.x = dialog.width / 2 - menu.width / 2
-    menu.y =  80
+    menu.y =  40
     //   this.resources.wave.play()
 
     this.addChild(richText)
