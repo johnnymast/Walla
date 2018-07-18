@@ -3201,7 +3201,7 @@ if (true) {
 
 var base64 = __webpack_require__(282)
 var ieee754 = __webpack_require__(280)
-var isArray = __webpack_require__(143)
+var isArray = __webpack_require__(142)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -15960,6 +15960,515 @@ function simpleEnd(buf) {
 /* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+// compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
+// original notice:
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+function compare(a, b) {
+  if (a === b) {
+    return 0;
+  }
+
+  var x = a.length;
+  var y = b.length;
+
+  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+    if (a[i] !== b[i]) {
+      x = a[i];
+      y = b[i];
+      break;
+    }
+  }
+
+  if (x < y) {
+    return -1;
+  }
+  if (y < x) {
+    return 1;
+  }
+  return 0;
+}
+function isBuffer(b) {
+  if (global.Buffer && typeof global.Buffer.isBuffer === 'function') {
+    return global.Buffer.isBuffer(b);
+  }
+  return !!(b != null && b._isBuffer);
+}
+
+// based on node assert, original notice:
+
+// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
+//
+// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
+//
+// Originally from narwhal.js (http://narwhaljs.org)
+// Copyright (c) 2009 Thomas Robinson <280north.com>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the 'Software'), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var util = __webpack_require__(203);
+var hasOwn = Object.prototype.hasOwnProperty;
+var pSlice = Array.prototype.slice;
+var functionsHaveNames = (function () {
+  return function foo() {}.name === 'foo';
+}());
+function pToString (obj) {
+  return Object.prototype.toString.call(obj);
+}
+function isView(arrbuf) {
+  if (isBuffer(arrbuf)) {
+    return false;
+  }
+  if (typeof global.ArrayBuffer !== 'function') {
+    return false;
+  }
+  if (typeof ArrayBuffer.isView === 'function') {
+    return ArrayBuffer.isView(arrbuf);
+  }
+  if (!arrbuf) {
+    return false;
+  }
+  if (arrbuf instanceof DataView) {
+    return true;
+  }
+  if (arrbuf.buffer && arrbuf.buffer instanceof ArrayBuffer) {
+    return true;
+  }
+  return false;
+}
+// 1. The assert module provides functions that throw
+// AssertionError's when particular conditions are not met. The
+// assert module must conform to the following interface.
+
+var assert = module.exports = ok;
+
+// 2. The AssertionError is defined in assert.
+// new assert.AssertionError({ message: message,
+//                             actual: actual,
+//                             expected: expected })
+
+var regex = /\s*function\s+([^\(\s]*)\s*/;
+// based on https://github.com/ljharb/function.prototype.name/blob/adeeeec8bfcc6068b187d7d9fb3d5bb1d3a30899/implementation.js
+function getName(func) {
+  if (!util.isFunction(func)) {
+    return;
+  }
+  if (functionsHaveNames) {
+    return func.name;
+  }
+  var str = func.toString();
+  var match = str.match(regex);
+  return match && match[1];
+}
+assert.AssertionError = function AssertionError(options) {
+  this.name = 'AssertionError';
+  this.actual = options.actual;
+  this.expected = options.expected;
+  this.operator = options.operator;
+  if (options.message) {
+    this.message = options.message;
+    this.generatedMessage = false;
+  } else {
+    this.message = getMessage(this);
+    this.generatedMessage = true;
+  }
+  var stackStartFunction = options.stackStartFunction || fail;
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(this, stackStartFunction);
+  } else {
+    // non v8 browsers so we can have a stacktrace
+    var err = new Error();
+    if (err.stack) {
+      var out = err.stack;
+
+      // try to strip useless frames
+      var fn_name = getName(stackStartFunction);
+      var idx = out.indexOf('\n' + fn_name);
+      if (idx >= 0) {
+        // once we have located the function frame
+        // we need to strip out everything before it (and its line)
+        var next_line = out.indexOf('\n', idx + 1);
+        out = out.substring(next_line + 1);
+      }
+
+      this.stack = out;
+    }
+  }
+};
+
+// assert.AssertionError instanceof Error
+util.inherits(assert.AssertionError, Error);
+
+function truncate(s, n) {
+  if (typeof s === 'string') {
+    return s.length < n ? s : s.slice(0, n);
+  } else {
+    return s;
+  }
+}
+function inspect(something) {
+  if (functionsHaveNames || !util.isFunction(something)) {
+    return util.inspect(something);
+  }
+  var rawname = getName(something);
+  var name = rawname ? ': ' + rawname : '';
+  return '[Function' +  name + ']';
+}
+function getMessage(self) {
+  return truncate(inspect(self.actual), 128) + ' ' +
+         self.operator + ' ' +
+         truncate(inspect(self.expected), 128);
+}
+
+// At present only the three keys mentioned above are used and
+// understood by the spec. Implementations or sub modules can pass
+// other keys to the AssertionError's constructor - they will be
+// ignored.
+
+// 3. All of the following functions must throw an AssertionError
+// when a corresponding condition is not met, with a message that
+// may be undefined if not provided.  All assertion methods provide
+// both the actual and expected values to the assertion error for
+// display purposes.
+
+function fail(actual, expected, message, operator, stackStartFunction) {
+  throw new assert.AssertionError({
+    message: message,
+    actual: actual,
+    expected: expected,
+    operator: operator,
+    stackStartFunction: stackStartFunction
+  });
+}
+
+// EXTENSION! allows for well behaved errors defined elsewhere.
+assert.fail = fail;
+
+// 4. Pure assertion tests whether a value is truthy, as determined
+// by !!guard.
+// assert.ok(guard, message_opt);
+// This statement is equivalent to assert.equal(true, !!guard,
+// message_opt);. To test strictly for the value true, use
+// assert.strictEqual(true, guard, message_opt);.
+
+function ok(value, message) {
+  if (!value) fail(value, true, message, '==', assert.ok);
+}
+assert.ok = ok;
+
+// 5. The equality assertion tests shallow, coercive equality with
+// ==.
+// assert.equal(actual, expected, message_opt);
+
+assert.equal = function equal(actual, expected, message) {
+  if (actual != expected) fail(actual, expected, message, '==', assert.equal);
+};
+
+// 6. The non-equality assertion tests for whether two objects are not equal
+// with != assert.notEqual(actual, expected, message_opt);
+
+assert.notEqual = function notEqual(actual, expected, message) {
+  if (actual == expected) {
+    fail(actual, expected, message, '!=', assert.notEqual);
+  }
+};
+
+// 7. The equivalence assertion tests a deep equality relation.
+// assert.deepEqual(actual, expected, message_opt);
+
+assert.deepEqual = function deepEqual(actual, expected, message) {
+  if (!_deepEqual(actual, expected, false)) {
+    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
+  }
+};
+
+assert.deepStrictEqual = function deepStrictEqual(actual, expected, message) {
+  if (!_deepEqual(actual, expected, true)) {
+    fail(actual, expected, message, 'deepStrictEqual', assert.deepStrictEqual);
+  }
+};
+
+function _deepEqual(actual, expected, strict, memos) {
+  // 7.1. All identical values are equivalent, as determined by ===.
+  if (actual === expected) {
+    return true;
+  } else if (isBuffer(actual) && isBuffer(expected)) {
+    return compare(actual, expected) === 0;
+
+  // 7.2. If the expected value is a Date object, the actual value is
+  // equivalent if it is also a Date object that refers to the same time.
+  } else if (util.isDate(actual) && util.isDate(expected)) {
+    return actual.getTime() === expected.getTime();
+
+  // 7.3 If the expected value is a RegExp object, the actual value is
+  // equivalent if it is also a RegExp object with the same source and
+  // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
+  } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
+    return actual.source === expected.source &&
+           actual.global === expected.global &&
+           actual.multiline === expected.multiline &&
+           actual.lastIndex === expected.lastIndex &&
+           actual.ignoreCase === expected.ignoreCase;
+
+  // 7.4. Other pairs that do not both pass typeof value == 'object',
+  // equivalence is determined by ==.
+  } else if ((actual === null || typeof actual !== 'object') &&
+             (expected === null || typeof expected !== 'object')) {
+    return strict ? actual === expected : actual == expected;
+
+  // If both values are instances of typed arrays, wrap their underlying
+  // ArrayBuffers in a Buffer each to increase performance
+  // This optimization requires the arrays to have the same type as checked by
+  // Object.prototype.toString (aka pToString). Never perform binary
+  // comparisons for Float*Arrays, though, since e.g. +0 === -0 but their
+  // bit patterns are not identical.
+  } else if (isView(actual) && isView(expected) &&
+             pToString(actual) === pToString(expected) &&
+             !(actual instanceof Float32Array ||
+               actual instanceof Float64Array)) {
+    return compare(new Uint8Array(actual.buffer),
+                   new Uint8Array(expected.buffer)) === 0;
+
+  // 7.5 For all other Object pairs, including Array objects, equivalence is
+  // determined by having the same number of owned properties (as verified
+  // with Object.prototype.hasOwnProperty.call), the same set of keys
+  // (although not necessarily the same order), equivalent values for every
+  // corresponding key, and an identical 'prototype' property. Note: this
+  // accounts for both named and indexed properties on Arrays.
+  } else if (isBuffer(actual) !== isBuffer(expected)) {
+    return false;
+  } else {
+    memos = memos || {actual: [], expected: []};
+
+    var actualIndex = memos.actual.indexOf(actual);
+    if (actualIndex !== -1) {
+      if (actualIndex === memos.expected.indexOf(expected)) {
+        return true;
+      }
+    }
+
+    memos.actual.push(actual);
+    memos.expected.push(expected);
+
+    return objEquiv(actual, expected, strict, memos);
+  }
+}
+
+function isArguments(object) {
+  return Object.prototype.toString.call(object) == '[object Arguments]';
+}
+
+function objEquiv(a, b, strict, actualVisitedObjects) {
+  if (a === null || a === undefined || b === null || b === undefined)
+    return false;
+  // if one is a primitive, the other must be same
+  if (util.isPrimitive(a) || util.isPrimitive(b))
+    return a === b;
+  if (strict && Object.getPrototypeOf(a) !== Object.getPrototypeOf(b))
+    return false;
+  var aIsArgs = isArguments(a);
+  var bIsArgs = isArguments(b);
+  if ((aIsArgs && !bIsArgs) || (!aIsArgs && bIsArgs))
+    return false;
+  if (aIsArgs) {
+    a = pSlice.call(a);
+    b = pSlice.call(b);
+    return _deepEqual(a, b, strict);
+  }
+  var ka = objectKeys(a);
+  var kb = objectKeys(b);
+  var key, i;
+  // having the same number of owned properties (keys incorporates
+  // hasOwnProperty)
+  if (ka.length !== kb.length)
+    return false;
+  //the same set of keys (although not necessarily the same order),
+  ka.sort();
+  kb.sort();
+  //~~~cheap key test
+  for (i = ka.length - 1; i >= 0; i--) {
+    if (ka[i] !== kb[i])
+      return false;
+  }
+  //equivalent values for every corresponding key, and
+  //~~~possibly expensive deep test
+  for (i = ka.length - 1; i >= 0; i--) {
+    key = ka[i];
+    if (!_deepEqual(a[key], b[key], strict, actualVisitedObjects))
+      return false;
+  }
+  return true;
+}
+
+// 8. The non-equivalence assertion tests for any deep inequality.
+// assert.notDeepEqual(actual, expected, message_opt);
+
+assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
+  if (_deepEqual(actual, expected, false)) {
+    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
+  }
+};
+
+assert.notDeepStrictEqual = notDeepStrictEqual;
+function notDeepStrictEqual(actual, expected, message) {
+  if (_deepEqual(actual, expected, true)) {
+    fail(actual, expected, message, 'notDeepStrictEqual', notDeepStrictEqual);
+  }
+}
+
+
+// 9. The strict equality assertion tests strict equality, as determined by ===.
+// assert.strictEqual(actual, expected, message_opt);
+
+assert.strictEqual = function strictEqual(actual, expected, message) {
+  if (actual !== expected) {
+    fail(actual, expected, message, '===', assert.strictEqual);
+  }
+};
+
+// 10. The strict non-equality assertion tests for strict inequality, as
+// determined by !==.  assert.notStrictEqual(actual, expected, message_opt);
+
+assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
+  if (actual === expected) {
+    fail(actual, expected, message, '!==', assert.notStrictEqual);
+  }
+};
+
+function expectedException(actual, expected) {
+  if (!actual || !expected) {
+    return false;
+  }
+
+  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
+    return expected.test(actual);
+  }
+
+  try {
+    if (actual instanceof expected) {
+      return true;
+    }
+  } catch (e) {
+    // Ignore.  The instanceof check doesn't work for arrow functions.
+  }
+
+  if (Error.isPrototypeOf(expected)) {
+    return false;
+  }
+
+  return expected.call({}, actual) === true;
+}
+
+function _tryBlock(block) {
+  var error;
+  try {
+    block();
+  } catch (e) {
+    error = e;
+  }
+  return error;
+}
+
+function _throws(shouldThrow, block, expected, message) {
+  var actual;
+
+  if (typeof block !== 'function') {
+    throw new TypeError('"block" argument must be a function');
+  }
+
+  if (typeof expected === 'string') {
+    message = expected;
+    expected = null;
+  }
+
+  actual = _tryBlock(block);
+
+  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') +
+            (message ? ' ' + message : '.');
+
+  if (shouldThrow && !actual) {
+    fail(actual, expected, 'Missing expected exception' + message);
+  }
+
+  var userProvidedMessage = typeof message === 'string';
+  var isUnwantedException = !shouldThrow && util.isError(actual);
+  var isUnexpectedException = !shouldThrow && actual && !expected;
+
+  if ((isUnwantedException &&
+      userProvidedMessage &&
+      expectedException(actual, expected)) ||
+      isUnexpectedException) {
+    fail(actual, expected, 'Got unwanted exception' + message);
+  }
+
+  if ((shouldThrow && actual && expected &&
+      !expectedException(actual, expected)) || (!shouldThrow && actual)) {
+    throw actual;
+  }
+}
+
+// 11. Expected to throw an error:
+// assert.throws(block, Error_opt, message_opt);
+
+assert.throws = function(block, /*optional*/error, /*optional*/message) {
+  _throws(true, block, error, message);
+};
+
+// EXTENSION! This is annoying to write outside this module.
+assert.doesNotThrow = function(block, /*optional*/error, /*optional*/message) {
+  _throws(false, block, error, message);
+};
+
+assert.ifError = function(err) { if (err) throw err; };
+
+var objectKeys = Object.keys || function (obj) {
+  var keys = [];
+  for (var key in obj) {
+    if (hasOwn.call(obj, key)) keys.push(key);
+  }
+  return keys;
+};
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+
+/***/ }),
+/* 142 */
+/***/ (function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+
+/***/ }),
+/* 143 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(global) {var require;var require;/**
 * matter-js 0.14.1 by @liabru 2018-01-10
 * http://brm.io/matter-js/
@@ -26299,515 +26808,6 @@ var Vector = _dereq_('../geometry/Vector');
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ }),
-/* 142 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-// compare and isBuffer taken from https://github.com/feross/buffer/blob/680e9e5e488f22aac27599a57dc844a6315928dd/index.js
-// original notice:
-
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-function compare(a, b) {
-  if (a === b) {
-    return 0;
-  }
-
-  var x = a.length;
-  var y = b.length;
-
-  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-    if (a[i] !== b[i]) {
-      x = a[i];
-      y = b[i];
-      break;
-    }
-  }
-
-  if (x < y) {
-    return -1;
-  }
-  if (y < x) {
-    return 1;
-  }
-  return 0;
-}
-function isBuffer(b) {
-  if (global.Buffer && typeof global.Buffer.isBuffer === 'function') {
-    return global.Buffer.isBuffer(b);
-  }
-  return !!(b != null && b._isBuffer);
-}
-
-// based on node assert, original notice:
-
-// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
-//
-// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
-//
-// Originally from narwhal.js (http://narwhaljs.org)
-// Copyright (c) 2009 Thomas Robinson <280north.com>
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the 'Software'), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var util = __webpack_require__(203);
-var hasOwn = Object.prototype.hasOwnProperty;
-var pSlice = Array.prototype.slice;
-var functionsHaveNames = (function () {
-  return function foo() {}.name === 'foo';
-}());
-function pToString (obj) {
-  return Object.prototype.toString.call(obj);
-}
-function isView(arrbuf) {
-  if (isBuffer(arrbuf)) {
-    return false;
-  }
-  if (typeof global.ArrayBuffer !== 'function') {
-    return false;
-  }
-  if (typeof ArrayBuffer.isView === 'function') {
-    return ArrayBuffer.isView(arrbuf);
-  }
-  if (!arrbuf) {
-    return false;
-  }
-  if (arrbuf instanceof DataView) {
-    return true;
-  }
-  if (arrbuf.buffer && arrbuf.buffer instanceof ArrayBuffer) {
-    return true;
-  }
-  return false;
-}
-// 1. The assert module provides functions that throw
-// AssertionError's when particular conditions are not met. The
-// assert module must conform to the following interface.
-
-var assert = module.exports = ok;
-
-// 2. The AssertionError is defined in assert.
-// new assert.AssertionError({ message: message,
-//                             actual: actual,
-//                             expected: expected })
-
-var regex = /\s*function\s+([^\(\s]*)\s*/;
-// based on https://github.com/ljharb/function.prototype.name/blob/adeeeec8bfcc6068b187d7d9fb3d5bb1d3a30899/implementation.js
-function getName(func) {
-  if (!util.isFunction(func)) {
-    return;
-  }
-  if (functionsHaveNames) {
-    return func.name;
-  }
-  var str = func.toString();
-  var match = str.match(regex);
-  return match && match[1];
-}
-assert.AssertionError = function AssertionError(options) {
-  this.name = 'AssertionError';
-  this.actual = options.actual;
-  this.expected = options.expected;
-  this.operator = options.operator;
-  if (options.message) {
-    this.message = options.message;
-    this.generatedMessage = false;
-  } else {
-    this.message = getMessage(this);
-    this.generatedMessage = true;
-  }
-  var stackStartFunction = options.stackStartFunction || fail;
-  if (Error.captureStackTrace) {
-    Error.captureStackTrace(this, stackStartFunction);
-  } else {
-    // non v8 browsers so we can have a stacktrace
-    var err = new Error();
-    if (err.stack) {
-      var out = err.stack;
-
-      // try to strip useless frames
-      var fn_name = getName(stackStartFunction);
-      var idx = out.indexOf('\n' + fn_name);
-      if (idx >= 0) {
-        // once we have located the function frame
-        // we need to strip out everything before it (and its line)
-        var next_line = out.indexOf('\n', idx + 1);
-        out = out.substring(next_line + 1);
-      }
-
-      this.stack = out;
-    }
-  }
-};
-
-// assert.AssertionError instanceof Error
-util.inherits(assert.AssertionError, Error);
-
-function truncate(s, n) {
-  if (typeof s === 'string') {
-    return s.length < n ? s : s.slice(0, n);
-  } else {
-    return s;
-  }
-}
-function inspect(something) {
-  if (functionsHaveNames || !util.isFunction(something)) {
-    return util.inspect(something);
-  }
-  var rawname = getName(something);
-  var name = rawname ? ': ' + rawname : '';
-  return '[Function' +  name + ']';
-}
-function getMessage(self) {
-  return truncate(inspect(self.actual), 128) + ' ' +
-         self.operator + ' ' +
-         truncate(inspect(self.expected), 128);
-}
-
-// At present only the three keys mentioned above are used and
-// understood by the spec. Implementations or sub modules can pass
-// other keys to the AssertionError's constructor - they will be
-// ignored.
-
-// 3. All of the following functions must throw an AssertionError
-// when a corresponding condition is not met, with a message that
-// may be undefined if not provided.  All assertion methods provide
-// both the actual and expected values to the assertion error for
-// display purposes.
-
-function fail(actual, expected, message, operator, stackStartFunction) {
-  throw new assert.AssertionError({
-    message: message,
-    actual: actual,
-    expected: expected,
-    operator: operator,
-    stackStartFunction: stackStartFunction
-  });
-}
-
-// EXTENSION! allows for well behaved errors defined elsewhere.
-assert.fail = fail;
-
-// 4. Pure assertion tests whether a value is truthy, as determined
-// by !!guard.
-// assert.ok(guard, message_opt);
-// This statement is equivalent to assert.equal(true, !!guard,
-// message_opt);. To test strictly for the value true, use
-// assert.strictEqual(true, guard, message_opt);.
-
-function ok(value, message) {
-  if (!value) fail(value, true, message, '==', assert.ok);
-}
-assert.ok = ok;
-
-// 5. The equality assertion tests shallow, coercive equality with
-// ==.
-// assert.equal(actual, expected, message_opt);
-
-assert.equal = function equal(actual, expected, message) {
-  if (actual != expected) fail(actual, expected, message, '==', assert.equal);
-};
-
-// 6. The non-equality assertion tests for whether two objects are not equal
-// with != assert.notEqual(actual, expected, message_opt);
-
-assert.notEqual = function notEqual(actual, expected, message) {
-  if (actual == expected) {
-    fail(actual, expected, message, '!=', assert.notEqual);
-  }
-};
-
-// 7. The equivalence assertion tests a deep equality relation.
-// assert.deepEqual(actual, expected, message_opt);
-
-assert.deepEqual = function deepEqual(actual, expected, message) {
-  if (!_deepEqual(actual, expected, false)) {
-    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
-  }
-};
-
-assert.deepStrictEqual = function deepStrictEqual(actual, expected, message) {
-  if (!_deepEqual(actual, expected, true)) {
-    fail(actual, expected, message, 'deepStrictEqual', assert.deepStrictEqual);
-  }
-};
-
-function _deepEqual(actual, expected, strict, memos) {
-  // 7.1. All identical values are equivalent, as determined by ===.
-  if (actual === expected) {
-    return true;
-  } else if (isBuffer(actual) && isBuffer(expected)) {
-    return compare(actual, expected) === 0;
-
-  // 7.2. If the expected value is a Date object, the actual value is
-  // equivalent if it is also a Date object that refers to the same time.
-  } else if (util.isDate(actual) && util.isDate(expected)) {
-    return actual.getTime() === expected.getTime();
-
-  // 7.3 If the expected value is a RegExp object, the actual value is
-  // equivalent if it is also a RegExp object with the same source and
-  // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
-  } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
-    return actual.source === expected.source &&
-           actual.global === expected.global &&
-           actual.multiline === expected.multiline &&
-           actual.lastIndex === expected.lastIndex &&
-           actual.ignoreCase === expected.ignoreCase;
-
-  // 7.4. Other pairs that do not both pass typeof value == 'object',
-  // equivalence is determined by ==.
-  } else if ((actual === null || typeof actual !== 'object') &&
-             (expected === null || typeof expected !== 'object')) {
-    return strict ? actual === expected : actual == expected;
-
-  // If both values are instances of typed arrays, wrap their underlying
-  // ArrayBuffers in a Buffer each to increase performance
-  // This optimization requires the arrays to have the same type as checked by
-  // Object.prototype.toString (aka pToString). Never perform binary
-  // comparisons for Float*Arrays, though, since e.g. +0 === -0 but their
-  // bit patterns are not identical.
-  } else if (isView(actual) && isView(expected) &&
-             pToString(actual) === pToString(expected) &&
-             !(actual instanceof Float32Array ||
-               actual instanceof Float64Array)) {
-    return compare(new Uint8Array(actual.buffer),
-                   new Uint8Array(expected.buffer)) === 0;
-
-  // 7.5 For all other Object pairs, including Array objects, equivalence is
-  // determined by having the same number of owned properties (as verified
-  // with Object.prototype.hasOwnProperty.call), the same set of keys
-  // (although not necessarily the same order), equivalent values for every
-  // corresponding key, and an identical 'prototype' property. Note: this
-  // accounts for both named and indexed properties on Arrays.
-  } else if (isBuffer(actual) !== isBuffer(expected)) {
-    return false;
-  } else {
-    memos = memos || {actual: [], expected: []};
-
-    var actualIndex = memos.actual.indexOf(actual);
-    if (actualIndex !== -1) {
-      if (actualIndex === memos.expected.indexOf(expected)) {
-        return true;
-      }
-    }
-
-    memos.actual.push(actual);
-    memos.expected.push(expected);
-
-    return objEquiv(actual, expected, strict, memos);
-  }
-}
-
-function isArguments(object) {
-  return Object.prototype.toString.call(object) == '[object Arguments]';
-}
-
-function objEquiv(a, b, strict, actualVisitedObjects) {
-  if (a === null || a === undefined || b === null || b === undefined)
-    return false;
-  // if one is a primitive, the other must be same
-  if (util.isPrimitive(a) || util.isPrimitive(b))
-    return a === b;
-  if (strict && Object.getPrototypeOf(a) !== Object.getPrototypeOf(b))
-    return false;
-  var aIsArgs = isArguments(a);
-  var bIsArgs = isArguments(b);
-  if ((aIsArgs && !bIsArgs) || (!aIsArgs && bIsArgs))
-    return false;
-  if (aIsArgs) {
-    a = pSlice.call(a);
-    b = pSlice.call(b);
-    return _deepEqual(a, b, strict);
-  }
-  var ka = objectKeys(a);
-  var kb = objectKeys(b);
-  var key, i;
-  // having the same number of owned properties (keys incorporates
-  // hasOwnProperty)
-  if (ka.length !== kb.length)
-    return false;
-  //the same set of keys (although not necessarily the same order),
-  ka.sort();
-  kb.sort();
-  //~~~cheap key test
-  for (i = ka.length - 1; i >= 0; i--) {
-    if (ka[i] !== kb[i])
-      return false;
-  }
-  //equivalent values for every corresponding key, and
-  //~~~possibly expensive deep test
-  for (i = ka.length - 1; i >= 0; i--) {
-    key = ka[i];
-    if (!_deepEqual(a[key], b[key], strict, actualVisitedObjects))
-      return false;
-  }
-  return true;
-}
-
-// 8. The non-equivalence assertion tests for any deep inequality.
-// assert.notDeepEqual(actual, expected, message_opt);
-
-assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
-  if (_deepEqual(actual, expected, false)) {
-    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
-  }
-};
-
-assert.notDeepStrictEqual = notDeepStrictEqual;
-function notDeepStrictEqual(actual, expected, message) {
-  if (_deepEqual(actual, expected, true)) {
-    fail(actual, expected, message, 'notDeepStrictEqual', notDeepStrictEqual);
-  }
-}
-
-
-// 9. The strict equality assertion tests strict equality, as determined by ===.
-// assert.strictEqual(actual, expected, message_opt);
-
-assert.strictEqual = function strictEqual(actual, expected, message) {
-  if (actual !== expected) {
-    fail(actual, expected, message, '===', assert.strictEqual);
-  }
-};
-
-// 10. The strict non-equality assertion tests for strict inequality, as
-// determined by !==.  assert.notStrictEqual(actual, expected, message_opt);
-
-assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
-  if (actual === expected) {
-    fail(actual, expected, message, '!==', assert.notStrictEqual);
-  }
-};
-
-function expectedException(actual, expected) {
-  if (!actual || !expected) {
-    return false;
-  }
-
-  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
-    return expected.test(actual);
-  }
-
-  try {
-    if (actual instanceof expected) {
-      return true;
-    }
-  } catch (e) {
-    // Ignore.  The instanceof check doesn't work for arrow functions.
-  }
-
-  if (Error.isPrototypeOf(expected)) {
-    return false;
-  }
-
-  return expected.call({}, actual) === true;
-}
-
-function _tryBlock(block) {
-  var error;
-  try {
-    block();
-  } catch (e) {
-    error = e;
-  }
-  return error;
-}
-
-function _throws(shouldThrow, block, expected, message) {
-  var actual;
-
-  if (typeof block !== 'function') {
-    throw new TypeError('"block" argument must be a function');
-  }
-
-  if (typeof expected === 'string') {
-    message = expected;
-    expected = null;
-  }
-
-  actual = _tryBlock(block);
-
-  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') +
-            (message ? ' ' + message : '.');
-
-  if (shouldThrow && !actual) {
-    fail(actual, expected, 'Missing expected exception' + message);
-  }
-
-  var userProvidedMessage = typeof message === 'string';
-  var isUnwantedException = !shouldThrow && util.isError(actual);
-  var isUnexpectedException = !shouldThrow && actual && !expected;
-
-  if ((isUnwantedException &&
-      userProvidedMessage &&
-      expectedException(actual, expected)) ||
-      isUnexpectedException) {
-    fail(actual, expected, 'Got unwanted exception' + message);
-  }
-
-  if ((shouldThrow && actual && expected &&
-      !expectedException(actual, expected)) || (!shouldThrow && actual)) {
-    throw actual;
-  }
-}
-
-// 11. Expected to throw an error:
-// assert.throws(block, Error_opt, message_opt);
-
-assert.throws = function(block, /*optional*/error, /*optional*/message) {
-  _throws(true, block, error, message);
-};
-
-// EXTENSION! This is annoying to write outside this module.
-assert.doesNotThrow = function(block, /*optional*/error, /*optional*/message) {
-  _throws(false, block, error, message);
-};
-
-assert.ifError = function(err) { if (err) throw err; };
-
-var objectKeys = Object.keys || function (obj) {
-  var keys = [];
-  for (var key in obj) {
-    if (hasOwn.call(obj, key)) keys.push(key);
-  }
-  return keys;
-};
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
-
-/***/ }),
-/* 143 */
-/***/ (function(module, exports) {
-
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-
-/***/ }),
 /* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -34587,7 +34587,7 @@ var pna = __webpack_require__(77);
 module.exports = Readable;
 
 /*<replacement>*/
-var isArray = __webpack_require__(143);
+var isArray = __webpack_require__(142);
 /*</replacement>*/
 
 /*<replacement>*/
@@ -39455,7 +39455,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = __webpack_require__(664).default;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = __webpack_require__(666).default;
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   let Scene = function (options) {
@@ -40193,7 +40193,7 @@ var vertex="attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nun
 /* WEBPACK VAR INJECTION */(function(Buffer, process) {
 /* eslint camelcase: "off" */
 
-var assert = __webpack_require__(142);
+var assert = __webpack_require__(141);
 
 var Zstream = __webpack_require__(291);
 var zlib_deflate = __webpack_require__(285);
@@ -40612,7 +40612,7 @@ var Buffer = __webpack_require__(43).Buffer;
 var Transform = __webpack_require__(200).Transform;
 var binding = __webpack_require__(278);
 var util = __webpack_require__(203);
-var assert = __webpack_require__(142).ok;
+var assert = __webpack_require__(141).ok;
 var kMaxLength = __webpack_require__(43).kMaxLength;
 var kRangeErrorMessage = 'Cannot create final Buffer. It would be larger ' + 'than 0x' + kMaxLength.toString(16) + ' bytes';
 
@@ -71212,7 +71212,7 @@ __webpack_require__(207);
 /* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(141)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(143)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter) {
   var PhysicsManager = function (options) {
     const canvas = document.getElementById('canvas');
 
@@ -71339,7 +71339,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(665)("./" + scene);
+      let _scene = __webpack_require__(667)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -71686,78 +71686,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 626 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-
-  /**
-   * Take controle over Keyboard input by using this class.
-   * You construct the class with a keycode.
-   * See http://keycode.info/ for more information.
-   * @exports core/input/KeyboardInput
-   * @module KeyboardInput
-   * @example
-   * let char = 32 // spacebar
-   * const space = new KeyboardInput(char)
-   * space.press = function() {
-   *  console.log('spacebar pressed')
-   * }
-   * space.release = function() {
-   *     console.log('spacebar released')
-   * }
-   * @constructor
-   * @param {number} keyCode - The keycode to listen for
-   */
-  let KeyboardInput = function (key) {
-
-    let info = {};
-    info.key = key;
-    info.isDown = false;
-    info.isUp = true;
-    info.down = undefined;
-    info.up = undefined;
-
-    window.addEventListener('keydown', this.downHandler.bind(info), false);
-
-    window.addEventListener('keyup', this.upHandler.bind(info), false);
-
-    return info;
-  };
-
-  /**
-   * The internal keyboard event handler for keydown.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.downHandler = function (event) {
-    if (event.key === this.key) {
-      if (this.isUp && this.down) this.down(event);
-      this.isDown = true;
-      this.isUp = false;
-    }
-    event.preventDefault();
-  };
-
-  /**
-   * The internal keyboard event handler for keyup.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.upHandler = function (event) {
-    if (event.key === this.key) {
-      if (this.isDown && this.up) this.up(event);
-      this.isDown = false;
-      this.isUp = true;
-    }
-    event.preventDefault();
-  };
-
-  return KeyboardInput;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 627 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71777,7 +71705,7 @@ const BUTTON_TYPE = {
 
 
 /***/ }),
-/* 628 */
+/* 627 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71797,157 +71725,10 @@ const DIALOG_STATE = {
 
 
 /***/ }),
-/* 629 */
+/* 628 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = __webpack_require__(205);
-
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(636)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Ball = function (texture) {
-    PhysicsSprite.call(this, texture);
-
-    this.sprite.filters = [new filters.OutlineFilter(2, 0x99ff99)];
-  };
-
-  extend(Ball, PhysicsSprite);
-
-  Ball.prototype.setupBody = function () {
-    let radius = this._width;
-
-    let options = {
-      // isSleeping: true,
-      // isStatic: true,
-      //  inertia: Infinity,
-      //  isSensor: true,
-      //  label: this._id,
-      //  mass: 1,
-      //  restitution: 1,
-    };
-
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.body.label = Object.getPrototypeOf(this).constructor.name;
-    this.PhysicsManager.add(this.body);
-  };
-
-  Ball.prototype.fire = function () {
-    // this.PhysicsManager.setVelocity(this.body, {x: 0, y:  rand(-2, 2)})
-    // this.PhysicsManager.setAngularVelocity(this.body, 0);
-  };
-
-  Ball.prototype.update = function (delta) {
-    let pos = this.body.position;
-    let angle = this.body.angle;
-
-    this.sprite.angle = angle;
-    this.sprite.x = pos.x;
-    this.sprite.y = pos.y;
-  };
-
-  return Ball;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 630 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(636)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Brick = function (type, texture) {
-    PhysicsSprite.call(this, texture);
-    this.type = type;
-    this.health = 1;
-
-    if (type === 'green') {
-      this.health = 2;
-    }
-  };
-
-  extend(Brick, PhysicsSprite);
-
-  Brick.prototype.onCollisionWith = function (withObject) {
-    if (this.health === 0) {
-      this.PhysicsManager.remove(this.body);
-      this.sprite.visible = false;
-    } else this.decareaseHealth();
-  };
-
-  Brick.prototype.setupBody = function () {
-    let options = {
-      isStatic: true,
-      restitution: 1.5
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.body.label = Object.getPrototypeOf(this).constructor.name;
-    this.PhysicsManager.add(this.body);
-  };
-
-  Brick.prototype.decareaseHealth = function () {
-    this.health--;
-  };
-
-  Brick.prototype.update = function (delta) {
-    let pos = this.body.position;
-    let angle = this.body.angle;
-
-    this.sprite.angle = angle;
-    this.sprite.x = pos.x;
-    this.sprite.y = pos.y;
-  };
-
-  return Brick;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 631 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(636)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Pad = function (texture) {
-    PhysicsSprite.call(this, texture);
-  };
-
-  extend(Pad, PhysicsSprite);
-
-  Pad.prototype.setPosition = function (x = 0, y = 0) {
-
-    x = x || this._x;
-    y = y || this._y;
-
-    console.log('Pad setting y to ', y);
-    this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
-
-    return this;
-  };
-
-  Pad.prototype.setupBody = function () {
-    let options = {
-      // isStatic: true,
-      // isSleeping: true,
-    };
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
-    this.body.label = Object.getPrototypeOf(this).constructor.name;
-    this.PhysicsManager.add(this.body);
-  };
-
-  Pad.prototype.update = function (delta) {
-    let pos = this.body.position;
-    let angle = this.body.angle;
-
-    this.sprite.angle = angle;
-    this.sprite.x = pos.x;
-    this.sprite.y = pos.y;
-  };
-
-  return Pad;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 632 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(141), __webpack_require__(247), __webpack_require__(626), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(143), __webpack_require__(247), __webpack_require__(632), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -72108,11 +71889,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 633 */,
-/* 634 */
+/* 629 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(141), __webpack_require__(247), __webpack_require__(626), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(143), __webpack_require__(247), __webpack_require__(632), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options);
 
@@ -72265,10 +72045,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 635 */
+/* 630 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(649), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(645), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
   var GameLevel = function (options) {
     Level.call(this, options);
 
@@ -72294,7 +72074,138 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 636 */
+/* 631 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(645), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+  /**
+   * GameLevel Constructor
+   *
+   * @constructor
+   */
+  let GameLevel = function () {
+    Level.call(this);
+
+    /**
+     * Add the FPS counter.
+     */
+    this.statistics = new Statistics();
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * The onStart callback
+   */
+  GameLevel.prototype.onStart = function () {
+    let background = new PIXI.Graphics();
+    background.name = 'background';
+
+    background.lineStyle(2, 0xFF0000, 1);
+    background.beginFill(0xFFFFFF, 0);
+    background.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
+
+    this.addChild(background);
+    this.setDisplayStats(true);
+  };
+
+  /**
+   * Enable or disable the onscreen FPS counter.
+   *
+   * @param {boolean) visible - The FPS counter visibility flag true|false
+   */
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+    this.addChild(this.statistics);
+  };
+
+  /**
+   * Update the GameLevel scene.
+   *
+   * @param delta
+   */
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 632 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+
+  /**
+   * Take controle over Keyboard input by using this class.
+   * You construct the class with a keycode.
+   * See http://keycode.info/ for more information.
+   * @exports core/input/KeyboardInput
+   * @module KeyboardInput
+   * @example
+   * let char = 32 // spacebar
+   * const space = new KeyboardInput(char)
+   * space.press = function() {
+   *  console.log('spacebar pressed')
+   * }
+   * space.release = function() {
+   *     console.log('spacebar released')
+   * }
+   * @constructor
+   * @param {number} keyCode - The keycode to listen for
+   */
+  let KeyboardInput = function (key) {
+
+    let info = {};
+    info.key = key;
+    info.isDown = false;
+    info.isUp = true;
+    info.down = undefined;
+    info.up = undefined;
+
+    window.addEventListener('keydown', this.downHandler.bind(info), false);
+
+    window.addEventListener('keyup', this.upHandler.bind(info), false);
+
+    return info;
+  };
+
+  /**
+   * The internal keyboard event handler for keydown.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.downHandler = function (event) {
+    if (event.key === this.key) {
+      if (this.isUp && this.down) this.down(event);
+      this.isDown = true;
+      this.isUp = false;
+    }
+    event.preventDefault();
+  };
+
+  /**
+   * The internal keyboard event handler for keyup.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.upHandler = function (event) {
+    if (event.key === this.key) {
+      if (this.isDown && this.up) this.up(event);
+      this.isDown = false;
+      this.isUp = true;
+    }
+    event.preventDefault();
+  };
+
+  return KeyboardInput;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 633 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -72409,11 +72320,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 637 */
+/* 634 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(627).BUTTON_STATE;
-const Type = __webpack_require__(627).BUTTON_TYPE;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(626).BUTTON_STATE;
+const Type = __webpack_require__(626).BUTTON_TYPE;
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   let Button = function (options, ...items) {
@@ -72505,6 +72416,153 @@ const Type = __webpack_require__(627).BUTTON_TYPE;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
+/* 635 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = __webpack_require__(205);
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(633)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Ball = function (texture) {
+    PhysicsSprite.call(this, texture);
+
+    this.sprite.filters = [new filters.OutlineFilter(2, 0x99ff99)];
+  };
+
+  extend(Ball, PhysicsSprite);
+
+  Ball.prototype.setupBody = function () {
+    let radius = this._width;
+
+    let options = {
+      // isSleeping: true,
+      // isStatic: true,
+      //  inertia: Infinity,
+      //  isSensor: true,
+      //  label: this._id,
+      //  mass: 1,
+      //  restitution: 1,
+    };
+
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.body.label = Object.getPrototypeOf(this).constructor.name;
+    this.PhysicsManager.add(this.body);
+  };
+
+  Ball.prototype.fire = function () {
+    // this.PhysicsManager.setVelocity(this.body, {x: 0, y:  rand(-2, 2)})
+    // this.PhysicsManager.setAngularVelocity(this.body, 0);
+  };
+
+  Ball.prototype.update = function (delta) {
+    let pos = this.body.position;
+    let angle = this.body.angle;
+
+    this.sprite.angle = angle;
+    this.sprite.x = pos.x;
+    this.sprite.y = pos.y;
+  };
+
+  return Ball;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 636 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(633)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Brick = function (type, texture) {
+    PhysicsSprite.call(this, texture);
+    this.type = type;
+    this.health = 1;
+
+    if (type === 'green') {
+      this.health = 2;
+    }
+  };
+
+  extend(Brick, PhysicsSprite);
+
+  Brick.prototype.onCollisionWith = function (withObject) {
+    if (this.health === 0) {
+      this.PhysicsManager.remove(this.body);
+      this.sprite.visible = false;
+    } else this.decareaseHealth();
+  };
+
+  Brick.prototype.setupBody = function () {
+    let options = {
+      isStatic: true,
+      restitution: 1.5
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.body.label = Object.getPrototypeOf(this).constructor.name;
+    this.PhysicsManager.add(this.body);
+  };
+
+  Brick.prototype.decareaseHealth = function () {
+    this.health--;
+  };
+
+  Brick.prototype.update = function (delta) {
+    let pos = this.body.position;
+    let angle = this.body.angle;
+
+    this.sprite.angle = angle;
+    this.sprite.x = pos.x;
+    this.sprite.y = pos.y;
+  };
+
+  return Brick;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 637 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(633)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+  var Pad = function (texture) {
+    PhysicsSprite.call(this, texture);
+  };
+
+  extend(Pad, PhysicsSprite);
+
+  Pad.prototype.setPosition = function (x = 0, y = 0) {
+
+    x = x || this._x;
+    y = y || this._y;
+
+    console.log('Pad setting y to ', y);
+    this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
+
+    return this;
+  };
+
+  Pad.prototype.setupBody = function () {
+    let options = {
+      // isStatic: true,
+      // isSleeping: true,
+    };
+    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
+    this.body.label = Object.getPrototypeOf(this).constructor.name;
+    this.PhysicsManager.add(this.body);
+  };
+
+  Pad.prototype.update = function (delta) {
+    let pos = this.body.position;
+    let angle = this.body.angle;
+
+    this.sprite.angle = angle;
+    this.sprite.x = pos.x;
+    this.sprite.y = pos.y;
+  };
+
+  return Pad;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
 /* 638 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -72530,7 +72588,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(632), __webpack_require__(246), __webpack_require__(630), __webpack_require__(631), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(628), __webpack_require__(246), __webpack_require__(636), __webpack_require__(637), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -72651,12 +72709,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 640 */,
-/* 641 */
+/* 640 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(246), __webpack_require__(630), __webpack_require__(631), __webpack_require__(629), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(629), __webpack_require__(246), __webpack_require__(636), __webpack_require__(637), __webpack_require__(635), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Statistics) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -72785,11 +72842,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 642 */
+/* 641 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(657);
-const Dialogs = __webpack_require__(654);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(659);
+const Dialogs = __webpack_require__(656);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(247), __webpack_require__(246), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
   let MainScreen = function (options) {
@@ -72900,13 +72957,13 @@ const Dialogs = __webpack_require__(654);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 643 */
+/* 642 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
 const DIRECTIONS = __webpack_require__(638).DIRECTIONS;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(635), __webpack_require__(246), __webpack_require__(648), __webpack_require__(650)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character, Matrix) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(630), __webpack_require__(246), __webpack_require__(649), __webpack_require__(652)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character, Matrix) {
   var Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -73064,6 +73121,175 @@ const DIRECTIONS = __webpack_require__(638).DIRECTIONS;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
+/* 643 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(631), __webpack_require__(650), __webpack_require__(651)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
+
+  /**
+   * Level1 constructor
+   *
+   * @constructor
+   */
+  let Level1 = function () {
+    GameLevel.call(this);
+
+    /**
+     *
+     * @type {Array}
+     */
+    this.rectangles = [];
+
+    /**
+     *
+     * @type {number}
+     */
+    this.delay = 0.5;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.time_passed = 0;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.alpha_decay = 0.05;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.scale_decay = 0.05;
+
+    /**
+     *
+     * @type {boolean}
+     */
+    this.mouse_down = false;
+  };
+
+  extend(Level1, GameLevel);
+
+  /**
+   * onStart callback
+   */
+  Level1.prototype.onStart = function () {
+    GameLevel.prototype.onStart.call(this);
+
+    this.text = new Text('Click and drag');
+    this.text.x = this.app.screen.width / 2 - this.text.width / 2;
+    this.text.y = this.app.screen.height / 2 - this.text.height / 2;
+
+    this.addChild(this.text);
+
+    var style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 18,
+      fill: ['#ffffff']
+    });
+    this.rect_count = new pixi.Text('Rects: ' + this.rectangles.length, style);
+    this.rect_count.x = this.statistics.x;
+    this.rect_count.y = this.statistics.y - this.statistics.height; //- 5
+
+    this.addChild(this.rect_count);
+  };
+
+  /**
+   * Handle the mousemove event
+   *
+   * @param {InteractionEvent} event - The event for mousemove
+   */
+  Level1.prototype.onMouseMove = function (event) {
+    if (this.mouse_down) {
+      let pos = event.data.global;
+
+      let rect = new RoundedRect();
+      rect.position.set(pos.x, pos.y);
+
+      this.rectangles.push(rect);
+      this.addChild(rect);
+    }
+  };
+
+  /**
+   * Handle the pointerdowm event
+   * @param {InteractionEvent} event - The event for pointerdown
+   */
+  Level1.prototype.onPointerDown = function (event) {
+    this.mouse_down = true;
+  };
+
+  /**
+   * Handle the pointerup event
+   * @param {InteractionEvent} event - The event for pointerup
+   */
+  Level1.prototype.onPointerUp = function (event) {
+    this.mouse_down = false;
+  };
+
+  /**
+   * Update the GameObjects
+   *
+   * @param {number} delta
+   */
+  Level1.prototype.update = function (delta) {
+    GameLevel.prototype.update.call(this, delta);
+
+    this.time_passed += delta;
+    if (this.time_passed > this.delay) {
+
+      /**
+       * Reset the time that has passed
+       * since the last update.
+       *
+       * @type {number}
+       */
+      this.time_passed = 0;
+
+      for (let i = 0; i < this.rectangles.length; i++) {
+        let item = this.rectangles[i];
+
+        /**
+         * If the item is invisible remove
+         * it from the array.
+         */
+        if (item.alpha < 0) {
+          this.removeChild(item);
+          this.rectangles.splice(i, 1);
+        }
+
+        item.alpha -= this.alpha_decay;
+      }
+
+      if (this.mouse_down) {
+        let new_scale = this.text.scale.x - this.scale_decay;
+        if (new_scale < 0) new_scale = 0;
+
+        this.text.visible = new_scale > 0;
+        this.text.scale.set(new_scale);
+      } else {
+
+        if (this.text.scale.x < 1) {
+          let new_scale = this.text.scale.x + this.scale_decay;
+          if (new_scale > 1) new_scale = 1;
+
+          this.text.visible = new_scale > 0;
+          this.text.scale.set(new_scale);
+        }
+      }
+
+      this.rect_count.text = 'Rects: ' + this.rectangles.length;
+    }
+  };
+
+  return Level1;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
 /* 644 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -73163,6 +73389,95 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 645 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(247), __webpack_require__(632)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
+  let Level = function (options) {
+    Scene.call(this, options);
+
+    this.keyboardKeys = [];
+
+    this.on('mousemove', this.onMouseMove);
+    this.on('pointerdown', this.onPointerDown);
+    this.on('pointerup', this.onPointerUp);
+  };
+
+  extend(Level, Scene);
+
+  Level.prototype.listenForKeyboardInputs = function (...keys) {
+    let self = this;
+    keys.forEach(function (key) {
+      let info = new KeyboardInput(key);
+
+      info.down = self.onKeyDown.bind(self);
+      info.up = self.onKeyUp.bind(self);
+
+      self.keyboardKeys.push(info);
+    });
+  };
+
+  Level.prototype.onKeyPress = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyPress events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  Level.prototype.onKeyDown = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard onKeyDown events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  Level.prototype.onKeyUp = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyUp events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See listenForKeyboardInputs
+     * for more information.
+     */
+  };
+
+  Level.prototype.onMouseMove = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive mouse move events.
+     */
+  };
+
+  Level.prototype.onPointerDown = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive pointer down events.
+     */
+  };
+
+  Level.prototype.onPointerUp = function (event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive pointer up events.
+     */
+  };
+
+  Level.prototype.onStart = function () {};
+
+  return Level;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 646 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -73172,16 +73487,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Type", function() { return Type; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseButton", function() { return BaseButton; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
-const State = __webpack_require__(627).BUTTON_STATE;
-const Type = __webpack_require__(627).BUTTON_TYPE;
-const BaseButton = __webpack_require__(651);
-const ImageButton = __webpack_require__(652);
-const Button = __webpack_require__(637);
+const State = __webpack_require__(626).BUTTON_STATE;
+const Type = __webpack_require__(626).BUTTON_TYPE;
+const BaseButton = __webpack_require__(653);
+const ImageButton = __webpack_require__(654);
+const Button = __webpack_require__(634);
 
 
 
 /***/ }),
-/* 646 */
+/* 647 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -73232,7 +73547,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 647 */
+/* 648 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -73302,7 +73617,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 648 */
+/* 649 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(638).DIRECTIONS;
@@ -73391,96 +73706,101 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 649 */
+/* 650 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(247), __webpack_require__(626)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
-  let Level = function (options) {
-    Scene.call(this, options);
+const GameObject = __webpack_require__(624);
 
-    this.keyboardKeys = [];
+class RoundedRect extends GameObject {
+  constructor() {
+    super();
 
-    this.on('mousemove', this.onMouseMove);
-    this.on('pointerdown', this.onPointerDown);
-    this.on('pointerup', this.onPointerUp);
-  };
-
-  extend(Level, Scene);
-
-  Level.prototype.listenForKeyboardInputs = function (...keys) {
-    let self = this;
-    keys.forEach(function (key) {
-      let info = new KeyboardInput(key);
-
-      info.down = self.onKeyDown.bind(self);
-      info.up = self.onKeyUp.bind(self);
-
-      self.keyboardKeys.push(info);
-    });
-  };
-
-  Level.prototype.onKeyPress = function (event) {
     /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
      *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
+     * @type {number}
      */
-  };
+    this.alpha = 1;
 
-  Level.prototype.onKeyDown = function (event) {
     /**
-     * You can overwrite this function if you wish
-     * to receive keyboard onKeyDown events.
      *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
+     * @type {number}
      */
-  };
+    this.radius = 5;
 
-  Level.prototype.onKeyUp = function (event) {
     /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyUp events.
      *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
+     * @type {number}
      */
-  };
+    this.rectangle_width = 45;
 
-  Level.prototype.onMouseMove = function (event) {
     /**
-     * You can overwrite this function if you wish
-     * to receive mouse move events.
+     *
+     * @type {number}
      */
-  };
+    this.rectangle_height = 45;
 
-  Level.prototype.onPointerDown = function (event) {
     /**
-     * You can overwrite this function if you wish
-     * to receive pointer down events.
+     *
+     * @type {number[]}
      */
-  };
+    this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
 
-  Level.prototype.onPointerUp = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive pointer up events.
-     */
-  };
+    this.init();
+  }
 
-  Level.prototype.onStart = function () {};
+  /**
+   * Create the RoundedRect.
+   */
+  init() {
+    let lineColor = this.randomColors[Math.round(rand(0, this.randomColors.length - 1))];
+    let rect = new PIXI.Graphics();
+    rect.name = 'circle';
 
-  return Level;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    let content_outline_alpha = 1;
+    rect.lineStyle(2, lineColor, content_outline_alpha);
+    rect.beginFill(0xFFFFFF, 0);
+    rect.drawRoundedRect(0, 0, this.rectangle_width, this.rectangle_height, this.radius);
+
+    this.addChild(rect);
+  }
+
+}
+
+module.exports = RoundedRect;
 
 /***/ }),
-/* 650 */
+/* 651 */
+/***/ (function(module, exports) {
+
+class Text extends PIXI.Container {
+  constructor(text = '') {
+    super();
+
+    /**
+     * @type {PIXI.TextStyle}
+     */
+    this.textStyle = new PIXI.TextStyle({
+      fontFamily: 'Helvetica',
+      fontSize: 120,
+      fill: ['#ffffff']
+    });
+
+    /**
+     * @type {PIXI.Text}
+     */
+    this.richText = new PIXI.Text(text, this.textStyle);
+
+    /**
+     * Add the text object to the stage
+     */
+    this.addChild(this.richText);
+  }
+}
+
+module.exports = Text;
+
+/***/ }),
+/* 652 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -73715,10 +74035,10 @@ if (true) {
 }
 
 /***/ }),
-/* 651 */
+/* 653 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(637);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(634);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(204), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
   let BaseButton = function (options) {
@@ -73922,10 +74242,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 652 */
+/* 654 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(637);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(634);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(204), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
   let ImageButton = function (options) {
@@ -74122,14 +74442,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 653 */
+/* 655 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(628).DIALOG_TYPE;
-const STATE = __webpack_require__(628).DIALOG_STATE;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(627).DIALOG_TYPE;
+const STATE = __webpack_require__(627).DIALOG_STATE;
 
-const DefaultDialog = __webpack_require__(656);
-const CloseableDialog = __webpack_require__(655);
+const DefaultDialog = __webpack_require__(658);
+const CloseableDialog = __webpack_require__(657);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   let Dialog = function (options, ...items) {
@@ -74233,27 +74553,27 @@ const CloseableDialog = __webpack_require__(655);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 654 */
+/* 656 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Dialog", function() { return Dialog; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TYPE", function() { return TYPE; });
-const TYPE = __webpack_require__(628).DIALOG_TYPE;
-const STATE = __webpack_require__(628).DIALOG_STATE;
+const TYPE = __webpack_require__(627).DIALOG_TYPE;
+const STATE = __webpack_require__(627).DIALOG_STATE;
 
-const Dialog = __webpack_require__(653);
+const Dialog = __webpack_require__(655);
 
 
 
 /***/ }),
-/* 655 */
+/* 657 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(645);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(646);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(646)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
   let CloseableDialog = function (options) {
 
     this.options = {
@@ -74324,10 +74644,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 656 */
+/* 658 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(646)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
   let DefaultDialog = function (options) {
     BaseDialog.call(this, options);
     console.log('loaded');
@@ -74340,7 +74660,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 657 */
+/* 659 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -74348,13 +74668,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(658);
-const MenuItemText = __webpack_require__(660);
-const MenuItemImageButton = __webpack_require__(659);
+const Menu = __webpack_require__(660);
+const MenuItemText = __webpack_require__(662);
+const MenuItemImageButton = __webpack_require__(661);
 
 
 /***/ }),
-/* 658 */
+/* 660 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -74407,12 +74727,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 659 */
+/* 661 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(645);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(646);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemImageButton module
@@ -74505,10 +74825,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 660 */
+/* 662 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemText module
@@ -74591,7 +74911,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 661 */
+/* 663 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74690,7 +75010,7 @@ function panable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy9wYW4uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQXdCLE9BQU87QUFBaEIsU0FBUyxPQUFPLENBQUUsTUFBTSxFQUFFO0FBQ3ZDLFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixTQUFLLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDL0I7O0FBRUQsV0FBUyxVQUFVLENBQUUsQ0FBQyxFQUFFO0FBQ3RCLFNBQUssQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7R0FDaEQ7OztBQUFBLEFBR0QsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNwQixRQUFJLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO0FBQ2pCLGFBQU07S0FDUDtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxHQUFHO0FBQ2QsT0FBQyxFQUFFO0FBQ0QsU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osWUFBSSxFQUFFLElBQUksSUFBSSxFQUFFO09BQ2pCO0tBQ0YsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQ0wsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDMUIsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FBQTtHQUM5Qjs7QUFFRCxXQUFTLFNBQVMsQ0FBRSxDQUFDLEVBQUU7QUFDckIsUUFBSSxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxDQUFBO0dBQzlCOztBQUVELFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixRQUFJLENBQUMsR0FBRyxDQUFDLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxhQUFhLENBQUE7QUFDMUMsUUFBSSxDQUFDLENBQUMsSUFBSSxDQUFDLENBQUMsTUFBTSxHQUFHLENBQUMsRUFBRTtBQUN0QixTQUFHLENBQUMsQ0FBQyxDQUFDLENBQUE7QUFDTixhQUFNO0tBQ1A7QUFDRCxRQUFJLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0dBQ2Q7O0FBRUQsV0FBUyxJQUFJLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNuQixRQUFJLEdBQUcsR0FBRyxJQUFJLElBQUksRUFBRSxDQUFBO0FBQ3BCLFFBQUksUUFBUSxHQUFHLEdBQUcsR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFBO0FBQ3pDLFFBQUksUUFBUSxHQUFHLEVBQUUsRUFBRTtBQUNqQixhQUFNO0tBQ1A7QUFDRCxRQUFJLEVBQUUsR0FBRyxDQUFDLENBQUMsT0FBTyxHQUFHLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7QUFDdEMsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ3RDLFFBQUksUUFBUSxHQUFHLElBQUksQ0FBQyxJQUFJLENBQUMsRUFBRSxHQUFHLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxDQUFDLENBQUE7QUFDM0MsUUFBSSxDQUFDLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLEVBQUUsRUFBRTtBQUNyQixVQUFJLFNBQVMsR0FBRyxBQUFDLENBQUMsWUFBWSxNQUFNLENBQUMsVUFBVSxHQUFJLENBQUMsR0FBRyxDQUFDLENBQUE7QUFDeEQsVUFBSSxRQUFRLEdBQUcsU0FBUyxFQUFFO0FBQ3hCLFNBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxDQUFBO0FBQ3pCLFNBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLENBQUE7T0FDdEI7QUFDRCxhQUFNO0tBQ1A7QUFDRCxRQUFJLEtBQUssR0FBRztBQUNWLFlBQU0sRUFBRSxFQUFFO0FBQ1YsWUFBTSxFQUFFLEVBQUU7QUFDVixjQUFRLEVBQUUsUUFBUSxHQUFHLFFBQVE7QUFDN0IsVUFBSSxFQUFFLENBQUMsQ0FBQyxJQUFJO0tBQ2IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFNBQVMsRUFBRSxLQUFLLENBQUMsQ0FBQTtBQUMvQixLQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxFQUFFLEdBQUc7QUFDakIsT0FBQyxFQUFFLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDO0FBQ3BCLE9BQUMsRUFBRSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUNwQixVQUFJLEVBQUUsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLElBQUk7S0FDM0IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsR0FBRztBQUNoQixPQUFDLEVBQUUsQ0FBQyxDQUFDLE9BQU87QUFDWixPQUFDLEVBQUUsQ0FBQyxDQUFDLE9BQU87QUFDWixVQUFJLEVBQUUsR0FBRztLQUNWLENBQUE7R0FDRjs7OztBQUFBLEFBSUQsV0FBUyxHQUFHLENBQUUsQ0FBQyxFQUFFO0FBQ2YsUUFBSSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksSUFBSSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUU7QUFDckMsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsUUFBUSxDQUFDLENBQUE7S0FDeEI7QUFDRCxLQUFDLENBQUMsTUFBTSxDQUFDLElBQUksR0FBRyxJQUFJLENBQUE7QUFDcEIsS0FBQyxDQUFDLE1BQU0sQ0FDTCxjQUFjLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUN0QyxjQUFjLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUFBO0dBQzFDOztBQUVELFFBQU0sQ0FBQyxXQUFXLEdBQUcsSUFBSSxDQUFBO0FBQ3pCLFFBQU0sQ0FDSCxFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUMxQixFQUFFLENBQUMsWUFBWSxFQUFFLFVBQVUsQ0FBQyxDQUM1QixFQUFFLENBQUMsU0FBUyxFQUFFLEdBQUcsQ0FBQyxDQUNsQixFQUFFLENBQUMsZ0JBQWdCLEVBQUUsR0FBRyxDQUFDLENBQ3pCLEVBQUUsQ0FBQyxVQUFVLEVBQUUsR0FBRyxDQUFDLENBQ25CLEVBQUUsQ0FBQyxpQkFBaUIsRUFBRSxHQUFHLENBQUMsQ0FBQTtDQUM5QiIsImZpbGUiOiJwYW4uanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwYW5hYmxlIChzcHJpdGUpIHtcbiAgZnVuY3Rpb24gbW91c2VEb3duIChlKSB7XG4gICAgc3RhcnQoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQpXG4gIH1cblxuICBmdW5jdGlvbiB0b3VjaFN0YXJ0IChlKSB7XG4gICAgc3RhcnQoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1swXSlcbiAgfVxuXG4gIC8vIHBvc3NpYmx5IGJlIGNhbGxlZCB0d2ljZSBvciBtb3JlXG4gIGZ1bmN0aW9uIHN0YXJ0IChlLCB0KSB7XG4gICAgaWYgKGUudGFyZ2V0Ll9wYW4pIHtcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBlLnRhcmdldC5fcGFuID0ge1xuICAgICAgcDoge1xuICAgICAgICB4OiB0LmNsaWVudFgsXG4gICAgICAgIHk6IHQuY2xpZW50WSxcbiAgICAgICAgZGF0ZTogbmV3IERhdGUoKVxuICAgICAgfVxuICAgIH1cbiAgICBlLnRhcmdldFxuICAgICAgLm9uKCdtb3VzZW1vdmUnLCBtb3VzZU1vdmUpXG4gICAgICAub24oJ3RvdWNobW92ZScsIHRvdWNoTW92ZSlcbiAgfVxuXG4gIGZ1bmN0aW9uIG1vdXNlTW92ZSAoZSkge1xuICAgIG1vdmUoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQpXG4gIH1cblxuICBmdW5jdGlvbiB0b3VjaE1vdmUgKGUpIHtcbiAgICBsZXQgdCA9IGUuZGF0YS5vcmlnaW5hbEV2ZW50LnRhcmdldFRvdWNoZXNcbiAgICBpZiAoIXQgfHwgdC5sZW5ndGggPiAxKSB7XG4gICAgICBlbmQoZSlcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBtb3ZlKGUsIHRbMF0pXG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlIChlLCB0KSB7XG4gICAgbGV0IG5vdyA9IG5ldyBEYXRlKClcbiAgICBsZXQgaW50ZXJ2YWwgPSBub3cgLSBlLnRhcmdldC5fcGFuLnAuZGF0ZVxuICAgIGlmIChpbnRlcnZhbCA8IDEyKSB7XG4gICAgICByZXR1cm5cbiAgICB9XG4gICAgbGV0IGR4ID0gdC5jbGllbnRYIC0gZS50YXJnZXQuX3Bhbi5wLnhcbiAgICBsZXQgZHkgPSB0LmNsaWVudFkgLSBlLnRhcmdldC5fcGFuLnAueVxuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSlcbiAgICBpZiAoIWUudGFyZ2V0Ll9wYW4ucHApIHtcbiAgICAgIGxldCB0aHJlc2hvbGQgPSAodCBpbnN0YW5jZW9mIHdpbmRvdy5Nb3VzZUV2ZW50KSA/IDIgOiA3XG4gICAgICBpZiAoZGlzdGFuY2UgPiB0aHJlc2hvbGQpIHtcbiAgICAgICAgZS50YXJnZXQuZW1pdCgncGFuc3RhcnQnKVxuICAgICAgICBlLnRhcmdldC5fcGFuLnBwID0ge31cbiAgICAgIH1cbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgZXZlbnQgPSB7XG4gICAgICBkZWx0YVg6IGR4LFxuICAgICAgZGVsdGFZOiBkeSxcbiAgICAgIHZlbG9jaXR5OiBkaXN0YW5jZSAvIGludGVydmFsLFxuICAgICAgZGF0YTogZS5kYXRhXG4gICAgfVxuICAgIGUudGFyZ2V0LmVtaXQoJ3Bhbm1vdmUnLCBldmVudClcbiAgICBlLnRhcmdldC5fcGFuLnBwID0ge1xuICAgICAgeDogZS50YXJnZXQuX3Bhbi5wLngsXG4gICAgICB5OiBlLnRhcmdldC5fcGFuLnAueSxcbiAgICAgIGRhdGU6IGUudGFyZ2V0Ll9wYW4ucC5kYXRlXG4gICAgfVxuICAgIGUudGFyZ2V0Ll9wYW4ucCA9IHtcbiAgICAgIHg6IHQuY2xpZW50WCxcbiAgICAgIHk6IHQuY2xpZW50WSxcbiAgICAgIGRhdGU6IG5vd1xuICAgIH1cbiAgfVxuXG4gIC8vIFRPRE86IEluZXJ0aWEgTW9kZVxuICAvLyBwb3NzaWJseSBiZSBjYWxsZWQgdHdpY2Ugb3IgbW9yZVxuICBmdW5jdGlvbiBlbmQgKGUpIHtcbiAgICBpZiAoZS50YXJnZXQuX3BhbiAmJiBlLnRhcmdldC5fcGFuLnBwKSB7XG4gICAgICBlLnRhcmdldC5lbWl0KCdwYW5lbmQnKVxuICAgIH1cbiAgICBlLnRhcmdldC5fcGFuID0gbnVsbFxuICAgIGUudGFyZ2V0XG4gICAgICAucmVtb3ZlTGlzdGVuZXIoJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5yZW1vdmVMaXN0ZW5lcigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgc3ByaXRlLmludGVyYWN0aXZlID0gdHJ1ZVxuICBzcHJpdGVcbiAgICAub24oJ21vdXNlZG93bicsIG1vdXNlRG93bilcbiAgICAub24oJ3RvdWNoc3RhcnQnLCB0b3VjaFN0YXJ0KVxuICAgIC5vbignbW91c2V1cCcsIGVuZClcbiAgICAub24oJ21vdXNldXBvdXRzaWRlJywgZW5kKVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 662 */
+/* 664 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74762,7 +75082,7 @@ function pinchable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy9waW5jaC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztrQkFBd0IsU0FBUztBQUFsQixTQUFTLFNBQVMsQ0FBRSxNQUFNLEVBQUU7QUFDekMsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFO0FBQ2pCLEtBQUMsQ0FBQyxNQUFNLENBQUMsRUFBRSxDQUFDLFdBQVcsRUFBRSxJQUFJLENBQUMsQ0FBQTtHQUMvQjs7QUFFRCxXQUFTLElBQUksQ0FBRSxDQUFDLEVBQUU7QUFDaEIsUUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFBO0FBQzFDLFFBQUksQ0FBQyxDQUFDLElBQUksQ0FBQyxDQUFDLE1BQU0sR0FBRyxDQUFDLEVBQUU7QUFDdEIsYUFBTTtLQUNQO0FBQ0QsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxDQUFBO0FBQ3BDLFFBQUksRUFBRSxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxPQUFPLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sQ0FBQTtBQUNwQyxRQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxHQUFHLEVBQUUsQ0FBQyxDQUFBO0FBQzNDLFFBQUksQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sRUFBRTtBQUNwQixPQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sR0FBRztBQUNoQixTQUFDLEVBQUUsRUFBRSxRQUFRLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRSxJQUFJLElBQUksRUFBRSxFQUFFO0FBQzNDLFVBQUUsRUFBRSxFQUFFO09BQ1AsQ0FBQTtBQUNELE9BQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFlBQVksQ0FBQyxDQUFBO0FBQzNCLGFBQU07S0FDUDtBQUNELFFBQUksTUFBTSxHQUFHO0FBQ1gsT0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxDQUFBLEdBQUksQ0FBQztBQUNwQyxPQUFDLEVBQUUsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxPQUFPLENBQUEsR0FBSSxDQUFDO0tBQ3JDLENBQUE7QUFDRCxRQUFJLEdBQUcsR0FBRyxJQUFJLElBQUksRUFBRSxDQUFBO0FBQ3BCLFFBQUksUUFBUSxHQUFHLEdBQUcsR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFBO0FBQzNDLFFBQUksUUFBUSxHQUFHLEVBQUUsRUFBRTtBQUNqQixhQUFNO0tBQ1A7QUFDRCxRQUFJLEtBQUssR0FBRztBQUNWLFdBQUssRUFBRSxRQUFRLEdBQUcsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxDQUFDLFFBQVE7QUFDNUMsY0FBUSxFQUFFLFFBQVEsR0FBRyxRQUFRO0FBQzdCLFlBQU0sRUFBRSxNQUFNO0FBQ2QsVUFBSSxFQUFFLENBQUMsQ0FBQyxJQUFJO0tBQ2IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFdBQVcsRUFBRSxLQUFLLENBQUMsQ0FBQTtBQUNqQyxLQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxFQUFFLEdBQUc7QUFDbkIsY0FBUSxFQUFFLENBQUMsQ0FBQyxNQUFNLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQyxRQUFRO0FBQ3BDLFVBQUksRUFBRSxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsSUFBSTtLQUM3QixDQUFBO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxHQUFHO0FBQ2xCLGNBQVEsRUFBRSxRQUFRO0FBQ2xCLFVBQUksRUFBRSxHQUFHO0tBQ1YsQ0FBQTtHQUNGOzs7QUFBQSxBQUdELFdBQVMsR0FBRyxDQUFFLENBQUMsRUFBRTtBQUNmLFFBQUksQ0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLEVBQUU7QUFDbkIsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsVUFBVSxDQUFDLENBQUE7S0FDMUI7QUFDRCxLQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sR0FBRyxJQUFJLENBQUE7QUFDdEIsS0FBQyxDQUFDLE1BQU0sQ0FBQyxjQUFjLENBQUMsV0FBVyxFQUFFLElBQUksQ0FBQyxDQUFBO0dBQzNDOztBQUVELFFBQU0sQ0FBQyxXQUFXLEdBQUcsSUFBSSxDQUFBO0FBQ3pCLFFBQU0sQ0FDSCxFQUFFLENBQUMsWUFBWSxFQUFFLEtBQUssQ0FBQyxDQUN2QixFQUFFLENBQUMsVUFBVSxFQUFFLEdBQUcsQ0FBQyxDQUNuQixFQUFFLENBQUMsaUJBQWlCLEVBQUUsR0FBRyxDQUFDLENBQUE7Q0FDOUIiLCJmaWxlIjoicGluY2guanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwaW5jaGFibGUgKHNwcml0ZSkge1xuICBmdW5jdGlvbiBzdGFydCAoZSkge1xuICAgIGUudGFyZ2V0Lm9uKCd0b3VjaG1vdmUnLCBtb3ZlKVxuICB9XG5cbiAgZnVuY3Rpb24gbW92ZSAoZSkge1xuICAgIGxldCB0ID0gZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1xuICAgIGlmICghdCB8fCB0Lmxlbmd0aCA8IDIpIHtcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgZHggPSB0WzBdLmNsaWVudFggLSB0WzFdLmNsaWVudFhcbiAgICBsZXQgZHkgPSB0WzBdLmNsaWVudFkgLSB0WzFdLmNsaWVudFlcbiAgICBsZXQgZGlzdGFuY2UgPSBNYXRoLnNxcnQoZHggKiBkeCArIGR5ICogZHkpXG4gICAgaWYgKCFlLnRhcmdldC5fcGluY2gpIHtcbiAgICAgIGUudGFyZ2V0Ll9waW5jaCA9IHtcbiAgICAgICAgcDogeyBkaXN0YW5jZTogZGlzdGFuY2UsIGRhdGU6IG5ldyBEYXRlKCkgfSxcbiAgICAgICAgcHA6IHt9XG4gICAgICB9XG4gICAgICBlLnRhcmdldC5lbWl0KCdwaW5jaHN0YXJ0JylcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgY2VudGVyID0ge1xuICAgICAgeDogKHRbMF0uY2xpZW50WCArIHRbMV0uY2xpZW50WCkgLyAyLFxuICAgICAgeTogKHRbMF0uY2xpZW50WSArIHRbMV0uY2xpZW50WSkgLyAyXG4gICAgfVxuICAgIGxldCBub3cgPSBuZXcgRGF0ZSgpXG4gICAgbGV0IGludGVydmFsID0gbm93IC0gZS50YXJnZXQuX3BpbmNoLnAuZGF0ZVxuICAgIGlmIChpbnRlcnZhbCA8IDEyKSB7XG4gICAgICByZXR1cm5cbiAgICB9XG4gICAgbGV0IGV2ZW50ID0ge1xuICAgICAgc2NhbGU6IGRpc3RhbmNlIC8gZS50YXJnZXQuX3BpbmNoLnAuZGlzdGFuY2UsXG4gICAgICB2ZWxvY2l0eTogZGlzdGFuY2UgLyBpbnRlcnZhbCxcbiAgICAgIGNlbnRlcjogY2VudGVyLFxuICAgICAgZGF0YTogZS5kYXRhXG4gICAgfVxuICAgIGUudGFyZ2V0LmVtaXQoJ3BpbmNobW92ZScsIGV2ZW50KVxuICAgIGUudGFyZ2V0Ll9waW5jaC5wcCA9IHtcbiAgICAgIGRpc3RhbmNlOiBlLnRhcmdldC5fcGluY2gucC5kaXN0YW5jZSxcbiAgICAgIGRhdGU6IGUudGFyZ2V0Ll9waW5jaC5wLmRhdGVcbiAgICB9XG4gICAgZS50YXJnZXQuX3BpbmNoLnAgPSB7XG4gICAgICBkaXN0YW5jZTogZGlzdGFuY2UsXG4gICAgICBkYXRlOiBub3dcbiAgICB9XG4gIH1cblxuICAvLyBUT0RPOiBJbmVydGlhIE1vZGVcbiAgZnVuY3Rpb24gZW5kIChlKSB7XG4gICAgaWYgKGUudGFyZ2V0Ll9waW5jaCkge1xuICAgICAgZS50YXJnZXQuZW1pdCgncGluY2hlbmQnKVxuICAgIH1cbiAgICBlLnRhcmdldC5fcGluY2ggPSBudWxsXG4gICAgZS50YXJnZXQucmVtb3ZlTGlzdGVuZXIoJ3RvdWNobW92ZScsIG1vdmUpXG4gIH1cblxuICBzcHJpdGUuaW50ZXJhY3RpdmUgPSB0cnVlXG4gIHNwcml0ZVxuICAgIC5vbigndG91Y2hzdGFydCcsIHN0YXJ0KVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 663 */
+/* 665 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74837,7 +75157,7 @@ function tappable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy90YXAuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQXdCLFFBQVE7QUFBakIsU0FBUyxRQUFRLENBQUUsTUFBTSxFQUFFO0FBQ3hDLFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixTQUFLLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDL0I7O0FBRUQsV0FBUyxVQUFVLENBQUUsQ0FBQyxFQUFFO0FBQ3RCLFNBQUssQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7R0FDaEQ7OztBQUFBLEFBR0QsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNwQixRQUFJLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO0FBQ2pCLGFBQU07S0FDUDtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxHQUFHO0FBQ2QsT0FBQyxFQUFFO0FBQ0QsU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO09BQ2I7S0FDRixDQUFBO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FDTCxFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUMxQixFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUFBO0dBQzlCOztBQUVELFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixRQUFJLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDOUI7O0FBRUQsV0FBUyxTQUFTLENBQUUsQ0FBQyxFQUFFO0FBQ3JCLFFBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLGFBQWEsQ0FBQTtBQUMxQyxRQUFJLENBQUMsQ0FBQyxJQUFJLENBQUMsQ0FBQyxNQUFNLEdBQUcsQ0FBQyxFQUFFO0FBQ3RCLE9BQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFFBQVEsR0FBRyxJQUFJLENBQUE7QUFDN0IsU0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ04sYUFBTTtLQUNQO0FBQ0QsUUFBSSxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQTtHQUNkOztBQUVELFdBQVMsSUFBSSxDQUFFLENBQUMsRUFBRSxDQUFDLEVBQUU7QUFDbkIsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ3RDLFFBQUksRUFBRSxHQUFHLENBQUMsQ0FBQyxPQUFPLEdBQUcsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQTtBQUN0QyxRQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxHQUFHLEVBQUUsQ0FBQyxDQUFBO0FBQzNDLFFBQUksU0FBUyxHQUFHLEFBQUMsQ0FBQyxZQUFZLE1BQU0sQ0FBQyxVQUFVLEdBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQTtBQUN4RCxRQUFJLFFBQVEsR0FBRyxTQUFTLEVBQUU7QUFDeEIsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsUUFBUSxHQUFHLElBQUksQ0FBQTtLQUM5QjtHQUNGOzs7QUFBQSxBQUdELFdBQVMsR0FBRyxDQUFFLENBQUMsRUFBRTtBQUNmLFFBQUksQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLElBQUksQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxRQUFRLEVBQUU7QUFDNUMsVUFBSSxLQUFLLEdBQUc7QUFDVixZQUFJLEVBQUUsQ0FBQyxDQUFDLElBQUk7T0FDYixDQUFBO0FBQ0QsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsV0FBVyxFQUFFLEtBQUssQ0FBQyxDQUFBO0tBQ2xDO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLEdBQUcsSUFBSSxDQUFBO0FBQ3BCLEtBQUMsQ0FBQyxNQUFNLENBQ0wsY0FBYyxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDdEMsY0FBYyxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FBQTtHQUMxQzs7QUFFRCxRQUFNLENBQUMsV0FBVyxHQUFHLElBQUksQ0FBQTtBQUN6QixRQUFNLENBQ0gsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDMUIsRUFBRSxDQUFDLFlBQVksRUFBRSxVQUFVLENBQUMsQ0FDNUIsRUFBRSxDQUFDLFNBQVMsRUFBRSxHQUFHLENBQUMsQ0FDbEIsRUFBRSxDQUFDLGdCQUFnQixFQUFFLEdBQUcsQ0FBQyxDQUN6QixFQUFFLENBQUMsVUFBVSxFQUFFLEdBQUcsQ0FBQyxDQUNuQixFQUFFLENBQUMsaUJBQWlCLEVBQUUsR0FBRyxDQUFDLENBQUE7Q0FDOUIiLCJmaWxlIjoidGFwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gdGFwcGFibGUgKHNwcml0ZSkge1xuICBmdW5jdGlvbiBtb3VzZURvd24gKGUpIHtcbiAgICBzdGFydChlLCBlLmRhdGEub3JpZ2luYWxFdmVudClcbiAgfVxuXG4gIGZ1bmN0aW9uIHRvdWNoU3RhcnQgKGUpIHtcbiAgICBzdGFydChlLCBlLmRhdGEub3JpZ2luYWxFdmVudC50YXJnZXRUb3VjaGVzWzBdKVxuICB9XG5cbiAgLy8gcG9zc2libHkgYmUgY2FsbGVkIHR3aWNlIG9yIG1vcmVcbiAgZnVuY3Rpb24gc3RhcnQgKGUsIHQpIHtcbiAgICBpZiAoZS50YXJnZXQuX3RhcCkge1xuICAgICAgcmV0dXJuXG4gICAgfVxuICAgIGUudGFyZ2V0Ll90YXAgPSB7XG4gICAgICBwOiB7XG4gICAgICAgIHg6IHQuY2xpZW50WCxcbiAgICAgICAgeTogdC5jbGllbnRZXG4gICAgICB9XG4gICAgfVxuICAgIGUudGFyZ2V0XG4gICAgICAub24oJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5vbigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgZnVuY3Rpb24gbW91c2VNb3ZlIChlKSB7XG4gICAgbW92ZShlLCBlLmRhdGEub3JpZ2luYWxFdmVudClcbiAgfVxuXG4gIGZ1bmN0aW9uIHRvdWNoTW92ZSAoZSkge1xuICAgIGxldCB0ID0gZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1xuICAgIGlmICghdCB8fCB0Lmxlbmd0aCA+IDEpIHtcbiAgICAgIGUudGFyZ2V0Ll90YXAuY2FuY2VsZWQgPSB0cnVlXG4gICAgICBlbmQoZSlcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBtb3ZlKGUsIHRbMF0pXG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlIChlLCB0KSB7XG4gICAgbGV0IGR4ID0gdC5jbGllbnRYIC0gZS50YXJnZXQuX3RhcC5wLnhcbiAgICBsZXQgZHkgPSB0LmNsaWVudFkgLSBlLnRhcmdldC5fdGFwLnAueVxuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSlcbiAgICBsZXQgdGhyZXNob2xkID0gKHQgaW5zdGFuY2VvZiB3aW5kb3cuTW91c2VFdmVudCkgPyAyIDogN1xuICAgIGlmIChkaXN0YW5jZSA+IHRocmVzaG9sZCkge1xuICAgICAgZS50YXJnZXQuX3RhcC5jYW5jZWxlZCA9IHRydWVcbiAgICB9XG4gIH1cblxuICAvLyBwb3NzaWJseSBiZSBjYWxsZWQgdHdpY2Ugb3IgbW9yZVxuICBmdW5jdGlvbiBlbmQgKGUpIHtcbiAgICBpZiAoZS50YXJnZXQuX3RhcCAmJiAhZS50YXJnZXQuX3RhcC5jYW5jZWxlZCkge1xuICAgICAgbGV0IGV2ZW50ID0ge1xuICAgICAgICBkYXRhOiBlLmRhdGFcbiAgICAgIH1cbiAgICAgIGUudGFyZ2V0LmVtaXQoJ3NpbXBsZXRhcCcsIGV2ZW50KVxuICAgIH1cbiAgICBlLnRhcmdldC5fdGFwID0gbnVsbFxuICAgIGUudGFyZ2V0XG4gICAgICAucmVtb3ZlTGlzdGVuZXIoJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5yZW1vdmVMaXN0ZW5lcigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgc3ByaXRlLmludGVyYWN0aXZlID0gdHJ1ZVxuICBzcHJpdGVcbiAgICAub24oJ21vdXNlZG93bicsIG1vdXNlRG93bilcbiAgICAub24oJ3RvdWNoc3RhcnQnLCB0b3VjaFN0YXJ0KVxuICAgIC5vbignbW91c2V1cCcsIGVuZClcbiAgICAub24oJ21vdXNldXBvdXRzaWRlJywgZW5kKVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 664 */
+/* 666 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74847,15 +75167,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _pinch = __webpack_require__(662);
+var _pinch = __webpack_require__(664);
 
 var _pinch2 = _interopRequireDefault(_pinch);
 
-var _pan = __webpack_require__(661);
+var _pan = __webpack_require__(663);
 
 var _pan2 = _interopRequireDefault(_pan);
 
-var _tap = __webpack_require__(663);
+var _tap = __webpack_require__(665);
 
 var _tap2 = _interopRequireDefault(_tap);
 
@@ -74869,28 +75189,28 @@ exports.default = {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9pbmRleC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7OztrQkFJZTtBQUNiLFdBQVMsaUJBQUE7QUFDVCxTQUFPLGVBQUE7QUFDUCxVQUFRLGVBQUE7Q0FDVCIsImZpbGUiOiJpbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBwaW5jaGFibGUgZnJvbSAnLi9nZXN0dXJlcy9waW5jaCdcbmltcG9ydCBwYW5hYmxlIGZyb20gJy4vZ2VzdHVyZXMvcGFuJ1xuaW1wb3J0IHRhcHBhYmxlIGZyb20gJy4vZ2VzdHVyZXMvdGFwJ1xuXG5leHBvcnQgZGVmYXVsdCB7XG4gIHBpbmNoYWJsZSxcbiAgcGFuYWJsZSxcbiAgdGFwcGFibGVcbn1cbiJdfQ==
 
 /***/ }),
-/* 665 */
+/* 667 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Breakout/GameLevel": 632,
-	"./Breakout/GameLevel.js": 632,
+	"./Breakout/GameLevel": 628,
+	"./Breakout/GameLevel.js": 628,
 	"./Breakout/Level1": 639,
 	"./Breakout/Level1.js": 639,
-	"./FlappyBird/GameLevel": 634,
-	"./FlappyBird/GameLevel.js": 634,
-	"./FlappyBird/Level1": 641,
-	"./FlappyBird/Level1.js": 641,
-	"./MainMenu": 642,
-	"./MainMenu.js": 642,
-	"./PixelShooter/GameLevel": 635,
-	"./PixelShooter/GameLevel.js": 635,
-	"./PixelShooter/Level1": 643,
-	"./PixelShooter/Level1.js": 643,
-	"./RoundedRects/GameLevel": 669,
-	"./RoundedRects/GameLevel.js": 669,
-	"./RoundedRects/Level1": 670,
-	"./RoundedRects/Level1.js": 670,
+	"./FlappyBird/GameLevel": 629,
+	"./FlappyBird/GameLevel.js": 629,
+	"./FlappyBird/Level1": 640,
+	"./FlappyBird/Level1.js": 640,
+	"./MainMenu": 641,
+	"./MainMenu.js": 641,
+	"./PixelShooter/GameLevel": 630,
+	"./PixelShooter/GameLevel.js": 630,
+	"./PixelShooter/Level1": 642,
+	"./PixelShooter/Level1.js": 642,
+	"./RoundedRects/GameLevel": 631,
+	"./RoundedRects/GameLevel.js": 631,
+	"./RoundedRects/Level1": 643,
+	"./RoundedRects/Level1.js": 643,
 	"./SplashScene": 644,
 	"./SplashScene.js": 644
 };
@@ -74908,331 +75228,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 665;
-
-/***/ }),
-/* 666 */,
-/* 667 */,
-/* 668 */,
-/* 669 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(649), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
-  /**
-   * GameLevel Constructor
-   *
-   * @constructor
-   */
-  let GameLevel = function () {
-    Level.call(this);
-
-    /**
-     * Add the FPS counter.
-     */
-    this.statistics = new Statistics();
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * The onStart callback
-   */
-  GameLevel.prototype.onStart = function () {
-    let background = new PIXI.Graphics();
-    background.name = 'background';
-
-    background.lineStyle(2, 0xFF0000, 1);
-    background.beginFill(0xFFFFFF, 0);
-    background.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
-
-    this.addChild(background);
-    this.setDisplayStats(true);
-  };
-
-  /**
-   * Enable or disable the onscreen FPS counter.
-   *
-   * @param {boolean) visible - The FPS counter visibility flag true|false
-   */
-  GameLevel.prototype.setDisplayStats = function (visible) {
-    this.statistics.visible = visible;
-    this.addChild(this.statistics);
-  };
-
-  /**
-   * Update the GameLevel scene.
-   *
-   * @param delta
-   */
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 670 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(669), __webpack_require__(671), __webpack_require__(672)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
-
-  /**
-   * Level1 constructor
-   *
-   * @constructor
-   */
-  let Level1 = function () {
-    GameLevel.call(this);
-
-    /**
-     *
-     * @type {Array}
-     */
-    this.rectangles = [];
-
-    /**
-     *
-     * @type {number}
-     */
-    this.delay = 0.5;
-
-    /**
-     *
-     * @type {number}
-     */
-    this.time_passed = 0;
-
-    /**
-     *
-     * @type {number}
-     */
-    this.alpha_decay = 0.05;
-
-    /**
-     *
-     * @type {number}
-     */
-    this.scale_decay = 0.05;
-
-    /**
-     *
-     * @type {boolean}
-     */
-    this.mouse_down = false;
-  };
-
-  extend(Level1, GameLevel);
-
-  /**
-   * onStart callback
-   */
-  Level1.prototype.onStart = function () {
-    GameLevel.prototype.onStart.call(this);
-
-    this.text = new Text('Click and drag');
-    this.text.x = this.app.screen.width / 2 - this.text.width / 2;
-    this.text.y = this.app.screen.height / 2 - this.text.height / 2;
-
-    this.addChild(this.text);
-
-    var style = new PIXI.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 18,
-      fill: ['#ffffff']
-    });
-    this.rect_count = new pixi.Text('Rects: ' + this.rectangles.length, style);
-    this.rect_count.x = this.statistics.x;
-    this.rect_count.y = this.statistics.y - this.statistics.height; //- 5
-
-    this.addChild(this.rect_count);
-  };
-
-  /**
-   * Handle the mousemove event
-   *
-   * @param {InteractionEvent} event - The event for mousemove
-   */
-  Level1.prototype.onMouseMove = function (event) {
-    if (this.mouse_down) {
-      let pos = event.data.global;
-
-      let rect = new RoundedRect();
-      rect.position.set(pos.x, pos.y);
-
-      this.rectangles.push(rect);
-      this.addChild(rect);
-    }
-  };
-
-  /**
-   * Handle the pointerdowm event
-   * @param {InteractionEvent} event - The event for pointerdown
-   */
-  Level1.prototype.onPointerDown = function (event) {
-    this.mouse_down = true;
-  };
-
-  /**
-   * Handle the pointerup event
-   * @param {InteractionEvent} event - The event for pointerup
-   */
-  Level1.prototype.onPointerUp = function (event) {
-    this.mouse_down = false;
-  };
-
-  /**
-   * Update the GameObjects
-   *
-   * @param {number} delta
-   */
-  Level1.prototype.update = function (delta) {
-    GameLevel.prototype.update.call(this, delta);
-
-    this.time_passed += delta;
-    if (this.time_passed > this.delay) {
-
-      /**
-       * Reset the time that has passed
-       * since the last update.
-       *
-       * @type {number}
-       */
-      this.time_passed = 0;
-
-      for (let i = 0; i < this.rectangles.length; i++) {
-        let item = this.rectangles[i];
-
-        /**
-         * If the item is invisible remove
-         * it from the array.
-         */
-        if (item.alpha < 0) {
-          this.removeChild(item);
-          this.rectangles.splice(i, 1);
-        }
-
-        item.alpha -= this.alpha_decay;
-      }
-
-      if (this.mouse_down) {
-        let new_scale = this.text.scale.x - this.scale_decay;
-        if (new_scale < 0) new_scale = 0;
-
-        this.text.visible = new_scale > 0;
-        this.text.scale.set(new_scale);
-      } else {
-
-        if (this.text.scale.x < 1) {
-          let new_scale = this.text.scale.x + this.scale_decay;
-          if (new_scale > 1) new_scale = 1;
-
-          this.text.visible = new_scale > 0;
-          this.text.scale.set(new_scale);
-        }
-      }
-
-      this.rect_count.text = 'Rects: ' + this.rectangles.length;
-    }
-  };
-
-  return Level1;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 671 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const GameObject = __webpack_require__(624);
-
-class RoundedRect extends GameObject {
-    constructor() {
-        super();
-
-        /**
-         *
-         * @type {number}
-         */
-        this.alpha = 1;
-
-        /**
-         *
-         * @type {number}
-         */
-        this.radius = 5;
-
-        /**
-         *
-         * @type {number}
-         */
-        this.rectangle_width = 45;
-
-        /**
-         *
-         * @type {number}
-         */
-        this.rectangle_height = 45;
-
-        /**
-         *
-         * @type {number[]}
-         */
-        this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
-
-        this.init();
-    }
-
-    /**
-     * Create the RoundedRect.
-     */
-    init() {
-        let lineColor = this.randomColors[Math.round(rand(0, this.randomColors.length - 1))];
-        let rect = new PIXI.Graphics();
-        rect.name = 'circle';
-
-        rect.lineStyle(2, lineColor, content_outline_alpha = 1);
-        rect.beginFill(0xFFFFFF, 0);
-        rect.drawRoundedRect(0, 0, this.rectangle_width, this.rectangle_height, this.radius);
-
-        this.addChild(rect);
-    }
-
-}
-
-module.exports = RoundedRect;
-
-/***/ }),
-/* 672 */
-/***/ (function(module, exports) {
-
-class Text extends PIXI.Container {
-  constructor(text = '') {
-    super();
-
-    /**
-     * @type {PIXI.TextStyle}
-     */
-    this.textStyle = new PIXI.TextStyle({
-      fontFamily: 'Helvetica',
-      fontSize: 120,
-      fill: ['#ffffff']
-    });
-
-    /**
-     * @type {PIXI.Text}
-     */
-    this.richText = new PIXI.Text(text, this.textStyle);
-
-    /**
-     * Add the text object to the stage
-     */
-    this.addChild(this.richText);
-  }
-}
-
-module.exports = Text;
+webpackContext.id = 667;
 
 /***/ })
 ]);

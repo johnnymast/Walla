@@ -52,7 +52,8 @@ class RoundedRect extends GameObject {
     let rect = new PIXI.Graphics()
     rect.name = 'circle'
 
-    rect.lineStyle(2, lineColor, content_outline_alpha = 1)
+    let content_outline_alpha = 1
+    rect.lineStyle(2, lineColor, content_outline_alpha)
     rect.beginFill(0xFFFFFF, 0)
     rect.drawRoundedRect(
       0,
