@@ -22,19 +22,10 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi, MenuItem) {
 
     let style = new pixi.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 36,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff00'],
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
+      fontSize: 16,
+      // fontStyle: 'italic',
+      // fontWeight: 'bold',
+      fill: ['#ffffff'],
     })
 
     let style_hover = style
@@ -43,7 +34,8 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi, MenuItem) {
     this.button = new Buttons.ImageButton({
       state: {
         default: {
-          texture: this.options.background_texture
+          texture: this.options.background_texture,
+          textstyle: style_hover
         },
         hover: {
           texture: this.options.background_texture,

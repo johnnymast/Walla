@@ -6,7 +6,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     this.textStyle = new pixi.TextStyle({
       fontFamily: 'Arial',
       fontSize: 16,
-      fill: ['#000000'], // gradient
+      fill: ['#ffffff'], // gradient
     })
 
     this.options = {
@@ -21,7 +21,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
           bordercolor: 0xd0d3d8,
           bordersize: 2,
           borderopacity: 1,
-          fillcolor: 0xdbd6d6,
+          fillcolor: 0xffffff,
           fillopacity: 1,
           radius: 15,
           text: '',
@@ -32,7 +32,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
           bordercolor: 0xabaeb2,
           bordersize: 2,
           borderopacity: 1,
-          fillcolor: 0x9e9999, // 0xFF00BB,
+          fillcolor: 0xffffff, // 0xFF00BB,
           fillopacity: 1,
           radius: 20,
           text: '',
@@ -43,7 +43,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
           bordercolor: 0xFF00FF,
           bordersize: 2,
           borderopacity: 1,
-          fillcolor: 0x777575,
+          fillcolor: 0xffffff,
           fillopacity: 1,
           radius: 20,
           text: '',

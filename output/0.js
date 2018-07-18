@@ -74253,7 +74253,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
     this.textStyle = new pixi.TextStyle({
       fontFamily: 'Arial',
       fontSize: 16,
-      fill: ['#000000'] // gradient
+      fill: ['#ffffff'] // gradient
     });
 
     this.options = {
@@ -74268,7 +74268,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
           bordercolor: 0xd0d3d8,
           bordersize: 2,
           borderopacity: 1,
-          fillcolor: 0xdbd6d6,
+          fillcolor: 0xffffff,
           fillopacity: 1,
           radius: 15,
           text: ''
@@ -74279,7 +74279,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
           bordercolor: 0xabaeb2,
           bordersize: 2,
           borderopacity: 1,
-          fillcolor: 0x9e9999, // 0xFF00BB,
+          fillcolor: 0xffffff, // 0xFF00BB,
           fillopacity: 1,
           radius: 20,
           text: ''
@@ -74290,7 +74290,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
           bordercolor: 0xFF00FF,
           bordersize: 2,
           borderopacity: 1,
-          fillcolor: 0x777575,
+          fillcolor: 0xffffff,
           fillopacity: 1,
           radius: 20,
           text: ''
@@ -74754,19 +74754,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 
     let style = new pixi.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 36,
-      fontStyle: 'italic',
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff00'],
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
+      fontSize: 16,
+      // fontStyle: 'italic',
+      // fontWeight: 'bold',
+      fill: ['#ffffff']
     });
 
     let style_hover = style;
@@ -74775,7 +74766,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
     this.button = new Buttons.ImageButton({
       state: {
         default: {
-          texture: this.options.background_texture
+          texture: this.options.background_texture,
+          textstyle: style_hover
         },
         hover: {
           texture: this.options.background_texture,
