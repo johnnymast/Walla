@@ -1,4 +1,10 @@
 define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
+
+  /**
+   * @classdesc PhysicsSprite
+   * @exports  core/sprites/PhysicsSprite
+   * @class
+   */
   let PhysicsSprite = function (texture) {
     GameObject.call(this)
 
