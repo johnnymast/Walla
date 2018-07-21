@@ -1,7 +1,18 @@
 const Menus = require('gui/menus')
 const Dialogs = require('gui/dialogs')
 
+/**
+ * @namespace Screens
+ */
 define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pixi, Scene, GameEngine, Statistics) {
+
+  /**
+   * @classdesc MainScreen
+   * @exports  screens/MainScreen
+   *
+   * @param {object} options - Options for PIXI.Container in GameObject
+   * @class
+   */
   let MainScreen = function (options) {
     Scene.call(this, options)
     this.backgrounds = []
@@ -11,15 +22,22 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
 
   extend(MainScreen, Scene)
 
+  /**
+   * This function is called by the SceneManager after preloading has finished.
+   * If your Scene does not have the preload function it will call this function
+   * instantly.
+   */
   MainScreen.prototype.onStart = function () {
-    //
 
-    for (var i = 5; i > 0; i--) {
-      var textureName = 'main_bg_0' + i
-      var tilingSprite = new pixi.extras.TilingSprite(pixi.Texture.fromFrame(textureName), this.app.screen.width, this.app.screen.height)
+    /**
+     * Setup the scrolling background tiles.
+     */
+    for (let i = 5; i > 0; i--) {
+      let textureName = 'main_bg_0' + i
+      let tilingSprite = new pixi.extras.TilingSprite(pixi.Texture.fromFrame(textureName), this.app.screen.width, this.app.screen.height)
+
       tilingSprite.tileScale.x = 0.6
       tilingSprite.tileScale.y = 0.6
-
       tilingSprite.tilePosition.y = this.app.screen.height
 
       this.backgrounds[textureName] = tilingSprite
@@ -37,21 +55,17 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
       type: Dialogs.TYPE.CLOSEABLE,
       width: 400,
       height: 400,
-      x: this.app.screen.width /2 - 200,
+      x: this.app.screen.width / 2 - 200,
       y: this.app.screen.height / 2 - 200
     })
 
-    dialog.onClose = function() {
+    dialog.onClose = function () {
       alert('Dialog onclose called')
     }
 
-    console.log(dialog.width, dialog.height)
-
-
-
-    var item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked)
-    var item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked)
-    var item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked)
+    let item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked)
+    let item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked)
+    let item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked)
 
     item1.setPosition(menu.x, menu.y)
     item2.setPosition(menu.x, item1.y + item1.height + 5)
@@ -61,13 +75,16 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     menu.addMenuItem(item2)
     menu.addMenuItem(item3)
 
+    /**
+     * Position the Menu on the Dialog
+     */
     menu.x = dialog.width / 2 - menu.width / 2
-    menu.y =  40
-    //   this.resources.wave.play()
+    menu.y = 40
 
-  //  this.addChild(this.statistics)
+    // PIXI.sound.play('main_menu_music');
 
     dialog.addContent(menu)
+
     this.addChild(dialog)
     this.addChild(this.statistics)
   }

@@ -21,6 +21,7 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
 
   extend(Level1, GameLevel)
 
+
   Level1.prototype.onMouseMove = function (event) {
 
     function calculateAngle (mx, my, px, py) {

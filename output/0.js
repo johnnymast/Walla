@@ -39423,12 +39423,24 @@ PIXI.loader.use(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__tiledMapLoade
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI) {
+
+  /**
+   * @classdesc GameEngine
+   * @exports  core/GameEngine
+   * @class
+   */
   let GameEngine = function () {
     PIXI.utils.EventEmitter.call(this);
   };
 
   extend(GameEngine, PIXI.utils.EventEmitter);
 
+  /**
+   * Return a signleton version of the GameEngine
+   * object.
+   *
+   * @returns {GameEngine}
+   */
   GameEngine.get = function () {
     if (!GameEngine.current) {
       GameEngine.current = new GameEngine();
@@ -39437,14 +39449,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     return GameEngine.current;
   };
 
-  GameEngine.prototype.get = function (index) {
-    return this[index];
+  /**
+   * Return a cached object.
+   *
+   * @param {string} key - Cache key for an object
+   * @returns {*}
+   */
+  GameEngine.prototype.get = function (key) {
+    return this[key];
   };
 
-  GameEngine.prototype.set = function (index, value) {
-    GameEngine.current.emit('set' + index, value);
+  /**
+   * Cache a given object object under given key.
+   *
+   * @param {string} key - The key to cache the object as
+   * @param {string} value - The object to add to the cache
+   */
+  GameEngine.prototype.set = function (key, value) {
+    GameEngine.current.emit('set' + key, value);
 
-    this[index] = value;
+    this[key] = value;
   };
 
   return GameEngine;
@@ -39455,9 +39479,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = __webpack_require__(666).default;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = __webpack_require__(672).default;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
+  /**
+   * @classdesc Scene
+   * @exports  core/Scene
+   * @class
+   */
   let Scene = function (options) {
     GameObject.call(this, options);
 
@@ -39499,12 +39528,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
       console.log('simpletap');
     });
 
-    this.resources = {};
-
     this.cursor_sprite = new PIXI.Sprite();
     this.cursor_sprite.interactive = false;
     this.cursor_sprite.buttonMode = false;
-    this.cursor_sprite.cursor = "none";
+    this.cursor_sprite.cursor = 'none';
     this.cursor_sprite.anchor.set(0.5);
 
     this.on('pointerover', function () {
@@ -39520,7 +39547,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
     }.bind(this));
 
     /**
-     * Every Scene loaded by default until onStart until switching to the Scene.
+     * 
+     * @type {{}}
+     */
+    this.resources = {};
+
+    /**
+     *
+     * @type {boolean}
+     * @default false
      */
     this.paused = true;
 
@@ -39531,16 +39566,30 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
 
   extend(Scene, GameObject);
 
+  /**
+   * Hide the cursor on the current Scene.
+   */
   Scene.prototype.hideCursor = function () {
     this.cursor = 'none';
   };
 
+  /**
+   * Define a new cursor.
+   *
+   * @param {string} name
+   * @param {string} texture_name
+   */
   Scene.prototype.addCursor = function (name = '', texture_name = '') {
     this.InteractionManager.cursorStyles[name] = () => {
       this.cursor_sprite.texture = PIXI.Texture.fromFrame(texture_name);
     };
   };
 
+  /**
+   * Set a cursor.
+   *
+   * @param {string} name - The name of the cursor
+   */
   Scene.prototype.setCursor = function (name = '') {
 
     if (this.cursor_sprite.parent) {
@@ -39553,53 +39602,89 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
     this.cursor = name;
   };
 
-  Scene.prototype.preload = function () {
-    /**
-     * This function will be called during switching of Scenes.
-     * You can implement this method to act on this event.
-     */
-  };
+  /**
+   * If you wish to preload assets in your scene you can
+   * overwrite this function.
+   */
+  Scene.prototype.preload = function () {}
+  /**
+   * This function will be called during switching of Scenes.
+   * You can implement this method to act on this event.
+   */
 
-  Scene.prototype.onPause = function () {
-    /**
-     * This function will be called when the Scene is paused.You can overwrite this in
-     * your Scene to act on this event.
-     */
-  };
 
-  Scene.prototype.onStart = function () {
-    /**
-     * This function will be called when the scene is started. You can overwrite this in
-     * your Scene to act on this event.
-     */
-  };
+  /**
+   * Callback for the onPause even. You can overwrite this your self
+   * to receive the onPause call.
+   */
+  ;Scene.prototype.onPause = function () {}
+  /**
+   * This function will be called when the Scene is paused.You can overwrite this in
+   * your Scene to act on this event.
+   */
 
-  Scene.prototype.onResume = function () {
-    /**
-     * This function will be called when the scene is unpauzed. You can overwrite this in
-     * your Scene to act on this event.
-     */
-  };
 
-  Scene.prototype.start = function () {
+  /**
+   * Callback for the onStart even. You can overwrite this your self
+   * to receive the onStart call.
+   */
+  ;Scene.prototype.onStart = function () {}
+  /**
+   * This function will be called when the scene is started. You can overwrite this in
+   * your Scene to act on this event.
+   */
+
+
+  /**
+   * Callback for the onResume even. You can overwrite this your self
+   * to receive the onResume call.
+   */
+  ;Scene.prototype.onResume = function () {}
+  /**
+   * This function will be called when the scene is unpauzed. You can overwrite this in
+   * your Scene to act on this event.
+   */
+
+
+  /**
+   * Start the scene
+   */
+  ;Scene.prototype.start = function () {
     this.paused = false;
     this.onStart();
   };
 
+  /**
+   * Pause the scene
+   */
   Scene.prototype.pause = function () {
     this.paused = true;
     this.onPause();
   };
 
+  /**
+   * Resume a paused scene.
+   */
   Scene.prototype.resume = function () {
     this.paused = false;
     this.onResume();
   };
 
+  /**
+   * Ask if the scene is paused.
+   *
+   * @returns {boolean}
+   */
   Scene.prototype.isPaused = function () {
     return this.paused;
   };
 
+  /**
+   * Internal update function. This is called per tick.
+   *
+   * @param {number} delta - The delta since the last tick
+   * @private
+   */
   Scene.prototype._update = function (delta) {
     if (!this.isPaused()) {
       this.update(delta);
@@ -71178,16 +71263,38 @@ module.exports = function(module) {
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;__webpack_require__(206);
 __webpack_require__(207);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(246)], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+/**
+ * AssetManager
+ * @namespace Core Managers
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI) {
 
+  /**
+   * @classdesc AssetManager
+   * @exports  core/managers/AssetManager
+   * @class
+   */
   let AssetManager = function () {
     PIXI.utils.EventEmitter.call(this);
-    PIXI.loader.once('complete', this.preloadready, this);
-    PIXI.loader.on('progress', this.preloadProgress, this);
+    PIXI.loader.once('complete', this._preloadready, this);
+    PIXI.loader.on('progress', this._preloadProgress, this);
   };
 
   extend(AssetManager, PIXI.utils.EventEmitter);
 
+  /**
+   * This function allows you to preload a set of assets at once.
+   *
+   * @example
+   *
+   * // Load the core_ui spritesheet.
+   * this.ge.get('AssetManager').loadManifest([
+   *   {name: 'core_ui', type: 'spritesheet', src: 'assets/core/ui/core_ui.json'},
+   * });
+   *
+   * @param {array} manifest - An array with assets to load
+   * @returns {AssetManager}
+   */
   AssetManager.prototype.loadManifest = function (manifest) {
     for (let asset of manifest) {
       PIXI.loader.add(asset.name, asset.src);
@@ -71196,11 +71303,27 @@ __webpack_require__(207);
     return this;
   };
 
-  AssetManager.prototype_preloadProgress = function (event) {
-    this.emit('progress', event);
+  /**
+   * Progress callback for the AssetManager. This internal function will emit
+   * the progress event for the AssetManager.
+   *
+   * @param {Loader} loader - The loader the progress is advancing on.
+   * @param {Resource} resource - The resource progressing in downloading.
+   * @private
+   */
+  AssetManager.prototype._preloadProgress = function (loader, resource) {
+    this.emit('progress', loader, resource);
   };
 
-  AssetManager.prototype.preloadready = function (loader, resources) {
+  /**
+   * Preloading of resources has finished. This internal function
+   * will emit the complete event for the AssetManager.
+   *
+   * @param {Loader} loader - The loader instance
+   * @param {array} resources - The loaded resources
+   * @private
+   */
+  AssetManager.prototype._preloadready = function (loader, resources) {
     this.emit('complete', loader, resources);
   };
 
@@ -71212,8 +71335,18 @@ __webpack_require__(207);
 /* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(143)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter) {
-  var PhysicsManager = function (options) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * PhysicsManager
+ * @namespace Core Managers
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(143)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Matter) {
+
+  /**
+   * @classdesc PhysicsManager
+   * @exports  core/managers/PhysicsManager
+   * @class
+   */
+  let PhysicsManager = function (options) {
     const canvas = document.getElementById('canvas');
 
     this.engine = Matter.Engine.create();
@@ -71272,7 +71405,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     Matter.World.remove(this.world, body);
   };
 
-  PhysicsManager.prototype.PixiToMatter = function (x, y, width, height) {
+  PhysicsManager.prototype.PIXIToMatter = function (x, y, width, height) {
     return {
       x: x + width * 0.5,
       y: y + height * 0.5
@@ -71288,22 +71421,22 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   };
 
   PhysicsManager.prototype.applyForce = function (body, x, y, width, height) {
-    let coord = this.PixiToMatter(x, y, width, height);
+    let coord = this.PIXIToMatter(x, y, width, height);
     return Matter.Body.applyForce(body, { x: body.position.x, y: body.position.y }, { x: 0, y: -0.05 });
   };
 
   PhysicsManager.prototype.setPosition = function (body, x, y, width, height) {
-    let coord = this.PixiToMatter(x, y, width, height);
+    let coord = this.PIXIToMatter(x, y, width, height);
     return Matter.Body.setPosition(body, { x: coord.x, y: coord.y });
   };
 
   PhysicsManager.prototype.rectangle = function (x, y, width, height, options = null) {
-    let coord = this.PixiToMatter(x, y, width, height);
+    let coord = this.PIXIToMatter(x, y, width, height);
     return Matter.Bodies.rectangle(coord.x, coord.y, width, height, options);
   };
 
   PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
-    //  let coord = this.PixiToMatter(x, y, width, height = width)
+    //  let coord = this.PIXIToMatter(x, y, width, height = width)
     console.log('circle options', options);
     return Matter.Bodies.circle(x, y, radius, options);
     // return Matter.Bodies.circle(coord.x, coord.y, width, options)
@@ -71325,7 +71458,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 417 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(246)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * SceneManager
+ * @namespace Core Managers
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(246)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameEngine) {
+
+  /**
+   * @classdesc SceneManager
+   * @exports  core/managers/SceneManager
+   * @class
+   */
   let SceneManager = function (scene = '') {
     this.scenes = [];
     this.currentScene = null;
@@ -71337,6 +71480,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     }
   };
 
+  /**
+   * Add an existing scene to the internal cache.
+   *
+   * @param {string} scene - The name of the scene
+   * @param {string} options - Options given to GameObject down the line
+   * @returns {SceneManager}
+   */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
       let _scene = __webpack_require__(667)("./" + scene);
@@ -71345,21 +71495,23 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     return this;
   };
 
-  SceneManager.prototype.preloadScene = function (scene) {
-    let thatScene = this.getScene(scene);
-
-    if (thatScene) {
-      thatScene.preload();
-    }
-    return this;
-  };
-
+  /**
+   * Return a scene by name.
+   *
+   * @param {string} scene - The name of the screen to get
+   * @returns {*}
+   */
   SceneManager.prototype.getScene = function (scene) {
     return this.scenes[scene];
   };
 
+  /**
+   * Switch to a given next scene.
+   *
+   * @param {string|Scene} scene - The scene to switch to
+   */
   SceneManager.prototype.switchTo = function (scene) {
-    // switch to next scene
+
     if (!this.getScene(scene)) {
       if (typeof scene === 'string') {
         this.add(scene);
@@ -71388,19 +71540,45 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * StateManager
+ * @namespace Core Managers
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+
+  /**
+   * @classdesc StateManager
+   * @exports  core/managers/StateManager
+   * @class
+   */
   let StateManager = function () {
     this.container = [];
   };
 
+  /**
+   * Return a state by key.
+   *
+   * @param {string} key - State key
+   * @returns {*}
+   */
   StateManager.prototype.get = function (key) {
     return this.container[key];
   };
 
+  /**
+   *
+   * @param {string} key - State key
+   * @param {string} val = The value for this state
+   */
   StateManager.prototype.set = function (key, val) {
     this.container[key] = val;
   };
 
+  /**
+   * Delete state with a given key from the StateManager.
+   *
+   * @param {string} key - Delete the value of this key
+   */
   StateManager.prototype.unset = function (key) {
     delete this.container[key];
   };
@@ -71618,22 +71796,52 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 624 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(246)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameEngine) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(246)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameEngine) {
+  /**
+   * @classdesc GameObject
+   * @exports  core/GameObject
+   * @class
+   */
   let GameObject = function (options) {
-    pixi.Container.call(this, options);
+    PIXI.Container.call(this, options);
 
+    /**
+     * @type {GameEngine}
+     */
     this.ge = GameEngine.get();
+
+    /**
+     * @type {PIXI.Application}
+     */
     this.app = this.ge.get('App');
 
+    /**
+     * @type {AssetManager}
+     */
     this.AssetManager = this.ge.get('AssetManager');
+
+    /**
+     * @type {SceneManager}
+     */
     this.SceneManager = this.ge.get('SceneManager');
+
+    /**
+     * @type {StateManager}
+     */
     this.StateManager = this.ge.get('StateManager');
+
+    /**
+     * @type {PhysicsManager}
+     */
     this.PhysicsManager = this.ge.get('PhysicsManager');
 
+    /**
+     * @type {PIXI.interaction.InteractionManager}
+     */
     this.InteractionManager = this.app.renderer.plugins.interaction;
   };
 
-  extend(GameObject, pixi.Container);
+  extend(GameObject, PIXI.Container);
 
   return GameObject;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
@@ -72208,17 +72416,45 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 633 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  var PhysicsSprite = function (texture) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
+  let PhysicsSprite = function (texture) {
     GameObject.call(this);
 
+    /**
+     * @type {PIXI.Texture}
+     */
     this.texture = texture;
-    this.sprite = new pixi.Sprite(texture);
+
+    /**
+     * @type {PIXI.Sprite}
+     */
+    this.sprite = new PIXI.Sprite(texture);
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 0.5;
+
+    /**
+     * @type {string}
+     */
     this.childClass = Object.getPrototypeOf(this).constructor.name;
+
+    /**
+     *
+     * @type {Body1}
+     */
     this.body = null;
+
+    /**
+     *
+     * @type {number}
+     * @private
+     */
     this._x = 0;
+
+    /**
+     *
+     * @type {number}
+     * @private
+     */
     this._y = 0;
 
     if (typeof this.update === 'undefined') {
@@ -72228,79 +72464,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this._width = this.texture.width;
     this._height = this.texture.height;
 
-    this.setupBody();
-    this.setupCollition();
+    this._setupBody();
+    this._setupCollision();
   };
 
   extend(PhysicsSprite, GameObject);
 
-  PhysicsSprite.prototype.sleep = function () {
-    this.setProperty('isSleeping', true);
-  };
-
-  PhysicsSprite.prototype.wakeUp = function () {
-    this.setProperty('isSleeping', false);
-  };
-
-  PhysicsSprite.prototype.setupCollition = function () {
-    this.PhysicsManager.getEventHandler().on(this.PhysicsManager.getEngine(), 'collisionActive', e => {
-      for (let pair of e.pairs) {
-        let bodyA = pair.bodyA;
-        let bodyB = pair.bodyB;
-
-        if (bodyA === this.body) {
-          this.onCollisionWith(bodyB);
-        }
-      }
-    });
-  };
-
-  PhysicsSprite.prototype.onCollisionWith = function (withObject) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive collision events for this sprite.
-     */
-  };
-
-  PhysicsSprite.prototype.setPosition = function (x = 0, y = 0) {
-
-    x = x || this._x;
-    y = y || this._y;
-
-    this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
-
-    return this;
-  };
-
-  PhysicsSprite.prototype.getPosition = function () {
-    return this.body.position;
-  };
-
-  PhysicsSprite.prototype.getX = function () {
-    return this.body.position.x;
-  };
-
-  PhysicsSprite.prototype.getY = function () {
-    return this.body.position.y;
-  };
-
-  PhysicsSprite.prototype.setX = function (x) {
-    this.PhysicsManager.setPosition(this.body, x, this.getY(), this._width, this._height);
-  };
-
-  PhysicsSprite.prototype.setY = function (y) {
-    this.PhysicsManager.setPosition(this.body, this.getX(), y, this._width, this._height);
-  };
-
-  PhysicsSprite.prototype.getProperty = function (key) {
-    return this.body[key];
-  };
-
-  PhysicsSprite.prototype.setProperty = function (key, val) {
-    this.body[key] = val;
-  };
-
-  PhysicsSprite.prototype.setupBody = function () {
+  /**
+   * Setup the body of the PhysicsSprite
+   * @private
+   */
+  PhysicsSprite.prototype._setupBody = function () {
     /**
      * You can overwrite this function if you need to add your
      * own body shape and properties.
@@ -72313,7 +72487,139 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.PhysicsManager.add(this.body);
   };
 
-  PhysicsSprite.prototype.update = function () {};
+  /**
+   * Setup collision events on the body.
+   * @private
+   */
+  PhysicsSprite.prototype._setupCollision = function () {
+    this.PhysicsManager.getEventHandler().on(this.PhysicsManager.getEngine(), 'collisionActive', e => {
+      for (let pair of e.pairs) {
+        let bodyA = pair.bodyA;
+        let bodyB = pair.bodyB;
+
+        if (bodyA === this.body) {
+          this.onCollisionWith(bodyB);
+        }
+      }
+    });
+  };
+
+  /**
+   * Put a PhysicsSprite to sleep
+   */
+  PhysicsSprite.prototype.sleep = function () {
+    this.setProperty('isSleeping', true);
+  };
+
+  /**
+   * Wake up a PhysicsSprite from sleep.
+   */
+  PhysicsSprite.prototype.wakeUp = function () {
+    this.setProperty('isSleeping', false);
+  };
+
+  /**
+   * Callback for the onKeyPress even. You can overwrite this your self
+   * to receive the onKeyPress call.
+     * @param {Body} withObject - The body the PhysicsSprite body collides with.
+   */
+  PhysicsSprite.prototype.onCollisionWith = function (withObject) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive collision events for this sprite.
+   */
+
+
+  /**
+   * Set the position of the body.
+   *
+   * @param {number} x - The x coordinate
+   * @param {number} y - The y coordinate
+   * @returns {PhysicsSprite}
+   */
+  ;PhysicsSprite.prototype.setPosition = function (x = 0, y = 0) {
+
+    x = x || this._x;
+    y = y || this._y;
+
+    this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
+
+    return this;
+  };
+
+  /**
+   * Return the body position.
+   *
+   * @returns {*}
+   */
+  PhysicsSprite.prototype.getPosition = function () {
+    return this.body.position;
+  };
+
+  /**
+   * Return the body x position.
+   *
+   * @returns {*}
+   */
+  PhysicsSprite.prototype.getX = function () {
+    return this.body.position.x;
+  };
+
+  /**
+   * Return the body y position.
+   *
+   * @returns {*}
+   */
+  PhysicsSprite.prototype.getY = function () {
+    return this.body.position.y;
+  };
+
+  /**
+   * Set the body x position
+   *
+   * @param {number} x - The x position
+   */
+  PhysicsSprite.prototype.setX = function (x) {
+    this.PhysicsManager.setPosition(this.body, x, this.getY(), this._width, this._height);
+  };
+
+  /**
+   * Set the body y position
+   *
+   * @param {number} y - The y position
+   */
+  PhysicsSprite.prototype.setY = function (y) {
+    this.PhysicsManager.setPosition(this.body, this.getX(), y, this._width, this._height);
+  };
+
+  /**
+   * Return a property of the body.
+   *
+   * @param {string} key - Property key
+   * @returns {*}
+   */
+  PhysicsSprite.prototype.getProperty = function (key) {
+    return this.body[key];
+  };
+
+  /**
+   * Set a property on the body.
+   *
+   * @param {string} key - Property key
+   * @param {string} val - Property value
+   */
+  PhysicsSprite.prototype.setProperty = function (key, val) {
+    this.body[key] = val;
+  };
+
+  /**
+   * PhysicsSprite update function. For now this is unused.
+   *
+   * @param {number} delta - The delta since the last tick
+   */
+  PhysicsSprite.prototype.update = function (delta) {
+    // unused for new
+  };
 
   return PhysicsSprite;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
@@ -72848,7 +73154,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(659);
 const Dialogs = __webpack_require__(656);
 
+/**
+ * @namespace Screens
+ */
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(247), __webpack_require__(246), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics) {
+
+  /**
+   * @classdesc MainScreen
+   * @exports  screens/MainScreen
+   *
+   * @param {object} options - Options for PIXI.Container in GameObject
+   * @class
+   */
   let MainScreen = function (options) {
     Scene.call(this, options);
     this.backgrounds = [];
@@ -72858,15 +73175,22 @@ const Dialogs = __webpack_require__(656);
 
   extend(MainScreen, Scene);
 
+  /**
+   * This function is called by the SceneManager after preloading has finished.
+   * If your Scene does not have the preload function it will call this function
+   * instantly.
+   */
   MainScreen.prototype.onStart = function () {
-    //
 
-    for (var i = 5; i > 0; i--) {
-      var textureName = 'main_bg_0' + i;
-      var tilingSprite = new pixi.extras.TilingSprite(pixi.Texture.fromFrame(textureName), this.app.screen.width, this.app.screen.height);
+    /**
+     * Setup the scrolling background tiles.
+     */
+    for (let i = 5; i > 0; i--) {
+      let textureName = 'main_bg_0' + i;
+      let tilingSprite = new pixi.extras.TilingSprite(pixi.Texture.fromFrame(textureName), this.app.screen.width, this.app.screen.height);
+
       tilingSprite.tileScale.x = 0.6;
       tilingSprite.tileScale.y = 0.6;
-
       tilingSprite.tilePosition.y = this.app.screen.height;
 
       this.backgrounds[textureName] = tilingSprite;
@@ -72892,11 +73216,9 @@ const Dialogs = __webpack_require__(656);
       alert('Dialog onclose called');
     };
 
-    console.log(dialog.width, dialog.height);
-
-    var item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked);
-    var item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked);
-    var item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked);
+    let item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked);
+    let item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked);
+    let item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked);
 
     item1.setPosition(menu.x, menu.y);
     item2.setPosition(menu.x, item1.y + item1.height + 5);
@@ -72906,13 +73228,16 @@ const Dialogs = __webpack_require__(656);
     menu.addMenuItem(item2);
     menu.addMenuItem(item3);
 
+    /**
+     * Position the Menu on the Dialog
+     */
     menu.x = dialog.width / 2 - menu.width / 2;
     menu.y = 40;
-    //   this.resources.wave.play()
 
-    //  this.addChild(this.statistics)
+    // PIXI.sound.play('main_menu_music');
 
     dialog.addContent(menu);
+
     this.addChild(dialog);
     this.addChild(this.statistics);
   };
@@ -73293,17 +73618,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 644 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(247), __webpack_require__(246)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine) {
-  var SplashScene = function (options) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+/**
+ * @namespace Screens
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(247)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene) {
+
+  /**
+   * @classdesc SplashScene
+   * @exports  screens/SplashScene
+   *
+   * @param {object} options - Options for PIXI.Container in GameObject
+   * @class
+   */
+  let SplashScene = function (options) {
     Scene.call(this, options);
 
-    this.loaderHolder = new pixi.Graphics();
-    this.loaderFill = new pixi.Graphics();
+    this.loaderHolder = new PIXI.Graphics();
+    this.loaderFill = new PIXI.Graphics();
 
-    this.precentageText = null;
-    this.logo = null;
-
-    this.percentageStyle = new pixi.TextStyle({
+    this.percentageStyle = new PIXI.TextStyle({
       fontFamily: 'Arial',
       fontSize: 18
     });
@@ -73311,18 +73645,23 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   extend(SplashScene, Scene);
 
+  /**
+   * This function is called by the SceneManager after preloading has finished.
+   * If your Scene does not have the preload function it will call this function
+   * instantly.
+   */
   SplashScene.prototype.onStart = function () {
 
-    var background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    var background = new PIXI.Sprite(PIXI.Texture.BLACK);
     background.width = this.app.screen.width;
     background.height = this.app.screen.height;
     background.alpha = 1;
 
     this.addChild(background);
 
-    var logoTexture = pixi.Texture.fromImage('/assets/main/images/engine.png');
+    var logoTexture = PIXI.Texture.fromImage('/assets/main/images/engine.png');
     logoTexture.on('update', () => {
-      this.logo = new pixi.Sprite(logoTexture);
+      this.logo = new PIXI.Sprite(logoTexture);
       this.logo.anchor.set(0.5);
       this.logo.x = this.app.screen.width / 2;
       this.logo.y = this.app.screen.height / 2;
@@ -73331,11 +73670,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
       this.loaderHolder.beginFill(0xffffff, 1);
       this.loaderHolder.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.logo.width * 2, 10);
 
-      this.loaderFill.lineStyle(2, 0x000000, 1);
-      this.loaderFill.beginFill(0x000000, 1);
+      this.loaderFill.lineStyle(2, 0xff6e02, 1);
+      this.loaderFill.beginFill(0xff6e02, 1);
       this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, 0, 10);
 
-      this.precentageText = new pixi.Text('0%', this.percentageStyle);
+      this.precentageText = new PIXI.Text('0%', this.percentageStyle);
       this.precentageText.y = this.logo.y + this.logo.height / 2 + 15;
       this.precentageText.x = this.app.screen.width / 2 - this.logo.width + this.logo.width * 2 + 10;
 
@@ -73347,6 +73686,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     });
   };
 
+  /**
+   * This function is called by the SceneManager so you can preload
+   * your game assets.
+   */
   SplashScene.prototype.preload = function () {
     this.ge.get('AssetManager').loadManifest([
 
@@ -73355,30 +73698,48 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
     // Breakout
     { name: 'level1_music', src: 'assets/breakout/sounds/music/level1.mp3' }, { name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3' }, { name: 'level3_music', src: 'assets/breakout/sounds/music/level3.mp3' }, { name: 'game_over', src: 'assets/breakout/sounds/game_over.mp3' }, { name: 'mission_completed', src: 'assets/breakout/sounds/mission_completed.mp3' }, { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/breakout/spritesheets/spritesheet-1.json' },
+
     // Main
-    { name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png' }, { name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png' }, { name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png' }, { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' }, { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
+    { name: 'main_menu_music', src: 'assets/main/sounds/music/menu_music.wav' }, { name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png' }, { name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png' }, { name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png' }, { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' }, { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
 
     // // PixelShooter
-    // {name: 'Decor', src: 'assets/Pixelshooter/images/ground.png'},
-    // {name: 'Water', src: 'assets/Pixelshooter/images/water.png'},
-    { name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx' }, { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json' }, { name: 'pixelshooter_character_animations', type: 'json', src: 'assets/Pixelshooter/data/character_animations.json' }]);
-    //
+    { name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx' }, { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json' }, {
+      name: 'pixelshooter_character_animations',
+      type: 'json',
+      src: 'assets/Pixelshooter/data/character_animations.json'
+    }]);
+
     this.AssetManager.once('complete', this._preloadready, this);
     this.AssetManager.on('progress', this._preloadProgress, this);
-    // PIXI.loader.once('complete', this._preloadready, this)
-    // PIXI.loader.on('progress', this._preloadProgress, this)
   };
 
-  SplashScene.prototype._preloadProgress = function (event) {
-    this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.loaderHolder.width / (100 / event.progress), 10);
-    this.precentageText.text = Math.round(event.progress) + '%';
+  /**
+   *
+   * @param {Loader} loader - The loader instance
+   * @param {array} resource - The loaded resource
+   * @private
+   */
+  SplashScene.prototype._preloadProgress = function (loader, resource) {
+    this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.loaderHolder.width / (100 / loader.progress), 10);
+    this.precentageText.text = Math.round(loader.progress) + '%';
   };
 
+  /**
+   *
+   * @param {Loader} loader - The loader instance
+   * @param {array} resources - The loaded resources
+   * @private
+   */
   SplashScene.prototype._preloadready = function (loader, resources) {
     this.StateManager.set('resources', this.resources);
     this.SceneManager.switchTo('MainMenu');
   };
 
+  /**
+   * This update function is called every tick
+   *
+   * @param {number} delta - Tick delta
+   */
   SplashScene.prototype.update = function (delta) {
     // required to add
   };
@@ -73392,11 +73753,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(247), __webpack_require__(632)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
+
+  /**
+   * @classdesc Level
+   * @exports  core/Level
+   * @class
+   */
   let Level = function (options) {
     Scene.call(this, options);
 
+    /**
+     * Holder for registered KeyboardInput.
+     *
+     * @type {Array}
+     */
     this.keyboardKeys = [];
 
+    /**
+     * Start listening for events.
+     */
     this.on('mousemove', this.onMouseMove);
     this.on('pointerdown', this.onPointerDown);
     this.on('pointerup', this.onPointerUp);
@@ -73404,6 +73779,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   extend(Level, Scene);
 
+  /**
+   * Add keyboard inputs to listen to.
+   *
+   * @example
+   * this.listenForKeyboardInputs('w', 'a', 's', 'd')
+   *
+   * @param {string} keys - The keys to listen for
+   */
   Level.prototype.listenForKeyboardInputs = function (...keys) {
     let self = this;
     keys.forEach(function (key) {
@@ -73416,61 +73799,94 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     });
   };
 
-  Level.prototype.onKeyPress = function (event) {
+  /**
+   * Callback for the onKeyPress even. You can overwrite this your self
+   * to receive the onKeyPress call.
+   */
+  Level.prototype.onKeyPress = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive keyboard keyPress events.
+   *
+   * Please note: These events will only be triggered
+   * by registered keys. See listenForKeyboardInputs
+   * for more information.
+   */
+
+
+  /**
+   * Callback for the onKeyDown even. You can overwrite this your self
+   * to receive the onKeyDown call.
+   */
+  ;Level.prototype.onKeyDown = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive keyboard onKeyDown events.
+   *
+   * Please note: These events will only be triggered
+   * by registered keys. See listenForKeyboardInputs
+   * for more information.
+   */
+
+
+  /**
+   * Callback for the onKeyUp even. You can overwrite this your self
+   * to receive the onKeyUp call.
+   */
+  ;Level.prototype.onKeyUp = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive keyboard keyUp events.
+   *
+   * Please note: These events will only be triggered
+   * by registered keys. See listenForKeyboardInputs
+   * for more information.
+   */
+
+
+  /**
+   * Callback for the onMouseMove even. You can overwrite this your self
+   * to receive the onMouseMove call.
+   */
+  ;Level.prototype.onMouseMove = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive mouse move events.
+   */
+
+
+  /**
+   * Callback for the onPointerDown even. You can overwrite this your self
+   * to receive the onPointerDown call.
+   */
+  ;Level.prototype.onPointerDown = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive pointer down events.
+   */
+
+
+  /**
+   * Callback for the onPointerUp even. You can overwrite this your self
+   * to receive the onPointerUp call.
+   */
+  ;Level.prototype.onPointerUp = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive pointer up events.
+   */
+
+
+  /**
+   * Callback for the onStart even. You can overwrite this your self
+   * to receive the onStart call.
+   */
+  ;Level.prototype.onStart = function () {
     /**
      * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
+     * to receive onStart up events.
      */
   };
-
-  Level.prototype.onKeyDown = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard onKeyDown events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  Level.prototype.onKeyUp = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyUp events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  Level.prototype.onMouseMove = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive mouse move events.
-     */
-  };
-
-  Level.prototype.onPointerDown = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive pointer down events.
-     */
-  };
-
-  Level.prototype.onPointerUp = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive pointer up events.
-     */
-  };
-
-  Level.prototype.onStart = function () {};
 
   return Level;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
@@ -73712,57 +74128,57 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS
 const GameObject = __webpack_require__(624);
 
 class RoundedRect extends GameObject {
-  constructor() {
-    super();
+    constructor() {
+        super();
+
+        /**
+         *
+         * @type {number}
+         */
+        this.alpha = 1;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.radius = 5;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.rectangle_width = 45;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.rectangle_height = 45;
+
+        /**
+         *
+         * @type {number[]}
+         */
+        this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
+
+        this.init();
+    }
 
     /**
-     *
-     * @type {number}
+     * Create the RoundedRect.
      */
-    this.alpha = 1;
+    init() {
+        let lineColor = this.randomColors[Math.round(rand(0, this.randomColors.length - 1))];
+        let rect = new PIXI.Graphics();
+        rect.name = 'circle';
 
-    /**
-     *
-     * @type {number}
-     */
-    this.radius = 5;
+        let content_outline_alpha = 1;
+        rect.lineStyle(2, lineColor, content_outline_alpha);
+        rect.beginFill(0xFFFFFF, 0);
+        rect.drawRoundedRect(0, 0, this.rectangle_width, this.rectangle_height, this.radius);
 
-    /**
-     *
-     * @type {number}
-     */
-    this.rectangle_width = 45;
-
-    /**
-     *
-     * @type {number}
-     */
-    this.rectangle_height = 45;
-
-    /**
-     *
-     * @type {number[]}
-     */
-    this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
-
-    this.init();
-  }
-
-  /**
-   * Create the RoundedRect.
-   */
-  init() {
-    let lineColor = this.randomColors[Math.round(rand(0, this.randomColors.length - 1))];
-    let rect = new PIXI.Graphics();
-    rect.name = 'circle';
-
-    let content_outline_alpha = 1;
-    rect.lineStyle(2, lineColor, content_outline_alpha);
-    rect.beginFill(0xFFFFFF, 0);
-    rect.drawRoundedRect(0, 0, this.rectangle_width, this.rectangle_height, this.radius);
-
-    this.addChild(rect);
-  }
+        this.addChild(rect);
+    }
 
 }
 
@@ -74903,7 +75319,54 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 663 */
+/* 663 */,
+/* 664 */,
+/* 665 */,
+/* 666 */,
+/* 667 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./Breakout/GameLevel": 628,
+	"./Breakout/GameLevel.js": 628,
+	"./Breakout/Level1": 639,
+	"./Breakout/Level1.js": 639,
+	"./FlappyBird/GameLevel": 629,
+	"./FlappyBird/GameLevel.js": 629,
+	"./FlappyBird/Level1": 640,
+	"./FlappyBird/Level1.js": 640,
+	"./MainMenu": 641,
+	"./MainMenu.js": 641,
+	"./PixelShooter/GameLevel": 630,
+	"./PixelShooter/GameLevel.js": 630,
+	"./PixelShooter/Level1": 642,
+	"./PixelShooter/Level1.js": 642,
+	"./RoundedRects/GameLevel": 631,
+	"./RoundedRects/GameLevel.js": 631,
+	"./RoundedRects/Level1": 643,
+	"./RoundedRects/Level1.js": 643,
+	"./SplashScene": 644,
+	"./SplashScene.js": 644
+};
+function webpackContext(req) {
+	return __webpack_require__(webpackContextResolve(req));
+};
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+};
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 667;
+
+/***/ }),
+/* 668 */,
+/* 669 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75002,7 +75465,7 @@ function panable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy9wYW4uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQXdCLE9BQU87QUFBaEIsU0FBUyxPQUFPLENBQUUsTUFBTSxFQUFFO0FBQ3ZDLFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixTQUFLLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDL0I7O0FBRUQsV0FBUyxVQUFVLENBQUUsQ0FBQyxFQUFFO0FBQ3RCLFNBQUssQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7R0FDaEQ7OztBQUFBLEFBR0QsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNwQixRQUFJLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO0FBQ2pCLGFBQU07S0FDUDtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxHQUFHO0FBQ2QsT0FBQyxFQUFFO0FBQ0QsU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osWUFBSSxFQUFFLElBQUksSUFBSSxFQUFFO09BQ2pCO0tBQ0YsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQ0wsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDMUIsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FBQTtHQUM5Qjs7QUFFRCxXQUFTLFNBQVMsQ0FBRSxDQUFDLEVBQUU7QUFDckIsUUFBSSxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxDQUFBO0dBQzlCOztBQUVELFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixRQUFJLENBQUMsR0FBRyxDQUFDLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxhQUFhLENBQUE7QUFDMUMsUUFBSSxDQUFDLENBQUMsSUFBSSxDQUFDLENBQUMsTUFBTSxHQUFHLENBQUMsRUFBRTtBQUN0QixTQUFHLENBQUMsQ0FBQyxDQUFDLENBQUE7QUFDTixhQUFNO0tBQ1A7QUFDRCxRQUFJLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0dBQ2Q7O0FBRUQsV0FBUyxJQUFJLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNuQixRQUFJLEdBQUcsR0FBRyxJQUFJLElBQUksRUFBRSxDQUFBO0FBQ3BCLFFBQUksUUFBUSxHQUFHLEdBQUcsR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFBO0FBQ3pDLFFBQUksUUFBUSxHQUFHLEVBQUUsRUFBRTtBQUNqQixhQUFNO0tBQ1A7QUFDRCxRQUFJLEVBQUUsR0FBRyxDQUFDLENBQUMsT0FBTyxHQUFHLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7QUFDdEMsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ3RDLFFBQUksUUFBUSxHQUFHLElBQUksQ0FBQyxJQUFJLENBQUMsRUFBRSxHQUFHLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxDQUFDLENBQUE7QUFDM0MsUUFBSSxDQUFDLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLEVBQUUsRUFBRTtBQUNyQixVQUFJLFNBQVMsR0FBRyxBQUFDLENBQUMsWUFBWSxNQUFNLENBQUMsVUFBVSxHQUFJLENBQUMsR0FBRyxDQUFDLENBQUE7QUFDeEQsVUFBSSxRQUFRLEdBQUcsU0FBUyxFQUFFO0FBQ3hCLFNBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxDQUFBO0FBQ3pCLFNBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLENBQUE7T0FDdEI7QUFDRCxhQUFNO0tBQ1A7QUFDRCxRQUFJLEtBQUssR0FBRztBQUNWLFlBQU0sRUFBRSxFQUFFO0FBQ1YsWUFBTSxFQUFFLEVBQUU7QUFDVixjQUFRLEVBQUUsUUFBUSxHQUFHLFFBQVE7QUFDN0IsVUFBSSxFQUFFLENBQUMsQ0FBQyxJQUFJO0tBQ2IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFNBQVMsRUFBRSxLQUFLLENBQUMsQ0FBQTtBQUMvQixLQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxFQUFFLEdBQUc7QUFDakIsT0FBQyxFQUFFLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQyxDQUFDO0FBQ3BCLE9BQUMsRUFBRSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQztBQUNwQixVQUFJLEVBQUUsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLElBQUk7S0FDM0IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUMsR0FBRztBQUNoQixPQUFDLEVBQUUsQ0FBQyxDQUFDLE9BQU87QUFDWixPQUFDLEVBQUUsQ0FBQyxDQUFDLE9BQU87QUFDWixVQUFJLEVBQUUsR0FBRztLQUNWLENBQUE7R0FDRjs7OztBQUFBLEFBSUQsV0FBUyxHQUFHLENBQUUsQ0FBQyxFQUFFO0FBQ2YsUUFBSSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksSUFBSSxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUU7QUFDckMsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsUUFBUSxDQUFDLENBQUE7S0FDeEI7QUFDRCxLQUFDLENBQUMsTUFBTSxDQUFDLElBQUksR0FBRyxJQUFJLENBQUE7QUFDcEIsS0FBQyxDQUFDLE1BQU0sQ0FDTCxjQUFjLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUN0QyxjQUFjLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUFBO0dBQzFDOztBQUVELFFBQU0sQ0FBQyxXQUFXLEdBQUcsSUFBSSxDQUFBO0FBQ3pCLFFBQU0sQ0FDSCxFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUMxQixFQUFFLENBQUMsWUFBWSxFQUFFLFVBQVUsQ0FBQyxDQUM1QixFQUFFLENBQUMsU0FBUyxFQUFFLEdBQUcsQ0FBQyxDQUNsQixFQUFFLENBQUMsZ0JBQWdCLEVBQUUsR0FBRyxDQUFDLENBQ3pCLEVBQUUsQ0FBQyxVQUFVLEVBQUUsR0FBRyxDQUFDLENBQ25CLEVBQUUsQ0FBQyxpQkFBaUIsRUFBRSxHQUFHLENBQUMsQ0FBQTtDQUM5QiIsImZpbGUiOiJwYW4uanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwYW5hYmxlIChzcHJpdGUpIHtcbiAgZnVuY3Rpb24gbW91c2VEb3duIChlKSB7XG4gICAgc3RhcnQoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQpXG4gIH1cblxuICBmdW5jdGlvbiB0b3VjaFN0YXJ0IChlKSB7XG4gICAgc3RhcnQoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1swXSlcbiAgfVxuXG4gIC8vIHBvc3NpYmx5IGJlIGNhbGxlZCB0d2ljZSBvciBtb3JlXG4gIGZ1bmN0aW9uIHN0YXJ0IChlLCB0KSB7XG4gICAgaWYgKGUudGFyZ2V0Ll9wYW4pIHtcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBlLnRhcmdldC5fcGFuID0ge1xuICAgICAgcDoge1xuICAgICAgICB4OiB0LmNsaWVudFgsXG4gICAgICAgIHk6IHQuY2xpZW50WSxcbiAgICAgICAgZGF0ZTogbmV3IERhdGUoKVxuICAgICAgfVxuICAgIH1cbiAgICBlLnRhcmdldFxuICAgICAgLm9uKCdtb3VzZW1vdmUnLCBtb3VzZU1vdmUpXG4gICAgICAub24oJ3RvdWNobW92ZScsIHRvdWNoTW92ZSlcbiAgfVxuXG4gIGZ1bmN0aW9uIG1vdXNlTW92ZSAoZSkge1xuICAgIG1vdmUoZSwgZS5kYXRhLm9yaWdpbmFsRXZlbnQpXG4gIH1cblxuICBmdW5jdGlvbiB0b3VjaE1vdmUgKGUpIHtcbiAgICBsZXQgdCA9IGUuZGF0YS5vcmlnaW5hbEV2ZW50LnRhcmdldFRvdWNoZXNcbiAgICBpZiAoIXQgfHwgdC5sZW5ndGggPiAxKSB7XG4gICAgICBlbmQoZSlcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBtb3ZlKGUsIHRbMF0pXG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlIChlLCB0KSB7XG4gICAgbGV0IG5vdyA9IG5ldyBEYXRlKClcbiAgICBsZXQgaW50ZXJ2YWwgPSBub3cgLSBlLnRhcmdldC5fcGFuLnAuZGF0ZVxuICAgIGlmIChpbnRlcnZhbCA8IDEyKSB7XG4gICAgICByZXR1cm5cbiAgICB9XG4gICAgbGV0IGR4ID0gdC5jbGllbnRYIC0gZS50YXJnZXQuX3Bhbi5wLnhcbiAgICBsZXQgZHkgPSB0LmNsaWVudFkgLSBlLnRhcmdldC5fcGFuLnAueVxuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSlcbiAgICBpZiAoIWUudGFyZ2V0Ll9wYW4ucHApIHtcbiAgICAgIGxldCB0aHJlc2hvbGQgPSAodCBpbnN0YW5jZW9mIHdpbmRvdy5Nb3VzZUV2ZW50KSA/IDIgOiA3XG4gICAgICBpZiAoZGlzdGFuY2UgPiB0aHJlc2hvbGQpIHtcbiAgICAgICAgZS50YXJnZXQuZW1pdCgncGFuc3RhcnQnKVxuICAgICAgICBlLnRhcmdldC5fcGFuLnBwID0ge31cbiAgICAgIH1cbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgZXZlbnQgPSB7XG4gICAgICBkZWx0YVg6IGR4LFxuICAgICAgZGVsdGFZOiBkeSxcbiAgICAgIHZlbG9jaXR5OiBkaXN0YW5jZSAvIGludGVydmFsLFxuICAgICAgZGF0YTogZS5kYXRhXG4gICAgfVxuICAgIGUudGFyZ2V0LmVtaXQoJ3Bhbm1vdmUnLCBldmVudClcbiAgICBlLnRhcmdldC5fcGFuLnBwID0ge1xuICAgICAgeDogZS50YXJnZXQuX3Bhbi5wLngsXG4gICAgICB5OiBlLnRhcmdldC5fcGFuLnAueSxcbiAgICAgIGRhdGU6IGUudGFyZ2V0Ll9wYW4ucC5kYXRlXG4gICAgfVxuICAgIGUudGFyZ2V0Ll9wYW4ucCA9IHtcbiAgICAgIHg6IHQuY2xpZW50WCxcbiAgICAgIHk6IHQuY2xpZW50WSxcbiAgICAgIGRhdGU6IG5vd1xuICAgIH1cbiAgfVxuXG4gIC8vIFRPRE86IEluZXJ0aWEgTW9kZVxuICAvLyBwb3NzaWJseSBiZSBjYWxsZWQgdHdpY2Ugb3IgbW9yZVxuICBmdW5jdGlvbiBlbmQgKGUpIHtcbiAgICBpZiAoZS50YXJnZXQuX3BhbiAmJiBlLnRhcmdldC5fcGFuLnBwKSB7XG4gICAgICBlLnRhcmdldC5lbWl0KCdwYW5lbmQnKVxuICAgIH1cbiAgICBlLnRhcmdldC5fcGFuID0gbnVsbFxuICAgIGUudGFyZ2V0XG4gICAgICAucmVtb3ZlTGlzdGVuZXIoJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5yZW1vdmVMaXN0ZW5lcigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgc3ByaXRlLmludGVyYWN0aXZlID0gdHJ1ZVxuICBzcHJpdGVcbiAgICAub24oJ21vdXNlZG93bicsIG1vdXNlRG93bilcbiAgICAub24oJ3RvdWNoc3RhcnQnLCB0b3VjaFN0YXJ0KVxuICAgIC5vbignbW91c2V1cCcsIGVuZClcbiAgICAub24oJ21vdXNldXBvdXRzaWRlJywgZW5kKVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 664 */
+/* 670 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75074,7 +75537,7 @@ function pinchable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy9waW5jaC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztrQkFBd0IsU0FBUztBQUFsQixTQUFTLFNBQVMsQ0FBRSxNQUFNLEVBQUU7QUFDekMsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFO0FBQ2pCLEtBQUMsQ0FBQyxNQUFNLENBQUMsRUFBRSxDQUFDLFdBQVcsRUFBRSxJQUFJLENBQUMsQ0FBQTtHQUMvQjs7QUFFRCxXQUFTLElBQUksQ0FBRSxDQUFDLEVBQUU7QUFDaEIsUUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFBO0FBQzFDLFFBQUksQ0FBQyxDQUFDLElBQUksQ0FBQyxDQUFDLE1BQU0sR0FBRyxDQUFDLEVBQUU7QUFDdEIsYUFBTTtLQUNQO0FBQ0QsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxDQUFBO0FBQ3BDLFFBQUksRUFBRSxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxPQUFPLEdBQUcsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sQ0FBQTtBQUNwQyxRQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxHQUFHLEVBQUUsQ0FBQyxDQUFBO0FBQzNDLFFBQUksQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sRUFBRTtBQUNwQixPQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sR0FBRztBQUNoQixTQUFDLEVBQUUsRUFBRSxRQUFRLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRSxJQUFJLElBQUksRUFBRSxFQUFFO0FBQzNDLFVBQUUsRUFBRSxFQUFFO09BQ1AsQ0FBQTtBQUNELE9BQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFlBQVksQ0FBQyxDQUFBO0FBQzNCLGFBQU07S0FDUDtBQUNELFFBQUksTUFBTSxHQUFHO0FBQ1gsT0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxDQUFBLEdBQUksQ0FBQztBQUNwQyxPQUFDLEVBQUUsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsT0FBTyxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxPQUFPLENBQUEsR0FBSSxDQUFDO0tBQ3JDLENBQUE7QUFDRCxRQUFJLEdBQUcsR0FBRyxJQUFJLElBQUksRUFBRSxDQUFBO0FBQ3BCLFFBQUksUUFBUSxHQUFHLEdBQUcsR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsSUFBSSxDQUFBO0FBQzNDLFFBQUksUUFBUSxHQUFHLEVBQUUsRUFBRTtBQUNqQixhQUFNO0tBQ1A7QUFDRCxRQUFJLEtBQUssR0FBRztBQUNWLFdBQUssRUFBRSxRQUFRLEdBQUcsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxDQUFDLFFBQVE7QUFDNUMsY0FBUSxFQUFFLFFBQVEsR0FBRyxRQUFRO0FBQzdCLFlBQU0sRUFBRSxNQUFNO0FBQ2QsVUFBSSxFQUFFLENBQUMsQ0FBQyxJQUFJO0tBQ2IsQ0FBQTtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFdBQVcsRUFBRSxLQUFLLENBQUMsQ0FBQTtBQUNqQyxLQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxFQUFFLEdBQUc7QUFDbkIsY0FBUSxFQUFFLENBQUMsQ0FBQyxNQUFNLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQyxRQUFRO0FBQ3BDLFVBQUksRUFBRSxDQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUMsSUFBSTtLQUM3QixDQUFBO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLENBQUMsQ0FBQyxHQUFHO0FBQ2xCLGNBQVEsRUFBRSxRQUFRO0FBQ2xCLFVBQUksRUFBRSxHQUFHO0tBQ1YsQ0FBQTtHQUNGOzs7QUFBQSxBQUdELFdBQVMsR0FBRyxDQUFFLENBQUMsRUFBRTtBQUNmLFFBQUksQ0FBQyxDQUFDLE1BQU0sQ0FBQyxNQUFNLEVBQUU7QUFDbkIsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsVUFBVSxDQUFDLENBQUE7S0FDMUI7QUFDRCxLQUFDLENBQUMsTUFBTSxDQUFDLE1BQU0sR0FBRyxJQUFJLENBQUE7QUFDdEIsS0FBQyxDQUFDLE1BQU0sQ0FBQyxjQUFjLENBQUMsV0FBVyxFQUFFLElBQUksQ0FBQyxDQUFBO0dBQzNDOztBQUVELFFBQU0sQ0FBQyxXQUFXLEdBQUcsSUFBSSxDQUFBO0FBQ3pCLFFBQU0sQ0FDSCxFQUFFLENBQUMsWUFBWSxFQUFFLEtBQUssQ0FBQyxDQUN2QixFQUFFLENBQUMsVUFBVSxFQUFFLEdBQUcsQ0FBQyxDQUNuQixFQUFFLENBQUMsaUJBQWlCLEVBQUUsR0FBRyxDQUFDLENBQUE7Q0FDOUIiLCJmaWxlIjoicGluY2guanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBwaW5jaGFibGUgKHNwcml0ZSkge1xuICBmdW5jdGlvbiBzdGFydCAoZSkge1xuICAgIGUudGFyZ2V0Lm9uKCd0b3VjaG1vdmUnLCBtb3ZlKVxuICB9XG5cbiAgZnVuY3Rpb24gbW92ZSAoZSkge1xuICAgIGxldCB0ID0gZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1xuICAgIGlmICghdCB8fCB0Lmxlbmd0aCA8IDIpIHtcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgZHggPSB0WzBdLmNsaWVudFggLSB0WzFdLmNsaWVudFhcbiAgICBsZXQgZHkgPSB0WzBdLmNsaWVudFkgLSB0WzFdLmNsaWVudFlcbiAgICBsZXQgZGlzdGFuY2UgPSBNYXRoLnNxcnQoZHggKiBkeCArIGR5ICogZHkpXG4gICAgaWYgKCFlLnRhcmdldC5fcGluY2gpIHtcbiAgICAgIGUudGFyZ2V0Ll9waW5jaCA9IHtcbiAgICAgICAgcDogeyBkaXN0YW5jZTogZGlzdGFuY2UsIGRhdGU6IG5ldyBEYXRlKCkgfSxcbiAgICAgICAgcHA6IHt9XG4gICAgICB9XG4gICAgICBlLnRhcmdldC5lbWl0KCdwaW5jaHN0YXJ0JylcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBsZXQgY2VudGVyID0ge1xuICAgICAgeDogKHRbMF0uY2xpZW50WCArIHRbMV0uY2xpZW50WCkgLyAyLFxuICAgICAgeTogKHRbMF0uY2xpZW50WSArIHRbMV0uY2xpZW50WSkgLyAyXG4gICAgfVxuICAgIGxldCBub3cgPSBuZXcgRGF0ZSgpXG4gICAgbGV0IGludGVydmFsID0gbm93IC0gZS50YXJnZXQuX3BpbmNoLnAuZGF0ZVxuICAgIGlmIChpbnRlcnZhbCA8IDEyKSB7XG4gICAgICByZXR1cm5cbiAgICB9XG4gICAgbGV0IGV2ZW50ID0ge1xuICAgICAgc2NhbGU6IGRpc3RhbmNlIC8gZS50YXJnZXQuX3BpbmNoLnAuZGlzdGFuY2UsXG4gICAgICB2ZWxvY2l0eTogZGlzdGFuY2UgLyBpbnRlcnZhbCxcbiAgICAgIGNlbnRlcjogY2VudGVyLFxuICAgICAgZGF0YTogZS5kYXRhXG4gICAgfVxuICAgIGUudGFyZ2V0LmVtaXQoJ3BpbmNobW92ZScsIGV2ZW50KVxuICAgIGUudGFyZ2V0Ll9waW5jaC5wcCA9IHtcbiAgICAgIGRpc3RhbmNlOiBlLnRhcmdldC5fcGluY2gucC5kaXN0YW5jZSxcbiAgICAgIGRhdGU6IGUudGFyZ2V0Ll9waW5jaC5wLmRhdGVcbiAgICB9XG4gICAgZS50YXJnZXQuX3BpbmNoLnAgPSB7XG4gICAgICBkaXN0YW5jZTogZGlzdGFuY2UsXG4gICAgICBkYXRlOiBub3dcbiAgICB9XG4gIH1cblxuICAvLyBUT0RPOiBJbmVydGlhIE1vZGVcbiAgZnVuY3Rpb24gZW5kIChlKSB7XG4gICAgaWYgKGUudGFyZ2V0Ll9waW5jaCkge1xuICAgICAgZS50YXJnZXQuZW1pdCgncGluY2hlbmQnKVxuICAgIH1cbiAgICBlLnRhcmdldC5fcGluY2ggPSBudWxsXG4gICAgZS50YXJnZXQucmVtb3ZlTGlzdGVuZXIoJ3RvdWNobW92ZScsIG1vdmUpXG4gIH1cblxuICBzcHJpdGUuaW50ZXJhY3RpdmUgPSB0cnVlXG4gIHNwcml0ZVxuICAgIC5vbigndG91Y2hzdGFydCcsIHN0YXJ0KVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 665 */
+/* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75149,7 +75612,7 @@ function tappable(sprite) {
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9nZXN0dXJlcy90YXAuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQXdCLFFBQVE7QUFBakIsU0FBUyxRQUFRLENBQUUsTUFBTSxFQUFFO0FBQ3hDLFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixTQUFLLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDL0I7O0FBRUQsV0FBUyxVQUFVLENBQUUsQ0FBQyxFQUFFO0FBQ3RCLFNBQUssQ0FBQyxDQUFDLEVBQUUsQ0FBQyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUE7R0FDaEQ7OztBQUFBLEFBR0QsV0FBUyxLQUFLLENBQUUsQ0FBQyxFQUFFLENBQUMsRUFBRTtBQUNwQixRQUFJLENBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxFQUFFO0FBQ2pCLGFBQU07S0FDUDtBQUNELEtBQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxHQUFHO0FBQ2QsT0FBQyxFQUFFO0FBQ0QsU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO0FBQ1osU0FBQyxFQUFFLENBQUMsQ0FBQyxPQUFPO09BQ2I7S0FDRixDQUFBO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FDTCxFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUMxQixFQUFFLENBQUMsV0FBVyxFQUFFLFNBQVMsQ0FBQyxDQUFBO0dBQzlCOztBQUVELFdBQVMsU0FBUyxDQUFFLENBQUMsRUFBRTtBQUNyQixRQUFJLENBQUMsQ0FBQyxFQUFFLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLENBQUE7R0FDOUI7O0FBRUQsV0FBUyxTQUFTLENBQUUsQ0FBQyxFQUFFO0FBQ3JCLFFBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLGFBQWEsQ0FBQTtBQUMxQyxRQUFJLENBQUMsQ0FBQyxJQUFJLENBQUMsQ0FBQyxNQUFNLEdBQUcsQ0FBQyxFQUFFO0FBQ3RCLE9BQUMsQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLFFBQVEsR0FBRyxJQUFJLENBQUE7QUFDN0IsU0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ04sYUFBTTtLQUNQO0FBQ0QsUUFBSSxDQUFDLENBQUMsRUFBRSxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQTtHQUNkOztBQUVELFdBQVMsSUFBSSxDQUFFLENBQUMsRUFBRSxDQUFDLEVBQUU7QUFDbkIsUUFBSSxFQUFFLEdBQUcsQ0FBQyxDQUFDLE9BQU8sR0FBRyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFBO0FBQ3RDLFFBQUksRUFBRSxHQUFHLENBQUMsQ0FBQyxPQUFPLEdBQUcsQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQTtBQUN0QyxRQUFJLFFBQVEsR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsR0FBRyxFQUFFLEdBQUcsRUFBRSxHQUFHLEVBQUUsQ0FBQyxDQUFBO0FBQzNDLFFBQUksU0FBUyxHQUFHLEFBQUMsQ0FBQyxZQUFZLE1BQU0sQ0FBQyxVQUFVLEdBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQTtBQUN4RCxRQUFJLFFBQVEsR0FBRyxTQUFTLEVBQUU7QUFDeEIsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsUUFBUSxHQUFHLElBQUksQ0FBQTtLQUM5QjtHQUNGOzs7QUFBQSxBQUdELFdBQVMsR0FBRyxDQUFFLENBQUMsRUFBRTtBQUNmLFFBQUksQ0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLElBQUksQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLElBQUksQ0FBQyxRQUFRLEVBQUU7QUFDNUMsVUFBSSxLQUFLLEdBQUc7QUFDVixZQUFJLEVBQUUsQ0FBQyxDQUFDLElBQUk7T0FDYixDQUFBO0FBQ0QsT0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsV0FBVyxFQUFFLEtBQUssQ0FBQyxDQUFBO0tBQ2xDO0FBQ0QsS0FBQyxDQUFDLE1BQU0sQ0FBQyxJQUFJLEdBQUcsSUFBSSxDQUFBO0FBQ3BCLEtBQUMsQ0FBQyxNQUFNLENBQ0wsY0FBYyxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDdEMsY0FBYyxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FBQTtHQUMxQzs7QUFFRCxRQUFNLENBQUMsV0FBVyxHQUFHLElBQUksQ0FBQTtBQUN6QixRQUFNLENBQ0gsRUFBRSxDQUFDLFdBQVcsRUFBRSxTQUFTLENBQUMsQ0FDMUIsRUFBRSxDQUFDLFlBQVksRUFBRSxVQUFVLENBQUMsQ0FDNUIsRUFBRSxDQUFDLFNBQVMsRUFBRSxHQUFHLENBQUMsQ0FDbEIsRUFBRSxDQUFDLGdCQUFnQixFQUFFLEdBQUcsQ0FBQyxDQUN6QixFQUFFLENBQUMsVUFBVSxFQUFFLEdBQUcsQ0FBQyxDQUNuQixFQUFFLENBQUMsaUJBQWlCLEVBQUUsR0FBRyxDQUFDLENBQUE7Q0FDOUIiLCJmaWxlIjoidGFwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gdGFwcGFibGUgKHNwcml0ZSkge1xuICBmdW5jdGlvbiBtb3VzZURvd24gKGUpIHtcbiAgICBzdGFydChlLCBlLmRhdGEub3JpZ2luYWxFdmVudClcbiAgfVxuXG4gIGZ1bmN0aW9uIHRvdWNoU3RhcnQgKGUpIHtcbiAgICBzdGFydChlLCBlLmRhdGEub3JpZ2luYWxFdmVudC50YXJnZXRUb3VjaGVzWzBdKVxuICB9XG5cbiAgLy8gcG9zc2libHkgYmUgY2FsbGVkIHR3aWNlIG9yIG1vcmVcbiAgZnVuY3Rpb24gc3RhcnQgKGUsIHQpIHtcbiAgICBpZiAoZS50YXJnZXQuX3RhcCkge1xuICAgICAgcmV0dXJuXG4gICAgfVxuICAgIGUudGFyZ2V0Ll90YXAgPSB7XG4gICAgICBwOiB7XG4gICAgICAgIHg6IHQuY2xpZW50WCxcbiAgICAgICAgeTogdC5jbGllbnRZXG4gICAgICB9XG4gICAgfVxuICAgIGUudGFyZ2V0XG4gICAgICAub24oJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5vbigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgZnVuY3Rpb24gbW91c2VNb3ZlIChlKSB7XG4gICAgbW92ZShlLCBlLmRhdGEub3JpZ2luYWxFdmVudClcbiAgfVxuXG4gIGZ1bmN0aW9uIHRvdWNoTW92ZSAoZSkge1xuICAgIGxldCB0ID0gZS5kYXRhLm9yaWdpbmFsRXZlbnQudGFyZ2V0VG91Y2hlc1xuICAgIGlmICghdCB8fCB0Lmxlbmd0aCA+IDEpIHtcbiAgICAgIGUudGFyZ2V0Ll90YXAuY2FuY2VsZWQgPSB0cnVlXG4gICAgICBlbmQoZSlcbiAgICAgIHJldHVyblxuICAgIH1cbiAgICBtb3ZlKGUsIHRbMF0pXG4gIH1cblxuICBmdW5jdGlvbiBtb3ZlIChlLCB0KSB7XG4gICAgbGV0IGR4ID0gdC5jbGllbnRYIC0gZS50YXJnZXQuX3RhcC5wLnhcbiAgICBsZXQgZHkgPSB0LmNsaWVudFkgLSBlLnRhcmdldC5fdGFwLnAueVxuICAgIGxldCBkaXN0YW5jZSA9IE1hdGguc3FydChkeCAqIGR4ICsgZHkgKiBkeSlcbiAgICBsZXQgdGhyZXNob2xkID0gKHQgaW5zdGFuY2VvZiB3aW5kb3cuTW91c2VFdmVudCkgPyAyIDogN1xuICAgIGlmIChkaXN0YW5jZSA+IHRocmVzaG9sZCkge1xuICAgICAgZS50YXJnZXQuX3RhcC5jYW5jZWxlZCA9IHRydWVcbiAgICB9XG4gIH1cblxuICAvLyBwb3NzaWJseSBiZSBjYWxsZWQgdHdpY2Ugb3IgbW9yZVxuICBmdW5jdGlvbiBlbmQgKGUpIHtcbiAgICBpZiAoZS50YXJnZXQuX3RhcCAmJiAhZS50YXJnZXQuX3RhcC5jYW5jZWxlZCkge1xuICAgICAgbGV0IGV2ZW50ID0ge1xuICAgICAgICBkYXRhOiBlLmRhdGFcbiAgICAgIH1cbiAgICAgIGUudGFyZ2V0LmVtaXQoJ3NpbXBsZXRhcCcsIGV2ZW50KVxuICAgIH1cbiAgICBlLnRhcmdldC5fdGFwID0gbnVsbFxuICAgIGUudGFyZ2V0XG4gICAgICAucmVtb3ZlTGlzdGVuZXIoJ21vdXNlbW92ZScsIG1vdXNlTW92ZSlcbiAgICAgIC5yZW1vdmVMaXN0ZW5lcigndG91Y2htb3ZlJywgdG91Y2hNb3ZlKVxuICB9XG5cbiAgc3ByaXRlLmludGVyYWN0aXZlID0gdHJ1ZVxuICBzcHJpdGVcbiAgICAub24oJ21vdXNlZG93bicsIG1vdXNlRG93bilcbiAgICAub24oJ3RvdWNoc3RhcnQnLCB0b3VjaFN0YXJ0KVxuICAgIC5vbignbW91c2V1cCcsIGVuZClcbiAgICAub24oJ21vdXNldXBvdXRzaWRlJywgZW5kKVxuICAgIC5vbigndG91Y2hlbmQnLCBlbmQpXG4gICAgLm9uKCd0b3VjaGVuZG91dHNpZGUnLCBlbmQpXG59XG4iXX0=
 
 /***/ }),
-/* 666 */
+/* 672 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75159,15 +75622,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _pinch = __webpack_require__(664);
+var _pinch = __webpack_require__(670);
 
 var _pinch2 = _interopRequireDefault(_pinch);
 
-var _pan = __webpack_require__(663);
+var _pan = __webpack_require__(669);
 
 var _pan2 = _interopRequireDefault(_pan);
 
-var _tap = __webpack_require__(665);
+var _tap = __webpack_require__(671);
 
 var _tap2 = _interopRequireDefault(_tap);
 
@@ -75179,48 +75642,6 @@ exports.default = {
   tappable: _tap2.default
 };
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9pbmRleC5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7OztrQkFJZTtBQUNiLFdBQVMsaUJBQUE7QUFDVCxTQUFPLGVBQUE7QUFDUCxVQUFRLGVBQUE7Q0FDVCIsImZpbGUiOiJpbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBwaW5jaGFibGUgZnJvbSAnLi9nZXN0dXJlcy9waW5jaCdcbmltcG9ydCBwYW5hYmxlIGZyb20gJy4vZ2VzdHVyZXMvcGFuJ1xuaW1wb3J0IHRhcHBhYmxlIGZyb20gJy4vZ2VzdHVyZXMvdGFwJ1xuXG5leHBvcnQgZGVmYXVsdCB7XG4gIHBpbmNoYWJsZSxcbiAgcGFuYWJsZSxcbiAgdGFwcGFibGVcbn1cbiJdfQ==
-
-/***/ }),
-/* 667 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var map = {
-	"./Breakout/GameLevel": 628,
-	"./Breakout/GameLevel.js": 628,
-	"./Breakout/Level1": 639,
-	"./Breakout/Level1.js": 639,
-	"./FlappyBird/GameLevel": 629,
-	"./FlappyBird/GameLevel.js": 629,
-	"./FlappyBird/Level1": 640,
-	"./FlappyBird/Level1.js": 640,
-	"./MainMenu": 641,
-	"./MainMenu.js": 641,
-	"./PixelShooter/GameLevel": 630,
-	"./PixelShooter/GameLevel.js": 630,
-	"./PixelShooter/Level1": 642,
-	"./PixelShooter/Level1.js": 642,
-	"./RoundedRects/GameLevel": 631,
-	"./RoundedRects/GameLevel.js": 631,
-	"./RoundedRects/Level1": 643,
-	"./RoundedRects/Level1.js": 643,
-	"./SplashScene": 644,
-	"./SplashScene.js": 644
-};
-function webpackContext(req) {
-	return __webpack_require__(webpackContextResolve(req));
-};
-function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
-	return id;
-};
-webpackContext.keys = function webpackContextKeys() {
-	return Object.keys(map);
-};
-webpackContext.resolve = webpackContextResolve;
-module.exports = webpackContext;
-webpackContext.id = 667;
 
 /***/ })
 ]);

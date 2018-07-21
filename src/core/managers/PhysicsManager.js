@@ -1,5 +1,15 @@
-define(['pixi', 'matter-js'], function (pixi, Matter) {
-  var PhysicsManager = function (options) {
+/**
+ * PhysicsManager
+ * @namespace Core Managers
+ */
+define(['pixi', 'matter-js'], function (PIXI, Matter) {
+
+  /**
+   * @classdesc PhysicsManager
+   * @exports  core/managers/PhysicsManager
+   * @class
+   */
+  let PhysicsManager = function (options) {
     const canvas = document.getElementById('canvas')
 
     this.engine = Matter.Engine.create()
@@ -58,7 +68,7 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
     Matter.World.remove(this.world, body)
   }
 
-  PhysicsManager.prototype.PixiToMatter = function (x, y, width, height) {
+  PhysicsManager.prototype.PIXIToMatter = function (x, y, width, height) {
     return {
       x: x + (width * 0.5),
       y: y + (height * 0.5),
@@ -74,22 +84,22 @@ define(['pixi', 'matter-js'], function (pixi, Matter) {
   }
 
   PhysicsManager.prototype.applyForce = function (body, x, y, width, height) {
-    let coord = this.PixiToMatter(x, y, width, height)
+    let coord = this.PIXIToMatter(x, y, width, height)
     return Matter.Body.applyForce(body, {x: body.position.x, y: body.position.y}, {x: 0, y: -0.05})
   }
 
   PhysicsManager.prototype.setPosition = function (body, x, y, width, height) {
-    let coord = this.PixiToMatter(x, y, width, height)
+    let coord = this.PIXIToMatter(x, y, width, height)
     return Matter.Body.setPosition(body, {x: coord.x, y: coord.y})
   }
 
   PhysicsManager.prototype.rectangle = function (x, y, width, height, options = null) {
-    let coord = this.PixiToMatter(x, y, width, height)
+    let coord = this.PIXIToMatter(x, y, width, height)
     return Matter.Bodies.rectangle(coord.x, coord.y, width, height, options)
   }
 
   PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
-    //  let coord = this.PixiToMatter(x, y, width, height = width)
+    //  let coord = this.PIXIToMatter(x, y, width, height = width)
     console.log('circle options', options)
     return Matter.Bodies.circle(x, y, radius, options)
     // return Matter.Bodies.circle(coord.x, coord.y, width, options)

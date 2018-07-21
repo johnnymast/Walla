@@ -1,6 +1,11 @@
-const gesture = require('pixi-simple-gesture').default
+const gesture = require('PIXI-simple-gesture').default
 
-define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
+define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
+  /**
+   * @classdesc Scene
+   * @exports  core/Scene
+   * @class
+   */
   let Scene = function (options) {
     GameObject.call(this, options)
 
@@ -42,12 +47,11 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
       console.log('simpletap')
     })
 
-    this.resources = {}
 
     this.cursor_sprite = new PIXI.Sprite()
     this.cursor_sprite.interactive = false
     this.cursor_sprite.buttonMode = false
-    this.cursor_sprite.cursor = "none"
+    this.cursor_sprite.cursor = 'none'
     this.cursor_sprite.anchor.set(0.5)
 
     this.on('pointerover', function () {
@@ -63,7 +67,15 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     }.bind(this))
 
     /**
-     * Every Scene loaded by default until onStart until switching to the Scene.
+     * 
+     * @type {{}}
+     */
+    this.resources = {}
+
+    /**
+     *
+     * @type {boolean}
+     * @default false
      */
     this.paused = true
 
@@ -74,16 +86,30 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
   extend(Scene, GameObject)
 
+  /**
+   * Hide the cursor on the current Scene.
+   */
   Scene.prototype.hideCursor = function () {
     this.cursor = 'none'
   }
 
-  Scene.prototype.addCursor = function(name = '', texture_name = '') {
+  /**
+   * Define a new cursor.
+   *
+   * @param {string} name
+   * @param {string} texture_name
+   */
+  Scene.prototype.addCursor = function (name = '', texture_name = '') {
     this.InteractionManager.cursorStyles[name] = () => {
       this.cursor_sprite.texture = PIXI.Texture.fromFrame(texture_name)
     }
   }
 
+  /**
+   * Set a cursor.
+   *
+   * @param {string} name - The name of the cursor
+   */
   Scene.prototype.setCursor = function (name = '') {
 
     if (this.cursor_sprite.parent) {
@@ -96,6 +122,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.cursor = name
   }
 
+  /**
+   * If you wish to preload assets in your scene you can
+   * overwrite this function.
+   */
   Scene.prototype.preload = function () {
     /**
      * This function will be called during switching of Scenes.
@@ -103,6 +133,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
      */
   }
 
+  /**
+   * Callback for the onPause even. You can overwrite this your self
+   * to receive the onPause call.
+   */
   Scene.prototype.onPause = function () {
     /**
      * This function will be called when the Scene is paused.You can overwrite this in
@@ -110,6 +144,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
      */
   }
 
+  /**
+   * Callback for the onStart even. You can overwrite this your self
+   * to receive the onStart call.
+   */
   Scene.prototype.onStart = function () {
     /**
      * This function will be called when the scene is started. You can overwrite this in
@@ -117,6 +155,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
      */
   }
 
+  /**
+   * Callback for the onResume even. You can overwrite this your self
+   * to receive the onResume call.
+   */
   Scene.prototype.onResume = function () {
     /**
      * This function will be called when the scene is unpauzed. You can overwrite this in
@@ -124,25 +166,45 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
      */
   }
 
+  /**
+   * Start the scene
+   */
   Scene.prototype.start = function () {
     this.paused = false
     this.onStart()
   }
 
+  /**
+   * Pause the scene
+   */
   Scene.prototype.pause = function () {
     this.paused = true
     this.onPause()
   }
 
+  /**
+   * Resume a paused scene.
+   */
   Scene.prototype.resume = function () {
     this.paused = false
     this.onResume()
   }
 
+  /**
+   * Ask if the scene is paused.
+   *
+   * @returns {boolean}
+   */
   Scene.prototype.isPaused = function () {
     return this.paused
   }
 
+  /**
+   * Internal update function. This is called per tick.
+   *
+   * @param {number} delta - The delta since the last tick
+   * @private
+   */
   Scene.prototype._update = function (delta) {
     if (!this.isPaused()) {
       this.update(delta)
