@@ -1,4 +1,8 @@
 /**
+ * @namespace Math
+ */
+
+/**
  * Class for Vector2d math calculations.
  *
  * @class

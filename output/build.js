@@ -3917,10 +3917,9 @@ __webpack_require__(414);
 
 /***/ }),
 /* 243 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-__webpack_require__(420);
-__webpack_require__(419);
+
 
 /***/ }),
 /* 244 */
@@ -4127,47 +4126,190 @@ define(String.prototype, "padRight", "".padEnd);
 /* 411 */,
 /* 412 */,
 /* 413 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__) {
 
+"use strict";
+/**
+ * Point
+ * @namespace Geometry
+ */
+class Point {
 
-function Position(x, y) {
+  /**
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   */
+  constructor(x = 0, y = 0) {
+
+    /**
+     * @member {number}
+     * @default 0
+     */
     this.x = x;
+
+    /**
+     * @member {number}
+     * @default 0
+     */
     this.y = y;
+  }
+
+  /**
+   * Creates a clone of this point
+   *
+   * @return {Point} a copy of the point
+   */
+  clone() {
+    return new Point(this.x, this.y);
+  }
+
+  /**
+   * Copies x and y from the given point
+   *
+   * @param {Point} p - The point to copy.
+   */
+  copy(p) {
+    this.set(p.x, p.y);
+  }
+
+  /**
+   * Returns true if the given point is equal to this point
+   *
+   * @param {Point} p - The point to check
+   * @returns {boolean} Whether the given point equal to this point
+   */
+  equals(p) {
+    return p.x === this.x && p.y === this.y;
+  }
+
+  /**
+   * Sets the point to a new x and y position.
+   * If y is omitted, both x and y will be set to x.
+   *
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   */
+  set(x, y) {
+
+    /**
+     * @member {number}
+     * @default 0
+     */
+    this.x = x || 0;
+
+    /**
+     * @member {number}
+     * @default 0
+     */
+    this.y = y || (y !== 0 ? this.x : 0);
+  }
 }
 
-Position.prototype.toPhysics = function () {};
+module.exports = Point;
 
 /***/ }),
 /* 414 */
 /***/ (function(module, exports) {
 
+/**
+ * Rect
+ * @namespace Geometry
+ */
+class Rect {
 
+  /**
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @param {number} [width=0] - width of the rect
+   * @param {number} [height=0] - height of the rect
+   */
+  constructor(x = 0, y = 0, width = 0, height = 0) {
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.x = x;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.y = y;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.width = width;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.height = height;
+  }
+
+  /**
+   * Clone the current Rect.
+   *
+   * @returns {Rect}
+   */
+  clone() {
+    return new Rect(this.x, this.y, this.width, this.height);
+  }
+
+  /**
+   * Copy the values of rect onto the current Rect.
+   *
+   * @param {Rect} rect - The rect to copy
+   */
+  copy(rect) {
+    this.set(rect.x, rect.y, rect.width, rect.height);
+  }
+
+  /**
+   * Compare the given Rect to this Rect.
+   *
+   * @param {Rect} rect - Compare this Rect to the passed Rect
+   * @returns {boolean}
+   */
+  equals(rect) {
+    return rect.x === this.x && rect.y === this.y && rect.width === this.width && rect.height === this.height;
+  }
+
+  /**
+   * Sets the rect to a new x and y position.
+   * If height is omitted, both width and height will be set to width.
+   *
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @param {number} [width=0] - width of the rect
+   * @param {number} [height=0] - height of the rect
+   */
+  set(x, y, width, height) {
+
+    this.x = x || 0;
+    this.y = y;
+
+    this.width = width;
+    this.height = height || (height !== 0 ? this.width : 0);
+  }
+}
+
+module.exports = Rect;
 
 /***/ }),
 /* 415 */,
 /* 416 */,
 /* 417 */,
 /* 418 */,
-/* 419 */
-/***/ (function(module, exports) {
-
-window.rand = function (min, max) {
-  return Math.random() * (max - min) + min;
-};
-
-/***/ }),
-/* 420 */
-/***/ (function(module, exports) {
-
-Number.prototype.normalize = function (min, max) {
-  return (max - min) / this;
-};
-
-Number.prototype.denormalize = function (min, max) {
-  return this * (this - min) / (max - min);
-};
-
-/***/ }),
+/* 419 */,
+/* 420 */,
 /* 421 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 

@@ -1,4 +1,8 @@
 /**
+ * @namespace Math
+ */
+
+/**
  * Class for Matrix math calculations. Please be aware
  * of the fact that the rows and columns start of by 0 and
  * not at 1.

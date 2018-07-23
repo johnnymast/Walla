@@ -1,7 +1,11 @@
+/**
+ * KeyboardInput
+ * @namespace Interaction
+ */
 define([], function () {
 
   /**
-   * Take controle over Keyboard input by using this class.
+   * Take control over Keyboard input by using this class.
    * You construct the class with a keycode.
    * See http://keycode.info/ for more information.
    * @exports core/input/KeyboardInput
