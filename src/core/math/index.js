@@ -1,4 +1,5 @@
 const Matrix = require('./matrix')
-const Vector2D = require('./vector2d')
+const Vector2d = require('./vector2d')
+const Vector3d = require('./vector3d')
 
-module.exports = { Matrix, Vector2D }
+module.exports = { Matrix, Vector2d, Vector3d }
