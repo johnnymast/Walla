@@ -4316,8 +4316,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_core_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_core_polyfill__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_core_geometry__ = __webpack_require__(242);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_core_geometry___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_core_geometry__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_polyfill__ = __webpack_require__(244);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_babel_polyfill__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_core_helpers__ = __webpack_require__(666);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_core_helpers___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_core_helpers__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_polyfill__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_babel_polyfill__);
+
 
 
 
@@ -9662,6 +9665,76 @@ module.exports = __webpack_require__(31);
 );
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+
+/***/ }),
+/* 621 */,
+/* 622 */,
+/* 623 */,
+/* 624 */,
+/* 625 */,
+/* 626 */,
+/* 627 */,
+/* 628 */,
+/* 629 */,
+/* 630 */,
+/* 631 */,
+/* 632 */,
+/* 633 */,
+/* 634 */,
+/* 635 */,
+/* 636 */,
+/* 637 */,
+/* 638 */,
+/* 639 */,
+/* 640 */,
+/* 641 */,
+/* 642 */,
+/* 643 */,
+/* 644 */,
+/* 645 */,
+/* 646 */,
+/* 647 */,
+/* 648 */,
+/* 649 */,
+/* 650 */,
+/* 651 */,
+/* 652 */,
+/* 653 */,
+/* 654 */,
+/* 655 */,
+/* 656 */,
+/* 657 */,
+/* 658 */,
+/* 659 */,
+/* 660 */,
+/* 661 */,
+/* 662 */,
+/* 663 */,
+/* 664 */,
+/* 665 */,
+/* 666 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(667);
+
+/***/ }),
+/* 667 */
+/***/ (function(module, exports) {
+
+/**
+ * @namespace Helper functions
+ */
+
+/**
+ * Generate a random number between given min and max.
+ *
+ * @param {number} min - the minimum value
+ * @param {number} max - the maximum value
+ * @returns {*}
+ */
+window.rand = function rand(min, max) {
+  return Math.random() * (max - min) + min;
+};
 
 /***/ })
 /******/ ]);
