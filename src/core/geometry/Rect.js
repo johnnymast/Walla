@@ -88,4 +88,6 @@ class Rect {
   }
 }
 
-module.exports = Rect
+if (typeof module !== 'undefined') {
+  module.exports = Rect
+}

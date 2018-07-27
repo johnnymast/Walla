@@ -74,4 +74,6 @@ class Point {
   }
 }
 
-module.exports = Point
+if (typeof module !== 'undefined') {
+  module.exports = Point
+}
