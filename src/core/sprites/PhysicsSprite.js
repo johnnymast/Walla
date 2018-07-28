@@ -8,6 +8,10 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   let PhysicsSprite = function (texture) {
     GameObject.call(this)
 
+
+    if (typeof this.setupBody != 'function') {
+      throw new Error('If you subclass PhysicsSprite you need to implement the setupBody() method.')
+    }
     /**
      * @type {PIXI.Texture}
      */
@@ -52,28 +56,12 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     this._width = this.texture.width
     this._height = this.texture.height
 
-    this._setupBody()
+
+    this.setupBody()
     this._setupCollision()
   }
 
   extend(PhysicsSprite, GameObject)
-
-  /**
-   * Setup the body of the PhysicsSprite
-   * @private
-   */
-  PhysicsSprite.prototype._setupBody = function () {
-    /**
-     * You can overwrite this function if you need to add your
-     * own body shape and properties.
-     */
-    let options = {
-      friction: 0,
-      restitution: 0.95,
-    }
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
-    this.PhysicsManager.add(this.body)
-  }
 
   /**
    * Setup collision events on the body.
@@ -139,7 +127,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   /**
    * Return the body position.
    *
-   * @returns {*}
+   * @returns {number}
    */
   PhysicsSprite.prototype.getPosition = function () {
     return this.body.position
@@ -148,7 +136,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   /**
    * Return the body x position.
    *
-   * @returns {*}
+   * @returns {number}
    */
   PhysicsSprite.prototype.getX = function () {
     return this.body.position.x
@@ -157,7 +145,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   /**
    * Return the body y position.
    *
-   * @returns {*}
+   * @returns {number}
    */
   PhysicsSprite.prototype.getY = function () {
     return this.body.position.y

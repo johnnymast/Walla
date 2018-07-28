@@ -1,5 +1,13 @@
-define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
-  var Brick = function (type, texture) {
+define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
+
+  /**
+   * Brick constructor.
+   *
+   * @param {string} type - the type of brick red/green/blue
+   * @param {PIXI.Texture} texture - the texture for this brick
+   * @constructor
+   */
+  let Brick = function (type, texture) {
     PhysicsSprite.call(this, texture)
     this.type = type
     this.health = 1
@@ -11,6 +19,12 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
 
   extend(Brick, PhysicsSprite)
 
+  /**
+   * This function is internally called by the PhysicsSprite if
+   * an collision is detected.
+   *
+   * @param {Body} withObject
+   */
   Brick.prototype.onCollisionWith = function(withObject) {
     if (this.health === 0) {
       this.PhysicsManager.remove(this.body);
@@ -19,6 +33,10 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
     this.decareaseHealth()
   }
 
+  /**
+   * Create the Brick object with physics properties.
+   * This function is internally called by the PhysicsSprite class.
+   */
   Brick.prototype.setupBody = function () {
     let options = {
       isStatic: true,
@@ -29,10 +47,18 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
     this.PhysicsManager.add(this.body)
   }
 
+  /**
+   * Remove 1 from the bricks health.
+   */
   Brick.prototype.decareaseHealth = function () {
     this.health--
   }
 
+  /**
+   * Update the physics of the brick.
+   *
+   * @param {number} delta - The delta since last tick
+   */
   Brick.prototype.update = function (delta) {
     let pos = this.body.position
     let angle = this.body.angle

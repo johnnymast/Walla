@@ -22,7 +22,9 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
      //  restitution: 1,
     }
 
-    this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
+    // this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
+    this.body = this.PhysicsManager.circle(this._x, this._y, this._width /2, options)
+
     this.body.label = Object.getPrototypeOf(this).constructor.name
     this.PhysicsManager.add(this.body)
   }

@@ -1,6 +1,6 @@
 // https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breakout/Brick', 'objects/Breakout/Pad', 'objects/Breakout/Ball'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
-  var Level1 = function (options) {
+  let Level1 = function (options) {
     GameLevel.call(this, {backgroundColor: 0x1099bb})
 
     this.startY = 50
@@ -34,9 +34,10 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     let y = this.startY
 
     for (let key of Object.keys(this.bricks)) {
-      var texture = this.bricks[key]
-      for (var x = 45; x < (this.num_bricks * texture.width); x += texture.width) {
-        var brick = new Brick(key, texture)
+      let texture = this.bricks[key]
+      for (let x = 45; x < (this.num_bricks * texture.width); x += texture.width) {
+        let brick = new Brick(key, texture)
+        brick.name = 'Brick' + this.objects.length + 1
         brick.setPosition(x, y)
 
         this.objects.push(brick)
@@ -84,13 +85,13 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     } else if (coords.x <= 0) {
       coords.x = 0
     }
-    console.log('pad x', coords.x, this.pad.body)
+    // console.log('pad x', coords.x, this.pad.body)
     this.pad.setX(coords.x)
   }
 
   Level1.prototype.onPointerDown = function (event) {
     this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05)
-    if (this.started == false) {
+    if (this.started === false) {
       for (let object of this.objects) {
         if (object instanceof Ball && this.didStart === false) {
           this.didStart = true
@@ -100,6 +101,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
       }
       this.started = true
     }
+    console.log(this.pad.y)
   }
 
   Level1.prototype.update = function (delta) {
