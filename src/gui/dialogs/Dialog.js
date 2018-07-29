@@ -11,7 +11,6 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.STATE_OPEN = 'open'
     this.STATE_CLOSED = 'closed'
 
-    console.log('DIALOG_TYPE', DIALOG_TYPE)
     this.options = {
       type: DIALOG_TYPE.DEFAULT,
       state: STATE.CLOSED

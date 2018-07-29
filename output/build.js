@@ -3925,7 +3925,9 @@ __webpack_require__(416);
 /* 244 */
 /***/ (function(module, exports) {
 
-
+Number.prototype.map = function (in_min, in_max, out_min, out_max) {
+  return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+};
 
 /***/ }),
 /* 245 */
@@ -4354,6 +4356,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+const EngineInfo = {
+  name: 'Walla',
+  version: 1.0,
+  url: 'https://github.com/johnnymast/Walla'
+};
+
 window.extend = function (a, b) {
   a.prototype = Object.create(b.prototype);
   a.prototype.constructor = a;
@@ -4403,7 +4411,20 @@ window.merge = function (src, dest) {
   return Object.assign(src, dest);
 };
 
+let sayHello = function () {
+  if (window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+    const args = [`\n %c %c %c ${EngineInfo.name} ${EngineInfo.version.toFixed(2)} - ✰ ✰  %c  %c  ${EngineInfo.url}  %c %c ♥%c♥%c♥ \n\n`, 'background: #ff66a5; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'color: #ff66a5; background: #030307; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'background: #ffc3dc; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;'];
+
+    window.console.log.apply(console, args);
+  } else if (window.console) {
+    window.console.log(`${EngineInfo.name} ${EngineInfo.version}`);
+  }
+};
+
 __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(2), __webpack_require__(247), __webpack_require__(419), __webpack_require__(417), __webpack_require__(420), __webpack_require__(418), __webpack_require__(248)]; (function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, Scene) {
+  PIXI.utils.skipHello();
+  sayHello();
+
   var ge = GameEngine.get();
 
   var app = new PIXI.Application(1920, 1080, {

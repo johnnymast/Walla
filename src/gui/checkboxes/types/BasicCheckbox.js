@@ -96,7 +96,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     } else {
       this.mark.visible = false
     }
-    console.log('set state', state)
   }
 
   return BasicCheckbox

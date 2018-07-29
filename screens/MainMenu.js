@@ -65,11 +65,13 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
       width: 248,
       height: 25,
       min: 0,
-      max: 100,
+      max: 1,
       x: 24,
       y: 124,
     })
 
+    slider.setValue(0.10)
+    console.log('value now', slider.getValue())
     // slider.deactivate()
 
     let checkbox = new Checkboxes.BasicCheckbox({
@@ -120,7 +122,6 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
    * PixelShooter menu option callback
    */
   MainScreen.prototype.pixelShooterClicked = function () {
-    console.log('EVENT', event)
     this.SceneManager.switchTo('PixelShooter/Level1')
   }
 

@@ -56,7 +56,6 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
 
     Button.call(this, this.options)
 
-    console.log('test hoor', this.options)
     this.states = {
       default: null,
       hover: null,

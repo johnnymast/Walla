@@ -24,6 +24,8 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
 
     BaseSlider.call(this, this.options)
 
+    this.on('slider.set_value', this._setValue.bind(this))
+
     this.init()
   }
 
@@ -67,6 +69,16 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     this.addChild(thumb)
   }
 
+  BasicSlider.prototype._setValue = function(value) {
+    if (value > this.options.max)
+      throw new Error(`BasicSlider: ${value} is higher the the configured maximum of ${this.options.max}`)
+    else if (value < this.options.min)
+      throw new Error(`BasicSlider: ${value} is lower the the configured minimum of ${this.options.min}`)
+
+    let x = value.map(this.options.min, this.options.max, 0, this.options.width)
+    this._moveThumbTo(x)
+  }
+
   BasicSlider.prototype._moveThumbTo = function(x) {
     let newx = x - this.options.thumbWidth
 
@@ -78,7 +90,10 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
       newx = 0
     }
     this.thumb.position.x = newx
-    this.value = newx / (this.options.width - this.options.thumbWidth)
+
+    let value = (newx / (this.options.width - this.options.thumbWidth)) * 100
+    this.value = value.map(0, 100, this.options.min, this.options.max)
+    console.log(this.value)
   }
 
 
@@ -89,7 +104,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    */
   BasicSlider.prototype._trackClicked = function(event) {
     let coords = event.data.global
-    this._moveThumbTo(coords.x, coords.y)
+    this._moveThumbTo(coords.x)
   }
 
 
