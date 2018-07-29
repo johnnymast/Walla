@@ -1,5 +1,6 @@
 const Menus = require('gui/menus')
 const Dialogs = require('gui/dialogs')
+const Checkboxes = require('gui/checkboxes')
 
 /**
  * @namespace Screens
@@ -59,6 +60,16 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
       y: this.app.screen.height / 2 - 200
     })
 
+    let checkbox = new Checkboxes.BasicCheckbox({
+      width: 48,
+      height: 48,
+      x: 24,
+      y: 24,
+    })
+    checkbox.check()
+
+
+
     dialog.onClose = function () {
       alert('Dialog onclose called')
     }
@@ -86,6 +97,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     dialog.addContent(menu)
 
     this.addChild(dialog)
+    this.addChild(checkbox)
     this.addChild(this.statistics)
   }
 
