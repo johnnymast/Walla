@@ -93,6 +93,12 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
 
     let value = (newx / (this.options.width - this.options.thumbWidth)) * 100
     this.value = value.map(0, 100, this.options.min, this.options.max)
+
+    console.log('FIXME: On mouse out move bug')
+    console.log('FIXME: SetValue bug under 10')
+    console.log('FIXME: Emit back that value changed')
+    console.log('TODO: Documentation')
+
     console.log(this.value)
   }
 
