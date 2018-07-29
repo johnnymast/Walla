@@ -3,11 +3,11 @@ const Rect = require('../../../src/core/geometry/rect')
 describe('Geometry - Rect', function () {
 
   it('Constructing values parameters should set the values.', () => {
-    let p = new Rect(10, 20, 200, 300)
-    expect(p.x).toEqual(10)
-    expect(p.y).toEqual(20)
-    expect(p.width).toEqual(200)
-    expect(p.height).toEqual(300)
+    let r = new Rect(10, 20, 200, 300)
+    expect(r.x).toEqual(10)
+    expect(r.y).toEqual(20)
+    expect(r.width).toEqual(200)
+    expect(r.height).toEqual(300)
   })
 
   it('clone() should return a new cloned version of an existing Rect.', () => {
