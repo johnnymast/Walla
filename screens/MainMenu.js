@@ -1,6 +1,7 @@
 const Menus = require('gui/menus')
 const Dialogs = require('gui/dialogs')
 const Checkboxes = require('gui/checkboxes')
+const Sliders = require('gui/sliders')
 
 /**
  * @namespace Screens
@@ -60,6 +61,24 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
       y: this.app.screen.height / 2 - 200
     })
 
+    let slider = new Sliders.BasicSlider({
+      width: 248,
+      height: 25,
+      min: 0,
+      max: 100,
+      x: 24,
+      y: 124,
+    })
+
+    // slider.deactivate()
+
+    let checkbox = new Checkboxes.BasicCheckbox({
+      width: 48,
+      height: 48,
+      x: 24,
+      y: 24,
+    })
+
     dialog.onClose = function () {
       alert('Dialog onclose called')
     }
@@ -82,11 +101,11 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
     menu.x = dialog.width / 2 - menu.width / 2
     menu.y = 40
 
-    // PIXI.sound.play('main_menu_music');
-
     dialog.addContent(menu)
 
     this.addChild(dialog)
+    this.addChild(slider)
+    this.addChild(checkbox)
     this.addChild(this.statistics)
   }
 

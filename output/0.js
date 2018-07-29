@@ -73200,6 +73200,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(667);
 const Dialogs = __webpack_require__(664);
 const Checkboxes = __webpack_require__(661);
+const Sliders = __webpack_require__(673);
 
 /**
  * @namespace Screens
@@ -73259,6 +73260,24 @@ const Checkboxes = __webpack_require__(661);
       y: this.app.screen.height / 2 - 200
     });
 
+    let slider = new Sliders.BasicSlider({
+      width: 248,
+      height: 25,
+      min: 0,
+      max: 100,
+      x: 24,
+      y: 124
+    });
+
+    // slider.deactivate()
+
+    let checkbox = new Checkboxes.BasicCheckbox({
+      width: 48,
+      height: 48,
+      x: 24,
+      y: 24
+    });
+
     dialog.onClose = function () {
       alert('Dialog onclose called');
     };
@@ -73281,11 +73300,11 @@ const Checkboxes = __webpack_require__(661);
     menu.x = dialog.width / 2 - menu.width / 2;
     menu.y = 40;
 
-    // PIXI.sound.play('main_menu_music');
-
     dialog.addContent(menu);
 
     this.addChild(dialog);
+    this.addChild(slider);
+    this.addChild(checkbox);
     this.addChild(this.statistics);
   };
 
@@ -75267,6 +75286,10 @@ const State = __webpack_require__(635).CHECKBOX_STATE;
     this.setState(State.UNCHECKED);
   };
 
+  BaseCheckbox.prototype.isChecked = function () {
+    return this.state == State.CHECKED;
+  };
+
   /**
    * Toggle the state to its inverted state.
    */
@@ -75389,9 +75412,9 @@ const State = __webpack_require__(635).CHECKBOX_STATE;
   let BasicCheckbox = function (options) {
 
     /**
-     * BasicCheckbox default options.
      *
      * @type {{borderSize: number, borderColor: number, borderOpacity: number, fillColor: number, fillOpacity: number, markFillColor: number, markOpacity: number, padding: number, state: string}}
+     *
      */
     this.options = {
       borderSize: 1,
@@ -75415,9 +75438,6 @@ const State = __webpack_require__(635).CHECKBOX_STATE;
 
   extend(BasicCheckbox, BaseCheckbox);
 
-  /**
-   * Initialize the BasicCheckbox.
-   */
   BasicCheckbox.prototype.init = function () {
 
     let options = this.options;
@@ -75442,8 +75462,6 @@ const State = __webpack_require__(635).CHECKBOX_STATE;
   };
 
   /**
-   * Handle on mouse click functionality for the checkbox.
-   *
    * @param {event} event - The event object
    */
   BasicCheckbox.prototype._onPointerDown = function (event) {
@@ -75482,6 +75500,7 @@ const State = __webpack_require__(635).CHECKBOX_STATE;
     } else {
       this.mark.visible = false;
     }
+    console.log('set state', state);
   };
 
   return BasicCheckbox;
@@ -75991,6 +76010,338 @@ webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
 webpackContext.id = 671;
 
+/***/ }),
+/* 672 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  let BaseSlider = function (options, ...items) {
+    GameObject.call(this, options);
+
+    this._options = options;
+
+    if (typeof this._options.width === 'undefined') {
+      throw new Error('BaseSlider: width provided.');
+    }
+
+    if (typeof this._options.height === 'undefined') {
+      throw new Error('BaseSlider: height provided.');
+    }
+
+    if (typeof this._options.x === 'undefined') {
+      throw new Error('BaseSlider: x position provided.');
+    }
+
+    if (typeof this._options.y === 'undefined') {
+      throw new Error('BaseSlider: y position provided.');
+    }
+
+    if (typeof this._options.min === 'undefined') {
+      throw new Error('BaseSlider: minimum value is not provided.');
+    }
+
+    if (typeof this._options.max === 'undefined') {
+      throw new Error('BaseSlider: maximum value is not provided.');
+    }
+
+    this.x = this._options.x;
+    this.y = this._options.y;
+
+    this.value = this._options.min;
+    this.isBeingDragged = false;
+
+    this.activate();
+
+    this.on('pointerdown', this._onPointerDown.bind(this));
+    this.on('pointerup', this._onPointerUp.bind(this));
+    this.on('pointerout', this._onPointerOut.bind(this));
+    this.on('pointerover', this._onPointerOver.bind(this));
+    this.on('pointerover', this._onPointerOver.bind(this));
+    this.on('mousemove', this._onMouseMove);
+  };
+
+  extend(BaseSlider, GameObject);
+
+  /**
+   * Return the slider value.
+   *
+   * @returns {number}
+   */
+  BaseSlider.prototype.getValue = function () {
+    return this.value;
+  };
+
+  /**
+   * Set the value for the slider.
+   *
+   * @param {number} value - the value for the slider
+   */
+  BaseSlider.prototype.setValue = function (value) {
+    this.value = value;
+    this.emit('slider.set_value', this.value);
+  };
+
+  /**
+   * In your level you can overwrite this function
+   * to get a callback from the slider if it is being
+   * clicked.
+   */
+  BaseSlider.prototype.onClick = function () {}
+  // Overwrite this in your level
+
+
+  /**
+   * In your level you can overwrite this function
+   * to get a callback from the checkbox if it is being
+   * hovered.
+   */
+  ;BaseSlider.prototype.onHover = function () {}
+  // Overwrite this in your level
+
+
+  /**
+   * In your level you can overwrite this function
+   * to get a callback from the slider if the mouse
+   * is leaving the object.
+   */
+  ;BaseSlider.prototype.onLeave = function () {}
+  // Overwrite this in your level
+
+
+  /**
+   * Activate the slider
+   */
+  ;BaseSlider.prototype.activate = function () {
+    this.interactive = true;
+    this.buttonMode = true;
+  };
+
+  /**
+   * Deactivate the slider
+   */
+  BaseSlider.prototype.deactivate = function () {
+    this.interactive = false;
+    this.buttonMode = true;
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the slider click is released.
+   *
+   * @param {event} event - The event object
+   */
+  BaseSlider.prototype._onPointerUp = function (event) {}
+  // Function body
+
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the slider is clicked.
+   *
+   * @param {event} event - The event object
+   */
+  ;BaseSlider.prototype._onPointerDown = function (event) {}
+  // Function body
+
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the mouse cursor leaves the
+   * slider.
+   *
+   * @param {event} event - The event object
+   */
+  ;BaseSlider.prototype._onPointerOut = function (event) {}
+  // Function body
+
+
+  /**
+  * You can overwrite this function if you wish
+  * to handle if the slider is hovered.
+  *
+  * @param {event} event - The event object
+  */
+  ;BaseSlider.prototype._onPointerOver = function (event) {}
+  // Function body
+
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if thumb of the slider is moved.
+   *
+   * @param {event} event - The event object
+   */
+  ;BaseSlider.prototype._onMouseMove = function (event) {
+    // Function body
+  };
+
+  return BaseSlider;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 673 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BasicSlider", function() { return BasicSlider; });
+const BasicSlider = __webpack_require__(674);
+
+
+/***/ }),
+/* 674 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const BaseSlider = __webpack_require__(672);
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
+
+  let BasicSlider = function (options) {
+
+    this.options = {
+      trackThickness: 2,
+      trackColor: 0x6d4b27,
+      trackOpacity: 1,
+      thumbBorderThickness: 2,
+      thumbBorderColor: 0xff0000,
+      thumbBorderOpacity: 1,
+      thumbFillColor: 0x6d4b27,
+      thumbOpacity: 1,
+      thumbWidth: 25,
+      thumbHeight: 25,
+      clickable: true, // false default
+      min: 0,
+      max: 1
+    };
+
+    this.options = extend2(true, this.options, options);
+
+    BaseSlider.call(this, this.options);
+
+    this.init();
+  };
+
+  extend(BasicSlider, BaseSlider);
+
+  /**
+   * Initialize the BasicSlider.
+   */
+  BasicSlider.prototype.init = function () {
+
+    let options = this.options;
+    let track = new PIXI.Graphics();
+    let thumb = new PIXI.Graphics();
+
+    /**
+     * Create the track
+     */
+    track.lineStyle(options.trackThickness, options.trackColor, options.trackOpacity);
+    track.moveTo(0, 0);
+    track.lineTo(this.options.width, 0);
+    track.endFill();
+
+    /**
+     * Creat the numb
+     */
+    track.lineStyle(options.thumbBorderThickness, options.thumbBorderColor, options.thumbBorderOpacity);
+
+    if (this.options.clickable == true) {
+      track.hitArea = track.getBounds();
+      track.interactive = true;
+      track.on('pointerdown', this._trackClicked.bind(this));
+    }
+
+    thumb.beginFill(options.thumbFillColor, options.thumbOpacity);
+    thumb.drawRect(0, -options.thumbHeight / 2, options.thumbWidth, options.thumbHeight);
+    thumb.endFill();
+
+    this.thumb = thumb;
+
+    this.addChild(track);
+    this.addChild(thumb);
+  };
+
+  BasicSlider.prototype._moveThumbTo = function (x) {
+    let newx = x - this.options.thumbWidth;
+
+    if (newx > this.options.width - this.options.thumbWidth) {
+      newx = this.options.width - this.options.thumbWidth;
+    }
+
+    if (newx < 0) {
+      newx = 0;
+    }
+    this.thumb.position.x = newx;
+    this.value = newx / (this.options.width - this.options.thumbWidth);
+  };
+
+  /**
+   *
+   * @param {event} event - The event object
+   * @private
+   */
+  BasicSlider.prototype._trackClicked = function (event) {
+    let coords = event.data.global;
+    this._moveThumbTo(coords.x, coords.y);
+  };
+
+  /**
+   * Handle on mouse click functionality for the BasicSlider.
+   *
+   * @param {event} event - The event object
+   */
+  BasicSlider.prototype._onPointerDown = function (event) {
+    this.isBeingDragged = true;
+    this.onClick();
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if the slider click is released.
+   *
+   * @param {event} event - The event object
+   */
+  BasicSlider.prototype._onPointerUp = function (event) {
+    this.isBeingDragged = false;
+  };
+
+  /**
+   * You can overwrite this function if you wish
+   * to handle if thumb of the slider is moved.
+   *
+   * @param {event} event - The event object
+   */
+  BasicSlider.prototype._onMouseMove = function (event) {
+    if (this.isBeingDragged === true) {
+      let coords = event.data.global;
+      this._moveThumbTo(coords.x, coords.y);
+    }
+  };
+
+  /**
+   * Handle on mouse over functionality for the BasicSlider.
+   *
+   * @param {event} event - The event object
+   */
+  BasicSlider.prototype._onPointerOver = function (event) {
+    this.onHover();
+  };
+
+  /**
+   * Handle on mouse out functionality for the BasicSlider.
+   *
+   * @param {event} event - The event object
+   * @private
+   */
+  BasicSlider.prototype._onPointerOut = function (event) {
+    this.onLeave();
+  };
+
+  return BasicSlider;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 /***/ })
 ]);
-//# sourceMappingURL=0.js.map
+//# sourceMappingURL=0.js.mapRL=0.js.map

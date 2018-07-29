@@ -6,9 +6,9 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   let BasicCheckbox = function (options) {
 
     /**
-     * BasicCheckbox default options.
      *
      * @type {{borderSize: number, borderColor: number, borderOpacity: number, fillColor: number, fillOpacity: number, markFillColor: number, markOpacity: number, padding: number, state: string}}
+     *
      */
     this.options = {
       borderSize: 1,
@@ -32,9 +32,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
 
   extend(BasicCheckbox, BaseCheckbox)
 
-  /**
-   * Initialize the BasicCheckbox.
-   */
   BasicCheckbox.prototype.init = function () {
 
     let options = this.options
@@ -61,8 +58,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   }
 
   /**
-   * Handle on mouse click functionality for the checkbox.
-   *
    * @param {event} event - The event object
    */
   BasicCheckbox.prototype._onPointerDown = function (event) {
@@ -101,6 +96,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     } else {
       this.mark.visible = false
     }
+    console.log('set state', state)
   }
 
   return BasicCheckbox

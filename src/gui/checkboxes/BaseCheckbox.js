@@ -76,6 +76,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.setState(State.UNCHECKED)
   }
 
+  BaseCheckbox.prototype.isChecked = function() {
+    return (this.state == State.CHECKED)
+  }
+
   /**
    * Toggle the state to its inverted state.
    */
