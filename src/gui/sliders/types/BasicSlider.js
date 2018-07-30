@@ -37,8 +37,13 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   BasicSlider.prototype.init = function () {
 
     let options = this.options
+    let background = new PIXI.Graphics()
     let track = new PIXI.Graphics()
     let thumb = new PIXI.Graphics()
+
+    background.beginFill(options.thumbBorderColor, 0)
+    background.drawRect(0, -options.thumbHeight / 2, options.width, options.height)
+    background.endFill()
 
     /**
      * Create the track
@@ -54,7 +59,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     track.lineStyle(options.thumbBorderThickness, options.thumbBorderColor, options.thumbBorderOpacity)
 
     if (this.options.clickable == true) {
-      track.hitArea = track.getBounds();
+      track.hitArea = track.getBounds()
       track.interactive = true
       track.on('pointerdown', this._trackClicked.bind(this))
     }
@@ -65,21 +70,41 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
 
     this.thumb = thumb
 
+    this.addChild(background)
     this.addChild(track)
     this.addChild(thumb)
+
+    this._setValue(this.options.min)
   }
 
-  BasicSlider.prototype._setValue = function(value) {
+  /**
+   * An external source (game) has used setValue to set the value (between min an max)
+   * to a given value. This function translates the value to the x position on the track.
+   *
+   * Note:
+   * This function is an internal callback to the 'slider.set_value' event.
+   *
+   * @param {number} value - the value the game has given to the slider
+   * @private
+   */
+  BasicSlider.prototype._setValue = function (value) {
     if (value > this.options.max)
       throw new Error(`BasicSlider: ${value} is higher the the configured maximum of ${this.options.max}`)
     else if (value < this.options.min)
       throw new Error(`BasicSlider: ${value} is lower the the configured minimum of ${this.options.min}`)
 
-    let x = value.map(this.options.min, this.options.max, 0, this.options.width)
+    let x = map2([this.options.min, this.options.max], [0, this.options.width], value)
+    x += this.thumb.width / 2
     this._moveThumbTo(x)
   }
 
-  BasicSlider.prototype._moveThumbTo = function(x) {
+  /**
+   * Move the thumb to position x on the tack.
+   *
+   * @param {number} x - the x position for the thumb
+   * @private
+   */
+  BasicSlider.prototype._moveThumbTo = function (x) {
     let newx = x - this.options.thumbWidth
 
     if (newx > (this.options.width - this.options.thumbWidth)) {
@@ -91,28 +116,24 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     }
     this.thumb.position.x = newx
 
-    let value = (newx / (this.options.width - this.options.thumbWidth)) * 100
-    this.value = value.map(0, 100, this.options.min, this.options.max)
+    let value = (newx / (this.options.width - this.options.thumbWidth))
 
-    console.log('FIXME: On mouse out move bug')
-    console.log('FIXME: SetValue bug under 10')
-    console.log('FIXME: Emit back that value changed')
-    console.log('TODO: Documentation')
+    this.value = Math.ceil(map2([0, 1], [this.options.min, this.options.max], value))
 
-    console.log(this.value)
+    this.emit('slider.value_changed', this.value)
   }
 
-
   /**
+   * Handle on mouse click functionality for the thumb of the
+   * BasicSlider.
    *
    * @param {event} event - The event object
    * @private
    */
-  BasicSlider.prototype._trackClicked = function(event) {
+  BasicSlider.prototype._trackClicked = function (event) {
     let coords = event.data.global
     this._moveThumbTo(coords.x)
   }
-
 
   /**
    * Handle on mouse click functionality for the BasicSlider.
@@ -163,6 +184,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    * @private
    */
   BasicSlider.prototype._onPointerOut = function (event) {
+    this.isBeingDragged = false
     this.onLeave()
   }
 

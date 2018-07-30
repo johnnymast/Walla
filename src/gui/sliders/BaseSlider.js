@@ -41,7 +41,8 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.on('pointerout', this._onPointerOut.bind(this))
     this.on('pointerover', this._onPointerOver.bind(this))
     this.on('pointerover', this._onPointerOver.bind(this))
-    this.on('mousemove', this._onMouseMove)
+    this.on('mousemove', this._onMouseMove.bind(this))
+    this.on('slider.value_changed', this._onValueChanged)
   }
 
   extend(BaseSlider, GameObject)
@@ -63,6 +64,16 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   BaseSlider.prototype.setValue = function (value) {
     this.value = value
     this.emit('slider.set_value', this.value)
+  }
+
+
+  /**
+   * In your level you can overwrite this function
+   * to get a callback from the slider if the value
+   * has been changed.
+   */
+  BaseSlider.prototype.onValueChanged = function () {
+    // Overwrite this in your level
   }
 
   /**
@@ -108,6 +119,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.buttonMode = true
   }
 
+  BaseSlider.prototype._onValueChanged = function (value = 0) {
+    this.onValueChanged(value)
+  }
+
   /**
    * You can overwrite this function if you wish
    * to handle if the slider click is released.
@@ -139,7 +154,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     // Function body
   }
 
-   /**
+  /**
    * You can overwrite this function if you wish
    * to handle if the slider is hovered.
    *
@@ -158,8 +173,6 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   BaseSlider.prototype._onMouseMove = function (event) {
     // Function body
   }
-
-
 
   return BaseSlider
 })

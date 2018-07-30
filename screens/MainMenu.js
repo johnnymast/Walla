@@ -65,15 +65,18 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics'], function (pi
       width: 248,
       height: 25,
       min: 0,
-      max: 1,
+      max: 10,
       x: 24,
       y: 124,
     })
 
-    slider.setValue(0.10)
+   slider.setValue(0.5)
     console.log('value now', slider.getValue())
     // slider.deactivate()
 
+    slider.onValueChanged = function(value) {
+      console.log('value is nu', value)
+    }
     let checkbox = new Checkboxes.BasicCheckbox({
       width: 48,
       height: 48,

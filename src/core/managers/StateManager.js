@@ -1,3 +1,5 @@
+const LocalStorage = require('core/storage/localStorage')
+
 /**
  * StateManager
  * @namespace Core Managers
@@ -10,7 +12,18 @@ define([], function () {
    * @class
    */
   let StateManager = function () {
-    this.container = []
+    this.adapter = new LocalStorage()
+    if (typeof this.adapter.set != 'function') {
+      throw new Error("StateManager: Adapter is not supporting the set method.")
+    }
+
+    if (typeof this.adapter.get != 'function') {
+      throw new Error("StateManager: Adapter is not supporting the get method.")
+    }
+
+    if (typeof this.adapter.unset != 'function') {
+      throw new Error("StateManager: Adapter is not supporting the unset method.")
+    }
   }
 
   /**
@@ -20,7 +33,7 @@ define([], function () {
    * @returns {*}
    */
   StateManager.prototype.get = function (key) {
-    return this.container[key]
+    return this.adapter.get(key)
   }
 
   /**
@@ -29,7 +42,7 @@ define([], function () {
    * @param {string} val = The value for this state
    */
   StateManager.prototype.set = function (key, val) {
-    this.container[key] = val
+    return this.adapter.set(key, val)
   }
 
   /**
@@ -38,7 +51,7 @@ define([], function () {
    * @param {string} key - Delete the value of this key
    */
   StateManager.prototype.unset = function (key) {
-    delete this.container[key]
+    return this.adapter.unset(key)
   }
 
   return StateManager
