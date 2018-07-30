@@ -76206,7 +76206,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const BaseSlider
     BaseSlider.call(this, this.options);
 
     this.on('slider.set_value', this._setValue.bind(this));
-
     this.init();
   };
 
@@ -76235,7 +76234,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const BaseSlider
     track.endFill();
 
     /**
-     * Creat the numb
+     * Create the thumb
      */
     track.lineStyle(options.thumbBorderThickness, options.thumbBorderColor, options.thumbBorderOpacity);
 
@@ -76334,8 +76333,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const BaseSlider
   };
 
   /**
-   * You can overwrite this function if you wish
-   * to handle if thumb of the slider is moved.
+    * Handle on mouse move functionality for the BasicSlider.
    *
    * @param {event} event - The event object
    */

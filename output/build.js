@@ -3921,6 +3921,9 @@ __webpack_require__(415);
 
 __webpack_require__(417);
 __webpack_require__(416);
+__webpack_require__(679);
+__webpack_require__(678);
+__webpack_require__(677);
 
 /***/ }),
 /* 244 */
@@ -4380,58 +4383,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 const EngineInfo = {
-  name: 'Walla',
+  name: 'Stage Engine',
   version: 1.0,
   url: 'https://github.com/johnnymast/Walla'
-};
-
-window.extend = function (a, b) {
-  a.prototype = Object.create(b.prototype);
-  a.prototype.constructor = a;
-  a.prototype.super = b.prototype;
-};
-
-// Pass in the objects to merge as arguments.
-// For a deep extend, set the first argument to `true`.
-window.extend2 = function () {
-
-  // Variables
-  var extended = {};
-  var deep = false;
-  var i = 0;
-  var length = arguments.length;
-
-  // Check if a deep merge
-  if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
-    deep = arguments[0];
-    i++;
-  }
-
-  // Merge the object into the extended object
-  var merge = function (obj) {
-    for (var prop in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-        // If deep merge and property is an object, merge properties
-        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
-          extended[prop] = extend2(true, extended[prop], obj[prop]);
-        } else {
-          extended[prop] = obj[prop];
-        }
-      }
-    }
-  };
-
-  // Loop through each object and conduct a merge
-  for (; i < length; i++) {
-    var obj = arguments[i];
-    merge(obj);
-  }
-
-  return extended;
-};
-
-window.merge = function (src, dest) {
-  return Object.assign(src, dest);
 };
 
 let sayHello = function () {
@@ -9738,6 +9692,121 @@ module.exports = __webpack_require__(31);
 );
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+
+/***/ }),
+/* 624 */,
+/* 625 */,
+/* 626 */,
+/* 627 */,
+/* 628 */,
+/* 629 */,
+/* 630 */,
+/* 631 */,
+/* 632 */,
+/* 633 */,
+/* 634 */,
+/* 635 */,
+/* 636 */,
+/* 637 */,
+/* 638 */,
+/* 639 */,
+/* 640 */,
+/* 641 */,
+/* 642 */,
+/* 643 */,
+/* 644 */,
+/* 645 */,
+/* 646 */,
+/* 647 */,
+/* 648 */,
+/* 649 */,
+/* 650 */,
+/* 651 */,
+/* 652 */,
+/* 653 */,
+/* 654 */,
+/* 655 */,
+/* 656 */,
+/* 657 */,
+/* 658 */,
+/* 659 */,
+/* 660 */,
+/* 661 */,
+/* 662 */,
+/* 663 */,
+/* 664 */,
+/* 665 */,
+/* 666 */,
+/* 667 */,
+/* 668 */,
+/* 669 */,
+/* 670 */,
+/* 671 */,
+/* 672 */,
+/* 673 */,
+/* 674 */,
+/* 675 */,
+/* 676 */,
+/* 677 */
+/***/ (function(module, exports) {
+
+// Pass in the objects to merge as arguments.
+// For a deep extend, set the first argument to `true`.
+window.extend2 = function () {
+
+  // Variables
+  var extended = {};
+  var deep = false;
+  var i = 0;
+  var length = arguments.length;
+
+  // Check if a deep merge
+  if (Object.prototype.toString.call(arguments[0]) === '[object Boolean]') {
+    deep = arguments[0];
+    i++;
+  }
+
+  // Merge the object into the extended object
+  var merge = function (obj) {
+    for (var prop in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+        // If deep merge and property is an object, merge properties
+        if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+          extended[prop] = extend2(true, extended[prop], obj[prop]);
+        } else {
+          extended[prop] = obj[prop];
+        }
+      }
+    }
+  };
+
+  // Loop through each object and conduct a merge
+  for (; i < length; i++) {
+    var obj = arguments[i];
+    merge(obj);
+  }
+
+  return extended;
+};
+
+/***/ }),
+/* 678 */
+/***/ (function(module, exports) {
+
+
+window.extend = function (a, b) {
+  a.prototype = Object.create(b.prototype);
+  a.prototype.constructor = a;
+  a.prototype.super = b.prototype;
+};
+
+/***/ }),
+/* 679 */
+/***/ (function(module, exports) {
+
+window.merge = function (src, dest) {
+  return Object.assign(src, dest);
+};
 
 /***/ })
 /******/ ]);

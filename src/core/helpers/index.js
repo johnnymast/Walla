@@ -1,2 +1,5 @@
 require('./rand')
 require('./map2')
+require('./merge')
+require('./extend')
+require('./extend2')

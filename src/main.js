@@ -4,59 +4,9 @@ import 'core/helpers'
 import 'babel-polyfill'
 
 const EngineInfo = {
-  name: 'Walla',
+  name: 'Stage Engine',
   version: 1.0,
   url: 'https://github.com/johnnymast/Walla',
-}
-
-window.extend = function (a, b) {
-  a.prototype = Object.create(b.prototype)
-  a.prototype.constructor = a
-  a.prototype.super = b.prototype
-}
-
-// Pass in the objects to merge as arguments.
-// For a deep extend, set the first argument to `true`.
-window.extend2 = function () {
-
-  // Variables
-  var extended = {};
-  var deep = false;
-  var i = 0;
-  var length = arguments.length;
-
-  // Check if a deep merge
-  if ( Object.prototype.toString.call( arguments[0] ) === '[object Boolean]' ) {
-    deep = arguments[0];
-    i++;
-  }
-
-  // Merge the object into the extended object
-  var merge = function (obj) {
-    for ( var prop in obj ) {
-      if ( Object.prototype.hasOwnProperty.call( obj, prop ) ) {
-        // If deep merge and property is an object, merge properties
-        if ( deep && Object.prototype.toString.call(obj[prop]) === '[object Object]' ) {
-          extended[prop] = extend2( true, extended[prop], obj[prop] );
-        } else {
-          extended[prop] = obj[prop];
-        }
-      }
-    }
-  };
-
-  // Loop through each object and conduct a merge
-  for ( ; i < length; i++ ) {
-    var obj = arguments[i];
-    merge(obj);
-  }
-
-  return extended;
-
-};
-
-window.merge = function (src, dest) {
-  return Object.assign(src, dest)
 }
 
 
