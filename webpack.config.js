@@ -24,7 +24,7 @@ if (PROD) {
 const config = {
   entry: {
     build: path.resolve(__dirname, './src/main.js'),
-    vendor: ['underscore', 'pixi', 'pixi-sound', 'pixi-tiledmap', 'pixi-filters', 'require', 'matter-js']
+    vendor: ['underscore', 'pixi', 'pixi-sound', 'pixi-tiledmap', 'tweenjs', 'pixi-filters', 'require', 'matter-js']
 
   },
   output: {
@@ -73,6 +73,7 @@ const config = {
       'pixi-filters': path.resolve(__dirname, './node_modules/pixi-filters'),
       'underscore': path.resolve(__dirname, './node_modules/underscore/underscore.js'),
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
+      'tweenjs': path.resolve(__dirname, './node_modules/@tweenjs/tween.js'),
       'core': path.resolve(__dirname, 'src/core'),
       'gui': path.resolve(__dirname, 'src/gui'),
       'screens': path.resolve(__dirname, 'screens'),

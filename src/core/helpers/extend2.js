@@ -1,12 +1,16 @@
+/**
+ * @namespace Helper functions
+ */
+
 // Pass in the objects to merge as arguments.
 // For a deep extend, set the first argument to `true`.
 window.extend2 = function () {
 
   // Variables
-  var extended = {};
-  var deep = false;
-  var i = 0;
-  var length = arguments.length;
+  let extended = {};
+  let deep = false;
+  let i = 0;
+  let length = arguments.length;
 
   // Check if a deep merge
   if ( Object.prototype.toString.call( arguments[0] ) === '[object Boolean]' ) {
@@ -15,7 +19,7 @@ window.extend2 = function () {
   }
 
   // Merge the object into the extended object
-  var merge = function (obj) {
+  let merge = function (obj) {
     for ( var prop in obj ) {
       if ( Object.prototype.hasOwnProperty.call( obj, prop ) ) {
         // If deep merge and property is an object, merge properties
@@ -30,7 +34,7 @@ window.extend2 = function () {
 
   // Loop through each object and conduct a merge
   for ( ; i < length; i++ ) {
-    var obj = arguments[i];
+    let obj = arguments[i];
     merge(obj);
   }
 

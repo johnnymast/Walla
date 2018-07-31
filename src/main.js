@@ -43,8 +43,7 @@ require([
   'core/managers/AssetManager',
   'core/managers/StateManager',
   'core/managers/PhysicsManager',
-  'core/Scene'
-], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, Scene) {
+], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager) {
   PIXI.utils.skipHello()
   sayHello()
 
