@@ -47,7 +47,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
       console.log('simpletap')
     })
 
-
     this.cursor_sprite = new PIXI.Sprite()
     this.cursor_sprite.interactive = false
     this.cursor_sprite.buttonMode = false
@@ -67,10 +66,20 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     }.bind(this))
 
     /**
-     * 
+     *
      * @type {{}}
      */
     this.resources = {}
+
+    this.fullscreen = {
+      available: false,
+      cancel: '',
+      keyboard: false,
+      request: '',
+      check: '',
+    }
+
+    this._detectFullScreenSupport()
 
     /**
      *
@@ -85,6 +94,56 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   }
 
   extend(Scene, GameObject)
+
+  /**
+   * You can call this function to see if fullscreen is available
+   * on this device.
+   *
+   * @returns {boolean}
+   */
+  Scene.prototype.isFullScreenAvailable = function () {
+    return this.fullscreen.available
+  }
+
+  /**
+   * Check to see if the device is in fullscreen mode.
+   *
+   * @returns {boolean}
+   */
+  Scene.prototype.isFullScreen = function () {
+    if (this.isFullScreenAvailable() === true) {
+      if (typeof document[this.fullscreen.check] !== 'undefined') {
+        return document[this.fullscreen.check]
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Toggle fullscreen mode.
+   *
+   * @returns {*}
+   */
+  Scene.prototype.enterFullScreen = function () {
+    if (this.isFullScreenAvailable() === true) {
+      if (typeof this.app.view[this.fullscreen.request] !== 'undefined') {
+        this.app.view[this.fullscreen.request]()
+      }
+    }
+  }
+
+  /**
+   * Exit from fullscreen if device is in fullscreen mode.
+   *
+   * @returns {*}
+   */
+  Scene.prototype.exitFullScreen = function () {
+    if (this.isFullScreenAvailable() === true && this.isFullScreen() === true) {
+      if (typeof document[this.fullscreen.cancel] !== 'undefined') {
+        document[this.fullscreen.cancel]()
+      }
+    }
+  }
 
   /**
    * Hide the cursor on the current Scene.
@@ -197,6 +256,83 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    */
   Scene.prototype.isPaused = function () {
     return this.paused
+  }
+
+  /**
+   * Check if whe have fullscreen support available.
+   * To be honest i have to give credit this function is taken
+   * from phaser sourcecode.
+   *
+   * Source:
+   * https://github.com/photonstorm/phaser/blob/747f09af86f11accd922210bd5b35c236bda5741/src/device/Fullscreen.js
+   *
+   *
+   * @author       Richard Davey <rich@photonstorm.com>
+   * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+   * @private
+   */
+  Scene.prototype._detectFullScreenSupport = function () {
+    let fs = [
+      'requestFullscreen',
+      'requestFullScreen',
+      'webkitRequestFullscreen',
+      'webkitRequestFullScreen',
+      'msRequestFullscreen',
+      'msRequestFullScreen',
+      'mozRequestFullScreen',
+      'mozRequestFullscreen'
+    ]
+
+    let element = document.createElement('div')
+
+    for (let i = 0; i < fs.length; i++) {
+      if (element[fs[i]]) {
+        this.fullscreen.available = true
+        this.fullscreen.request = fs[i]
+        break
+      }
+    }
+
+    let cfs = [
+      'cancelFullScreen',
+      'exitFullscreen',
+      'webkitCancelFullScreen',
+      'webkitExitFullscreen',
+      'msCancelFullScreen',
+      'msExitFullscreen',
+      'mozCancelFullScreen',
+      'mozExitFullscreen'
+    ]
+
+    if (this.fullscreen.available) {
+      for (let i = 0; i < cfs.length; i++) {
+        if (typeof document[cfs[i]] == 'function') {
+          this.fullscreen.cancel = cfs[i]
+          break
+        }
+      }
+    }
+
+    let cff = [
+      'fullscreen',
+      'webkitIsFullScreen',
+      'mozFullScreen',
+    ]
+
+
+    for (let i = 0; i < cff.length; i++) {
+      if (typeof document[cff[i]] == 'boolean') {
+        this.fullscreen.check = cff[i]
+        break
+      }
+    }
+
+
+
+    //  Keyboard Input?
+    if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT']) {
+      this.fullscreen.keyboard = true
+    }
   }
 
   /**

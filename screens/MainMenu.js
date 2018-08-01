@@ -55,9 +55,9 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       let dialog = new Dialogs.Dialog({
         type: Dialogs.TYPE.CLOSEABLE,
         width: 400,
-        height: 400,
+        height: 500,
         x: this.app.screen.width / 2 - 200,
-        y: -400,
+        y: -500,
       })
 
 
@@ -73,9 +73,17 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       item2.setPosition(menu.x, item1.y + item1.height + 5)
       item3.setPosition(menu.x, item2.y + item2.height + 5)
 
+
       menu.addMenuItem(item1)
       menu.addMenuItem(item2)
       menu.addMenuItem(item3)
+
+      if (this.isFullScreenAvailable() === true) {
+        let item4 = new Menus.MenuItemImageButton('Toggle Fullscreen', this.fullscreenClicked.bind(this))
+        item4.setPosition(menu.x, item3.y + item3.height + 5)
+        menu.addMenuItem(item4)
+      }
+
 
       /**
        * Position the Menu on the Dialog
@@ -121,6 +129,19 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
     MainScreen.prototype.roundedRectsClicked = function () {
       this.SceneManager.switchTo('RoundedRects/Level1')
     }
+
+    /**
+     * RoundedRects menu option callback
+     */
+    MainScreen.prototype.fullscreenClicked = function () {
+      if (this.isFullScreen() === false) {
+        this.enterFullScreen()
+      } else {
+        this.exitFullScreen()
+      }
+    }
+
+
 
     /**
      * Animate the background scrolling/
