@@ -141,8 +141,9 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       }
     }
 
-
-
+    MainScreen.prototype.onSwitchedAway = function() {
+      console.log('SceneManager switched away from MainMenu')
+    }
     /**
      * Animate the background scrolling/
      *

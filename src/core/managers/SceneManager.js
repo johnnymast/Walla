@@ -63,6 +63,7 @@ define(['core/GameEngine'], function (GameEngine) {
     if (nextScene) {
       if (this.currentScene) {
         this.app.stage.removeChild(this.currentScene)
+        this.currentScene.switchedAway()
       }
 
       nextScene.start()

@@ -193,7 +193,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   }
 
   /**
-   * Callback for the onPause even. You can overwrite this your self
+   * Callback for the onPause event. You can overwrite this your self
    * to receive the onPause call.
    */
   Scene.prototype.onPause = function () {
@@ -204,7 +204,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   }
 
   /**
-   * Callback for the onStart even. You can overwrite this your self
+   * Callback for the onStart event. You can overwrite this your self
    * to receive the onStart call.
    */
   Scene.prototype.onStart = function () {
@@ -215,7 +215,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   }
 
   /**
-   * Callback for the onResume even. You can overwrite this your self
+   * Callback for the onResume event. You can overwrite this your self
    * to receive the onResume call.
    */
   Scene.prototype.onResume = function () {
@@ -226,11 +226,29 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   }
 
   /**
+   * Callback for the onSwitchedAway event. You can overwrite this your self
+   * to receive the onResume call.
+   */
+  Scene.prototype.onSwitchedAway = function() {
+    /**
+     * This function will be called when the scene is been switched away from. You can overwrite this in
+     * your Scene to act on this event.
+     */
+  }
+
+  /**
    * Start the scene
    */
   Scene.prototype.start = function () {
     this.paused = false
     this.onStart()
+  }
+
+  /**
+   * The scene has been switched off.
+   */
+  Scene.prototype.switchedAway = function () {
+    this.onSwitchedAway()
   }
 
   /**
