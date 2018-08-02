@@ -56,6 +56,28 @@ describe('Math - Vector2d', function () {
     )
   })
 
+  it('multiply () should multiply a value to every value in the Vector2d.', () => {
+    let v = new Vector2d(4, 4)
+    v.multiply(2)
+    expect(v).toEqual(
+      {
+        x: 8,
+        y: 8
+      }
+    )
+  })
+
+  it('devide () should devide the value of the Vector2d.', () => {
+    let v = new Vector2d(4, 4)
+    v.devide(2)
+    expect(v).toEqual(
+      {
+        x: 2,
+        y: 2
+      }
+    )
+  })
+
   it('getX() should return the x value of the Vector2d.', () => {
     let v = new Vector2d(4, 6)
     let x = v.getX()
@@ -84,6 +106,12 @@ describe('Math - Vector2d', function () {
     let v = new Vector2d(2, 2, 4)
     let multiply = v.multiply(2)
     expect(multiply).toBeInstanceOf(Vector2d)
+  })
+
+  it('devide () should return an instance of the Vector2d it self', () => {
+    let v = new Vector2d(2, 2, 4)
+    let devide = v.devide(2)
+    expect(devide).toBeInstanceOf(Vector2d)
   })
 
   it('toObject() returns the values as an object', () => {
@@ -127,6 +155,16 @@ describe('Math - Vector2d Element-wise', function () {
     expect(v1).toEqual({
       x: 4,
       y: 12,
+    })
+  })
+
+  it('devide() should take an other Vector2d as argument and devide that Vector2d with the existing Vector2d.', () => {
+    let v1 = new Vector2d(12, 12)
+    let v2 = new Vector2d(6, 6)
+    v1 = v1.devide(v2)
+    expect(v1).toEqual({
+      x: 2,
+      y: 2,
     })
   })
 })

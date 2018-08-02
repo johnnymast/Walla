@@ -8,7 +8,11 @@
  * @class
  */
 class Vector2d {
-  constructor (x, y) {
+  /**
+   * @param {number} [x=0] - the x value
+   * @param {number} [y=0] - the y value
+   */
+  constructor (x = 0, y = 0) {
     this.x = x
     this.y = y
   }
@@ -28,7 +32,6 @@ class Vector2d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2d} n Add a number to the vector or add an other Vector2d object
    * @returns {object}
    */
   toObject () {
@@ -61,7 +64,7 @@ class Vector2d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2d} n Add a number to the vector or add a an other Vector2d object
+   * @param {number|Vector2d} n - Add a number to the vector or add a an other Vector2d object
    * @returns {Vector2d}
    */
   add (n) {
@@ -90,7 +93,7 @@ class Vector2d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2d} n Add a number to the vector or add a an other Vector2d object
+   * @param {number|Vector2d} n - Substract a number to the vector or subtract a an other Vector2d object
    * @returns {Vector2d}
    */
   subtract (n) {
@@ -119,7 +122,7 @@ class Vector2d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2d} n Add a number to the vector or add a an other Vector2d object
+   * @param {number|Vector2d} n - Multiply a number to the vector or multiply a an other Vector2d object
    * @returns {Vector2d}
    */
   multiply (n) {
@@ -129,6 +132,35 @@ class Vector2d {
     } else {
       this.x *= n
       this.y *= n
+    }
+    return this
+  }
+
+  /**
+   * @example
+   *
+   *  let vector = new Vector2d(8,8);
+   *
+   *  // Our vector looks like this
+   *  // { x: 8, y: 8 }
+   *
+   *  let result = v.devide(2)
+   *
+   *  // Our resulting vector now looks like this
+   *  // { x: 4, y: 4 }
+   *
+   *  console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - devide a number on the vector or devide a an other Vector3d object
+   * @returns {Vector3d}
+   */
+  devide (n) {
+    if (n instanceof Vector2d) {
+      this.x /= n.x
+      this.y /= n.y
+    } else {
+      this.x /= n
+      this.y /= n
     }
     return this
   }

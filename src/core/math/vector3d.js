@@ -35,7 +35,6 @@ class Vector3d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector3d} n Add a number to the vector or add a an other Vector3d object
    * @returns {object}
    */
   toObject () {
@@ -68,7 +67,7 @@ class Vector3d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector3d} n Add a number to the vector or add an other Vector3d object
+   * @param {number|Vector3d} n - Add a number to the vector or add an other Vector3d object
    * @returns {Vector3d}
    */
   add (n) {
@@ -99,7 +98,7 @@ class Vector3d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector3d} n Add a number to the vector or add a an other Vector3d object
+   * @param {number|Vector3d} n - Subtract a number to the vector or substract a an other Vector3d object
    * @returns {Vector3d}
    */
   subtract (n) {
@@ -130,7 +129,7 @@ class Vector3d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector3d} n Add a number to the vector or add a an other Vector3d object
+   * @param {number|Vector3d} n - Multiply a number to the vector or multiply a an other Vector3d object
    * @returns {Vector3d}
    */
   multiply (n) {
@@ -142,6 +141,37 @@ class Vector3d {
       this.x *= n
       this.y *= n
       this.z *= n
+    }
+    return this
+  }
+
+  /**
+   * @example
+   *
+   *  let v = new Vector3d(4, 4, 2)
+   *
+   *  // Our vector looks like this
+   *  // { x: 4, y: 4, z: 2 }
+   *
+   *  let result = v.devide(2)
+   *
+   *  // Our resulting vector now looks like this
+   *  // { x: 2, y: 2, z: 1 }
+   *
+   *  console.log(result.toObject())
+   *
+   * @param {number|Vector3d} n - devide a number on the vector or devide a an other Vector3d object
+   * @returns {Vector3d}
+   */
+  devide (n) {
+    if (n instanceof Vector3d) {
+      this.x /= n.x
+      this.y /= n.y
+      this.z /= n.z
+    } else {
+      this.x /= n
+      this.y /= n
+      this.z /= n
     }
     return this
   }

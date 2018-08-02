@@ -21,7 +21,7 @@ describe('Math - Vector3d', function () {
     })
   })
 
-  it('add() should add a value to every value in the vector2d.', () => {
+  it('add() should add a value to every value in the Vector3d.', () => {
     let v = new Vector3d(2, 5, 2)
     v.add(2)
     expect(v).toEqual(
@@ -32,7 +32,31 @@ describe('Math - Vector3d', function () {
       }
     )
   })
-  //
+
+  it('multiply () should multiply a value to every value in the Vector3d.', () => {
+    let v = new Vector3d(4, 4, 4)
+    v.multiply(2)
+    expect(v).toEqual(
+      {
+        x: 8,
+        y: 8,
+        z: 8
+      }
+    )
+  })
+
+  it('devide () should devide the value of the Vector3d.', () => {
+    let v = new Vector3d(4, 4, 2)
+    v.devide(2)
+    expect(v).toEqual(
+      {
+        x: 2,
+        y: 2,
+        z: 1,
+      }
+    )
+  })
+
   it('clone() should return a new cloned version of an existing Vector3d. And add() would not change the original', () => {
     let v = new Vector3d(2, 2, 5)
     let theclone = v.clone()
@@ -98,6 +122,12 @@ describe('Math - Vector3d', function () {
     expect(multiply).toBeInstanceOf(Vector3d)
   })
 
+  it('devide () should return an instance of the Vector3d it self', () => {
+    let v = new Vector3d(2, 2, 4)
+    let devide = v.multiply(2)
+    expect(devide).toBeInstanceOf(Vector3d)
+  })
+
   it('toObject() returns the values as an object', () => {
     let v = new Vector3d(2, 5, 2)
     let result = v.add(2)
@@ -145,6 +175,17 @@ describe('Math - Vector3d Element-wise', function () {
       x: 4,
       y: 12,
       z: 132,
+    })
+  })
+
+  it('devide() should take an other vector as argument and devide that Vector3d with the existing Vector3d.', () => {
+    let v1 = new Vector3d(8, 8, 8)
+    let v2 = new Vector3d(2, 2, 2)
+    v1 = v1.devide(v2)
+    expect(v1).toEqual({
+      x: 4,
+      y: 4,
+      z: 4,
     })
   })
 })
