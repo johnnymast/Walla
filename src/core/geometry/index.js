@@ -1,2 +1,2 @@
-require ('./Point')
-require ('./Rect')
+require ('./point')
+require ('./rect')
