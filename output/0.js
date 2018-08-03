@@ -72234,6 +72234,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     if (nextScene) {
       if (this.currentScene) {
         this.app.stage.removeChild(this.currentScene);
+        this.currentScene.switchedAway();
       }
 
       nextScene.start();
@@ -72813,7 +72814,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
 
 
   /**
-   * Callback for the onPause even. You can overwrite this your self
+   * Callback for the onPause event. You can overwrite this your self
    * to receive the onPause call.
    */
   ;Scene.prototype.onPause = function () {}
@@ -72824,7 +72825,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
 
 
   /**
-   * Callback for the onStart even. You can overwrite this your self
+   * Callback for the onStart event. You can overwrite this your self
    * to receive the onStart call.
    */
   ;Scene.prototype.onStart = function () {}
@@ -72835,7 +72836,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
 
 
   /**
-   * Callback for the onResume even. You can overwrite this your self
+   * Callback for the onResume event. You can overwrite this your self
    * to receive the onResume call.
    */
   ;Scene.prototype.onResume = function () {}
@@ -72846,11 +72847,29 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
 
 
   /**
+   * Callback for the onSwitchedAway event. You can overwrite this your self
+   * to receive the onResume call.
+   */
+  ;Scene.prototype.onSwitchedAway = function () {}
+  /**
+   * This function will be called when the scene is been switched away from. You can overwrite this in
+   * your Scene to act on this event.
+   */
+
+
+  /**
    * Start the scene
    */
   ;Scene.prototype.start = function () {
     this.paused = false;
     this.onStart();
+  };
+
+  /**
+   * The scene has been switched off.
+   */
+  Scene.prototype.switchedAway = function () {
+    this.onSwitchedAway();
   };
 
   /**
@@ -74366,6 +74385,9 @@ const Dialogs = __webpack_require__(666);
     }
   };
 
+  MainScreen.prototype.onSwitchedAway = function () {
+    console.log('SceneManager switched away from MainMenu');
+  };
   /**
    * Animate the background scrolling/
    *
