@@ -1,7 +1,7 @@
 const Button = require('../BaseButton')
 
 define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject) {
-  let ImageButton = function (options) {
+  let NineSlicedButton = function (options) {
 
     this.textStyle = new pixi.TextStyle({
       fontFamily: 'Arial',
@@ -64,14 +64,14 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     this.init()
   }
 
-  extend(ImageButton, Button)
+  extend(NineSlicedButton, Button)
 
   /**
    * Set thew text for the button.
    *
    * @param {string} text - the text for the button
    */
-  ImageButton.prototype.setText = function (text) {
+  NineSlicedButton.prototype.setText = function (text) {
     this.options.text = text
     this.textLabel.text = this.options.text
 
@@ -80,14 +80,14 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
   }
 
   /**
-   * Initialize the ImageButton objects.
+   * Initialize the NineSlicedButton objects.
    */
-  ImageButton.prototype.init = function () {
+  NineSlicedButton.prototype.init = function () {
 
     let options = this.options
-    let state_default = new PIXI.Sprite(PIXI.Texture.fromImage(options.state.default.texture))
-    let state_hover = new PIXI.Sprite(PIXI.Texture.fromImage(options.state.hover.texture))
-    let state_clicked = new PIXI.Sprite(PIXI.Texture.fromImage(options.state.clicked.texture))
+    let state_default = new PIXI.mesh.NineSlicePlane(PIXI.Texture.fromImage(options.state.default.texture))
+    let state_hover = new PIXI.mesh.NineSlicePlane(PIXI.Texture.fromImage(options.state.hover.texture))
+    let state_clicked = new PIXI.mesh.NineSlicePlane(PIXI.Texture.fromImage(options.state.clicked.texture))
 
     state_default.width = this.options.width
     state_default.height = this.options.height
@@ -123,7 +123,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
    *
    * @param {event} event - the event object
    */
-  ImageButton.prototype._onPointerOut = function (event) {
+  NineSlicedButton.prototype._onPointerOut = function (event) {
     this.states.default.visible = true
     this.states.hover.visible = false
     this.states.clicked.visible = false
@@ -143,7 +143,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
    *
    * @param {event} event - the event object
    */
-  ImageButton.prototype._onPointerOver = function (event) {
+  NineSlicedButton.prototype._onPointerOver = function (event) {
     this.states.default.visible = false
     this.states.hover.visible = true
     this.states.clicked.visible = false
@@ -160,11 +160,11 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
 
   /**
    * You can overwrite this function if you wish
-   * to handle if the button clicke is released.
+   * to handle if the button click is released.
    *
-   * @param {event} event - The event object
+   * @param {event} event - the event object
    */
-  ImageButton.prototype._onPointerUp = function (event) {
+  NineSlicedButton.prototype._onPointerUp = function (event) {
     this.states.default.visible = true
     this.states.hover.visible = false
     this.states.clicked.visible = false
@@ -184,7 +184,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
    *
    * @param {event} event - the event object
    */
-  ImageButton.prototype._onPointerDown = function (event) {
+  NineSlicedButton.prototype._onPointerDown = function (event) {
     this.states.default.visible = false
     this.states.hover.visible = false
     this.states.clicked.visible = true
@@ -198,5 +198,5 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     }
   }
 
-  return ImageButton
+  return NineSlicedButton
 })
