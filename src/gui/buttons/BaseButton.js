@@ -9,7 +9,6 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.x = this._options.x
     this.y = this._options.y
 
-
     this.on('pointerdown', this._onPointerDown.bind(this))
     this.on('pointerup', this._onPointerUp.bind(this))
     this.on('pointerout', this._onPointerOut.bind(this))
@@ -18,19 +17,41 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
 
   extend(Button, GameObject)
 
-  Button.prototype.onRestore = function() {
+  /**
+   * In your level you can overwrite this function
+   * to get a callback from the button if it is being
+   * restored to the default state.
+   */
+  Button.prototype.onRestore = function () {
     // Overwrite this
   }
 
-  Button.prototype.onClick = function() {
+  /**
+   * In your level you can overwrite this function
+   * to get a callback from the button if it is being
+   * clicked.
+   */
+  Button.prototype.onClick = function () {
     // Overwrite this
-    console.log('internal onclick')
   }
 
-  Button.prototype.onHover = function() {
+  /**
+   * In your level you can overwrite this function
+   * to get a button from the checkbox if it is being
+   * hovered.
+   */
+  Button.prototype.onHover = function () {
     // Overwrite this
   }
 
+  /**
+   * Determine if the button is activates.
+   *
+   * @returns {boolean}
+   */
+  Button.prototype.isActive = function () {
+    return (this.interactive === true && this.buttonMode === true)
+  }
 
   /**
    * Activate the button
