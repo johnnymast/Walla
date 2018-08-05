@@ -81,10 +81,10 @@ class Matrix {
    *
    * console.table(matrix.valueOf())
    *
-   * @param {number} row The row on which to set the value
-   * @param {number} col The column on which to set the value
-   * @param {number} value The value to set on the coordinates
-   * @returns {Matrix} The matrix object it self
+   * @param {number} row - the row on which to set the value
+   * @param {number} col - the column on which to set the value
+   * @param {number} value - the value to set on the coordinates
+   * @returns {Matrix}
    */
   setValue (row, col, value) {
     this.data[row][col] = value
@@ -105,9 +105,9 @@ class Matrix {
    * // This will output 8
    * console.log(matrix.valueAt(0, 1))
    *
-   * @param {number} row The row on which to get the value
-   * @param {number} col The column on which to get the value
-   * @returns {number} value at this position
+   * @param {number} row - the row on which to get the value
+   * @param {number} col - the column on which to get the value
+   * @returns {number}
    */
   valueAt (row, col) {
     return this.data[row][col]
@@ -129,7 +129,7 @@ class Matrix {
    *
    * console.table(result.valueOf())
    *
-   * @param {number|Matrix} n Add a number to the matrix or add a an other Matrix object
+   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
    * @returns {Matrix}
    */
   add (n) {
@@ -173,7 +173,7 @@ class Matrix {
    *
    * console.table(result.valueOf())
    *
-   * @param {number|Matrix} n Add a number to the matrix or add a an other Matrix object
+   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
    * @returns {Matrix}
    */
   subtract (n) {
@@ -216,7 +216,7 @@ class Matrix {
    *
    * console.table(result.valueOf())
    *
-   * @param {number|Matrix} n Add a number to the matrix or add a an other Matrix object
+   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
    * @returns {Matrix}
    */
   multiply (n) {

@@ -67,7 +67,7 @@ class Vector3d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector3d} n - Add a number to the vector or add an other Vector3d object
+   * @param {number|Vector3d} n - add a number to the vector or add an other Vector3d object
    * @returns {Vector3d}
    */
   add (n) {
@@ -98,7 +98,7 @@ class Vector3d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector3d} n - Subtract a number to the vector or substract a an other Vector3d object
+   * @param {number|Vector3d} n - subtract a number to the vector or subtract a an other Vector3d object
    * @returns {Vector3d}
    */
   subtract (n) {
@@ -129,7 +129,7 @@ class Vector3d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector3d} n - Multiply a number to the vector or multiply a an other Vector3d object
+   * @param {number|Vector3d} n - multiply a number to the vector or multiply a an other Vector3d object
    * @returns {Vector3d}
    */
   multiply (n) {
@@ -202,7 +202,6 @@ class Vector3d {
   getZ() {
     return this.z
   }
-
 }
 
 if (typeof module !== 'undefined') {

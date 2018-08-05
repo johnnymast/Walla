@@ -64,7 +64,7 @@ class Vector2d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2d} n - Add a number to the vector or add a an other Vector2d object
+   * @param {number|Vector2d} n - add a number to the vector or add a an other Vector2d object
    * @returns {Vector2d}
    */
   add (n) {
@@ -93,7 +93,7 @@ class Vector2d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2d} n - Substract a number to the vector or subtract a an other Vector2d object
+   * @param {number|Vector2d} n - subtract a number to the vector or subtract a an other Vector2d object
    * @returns {Vector2d}
    */
   subtract (n) {
@@ -122,7 +122,7 @@ class Vector2d {
    *
    * console.log(result.toObject())
    *
-   * @param {number|Vector2d} n - Multiply a number to the vector or multiply a an other Vector2d object
+   * @param {number|Vector2d} n - multiply a number to the vector or multiply a an other Vector2d object
    * @returns {Vector2d}
    */
   multiply (n) {
