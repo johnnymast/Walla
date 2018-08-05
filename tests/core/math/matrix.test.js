@@ -67,6 +67,28 @@ describe('Math - Matrix', function () {
     })
   })
 
+  it ('valueOf() should return the Matrix as an array.', () => {
+    let m = new Matrix(2, 2)
+    let actual = m.valueOf()
+    let expected = [
+      [0, 0],
+      [0, 0]
+    ]
+
+    expect(actual).toEqual(expected)
+  })
+
+  it ('toObject() should return the Matrix as an array.', () => {
+    let m = new Matrix(2, 2)
+    let actual = m.toObject()
+    let expected = [
+      [0, 0],
+      [0, 0]
+    ]
+
+    expect(actual).toEqual(expected)
+  })
+
   it('subtract() should add a value to every value in the matrix.', () => {
     let m = new Matrix(4, 4, 3)
     m.subtract(2)

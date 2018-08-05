@@ -14,9 +14,9 @@ class Matrix {
   /* Instantiate a new Matrix Object.
    *
    * @constructor
-   * @param {number} rows The number of rows in the matrix
-   * @param {number} cols The number of columns in the matrix
-   * @param {number} [fill=0] The initial fill for the matrix
+   * @param {number} rows - the number of rows in the matrix
+   * @param {number} cols - the number of columns in the matrix
+   * @param {number} [fill=0] - the initial fill for the matrix
    */
   constructor (rows = 0, cols = 0, fill = 0) {
     this.rows = rows
@@ -38,6 +38,16 @@ class Matrix {
    */
   valueOf () {
     return this.data
+  }
+
+  /**
+   * Alias for valueOf()
+   *
+   * @see {@Matrix valueOf}
+   * @returns {array}
+   */
+  toObject() {
+    return this.valueOf()
   }
 
   /**
