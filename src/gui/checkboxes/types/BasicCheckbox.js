@@ -32,6 +32,9 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
 
   extend(BasicCheckbox, BaseCheckbox)
 
+  /**
+   * Initialize the components that make this checkbox.
+   */
   BasicCheckbox.prototype.init = function () {
 
     let options = this.options
