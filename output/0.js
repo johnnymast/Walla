@@ -72078,11 +72078,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
   extend(InputManager, GameObject);
 
   /**
+   * Add a key binding to action names.
    *
-   * @param input
-   * @param to
+   * @param {KeyboardInput|string} input - a key string or an KeyboardInput instance
+   * @param {array} actions - an array with strings identifying the actions this key(s) is|are used for
    */
-  InputManager.prototype.mapInput = function (input = '', to = []) {
+  InputManager.prototype.mapInput = function (input = '', actions = []) {
     if (!(input instanceof KeyboardInput)) {
 
       if (!(input instanceof Array)) {
@@ -72095,7 +72096,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 
         key.info.down = function (event) {
           parent.emit('InputManager.keyDown', event);
-          console.log('event is ontvangen ', this);
         }.bind(this);
 
         key.info.up = function (event) {
@@ -72108,12 +72108,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
       throw new Error('InputManager: Unsupported input');
     }
 
-    if (!(to instanceof Array)) {
+    if (!(actions instanceof Array)) {
       throw new Error('InputManager: To is not an array.');
     }
 
-    for (let i = 0; i < to.length; i++) {
-      let name = to[i];
+    for (let i = 0; i < actions.length; i++) {
+      let name = actions[i];
 
       if (typeof this.map[name] === 'undefined') {
         this.map[name] = new Array();
@@ -72142,7 +72142,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
         continue;
       }
 
-      console.log('?? isDown ', this.map[name][i]);
       if (this.map[name][i].isDown() === true) {
         return true;
       }
@@ -74604,8 +74603,8 @@ const Dialogs = __webpack_require__(667);
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
 const DIRECTIONS = __webpack_require__(644).DIRECTIONS;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(637), __webpack_require__(248), __webpack_require__(659), __webpack_require__(662)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character, Matrix) {
-  var Level1 = function (options) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(637), __webpack_require__(248), __webpack_require__(659)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
+  let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
     this.interactive = true;
@@ -74621,6 +74620,11 @@ const DIRECTIONS = __webpack_require__(644).DIRECTIONS;
 
   extend(Level1, GameLevel);
 
+  /**
+   * Respond to mouse movement
+   *
+   * @param {InteractionEvent } event - the pixi InteractionEvent 
+   */
   Level1.prototype.onMouseMove = function (event) {
 
     function calculateAngle(mx, my, px, py) {
@@ -74660,6 +74664,9 @@ const DIRECTIONS = __webpack_require__(644).DIRECTIONS;
     }
   };
 
+  /**
+   * The onStart callback called from the Scene object.
+   */
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this);
     this.addCursor('attack', '1crosshair');
@@ -74710,6 +74717,11 @@ const DIRECTIONS = __webpack_require__(644).DIRECTIONS;
     this.character.update(delta);
   };
 
+  /**
+   * Update the current scene.
+   *
+   * @param {number} delta - the delta since last update
+   */
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta);
     this.updateGameLogic(delta);
@@ -75743,255 +75755,7 @@ class Text extends PIXI.Container {
 module.exports = Text;
 
 /***/ }),
-/* 662 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @namespace Math
- */
-
-/**
- * Class for Matrix math calculations. Please be aware
- * of the fact that the rows and columns start of by 0 and
- * not at 1.
- *
- * @class
- */
-class Matrix {
-
-  /* Instantiate a new Matrix Object.
-   *
-   * @constructor
-   * @param {number} rows - the number of rows in the matrix
-   * @param {number} cols - the number of columns in the matrix
-   * @param {number} [fill=0] - the initial fill for the matrix
-   */
-  constructor(rows = 0, cols = 0, fill = 0) {
-    this.rows = rows;
-    this.cols = cols;
-    this.fill = fill;
-    this.data = Array(this.rows).fill().map(() => Array(this.cols).fill(this.fill));
-  }
-
-  /**
-   * Get the matrix data.
-   * @example
-   * let matrix = new Matrix(4,4, 2);
-   *
-   * // this will output
-   * // [ [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ] ]
-   * console.log(matrix.valueOf())
-   *
-   * @returns {Array}
-   */
-  valueOf() {
-    return this.data;
-  }
-
-  /**
-   * Alias for valueOf()
-   *
-   * @see {@Matrix valueOf}
-   * @returns {array}
-   */
-  toObject() {
-    return this.valueOf();
-  }
-
-  /**
-   * Clone the matrix into a new Matrix object.
-   *
-   * @returns {Matrix}
-   */
-  clone() {
-    let clone = new Matrix(this.rows, this.cols, this.fill);
-    for (let i = 0; i < this.rows; i++) {
-      for (let j = 0; j < this.cols; j++) {
-        clone.data[i][j] = this.data[i][j];
-      }
-    }
-    return clone;
-  }
-
-  /**
-   * Set the value inside the matrix
-   *
-   * @example
-   * let matrix = new Matrix(1,1, 1);
-   * matrix.setValue(0, 0, 2)
-   * matrix.setValue(0, 1, 3)
-   *
-   * // Our matrix now looks like
-   * // [ [ 1, 2, 3 ] ]
-   *
-   * // This will return
-   * // [ [ 2, 4, 6 ] ]
-   *
-   * console.table(matrix.valueOf())
-   *
-   * @param {number} row - the row on which to set the value
-   * @param {number} col - the column on which to set the value
-   * @param {number} value - the value to set on the coordinates
-   * @returns {Matrix}
-   */
-  setValue(row, col, value) {
-    this.data[row][col] = value;
-    return this;
-  }
-
-  /**
-   * Return a value stored in the Matrix at row and column
-   *
-   * @example
-   * let matrix = new Matrix(1,1, 10);
-   * matrix.setValue(0, 0, 9)
-   * matrix.setValue(0, 1, 8)
-   *
-   * // Our matrix looks like this
-   * // [ [ 9, 8 ] ]
-   *
-   * // This will output 8
-   * console.log(matrix.valueAt(0, 1))
-   *
-   * @param {number} row - the row on which to get the value
-   * @param {number} col - the column on which to get the value
-   * @returns {number}
-   */
-  valueAt(row, col) {
-    return this.data[row][col];
-  }
-
-  /**
-   * @example
-   * let matrix = new Matrix(1,3, 0);
-   * matrix.add(1)
-   *
-   * // Our matrix looks like this
-   * // [ [ 1, 1, 1 ] ]
-   *
-   * // Lets add 2 to all values
-   * let result = matrix.add(2);
-   *
-   * // Our resulting matrix now looks like this
-   * // [ [ 3, 3, 3 ] ]
-   *
-   * console.table(result.valueOf())
-   *
-   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
-   * @returns {Matrix}
-   */
-  add(n) {
-
-    if (n instanceof Matrix) {
-      if (n.rows !== this.rows || n.cols !== this.cols) {
-        throw 'Cannot add matrices together that don\'t share the same size.';
-      }
-
-      let src = n;
-
-      for (let i = 0; i < src.rows; i++) {
-        for (let j = 0; j < src.cols; j++) {
-          this.data[i][j] += n.data[i][j];
-        }
-      }
-    } else {
-      for (let i = 0; i < this.rows; i++) {
-        this.data[i] = this.data[i].map(v => v + n);
-      }
-    }
-    return this;
-  }
-
-  /**
-   * @example
-   * let matrix = new Matrix(1,3);
-   * matrix.setValue(0, 0, 1)
-   * .setValue(0, 1, 2)
-   * .setValue(0, 2, 3)
-   *
-   * // Our matrix looks like this
-   * // [ [ 1, 2, 3 ] ]
-   *
-   * // Lets add 2 to all values
-   * let result = matrix.add(2);
-   *
-   * // Our resulting matrix now looks like this
-   * // [ [ 3, 4, 5 ] ]
-   *
-   * console.table(result.valueOf())
-   *
-   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
-   * @returns {Matrix}
-   */
-  subtract(n) {
-    if (n instanceof Matrix) {
-      if (n.rows !== this.rows || n.cols !== this.cols) {
-        throw 'Cannot subtract matrices from each other that don\'t share the same size.';
-      }
-
-      let src = n;
-
-      for (let i = 0; i < src.rows; i++) {
-        for (let j = 0; j < src.cols; j++) {
-          this.data[i][j] -= n.data[i][j];
-        }
-      }
-    } else {
-      for (let i = 0; i < this.rows; i++) {
-        this.data[i] = this.data[i].map(v => v - n);
-      }
-    }
-    return this;
-  }
-
-  /**
-   * @example
-   * let matrix = new Matrix(1,3);
-   * matrix.setValue(0, 0, 1)
-   * .setValue(0, 1, 2)
-   * .setValue(0, 2, 3)
-   *
-   * // Our matrix looks like this
-   * // [ [ 1, 2, 3 ] ]
-   *
-   * // Lets add 2 to all values
-   * let result = matrix.multiply(2);
-   *
-   * // Our resulting matrix now looks like this
-   * // [ [ 2, 4, 6 ] ]
-   *
-   * console.table(result.valueOf())
-   *
-   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
-   * @returns {Matrix}
-   */
-  multiply(n) {
-    if (n instanceof Matrix) {
-      if (n.rows !== this.rows || n.cols !== this.cols) {
-        throw 'Cannot multiply matrices with each other that don\'t share the same size.';
-      }
-
-      let src = n;
-
-      for (let i = 0; i < src.rows; i++) {
-        for (let j = 0; j < src.cols; j++) {
-          this.data[i][j] *= n.data[i][j];
-        }
-      }
-    } else {
-      for (let i = 0; i < this.rows; i++) {
-        this.data[i] = this.data[i].map(v => v * n);
-      }
-    }
-    return this;
-  }
-}
-
-if (true) {
-  module.exports = Matrix;
-}
-
-/***/ }),
+/* 662 */,
 /* 663 */
 /***/ (function(module, exports) {
 

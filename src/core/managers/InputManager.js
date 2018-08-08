@@ -31,11 +31,12 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
   extend(InputManager, GameObject)
 
   /**
+   * Add a key binding to action names.
    *
-   * @param input
-   * @param to
+   * @param {KeyboardInput|string} input - a key string or an KeyboardInput instance
+   * @param {array} actions - an array with strings identifying the actions this key(s) is|are used for
    */
-  InputManager.prototype.mapInput = function (input = '', to = []) {
+  InputManager.prototype.mapInput = function (input = '', actions = []) {
     if (!(input instanceof KeyboardInput)) {
 
       if (!(input instanceof Array)) {
@@ -61,12 +62,12 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
     }
 
 
-    if (!(to instanceof Array)) {
+    if (!(actions instanceof Array)) {
       throw new Error('InputManager: To is not an array.')
     }
 
-    for (let i = 0; i < to.length; i++) {
-      let name = to[i]
+    for (let i = 0; i < actions.length; i++) {
+      let name = actions[i]
 
       if (typeof this.map[name] === 'undefined') {
         this.map[name] = new Array()
