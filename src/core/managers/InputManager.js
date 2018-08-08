@@ -48,7 +48,6 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
 
         key.info.down = function (event) {
           parent.emit('InputManager.keyDown', event)
-          console.log('event is ontvangen ', this)
         }.bind(this)
 
         key.info.up = function (event) {
@@ -96,7 +95,6 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
         continue
       }
 
-      console.log('?? isDown ', this.map[name][i])
       if (this.map[name][i].isDown() === true) {
         return true
       }

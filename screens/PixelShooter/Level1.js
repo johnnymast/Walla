@@ -1,8 +1,8 @@
 // https://github.com/riebel/pixi-tiledmap
 const DIRECTIONS = require('objects/Pixelshooter/Options').DIRECTIONS
 
-define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshooter/Character', 'core/math/matrix'], function (GameLevel, GameEngine, Character, Matrix) {
-  var Level1 = function (options) {
+define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshooter/Character'], function (GameLevel, GameEngine, Character) {
+  let Level1 = function (options) {
     GameLevel.call(this, {backgroundColor: 0x1099bb})
 
     this.interactive = true
@@ -18,7 +18,11 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
 
   extend(Level1, GameLevel)
 
-
+  /**
+   * Respond to mouse movement
+   *
+   * @param {InteractionEvent } event - the pixi InteractionEvent 
+   */
   Level1.prototype.onMouseMove = function (event) {
 
     function calculateAngle (mx, my, px, py) {
@@ -65,6 +69,9 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
     }
   }
 
+  /**
+   * The onStart callback called from the Scene object.
+   */
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this)
     this.addCursor('attack', '1crosshair')
@@ -115,6 +122,11 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
     this.character.update(delta)
   }
 
+  /**
+   * Update the current scene.
+   *
+   * @param {number} delta - the delta since last update
+   */
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta)
     this.updateGameLogic(delta)
