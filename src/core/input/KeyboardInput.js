@@ -31,15 +31,42 @@ define([], function () {
     info.down = undefined
     info.up = undefined
 
+    this.info = info
+
     window.addEventListener(
-      'keydown', this.downHandler.bind(info), false
+      'keydown', this.downHandler.bind(this), false
     )
 
     window.addEventListener(
-      'keyup', this.upHandler.bind(info), false
+      'keyup', this.upHandler.bind(this), false
     )
+  }
 
-    return info
+  /**
+   * Return the information object.
+   *
+   * @returns {object}
+   */
+  KeyboardInput.prototype.getInfo = function () {
+    return this.info
+  }
+
+  /**
+   * Check to see if the key is down.
+   *
+   * @returns {boolean}
+   */
+  KeyboardInput.prototype.isDown = function () {
+    return this.info.isDown
+  }
+
+  /**
+   * Check to see if the key is up.
+   *
+   * @returns {boolean}
+   */
+  KeyboardInput.prototype.isUp = function () {
+    return this.info.isUp
   }
 
   /**
@@ -48,10 +75,10 @@ define([], function () {
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   KeyboardInput.prototype.downHandler = function (event) {
-    if (event.key === this.key) {
-      if (this.isUp && this.down) this.down(event)
-      this.isDown = true
-      this.isUp = false
+    if (event.key === this.info.key) {
+      if (this.info.isUp && this.info.down) { this.info.down(event) }
+      this.info.isDown = true
+      this.info.isUp = false
     }
     event.preventDefault()
   }
@@ -62,10 +89,10 @@ define([], function () {
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   KeyboardInput.prototype.upHandler = function (event) {
-    if (event.key === this.key) {
-      if (this.isDown && this.up) this.up(event)
-      this.isDown = false
-      this.isUp = true
+    if (event.key === this.info.key) {
+      if (this.info.isDown && this.info.up) this.info.up(event)
+      this.info.isDown = false
+      this.info.isUp = true
     }
     event.preventDefault()
   }

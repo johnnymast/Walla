@@ -6,17 +6,14 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
     GameLevel.call(this, {backgroundColor: 0x1099bb})
 
     this.interactive = true
-    // this.buttonMode = false
-
-    this.listenForKeyboardInputs('w', 'a', 's', 'd')
     this.map = new PIXI.extras.TiledMap('pixelshooter_map')
     this.character = new Character(1)
     this.character.anchor = 0.5
 
-    this.enemies = []
-
-    this.downkey = null
-
+    this.InputManager.mapInput([this.InputManager.keys.ArrowUp, 'w'], ['up'])
+    this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left'])
+    this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right'])
+    this.InputManager.mapInput([this.InputManager.keys.ArrowDown, 's'], ['down'])
   }
 
   extend(Level1, GameLevel)
@@ -41,16 +38,7 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
     let mousePos = event.data.global
     let angle = calculateAngle(mousePos.x, mousePos.y, this.character.x, this.character.y)
     let degrees = Math.floor(angle * 90 / Math.PI)
-    // this.character.rotation = angle
 
-    // for(var b=bullets.length-1;b>=0;b--){
-    //   bullets[b].position.x += Math.cos(bullets[b].rotation)*bulletSpeed;
-    //   bullets[b].position.y += Math.sin(bullets[b].rotation)*bulletSpeed;
-    // }
-
-    let test = degrees.denormalize(0, 80)
-
-    // console.log('denormalize: ', test)
     let direction_mapping = [
 
       {mouseX: DIRECTIONS.LEFT, mouseY: DIRECTIONS.UP, direction: DIRECTIONS.DIAGUP_LEFT},
@@ -75,44 +63,6 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
       if (direction)
         break
     }
-
-    // w: 87
-    if (this.downkey === 87)
-      direction = DIRECTIONS.UP
-
-    // s: 83
-    if (this.downkey == 83)
-      direction = DIRECTIONS.DOWN
-
-    // a: 65
-    if (this.downkey === 65)
-      direction = DIRECTIONS.LEFT
-
-    // d: 68
-    if (this.downkey === 68)
-      direction = DIRECTIONS.RIGHT
-
-    // console.log('Detected', direction, 'at')
-    this.character.setDirection(direction)
-
-    // console.log(degrees)
-
-// else if (degrees > 45 && degrees <= 90) {
-//   this.character.setDirection(DIRECTIONS.DIAGDOWN_RIGHT)
-// }  else if (degrees > 90 && degrees <= 135) {
-//   this.character.setDirection(DIRECTIONS.DOWN);
-// } else if (degrees > 135 && degrees <= 180) {
-//   this.character.setDirection(DIRECTIONS.DIAGDOWN_LEFT);
-// }
-
-  }
-
-  Level1.prototype.onKeyDown = function (event) {
-    this.downkey = event.key
-  }
-
-  Level1.prototype.onKeyUp = function (event) {
-    this.downkey = null
   }
 
   Level1.prototype.onStart = function () {
@@ -143,8 +93,8 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
     this.setCursor('attack')
   }
 
-  Level1.prototype.spawnEnamy = function () {
-
+  Level1.prototype.spawnEnemy = function () {
+    // TODO: Add code here
   }
 
   Level1.prototype.updateGameLogic = function (delta) {
@@ -152,13 +102,13 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
     /**
      * Moving the character.
      */
-    if (this.downkey === 'a') {
+    if (this.InputManager.isDown('left')) {
       this.character.position.x -= 5
-    } else if (this.downkey === 'd') {
+    } else if (this.InputManager.isDown('right')) {
       this.character.position.x += 5
-    } else if (this.downkey === 'w') {
+    } else if (this.InputManager.isDown('up')) {
       this.character.position.y -= 5
-    } else if (this.downkey === 's') {
+    } else if (this.InputManager.isDown('down')) {
       this.character.position.y += 5
     }
 
@@ -168,7 +118,6 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta)
     this.updateGameLogic(delta)
-
   }
 
   return Level1

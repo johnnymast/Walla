@@ -43,7 +43,8 @@ require([
   'core/managers/AssetManager',
   'core/managers/StateManager',
   'core/managers/PhysicsManager',
-], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager) {
+  'core/managers/InputManager',
+], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, InputManager) {
   PIXI.utils.skipHello()
   sayHello()
 
@@ -64,6 +65,7 @@ require([
   ge.set('SceneManager', new SceneManager())
   ge.set('StateManager', new StateManager())
   ge.set('PhysicsManager', new PhysicsManager())
+  ge.set('InputManager', new InputManager())
 
   ge.get('SceneManager')
     .add('SplashScene')

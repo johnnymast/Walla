@@ -76,6 +76,7 @@ const config = {
       'tweenjs': path.resolve(__dirname, './node_modules/@tweenjs/tween.js'),
       'core': path.resolve(__dirname, 'src/core'),
       'gui': path.resolve(__dirname, 'src/gui'),
+      'input': path.resolve(__dirname, 'src/core/input'),
       'screens': path.resolve(__dirname, 'screens'),
       'objects': path.resolve(__dirname, 'objects')
     },

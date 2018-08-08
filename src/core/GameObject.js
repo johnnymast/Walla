@@ -38,6 +38,11 @@ define(['pixi', 'core/GameEngine'], function (PIXI, GameEngine) {
     this.PhysicsManager = this.ge.get('PhysicsManager')
 
     /**
+     * @type {InputManager}
+     */
+    this.InputManager = this.ge.get('InputManager')
+
+    /**
      * @type {PIXI.interaction.InteractionManager}
      */
     this.InteractionManager = this.app.renderer.plugins.interaction

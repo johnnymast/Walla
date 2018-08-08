@@ -9,41 +9,17 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
     Scene.call(this, options)
 
     /**
-     * Holder for registered KeyboardInput.
-     *
-     * @type {Array}
-     */
-    this.keyboardKeys = []
-
-    /**
      * Start listening for events.
      */
     this.on('mousemove', this.onMouseMove)
     this.on('pointerdown', this.onPointerDown)
     this.on('pointerup', this.onPointerUp)
+
+    this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this))
+    this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this))
   }
 
   extend(Level, Scene)
-
-  /**
-   * Add keyboard inputs to listen to.
-   *
-   * @example
-   * this.listenForKeyboardInputs('w', 'a', 's', 'd')
-   *
-   * @param {string} keys - The keys to listen for
-   */
-  Level.prototype.listenForKeyboardInputs = function (...keys) {
-    let self = this
-    keys.forEach(function (key) {
-      let info = new KeyboardInput(key)
-
-      info.down = self.onKeyDown.bind(self)
-      info.up = self.onKeyUp.bind(self)
-
-      self.keyboardKeys.push(info)
-    })
-  }
 
   /**
    * Callback for the onKeyPress even. You can overwrite this your self
@@ -55,7 +31,7 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
      * to receive keyboard keyPress events.
      *
      * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
+     * by registered keys. See InputManager.mapInput
      * for more information.
      */
   }
@@ -70,7 +46,7 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
      * to receive keyboard onKeyDown events.
      *
      * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
+     * by registered keys. See InputManager.mapInput
      * for more information.
      */
   }
@@ -85,7 +61,7 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
      * to receive keyboard keyUp events.
      *
      * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
+     * by registered keys. See InputManager.mapInput
      * for more information.
      */
   }
