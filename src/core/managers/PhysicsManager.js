@@ -100,7 +100,6 @@ define(['pixi', 'matter-js'], function (PIXI, Matter) {
 
   PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
     //  let coord = this.PIXIToMatter(x, y, width, height = width)
-    console.log('circle options', options)
     return Matter.Bodies.circle(x, y, radius, options)
     // return Matter.Bodies.circle(coord.x, coord.y, width, options)
   }

@@ -15,6 +15,10 @@ define([ 'core/Level', 'gui/Statistics'], function (Level, Statistics) {
     this.addChild(this.statistics)
   }
 
+  GameLevel.prototype.fixedUpdate = function(delta) {
+    // Empty
+  }
+
   GameLevel.prototype.update = function(delta) {
     this.statistics.update(delta)
   }

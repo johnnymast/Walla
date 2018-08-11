@@ -72281,7 +72281,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 
   PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
     //  let coord = this.PIXIToMatter(x, y, width, height = width)
-    console.log('circle options', options);
     return Matter.Bodies.circle(x, y, radius, options);
     // return Matter.Bodies.circle(coord.x, coord.y, width, options)
   };
@@ -72333,7 +72332,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(674)("./" + scene);
+      let _scene = __webpack_require__(673)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -72385,7 +72384,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(663);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(662);
 
 /**
  * StateManager
@@ -72850,6 +72849,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
     this.app.ticker.add(delta => {
       this._update(delta);
     });
+
+    this.physicsTicker = new PIXI.ticker.Ticker();
+    this.physicsTicker.speed = PIXI.ticker.shared.speed / 2;
+    this.physicsTicker.autoStart = true;
+    this.physicsTicker.add(delta => {
+      this._fixedupdate(delta);
+    });
   };
 
   extend(Scene, GameObject);
@@ -73088,9 +73094,33 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const gesture = 
   };
 
   /**
+   * The update function for physics. You can overwrite this function
+   * in your own level to update physics for your your game.
+   *
+   * @param {number} delta - the delta since the last tick
+   */
+  Scene.prototype.fixedUpdate = function (delta) {}
+  // Overwrite this function
+
+
+  /**
+   * Internal fixedupdate function. This is called per tick.
+   * This function is specially for updating physics in the game engine
+   * it runs 2x faster then the update function.
+   *
+   * @param {number} delta - the delta since the last tick
+   * @private
+   */
+  ;Scene.prototype._fixedupdate = function (delta) {
+    if (!this.isPaused()) {
+      this.fixedUpdate(delta);
+    }
+  };
+
+  /**
    * Internal update function. This is called per tick.
    *
-   * @param {number} delta - The delta since the last tick
+   * @param {number} delta - the delta since the last tick
    * @private
    */
   Scene.prototype._update = function (delta) {
@@ -73404,6 +73434,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.livesText.text = 'LIVES: ' + this.lives;
   };
 
+  GameLevel.prototype.fixedUpdate = function (delta) {
+    // Empty
+  };
+
   GameLevel.prototype.update = function (delta) {
     this.statistics.update(delta);
   };
@@ -73587,6 +73621,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   GameLevel.prototype.setDisplayStats = function (visible) {
     this.statistics.visible = visible;
     this.addChild(this.statistics);
+  };
+
+  GameLevel.prototype.fixedUpdate = function (delta) {
+    // Empty
   };
 
   GameLevel.prototype.update = function (delta) {
@@ -74286,15 +74324,23 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     console.log(this.pad.y);
   };
 
-  Level1.prototype.update = function (delta) {
+  /**
+   * Update the current scene for physics.
+   *
+   * @param {number} delta - the delta since last update
+   */
+  Level1.prototype.fixedUpdate = function (delta) {
     GameLevel.prototype.update.call(this, delta);
     this.PhysicsManager.update(delta);
+  };
+
+  Level1.prototype.update = function (delta) {
+    GameLevel.prototype.update.call(this, delta);
 
     for (let object of this.objects) {
       if (object instanceof Ball && this.didStart === false) {
         //  object.setPosition(this.pad.sprite.x + this.pad.sprite.width / 2 - object.sprite.width / 2, object.sprite.y)
       }
-
       object.update(delta);
     }
   };
@@ -74440,8 +74486,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 /* 647 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(670);
-const Dialogs = __webpack_require__(667);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(669);
+const Dialogs = __webpack_require__(666);
 
 /**
  * @namespace Screens
@@ -74486,19 +74532,13 @@ const Dialogs = __webpack_require__(667);
       this.addChild(tilingSprite);
     }
 
-    var menu = new Menus.Menu({
-      items: {
-        // paddingBottom: 1,
-        // paddingTop: 10
-      }
-    });
+    var menu = new Menus.Menu();
 
-    let dialog = new Dialogs.Dialog({
-      type: Dialogs.TYPE.CLOSEABLE,
+    let dialog = new Dialogs.CloseableDialog({
       width: 400,
       height: 500,
-      x: this.app.screen.width / 2 - 200,
-      y: -500
+      x: this.app.screen.width / 2 - 400 / 2,
+      y: this.app.screen.height / 2
     });
 
     dialog.onClose = function () {
@@ -74534,13 +74574,11 @@ const Dialogs = __webpack_require__(667);
     this.addChild(dialog);
     this.addChild(this.statistics);
 
-    let coords = { x: 0, y: 0, useTicks: false };
-    this.tween = new TweenJS.Tween(coords).to({ y: this.app.screen.height / 2 + dialog.height / 2 }, 500).easing(TweenJS.Easing.Circular.In).onUpdate(function () {
+    let coords = { x: dialog.x, y: 0, useTicks: false };
+    this.tween = new TweenJS.Tween(coords).to({ y: this.app.screen.height / 2 - dialog.height / 2 }, 500).easing(TweenJS.Easing.Circular.In).onUpdate(function () {
       dialog.x = coords.x;
       dialog.y = coords.y;
     }).start();
-
-    console.log('done');
   };
 
   /**
@@ -74575,15 +74613,20 @@ const Dialogs = __webpack_require__(667);
     }
   };
 
-  MainScreen.prototype.onSwitchedAway = function () {
-    console.log('SceneManager switched away from MainMenu');
-  };
+  /**
+   * Callback for when the main menu was left for an other
+   * scene.
+   */
+  MainScreen.prototype.onSwitchedAway = function () {}
+  // console.log('SceneManager switched away from MainMenu')
+
+
   /**
    * Animate the background scrolling/
    *
    * @param {number} delta
    */
-  MainScreen.prototype.update = function (delta) {
+  ;MainScreen.prototype.update = function (delta) {
     for (let i = 5; i > 0; i--) {
       let texture = 'main_bg_0' + i;
       this.backgrounds[texture].tilePosition.x -= 1 / (i * 1.5);
@@ -75166,64 +75209,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(633).BUTTON_STATE;
 const Type = __webpack_require__(633).BUTTON_TYPE;
-const BaseButton = __webpack_require__(664);
-const ImageButton = __webpack_require__(665);
+const BaseButton = __webpack_require__(663);
+const ImageButton = __webpack_require__(664);
 const Button = __webpack_require__(640);
 
 
 
 /***/ }),
-/* 653 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  let BaseDialog = function (options) {
-    GameObject.call(this, options);
-
-    this._options = options;
-
-    this.x = this._options.x;
-    this.y = this._options.y;
-
-    this.background = new PIXI.Container();
-    this.background.width = this.width;
-    this.background.height = this.height;
-    this.background.name = 'background';
-    this.addChild(this.background);
-
-    this.content = new PIXI.Graphics();
-    this.content.name = 'content';
-
-    let content_outline_alpha = 0;
-    if (typeof this._options.outline_content !== 'undefined') {
-      if (this._options.outline_content === true) {
-        content_outline_alpha = 1;
-      }
-    }
-
-    this.content.lineStyle(2, 0xFF0000, content_outline_alpha);
-    this.content.beginFill(0xFFFFFF, 0);
-    this.content.drawRect(this._options.padding, this._options.padding, this._options.width - this._options.padding * 2, this._options.height - this._options.padding * 2);
-
-    this.addChild(this.content);
-  };
-
-  extend(BaseDialog, GameObject);
-  /**
-   *
-   * @param {GameObject} content
-   */
-  BaseDialog.prototype.addContent = function (content) {
-    if (content) {
-      this.content.addChild(content);
-    }
-  };
-
-  return BaseDialog;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
+/* 653 */,
 /* 654 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -75755,8 +75748,7 @@ class Text extends PIXI.Container {
 module.exports = Text;
 
 /***/ }),
-/* 662 */,
-/* 663 */
+/* 662 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -75782,7 +75774,7 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 664 */
+/* 663 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(640);
@@ -75989,7 +75981,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 665 */
+/* 664 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(640);
@@ -76196,137 +76188,29 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
+/* 665 */,
 /* 666 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(634).DIALOG_TYPE;
-const STATE = __webpack_require__(634).DIALOG_STATE;
-
-const DefaultDialog = __webpack_require__(669);
-const CloseableDialog = __webpack_require__(668);
-
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  let Dialog = function (options, ...items) {
-    GameObject.call(this, options);
-
-    this.STATE_OPEN = 'open';
-    this.STATE_CLOSED = 'closed';
-
-    this.options = {
-      type: DIALOG_TYPE.DEFAULT,
-      state: STATE.CLOSED
-    };
-
-    this.options = merge(this.options, options);
-    this.items = [];
-
-    this.state = this.options.state;
-    this.instance = null;
-
-    this.init();
-  };
-
-  extend(Dialog, GameObject);
-
-  /**
-   *
-   * @param {GameObject} content
-   */
-  Dialog.prototype.addContent = function (content) {
-    if (content && this.instance) {
-      this.instance.addContent(content);
-    }
-  };
-
-  Dialog.prototype.getContent = function () {
-    if (this.instance) {
-      return this.instance.content;
-    }
-    return null;
-  };
-
-  Dialog.prototype.init = function () {
-    switch (this.options.type) {
-      case DIALOG_TYPE.DEFAULT:
-        this.instance = new DefaultDialog(this.options);
-        break;
-      case DIALOG_TYPE.CLOSEABLE:
-        this.instance = new CloseableDialog(this.options);
-        break;
-      default:
-        throw new Error(`Dialog type unknown: Unable to reconize ${this.options.type}`);
-    }
-
-    this.on('internal.state.closing', this._closing);
-
-    if (this.instance) {
-
-      this.addChild(this.instance);
-    }
-  };
-
-  Dialog.prototype._closing = function () {
-    this.onClose();
-  };
-
-  Dialog.prototype.onOpen = function () {
-    // overwrite
-  };
-
-  Dialog.prototype.onClose = function () {}
-  // overwrite
-
-
-  /**
-   * Check if the Dialog is open or not.
-   *
-   * @returns {boolean} true if the Dialog is open
-   */
-  ;Dialog.prototype.isOpen = function () {
-    return this.state === STATE.OPEN;
-  };
-
-  /**
-   * Check if the Dialog is closed or not.
-   *
-   * @returns {boolean} true if the Dialog is closed
-   */
-  Dialog.prototype.isClosed = function () {
-    return this.state === STATE.CLOSED;
-  };
-
-  Dialog.prototype.update = function (delta) {
-    for (let item of this.items) {
-      item.update(delta);
-    }
-  };
-
-  return Dialog;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 667 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Dialog", function() { return Dialog; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TYPE", function() { return TYPE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CloseableDialog", function() { return CloseableDialog; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(634).DIALOG_TYPE;
 const STATE = __webpack_require__(634).DIALOG_STATE;
-
-const Dialog = __webpack_require__(666);
+const CloseableDialog = __webpack_require__(667);
+const DefaultDialog = __webpack_require__(668);
 
 
 
 /***/ }),
-/* 668 */
+/* 667 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(652);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(653)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(674)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
   let CloseableDialog = function (options) {
 
     this.options = {
@@ -76336,17 +76220,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
       height: 100,
       background_texture: 'panel_woodDetail.png',
       padding: 30
-      // outline_content: true,
     };
 
     this.options = extend2(true, this.options, options);
-
     BaseDialog.call(this, this.options);
     this.init();
   };
 
   extend(CloseableDialog, BaseDialog);
 
+  /**
+   * Initialize the CloseableDialog. This function is internally called via BaseDialog.
+   */
   CloseableDialog.prototype.init = function () {
     this.setupBackground();
     this.setupButtons();
@@ -76356,7 +76241,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
    * Create the background
    */
   CloseableDialog.prototype.setupBackground = function () {
-    this.bgMesh = new pixi.mesh.NineSlicePlane(pixi.Texture.fromImage(this.options.background_texture));
+    this.bgMesh = new PIXI.mesh.NineSlicePlane(PIXI.Texture.fromImage(this.options.background_texture));
     this.bgMesh.width = this.options.width;
     this.bgMesh.height = this.options.height;
     this.bgMesh.x = 0;
@@ -76364,13 +76249,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 
     this.background.addChild(this.bgMesh);
   };
+
+  /**
+   * Setup the buttons for this dialog
+   */
   CloseableDialog.prototype.setupButtons = function () {
     let close_button = new Buttons.ImageButton({
       text: '',
       width: 24,
       height: 24,
       x: this.background.width - 24 / 2,
-      y: -(24 / 2),
+      y: 0 - 24 / 2,
       state: {
         default: {
           texture: 'button_woodClose.png'
@@ -76384,8 +76273,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
       }
     });
 
+    close_button.name = 'close';
+
     close_button.onClick = () => {
-      this.parent.emit('internal.state.closing');
+      this.emit('internal.state.closing');
     };
 
     close_button.activate();
@@ -76397,10 +76288,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 669 */
+/* 668 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(653)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(674)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
   let DefaultDialog = function (options) {
     BaseDialog.call(this, options);
     console.log('loaded');
@@ -76413,7 +76304,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 670 */
+/* 669 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -76421,13 +76312,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(671);
-const MenuItemText = __webpack_require__(673);
-const MenuItemImageButton = __webpack_require__(672);
+const Menu = __webpack_require__(670);
+const MenuItemText = __webpack_require__(672);
+const MenuItemImageButton = __webpack_require__(671);
 
 
 /***/ }),
-/* 671 */
+/* 670 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -76447,28 +76338,49 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   extend(Menu, GameObject);
 
+  /**
+   * Add a menu item to the menu.
+   *
+   * @param {MenuItem} item - the item to add
+   */
   Menu.prototype.addMenuItem = function (item) {
     this.items.push(item);
     this.addChild(item);
     this.arangeItems();
   };
 
-  Menu.prototype.arangeItems = function () {
-    // TODO: Add code here
-  };
+  /**
+   * Place menu items on their given position.
+   *
+   * @deprecated maybe not sure yet
+   */
+  Menu.prototype.arangeItems = function () {}
+  // TODO: Add code here
 
-  Menu.prototype.addMenuItemAt = function (item, index) {
+
+  /**
+   *
+   * @param {MenuItem} item - a menu item to add
+   * @param {number} index - add the item at this index
+   * @return {PIXI.DisplayObject|*}
+   */
+  ;Menu.prototype.addMenuItemAt = function (item, index) {
     if (index < 0 || index > this.items.length) {
       throw new Error(`${item}addChildAt: The index ${index} supplied is out of bounds ${this.items.length}`);
     }
 
     this.items.splice(index, 0, child);
 
-    var ret = this.addChildAt(item.index);
+    let ret = this.addChildAt(item.index);
     this.arangeItems();
     return ret;
   };
 
+  /**
+   * Update the menu.
+   *
+   * @param {number} delta - the time difference since last tick in the game
+   */
   Menu.prototype.update = function (delta) {
     for (item of this.items) {
       this.item.update(delta);
@@ -76480,7 +76392,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 672 */
+/* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(652);
@@ -76570,7 +76482,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 673 */
+/* 672 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(654)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
@@ -76656,7 +76568,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 674 */
+/* 673 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -76695,7 +76607,145 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 674;
+webpackContext.id = 673;
+
+/***/ }),
+/* 674 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(634).DIALOG_TYPE;
+const STATE = __webpack_require__(634).DIALOG_STATE;
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
+  let BaseDialog = function (options) {
+    GameObject.call(this, options);
+
+    this.STATE_OPEN = 'open';
+    this.STATE_CLOSED = 'closed';
+
+    this._options = options;
+
+    if (typeof this._options.x === 'undefined') {
+      throw new Error('BaseDialog: no x provided.');
+    }
+
+    if (typeof this._options.y === 'undefined') {
+      throw new Error('BaseDialog: no y provided.');
+    }
+
+    if (typeof this._options.width === 'undefined') {
+      throw new Error('BaseDialog: no width provided.');
+    }
+
+    if (typeof this._options.height === 'undefined') {
+      throw new Error('BaseDialog: no height provided.');
+    }
+
+    if (typeof this.init === 'undefined') {
+      throw new Error('BaseDialog: init() is not defined.');
+    }
+
+    this.on('internal.state.closing', this._closing);
+
+    this.x = this._options.x;
+    this.y = this._options.y;
+
+    this.background = new PIXI.Container();
+    this.background.width = this.width;
+    this.background.height = this.height;
+    this.background.name = 'background';
+    this.addChild(this.background);
+
+    this.content = new PIXI.Graphics();
+    this.content.name = 'content';
+
+    let content_outline_alpha = 0;
+    if (typeof this._options.outline_content !== 'undefined') {
+      if (this._options.outline_content === true) {
+        content_outline_alpha = 1;
+      }
+    }
+
+    this.content.lineStyle(2, 0xFF0000, content_outline_alpha);
+    this.content.beginFill(0xFFFFFF, 0);
+    this.content.drawRect(this._options.padding, this._options.padding, this._options.width - this._options.padding * 2, this._options.height - this._options.padding * 2);
+
+    this.addChild(this.content);
+
+    // this.init()
+  };
+
+  extend(BaseDialog, GameObject);
+
+  BaseDialog.prototype._closing = function () {
+    this.onClose();
+  };
+
+  BaseDialog.prototype.onOpen = function () {
+    // overwrite
+  };
+
+  BaseDialog.prototype.onClose = function () {
+    console.log('BaseDialog.onClose');
+    // overwrite
+  };
+
+  // BaseDialog.prototype.init = function () {
+  //   this.on('internal.state.closing', this._closing)
+  // }
+
+  /**
+   * Check if the Dialog is open or not.
+   *
+   * @returns {boolean} true if the Dialog is open
+   */
+  BaseDialog.prototype.isOpen = function () {
+    return this.state === STATE.OPEN;
+  };
+
+  /**
+   * Check if the Dialog is closed or not.
+   *
+   * @returns {boolean} true if the Dialog is closed
+   */
+  BaseDialog.prototype.isClosed = function () {
+    return this.state === STATE.CLOSED;
+  };
+
+  /**
+   *
+   * @param {GameObject} content
+   */
+  BaseDialog.prototype.addContent = function (content) {
+    if (content && this.instance) {
+      this.instance.addContent(content);
+    }
+  };
+
+  /**
+   *
+   * @return {*}
+   */
+  BaseDialog.prototype.getContent = function () {
+    if (this.instance) {
+      return this.instance.content;
+    }
+    return null;
+  };
+
+  /**
+   *
+   * @param {GameObject} content
+   */
+  BaseDialog.prototype.addContent = function (content) {
+    if (content) {
+      this.content.addChild(content);
+    }
+  };
+
+  return BaseDialog;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ })
 ]);

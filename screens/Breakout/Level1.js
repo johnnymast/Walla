@@ -104,15 +104,24 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     console.log(this.pad.y)
   }
 
-  Level1.prototype.update = function (delta) {
+
+  /**
+   * Update the current scene for physics.
+   *
+   * @param {number} delta - the delta since last update
+   */
+  Level1.prototype.fixedUpdate = function (delta) {
     GameLevel.prototype.update.call(this, delta)
     this.PhysicsManager.update(delta)
+  }
+
+  Level1.prototype.update = function (delta) {
+    GameLevel.prototype.update.call(this, delta)
 
     for (let object of this.objects) {
       if (object instanceof Ball && this.didStart === false) {
         //  object.setPosition(this.pad.sprite.x + this.pad.sprite.width / 2 - object.sprite.width / 2, object.sprite.y)
       }
-
       object.update(delta)
     }
   }

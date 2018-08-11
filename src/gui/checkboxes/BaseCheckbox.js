@@ -13,19 +13,19 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     }
 
     if (typeof this._options.width === 'undefined') {
-      throw new Error('BaseCheckbox: width provided.')
+      throw new Error('BaseCheckbox: no width provided.')
     }
 
     if (typeof this._options.height === 'undefined') {
-      throw new Error('BaseCheckbox: height provided.')
+      throw new Error('BaseCheckbox: no height provided.')
     }
 
     if (typeof this._options.x === 'undefined') {
-      throw new Error('BaseCheckbox: x position provided.')
+      throw new Error('BaseCheckbox: no x position provided.')
     }
 
     if (typeof this._options.y === 'undefined') {
-      throw new Error('BaseCheckbox: y position provided.')
+      throw new Error('BaseCheckbox: no y position provided.')
     }
 
     this.x = this._options.x

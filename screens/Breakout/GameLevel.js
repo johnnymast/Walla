@@ -150,6 +150,10 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.livesText.text = 'LIVES: ' + this.lives
   }
 
+  GameLevel.prototype.fixedUpdate = function(delta) {
+    // Empty
+  }
+
   GameLevel.prototype.update = function (delta) {
     this.statistics.update(delta)
   }

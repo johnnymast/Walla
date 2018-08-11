@@ -1,6 +1,6 @@
 const TYPE = require('./const').DIALOG_TYPE
 const STATE = require('./const').DIALOG_STATE
+const CloseableDialog = require('./types/CloseableDialog')
+const DefaultDialog = require('./types/DefaultDialog')
 
-const Dialog = require('./Dialog')
-
-export { Dialog, TYPE }
+export { TYPE, CloseableDialog, DefaultDialog }

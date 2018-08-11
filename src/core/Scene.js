@@ -91,6 +91,13 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     this.app.ticker.add((delta) => {
       this._update(delta)
     })
+
+    this.physicsTicker = new PIXI.ticker.Ticker()
+    this.physicsTicker.speed = PIXI.ticker.shared.speed / 2
+    this.physicsTicker.autoStart = true
+    this.physicsTicker.add((delta) => {
+      this._fixedupdate(delta)
+    })
   }
 
   extend(Scene, GameObject)
@@ -354,9 +361,33 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   }
 
   /**
+   * The update function for physics. You can overwrite this function
+   * in your own level to update physics for your your game.
+   *
+   * @param {number} delta - the delta since the last tick
+   */
+  Scene.prototype.fixedUpdate = function(delta) {
+    // Overwrite this function
+  }
+
+  /**
+   * Internal fixedupdate function. This is called per tick.
+   * This function is specially for updating physics in the game engine
+   * it runs 2x faster then the update function.
+   *
+   * @param {number} delta - the delta since the last tick
+   * @private
+   */
+  Scene.prototype._fixedupdate = function(delta) {
+    if (!this.isPaused()) {
+      this.fixedUpdate(delta)
+    }
+  }
+
+  /**
    * Internal update function. This is called per tick.
    *
-   * @param {number} delta - The delta since the last tick
+   * @param {number} delta - the delta since the last tick
    * @private
    */
   Scene.prototype._update = function (delta) {

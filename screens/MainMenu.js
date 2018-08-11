@@ -45,19 +45,13 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
         this.addChild(tilingSprite)
       }
 
-      var menu = new Menus.Menu({
-        items: {
-          // paddingBottom: 1,
-          // paddingTop: 10
-        }
-      })
+      var menu = new Menus.Menu()
 
-      let dialog = new Dialogs.Dialog({
-        type: Dialogs.TYPE.CLOSEABLE,
+      let dialog = new Dialogs.CloseableDialog({
         width: 400,
         height: 500,
-        x: this.app.screen.width / 2 - 200,
-        y: -500,
+        x: this.app.screen.width / 2 - 400 /2,
+        y: this.app.screen.height / 2 ,
       })
 
 
@@ -96,17 +90,15 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       this.addChild(dialog)
       this.addChild(this.statistics)
 
-      let coords = {x: 0, y: 0, useTicks: false}
+      let coords = {x: dialog.x, y: 0, useTicks: false}
       this.tween = new TweenJS.Tween(coords)
-        .to({y: this.app.screen.height / 2 + dialog.height / 2}, 500)
+        .to({y: this.app.screen.height / 2 - dialog.height / 2}, 500)
         .easing(TweenJS.Easing.Circular.In)
         .onUpdate(function () {
           dialog.x = coords.x
           dialog.y = coords.y
         })
         .start()
-
-      console.log('done')
     }
 
     /**
@@ -141,9 +133,14 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       }
     }
 
+    /**
+     * Callback for when the main menu was left for an other
+     * scene.
+     */
     MainScreen.prototype.onSwitchedAway = function() {
-      console.log('SceneManager switched away from MainMenu')
+      // console.log('SceneManager switched away from MainMenu')
     }
+
     /**
      * Animate the background scrolling/
      *
