@@ -110,6 +110,5 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
      */
   }
 
-
   return Level
 })

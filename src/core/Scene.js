@@ -88,12 +88,13 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
      */
     this.paused = true
 
+
     this.app.ticker.add((delta) => {
       this._update(delta)
     })
 
     this.physicsTicker = new PIXI.ticker.Ticker()
-    this.physicsTicker.speed = PIXI.ticker.shared.speed / 2
+    this.physicsTicker.speed = PIXI.ticker.shared.speed + 0.5
     this.physicsTicker.autoStart = true
     this.physicsTicker.add((delta) => {
       this._fixedupdate(delta)

@@ -33,7 +33,7 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
   /**
    * Add a key binding to action names.
    *
-   * @param {KeyboardInput|string} input - a key string or an KeyboardInput instance
+   * @param {array|KeyboardInput|string} input - a key string or an KeyboardInput instance
    * @param {array} actions - an array with strings identifying the actions this key(s) is|are used for
    */
   InputManager.prototype.mapInput = function (input = '', actions = []) {

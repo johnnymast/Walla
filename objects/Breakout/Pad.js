@@ -7,19 +7,15 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
 
   Pad.prototype.setPosition = function (x = 0, y = 0) {
 
-    x = x || this._x
-    y = y || this._y
-
     console.log('Pad setting y to ', y)
     this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height)
-
     return this
   }
 
 
   Pad.prototype.setupBody = function () {
     let options = {
-      // isStatic: true,
+      isStatic: true,
       // isSleeping: true,
     }
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)

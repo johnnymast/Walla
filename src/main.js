@@ -48,16 +48,18 @@ require([
   PIXI.utils.skipHello()
   sayHello()
 
-  var ge = GameEngine.get()
+  let width = 800
+  let height = 600
 
-  var app = new PIXI.Application(1920, 1080, {
+  let ge = GameEngine.get()
+  let app = new PIXI.Application(width, height, {
     backgroundColor: 0x0,
     autoResize: true,
     resolution: window.devicePixelRatio
   })
   document.body.appendChild(app.view)
 
-  app.renderer.resize(800, 600)
+  app.renderer.resize(width, height)
 
 
   ge.set('App', app)

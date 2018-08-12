@@ -58,9 +58,10 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
       this.precentageText.y = (this.logo.y + this.logo.height / 2) + 15
       this.precentageText.x = (((this.app.screen.width / 2) - this.logo.width) + this.logo.width * 2) + 10
 
-      this.addChild(this.precentageText)
+
       this.addChild(this.loaderHolder)
       this.addChild(this.loaderFill)
+      this.addChild(this.precentageText)
       this.addChild(this.logo)
       this.preload()
     })
@@ -124,7 +125,7 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
    * @private
    */
   SplashScene.prototype._preloadready = function (loader, resources) {
-    this.SceneManager.switchTo('MainMenu')
+    this.SceneManager.switchTo('Breakout/Level1')
   }
 
   /**

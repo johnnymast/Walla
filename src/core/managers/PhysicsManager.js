@@ -1,8 +1,10 @@
+const Vector2d = require('core/math/Vector2d')
+
 /**
  * PhysicsManager
  * @namespace Core Managers
  */
-define(['pixi', 'matter-js'], function (PIXI, Matter) {
+define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObject) {
 
   /**
    * @classdesc PhysicsManager
@@ -10,6 +12,8 @@ define(['pixi', 'matter-js'], function (PIXI, Matter) {
    * @class
    */
   let PhysicsManager = function (options) {
+    GameObject.call(this, options)
+
     const canvas = document.getElementById('canvas')
 
     this.engine = Matter.Engine.create()
@@ -20,13 +24,14 @@ define(['pixi', 'matter-js'], function (PIXI, Matter) {
       canvas: canvas,
       engine: this.engine,
       options: {
-        width: 800,
-        height: 600,
+        width: this.app.screen.width,
+        height: this.app.screen.height,
         center: true,
         wireframes: true,
         wireframe: true,
         pixelRatio: window.devicePixelRatio,
         // showIds: true,
+        showLabels: true,
         showAngleIndicator: true,
         showCollisions: true,
         showVelocity: true
@@ -47,6 +52,8 @@ define(['pixi', 'matter-js'], function (PIXI, Matter) {
 
     Matter.World.add(this.world, mouseConstraint)
   }
+
+  extend(PhysicsManager, GameObject)
 
   PhysicsManager.prototype.getEventHandler = function () {
     return Matter.Events
@@ -83,25 +90,20 @@ define(['pixi', 'matter-js'], function (PIXI, Matter) {
     return Matter.Body.setAngularVelocity(body, velocity)
   }
 
-  PhysicsManager.prototype.applyForce = function (body, x, y, width, height) {
-    let coord = this.PIXIToMatter(x, y, width, height)
-    return Matter.Body.applyForce(body, {x: body.position.x, y: body.position.y}, {x: 0, y: -0.05})
+  PhysicsManager.prototype.applyForce = function (body, x, y) {
+    return Matter.Body.applyForce(body, new Vector2d(body.position.x, body.position.y), new Vector2d(0, -0.5))
   }
 
-  PhysicsManager.prototype.setPosition = function (body, x, y, width, height) {
-    let coord = this.PIXIToMatter(x, y, width, height)
-    return Matter.Body.setPosition(body, {x: coord.x, y: coord.y})
+  PhysicsManager.prototype.setPosition = function (body, x, y) {
+    return Matter.Body.setPosition(body, new Vector2d(x, y))
   }
 
   PhysicsManager.prototype.rectangle = function (x, y, width, height, options = null) {
-    let coord = this.PIXIToMatter(x, y, width, height)
-    return Matter.Bodies.rectangle(coord.x, coord.y, width, height, options)
+    return Matter.Bodies.rectangle(x, y, width, height, options)
   }
 
   PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
-    //  let coord = this.PIXIToMatter(x, y, width, height = width)
     return Matter.Bodies.circle(x, y, radius, options)
-    // return Matter.Bodies.circle(coord.x, coord.y, width, options)
   }
 
   PhysicsManager.prototype.update = function (delta) {

@@ -1,4 +1,4 @@
-define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, KeyboardInput, Statistics) {
+define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput',  'gui/Statistics'], function (pixi, Matter, Scene, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options)
 
@@ -8,46 +8,25 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.statistics = new Statistics()
     this.addChild(this.statistics)
 
-    this.keyboardKeys = []
-
     this.scoreText = null
     this.livesText = null
 
     this.score = 0
     this.lives = 3
 
-//    this.PhysicsManager.run();
+    this.showPhysics = true
+
+    if (this.showPhysics === false)
+      this.PhysicsManager.run();
   }
 
   extend(GameLevel, Scene)
+
 
   GameLevel.prototype.setDisplayStats = function (visible) {
     this.statistics.visible = visible
   }
 
-  GameLevel.prototype.listenSingleForKeyboardInput = function (keycode, keypress, keyup) {
-    let key = new KeyboardInput(keycode)
-
-    key.press.bind(this)
-    key.release.bind(this)
-
-    key.press = keypress || self.onKeyPress.bind(self)
-    key.release = keyup || self.onKeyUp.bind(self)
-
-    this.keyboardKeys.push(key)
-  }
-
-  GameLevel.prototype.listenForKeyboardInputs = function (...keys) {
-    let self = this
-    keys.forEach(function (keycode) {
-      let key = new KeyboardInput(keycode)
-
-      key.press = self.onKeyPress.bind(self)
-      key.release = self.onKeyUp.bind(self)
-
-      self.keyboardKeys.push(key)
-    })
-  }
 
   GameLevel.prototype.onKeyPress = function (event) {
     /**
@@ -93,7 +72,7 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     background.alpha = 0
 
     let inset = 10
-
+    console.log(this.app.screen)
     let ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, inset, {isStatic: true})
     ceiling.label = 'ceiling'
     this.PhysicsManager.add(ceiling)
@@ -110,7 +89,7 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     rightwall.label = 'rightwall'
     this.PhysicsManager.add(rightwall)
 
-    let style = new pixi.TextStyle({
+    let style = new PIXI.TextStyle({
       fontFamily: 'Arial',
       fontSize: 20,
       // fontStyle: 'italic',
@@ -127,11 +106,11 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
       wordWrapWidth: 440
     })
 
-    this.scoreText = new pixi.Text('SCORE: 0', style)
+    this.scoreText = new PIXI.Text('SCORE: 0', style)
     this.scoreText.x = this.app.screen.width - this.scoreText.width - 45
     this.scoreText.y = 10
 
-    this.livesText = new pixi.Text('LIVES: 3', style)
+    this.livesText = new PIXI.Text('LIVES: 3', style)
     this.livesText.x = 45
     this.livesText.y = 10
 

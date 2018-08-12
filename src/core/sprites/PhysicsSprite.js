@@ -116,8 +116,8 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    */
   PhysicsSprite.prototype.setPosition = function (x = 0, y = 0) {
 
-    x = x || this._x
-    y = y || this._y
+    // x = x || this._x
+    // y = y || this._y
 
     this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height)
 

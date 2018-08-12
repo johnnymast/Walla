@@ -9,6 +9,11 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.setDisplayStats(true)
     this.didStart = false
     this.objects = []
+
+    // FIXME: KeyPress doesnt work
+    // FIXME: Physics for the blocks dont work
+    // FIXME: Pedal not working correctly
+    // FIXME: Add comments
   }
 
   extend(Level1, GameLevel)
@@ -16,18 +21,42 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this)
 
+    /**
+     * Lives tracking variable.
+     *
+     * @type {number}
+     * @default 5
+     */
     this.lives = 5
+
+    /**
+     * Score tracking variable.
+     *
+     * @type {number}
+     * @default = 0
+     */
     this.score = 0
 
-    this.listenForKeyboardInputs(37, 39)
+    /**
+     * Make the pad controllable with left and right arrows as well as
+     * a and d for moving left and right. This is in addition to mouse
+     * support.
+     */
+    this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left'])
+    this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right'])
+
+    /**
+     * Set the default scores and
+     * lives.
+     */
     this.setLives(this.lives)
     this.setScore(this.score)
 
     this.bricks = {
       'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
-      'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
-      'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
-      'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
+      // 'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
+      // 'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
+      // 'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
     }
 
     this.PhysicsManager.getWorld().gravity.y = 0.75
@@ -35,7 +64,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     for (let key of Object.keys(this.bricks)) {
       let texture = this.bricks[key]
-      for (let x = 45; x < (this.num_bricks * texture.width); x += texture.width) {
+      for (let x = 45; x < (this.num_bricks * texture.width); x += texture.width + 5) {
         let brick = new Brick(key, texture)
         brick.name = 'Brick' + this.objects.length + 1
         brick.setPosition(x, y)
@@ -85,18 +114,21 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     } else if (coords.x <= 0) {
       coords.x = 0
     }
-    // console.log('pad x', coords.x, this.pad.body)
     this.pad.setX(coords.x)
   }
 
+  /**
+   *
+   * @param event
+   */
   Level1.prototype.onPointerDown = function (event) {
-    this.PhysicsManager.applyForce(this.ball.body, this.ball.texture.width, this.ball.texture.height, 0, -0.05)
+    this.PhysicsManager.applyForce(this.ball.body,  0, 0.005)
     if (this.started === false) {
       for (let object of this.objects) {
         if (object instanceof Ball && this.didStart === false) {
           this.didStart = true
-          object.wakeUp()
-          object.fire()
+          // object.wakeUp()
+          // object.fire()
         }
       }
       this.started = true
@@ -104,6 +136,17 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     console.log(this.pad.y)
   }
 
+  Level1.prototype.onKeyPress = function(event) {
+    console.log('onKeyPress')
+    /**
+     * Moving the character.
+     */
+    if (this.InputManager.isDown('left')) {
+      console.log('left')
+    } else if (this.InputManager.isDown('right')) {
+      console.log('right')
+    }
+  }
 
   /**
    * Update the current scene for physics.
@@ -111,7 +154,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
    * @param {number} delta - the delta since last update
    */
   Level1.prototype.fixedUpdate = function (delta) {
-    GameLevel.prototype.update.call(this, delta)
+    GameLevel.prototype.fixedUpdate.call(this, delta)
     this.PhysicsManager.update(delta)
   }
 
