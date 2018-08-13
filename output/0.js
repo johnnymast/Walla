@@ -72179,7 +72179,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(671);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(660);
 
 /**
  * PhysicsManager
@@ -72204,6 +72204,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
       element: document.body,
       canvas: canvas,
       engine: this.engine,
+      // controller: Matter.RenderPixi,
       options: {
         width: this.app.screen.width,
         height: this.app.screen.height,
@@ -72257,6 +72258,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
   };
 
   PhysicsManager.prototype.PIXIToMatter = function (x, y, width, height) {
+
     return {
       x: x + width * 0.5,
       y: y + height * 0.5
@@ -72272,7 +72274,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
   };
 
   PhysicsManager.prototype.applyForce = function (body, x, y) {
-    return Matter.Body.applyForce(body, new Vector2d(body.position.x, body.position.y), new Vector2d(0, -0.5));
+    return Matter.Body.applyForce(body, new Vector2d(body.position.x, body.position.y), new Vector2d(x, y));
   };
 
   PhysicsManager.prototype.setPosition = function (body, x, y) {
@@ -72334,7 +72336,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(670)("./" + scene);
+      let _scene = __webpack_require__(671)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -72386,7 +72388,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(660);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(661);
 
 /**
  * StateManager
@@ -73194,7 +73196,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
     this.score = 0;
     this.lives = 3;
-
+    this.wall_inset = 10;
     this.showPhysics = true;
 
     if (this.showPhysics === false) this.PhysicsManager.run();
@@ -73251,19 +73253,19 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
     let inset = 10;
     console.log(this.app.screen);
-    let ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, inset, { isStatic: true });
+    let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, { isStatic: true });
     ceiling.label = 'ceiling';
     this.PhysicsManager.add(ceiling);
 
-    let floor = this.PhysicsManager.rectangle(0, this.app.screen.height - inset, this.app.screen.width, inset, { isStatic: true });
+    let floor = this.PhysicsManager.rectangle(this.app.screen.width / 2, this.app.screen.height, this.app.screen.width, this.wall_inset, { isStatic: true });
     floor.label = 'floor';
     this.PhysicsManager.add(floor);
 
-    let leftwall = this.PhysicsManager.rectangle(0, 0, inset, this.app.screen.height, { isStatic: true, isSleeping: true });
+    let leftwall = this.PhysicsManager.rectangle(0, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, { isSleeping: true });
     leftwall.label = 'leftwall';
     this.PhysicsManager.add(leftwall);
 
-    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width - inset, 0, inset, this.app.screen.height, { isStatic: true });
+    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, { isStatic: true });
     rightwall.label = 'rightwall';
     this.PhysicsManager.add(rightwall);
 
@@ -73585,16 +73587,18 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   /**
    * Setup collision events on the body.
+   *
    * @private
    */
   PhysicsSprite.prototype._setupCollision = function () {
-    this.PhysicsManager.getEventHandler().on(this.PhysicsManager.getEngine(), 'collisionActive', e => {
+    this.PhysicsManager.getEventHandler().on(this.PhysicsManager.getEngine(), 'collisionStart', e => {
+
       for (let pair of e.pairs) {
         let bodyA = pair.bodyA;
         let bodyB = pair.bodyB;
 
-        if (bodyA === this.body) {
-          this.onCollisionWith(bodyB);
+        if (bodyB === this.body) {
+          this.onCollisionWith(bodyA);
         }
       }
     });
@@ -73920,10 +73924,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.setScore(this.score);
 
     this.bricks = {
-      'red': PIXI.Texture.fromFrame('element_red_rectangle.png')
-      // 'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
-      // 'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
-      // 'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
+      'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
+      'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
+      'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
+      'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png')
     };
 
     this.PhysicsManager.getWorld().gravity.y = 0.75;
@@ -73931,10 +73935,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
     for (let key of Object.keys(this.bricks)) {
       let texture = this.bricks[key];
-      for (let x = 45; x < this.num_bricks * texture.width; x += texture.width + 5) {
+      for (let x = 45; x < this.num_bricks * texture.width; x += texture.width) {
         let brick = new Brick(key, texture);
         brick.name = 'Brick' + this.objects.length + 1;
-        brick.setPosition(x, y);
+        brick.setPosition(x + texture.width * 0.5, y + texture.height * 0.5);
 
         this.objects.push(brick);
         this.addChild(brick.sprite);
@@ -73950,20 +73954,50 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     // PIXI.sound.play('game_over');
 
     this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'));
-    this.pad.setPosition(this.app.screen.width / 2, this.app.screen.height / 2 - 100);
+    this.pad.setPosition(this.app.screen.width / 2, this.app.screen.height - 100);
 
     var tx = PIXI.Texture.fromFrame('ballBlue.png');
-    this.ball = new Ball(tx);
-    this.ball.setPosition(this.pad.body.position.x / 2 - tx.width / 2, 300);
+    this.ball = new Ball(tx);console.log('this.pad.height', this.pad.sprite.height);
+    this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height);
+
     //
-    // this.pad.onCollisionWith = (withOnbject) => {
-    //   let MAX_VELOCITY = 50
-    //   console.log('hi with pad', withOnbject)
-    //   this.PhysicsManager.setVelocity(this.ball.body, {
-    //     x: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
-    //     y: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
-    //   })
-    // }
+    this.ball.onCollisionWith = withOnbject => {
+      if (withOnbject.label == 'Pad') {
+        let MAX_VELOCITY = 50;
+        var taxaAumentoVelocidade = .5;
+        console.log('hi with pad', withOnbject);
+        if (this.ball.body.velocity.x > 0 && this.ball.body.velocity.y > 0) {
+          console.log('case 1');
+          this.PhysicsManager.setVelocity(this.ball.body, {
+            x: this.ball.body.velocity.x + taxaAumentoVelocidade,
+            y: this.ball.body.velocity.y + taxaAumentoVelocidade
+          });
+        } else if (this.ball.body.velocity.x < 0 && this.ball.body.velocity.y < 0) {
+          console.log('case 2');
+          this.PhysicsManager.setVelocity(this.ball.body, {
+            x: this.ball.body.velocity.x - taxaAumentoVelocidade,
+            y: this.ball.body.velocity.y - taxaAumentoVelocidade
+          });
+        } else if (this.ball.body.velocity.x > 0 && this.ball.body.velocity.y < 0) {
+          console.log('case 3');
+          this.PhysicsManager.setVelocity(this.ball.body, {
+            x: this.ball.body.velocity.x + taxaAumentoVelocidade,
+            y: this.ball.body.velocity.y - taxaAumentoVelocidade
+          });
+        } else {
+          console.log('case 4');
+          this.PhysicsManager.setVelocity(this.ball.body, {
+            x: this.ball.body.velocity.x - taxaAumentoVelocidade,
+            y: this.ball.body.velocity.y + taxaAumentoVelocidade
+          });
+        }
+      }
+      // this.PhysicsManager.setVelocity(this.ball.body, {
+      //   x: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
+      //   y: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
+      // })
+      // this.ball.fire()
+    };
 
     this.objects.push(this.ball);
     this.objects.push(this.pad);
@@ -73976,10 +74010,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
   Level1.prototype.onMouseMove = function (event) {
     let coords = event.data.global;
-    if (coords.x + this.pad._width > this.app.screen.width) {
-      coords.x = this.app.screen.width - this.pad._width;
-    } else if (coords.x <= 0) {
-      coords.x = 0;
+    if (coords.x + this.pad._width / 2 > this.app.screen.width - this.wall_inset) {
+      coords.x = this.app.screen.width - this.pad._width / 2 - this.wall_inset;
+    } else if (coords.x - this.pad._width / 2 < this.pad._width / 2) {
+      coords.x = this.wall_inset + this.pad._width / 2;
     }
     this.pad.setX(coords.x);
   };
@@ -73989,13 +74023,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
    * @param event
    */
   Level1.prototype.onPointerDown = function (event) {
-    this.PhysicsManager.applyForce(this.ball.body, 0, 0.005);
+    //this.PhysicsManager.applyForce(this.ball.body,  0, -0.05)
     if (this.started === false) {
       for (let object of this.objects) {
         if (object instanceof Ball && this.didStart === false) {
           this.didStart = true;
-          // object.wakeUp()
-          // object.fire()
+          object.wakeUp();
+          object.fire();
         }
       }
       this.started = true;
@@ -74025,12 +74059,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.PhysicsManager.update(delta);
   };
 
+  /**
+   *
+   * @param {number} delta - the time difference since the last tick
+   */
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta);
 
     for (let object of this.objects) {
       if (object instanceof Ball && this.didStart === false) {
-        //  object.setPosition(this.pad.sprite.x + this.pad.sprite.width / 2 - object.sprite.width / 2, object.sprite.y)
+        object.setX(this.pad.body.position.x);
       }
       object.update(delta);
     }
@@ -74044,8 +74082,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 /* 642 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(666);
-const Dialogs = __webpack_require__(663);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(667);
+const Dialogs = __webpack_require__(664);
 
 /**
  * @namespace Screens
@@ -74767,8 +74805,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(632).BUTTON_STATE;
 const Type = __webpack_require__(632).BUTTON_TYPE;
-const BaseButton = __webpack_require__(661);
-const ImageButton = __webpack_require__(662);
+const BaseButton = __webpack_require__(662);
+const ImageButton = __webpack_require__(663);
 const Button = __webpack_require__(639);
 
 
@@ -75266,7 +75304,7 @@ exports.default = {
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = __webpack_require__(206);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(638)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Ball = function (texture) {
+  let Ball = function (texture) {
     PhysicsSprite.call(this, texture);
 
     this.sprite.filters = [new filters.OutlineFilter(2, 0x99ff99)];
@@ -75277,18 +75315,22 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = 
   Ball.prototype.setupBody = function () {
     let radius = this._width;
 
-    let options = {}
-    // isSleeping: true,
-    // isStatic: true,
-    //  inertia: Infinity,
-    //  isSensor: true,
-    //  label: this._id,
-    //  mass: 1,
-    //  restitution: 1,
+    let options = {
+      isSleeping: true,
+      // isStatic: true,
+      inertia: Infinity,
+      //  isSensor: true,
+      //  label: this._id,
+      mass: 1,
+      //  inertia: 0,
+      //  friction: 0,
+      restitution: 1
+      //  frictionStatic: 0,
+      //  frictionAir: 0
 
 
-    // this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
-    ;this.body = this.PhysicsManager.circle(this._x, this._y, this._width / 2, options);
+      // this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options)
+    };this.body = this.PhysicsManager.circle(this._x, this._y, this._width / 2, options);
 
     this.body.label = Object.getPrototypeOf(this).constructor.name;
     this.PhysicsManager.add(this.body);
@@ -75297,6 +75339,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = 
   Ball.prototype.fire = function () {
     // this.PhysicsManager.setVelocity(this.body, {x: 0, y:  rand(-2, 2)})
     // this.PhysicsManager.setAngularVelocity(this.body, 0);
+    console.log('fire');
+    this.PhysicsManager.setAngularVelocity(this.body, 0.1);
+    // this.PhysicsManager.setVelocity(this.body, {x: bola.velocity.x*2,y:bola.velocity.y*2});
+    this.PhysicsManager.setVelocity(this.body, { x: -15, y: -15 });
+
+    //
+    // this.PhysicsManager.applyForce(this.body,  0, -0.10)
   };
 
   Ball.prototype.update = function (delta) {
@@ -75394,7 +75443,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(638)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
-  var Pad = function (texture) {
+  let Pad = function (texture) {
     PhysicsSprite.call(this, texture);
   };
 
@@ -75402,7 +75451,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   Pad.prototype.setPosition = function (x = 0, y = 0) {
 
-    console.log('Pad setting y to ', y);
+    console.log('Pad setting y to ', this.body);
     this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
     return this;
   };
@@ -75410,7 +75459,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   Pad.prototype.setupBody = function () {
     let options = {
       isStatic: true
-      // isSleeping: true,
+      // inertia: 0,
+      // frictionStatic: 1,
+      // isStatic: true,
+      // frictionAir: 0,
+      // friction: 0,
+      // restitution: 1
     };
     this.body = this.PhysicsManager.rectangle(this._x, this._y, this._width, this._height, options);
     this.body.label = Object.getPrototypeOf(this).constructor.name;
@@ -75615,6 +75669,201 @@ module.exports = Text;
 
 /***/ }),
 /* 660 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @namespace Math
+ */
+
+/**
+ * Class for Vector2d math calculations.
+ *
+ * @class
+ */
+class Vector2d {
+  /**
+   * @param {number} [x=0] - the x value
+   * @param {number} [y=0] - the y value
+   */
+  constructor(x = 0, y = 0) {
+    this.x = x;
+    this.y = y;
+  }
+
+  /**
+   * @example
+   * let vector = new Vector2d(1,3);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3 }
+   *
+   * // Lets add 2 to all values
+   * let result = vector.add(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 3, y: 5 }
+   *
+   * console.log(result.toObject())
+   *
+   * @returns {object}
+   */
+  toObject() {
+    return { x: this.x, y: this.y };
+  }
+
+  /**
+   * Clone the vector into a new Vector2d object.
+   *
+   * @returns {Vector2d}
+   */
+  clone() {
+    return new Vector2d(this.x, this.y);
+  }
+
+  // element wise
+
+  /**
+   * @example
+   * let vector = new Vector2d(1,3);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3 }
+   *
+   * // Lets add 2 to all values
+   * let result = vector.add(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 2, y: 6 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - add a number to the vector or add a an other Vector2d object
+   * @returns {Vector2d}
+   */
+  add(n) {
+    if (n instanceof Vector2d) {
+      this.x += n.x;
+      this.y += n.y;
+    } else {
+      this.x += n;
+      this.y += n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let vector = new Vector2d(1,3);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3 }
+   *
+   * // Lets subtract 2 to all values
+   * let result = vector.subtract(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: -1, y: 1 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - subtract a number to the vector or subtract a an other Vector2d object
+   * @returns {Vector2d}
+   */
+  subtract(n) {
+    if (n instanceof Vector2d) {
+      this.x -= n.x;
+      this.y -= n.y;
+    } else {
+      this.x -= n;
+      this.y -= n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let vector = new Vector2d(1,3);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3 }
+   *
+   * // Lets multiply 2 to all values
+   * let result = vector.multiply(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 2, y: 6 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - multiply a number to the vector or multiply a an other Vector2d object
+   * @returns {Vector2d}
+   */
+  multiply(n) {
+    if (n instanceof Vector2d) {
+      this.x *= n.x;
+      this.y *= n.y;
+    } else {
+      this.x *= n;
+      this.y *= n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   *
+   *  let vector = new Vector2d(8,8);
+   *
+   *  // Our vector looks like this
+   *  // { x: 8, y: 8 }
+   *
+   *  let result = v.devide(2)
+   *
+   *  // Our resulting vector now looks like this
+   *  // { x: 4, y: 4 }
+   *
+   *  console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - devide a number on the vector or devide a an other Vector3d object
+   * @returns {Vector3d}
+   */
+  devide(n) {
+    if (n instanceof Vector2d) {
+      this.x /= n.x;
+      this.y /= n.y;
+    } else {
+      this.x /= n;
+      this.y /= n;
+    }
+    return this;
+  }
+
+  /**
+   * Get the current x value
+   *
+   * @returns {number}
+   */
+  getX() {
+    return this.x;
+  }
+
+  /**
+   * Get the current y value
+   *
+   * @returns {number}
+   */
+  getY() {
+    return this.y;
+  }
+
+}
+
+if (true) {
+  module.exports = Vector2d;
+}
+
+/***/ }),
+/* 661 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -75640,7 +75889,7 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 661 */
+/* 662 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(639);
@@ -75847,7 +76096,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 662 */
+/* 663 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(639);
@@ -76054,7 +76303,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 663 */
+/* 664 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -76064,13 +76313,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(633).DIALOG_TYPE;
 const STATE = __webpack_require__(633).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(664);
-const DefaultDialog = __webpack_require__(665);
+const CloseableDialog = __webpack_require__(665);
+const DefaultDialog = __webpack_require__(666);
 
 
 
 /***/ }),
-/* 664 */
+/* 665 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(647);
@@ -76153,7 +76402,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 665 */
+/* 666 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
@@ -76169,7 +76418,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 666 */
+/* 667 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -76177,13 +76426,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(667);
-const MenuItemText = __webpack_require__(669);
-const MenuItemImageButton = __webpack_require__(668);
+const Menu = __webpack_require__(668);
+const MenuItemText = __webpack_require__(670);
+const MenuItemImageButton = __webpack_require__(669);
 
 
 /***/ }),
-/* 667 */
+/* 668 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -76257,7 +76506,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 668 */
+/* 669 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(647);
@@ -76347,7 +76596,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 669 */
+/* 670 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(649)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
@@ -76433,7 +76682,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 670 */
+/* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -76468,202 +76717,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 670;
-
-/***/ }),
-/* 671 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @namespace Math
- */
-
-/**
- * Class for Vector2d math calculations.
- *
- * @class
- */
-class Vector2d {
-  /**
-   * @param {number} [x=0] - the x value
-   * @param {number} [y=0] - the y value
-   */
-  constructor(x = 0, y = 0) {
-    this.x = x;
-    this.y = y;
-  }
-
-  /**
-   * @example
-   * let vector = new Vector2d(1,3);
-   *
-   * // Our vector looks like this
-   * // { x: 1, y: 3 }
-   *
-   * // Lets add 2 to all values
-   * let result = vector.add(2);
-   *
-   * // Our resulting vector now looks like this
-   * // { x: 3, y: 5 }
-   *
-   * console.log(result.toObject())
-   *
-   * @returns {object}
-   */
-  toObject() {
-    return { x: this.x, y: this.y };
-  }
-
-  /**
-   * Clone the vector into a new Vector2d object.
-   *
-   * @returns {Vector2d}
-   */
-  clone() {
-    return new Vector2d(this.x, this.y);
-  }
-
-  // element wise
-
-  /**
-   * @example
-   * let vector = new Vector2d(1,3);
-   *
-   * // Our vector looks like this
-   * // { x: 1, y: 3 }
-   *
-   * // Lets add 2 to all values
-   * let result = vector.add(2);
-   *
-   * // Our resulting vector now looks like this
-   * // { x: 2, y: 6 }
-   *
-   * console.log(result.toObject())
-   *
-   * @param {number|Vector2d} n - add a number to the vector or add a an other Vector2d object
-   * @returns {Vector2d}
-   */
-  add(n) {
-    if (n instanceof Vector2d) {
-      this.x += n.x;
-      this.y += n.y;
-    } else {
-      this.x += n;
-      this.y += n;
-    }
-    return this;
-  }
-
-  /**
-   * @example
-   * let vector = new Vector2d(1,3);
-   *
-   * // Our vector looks like this
-   * // { x: 1, y: 3 }
-   *
-   * // Lets subtract 2 to all values
-   * let result = vector.subtract(2);
-   *
-   * // Our resulting vector now looks like this
-   * // { x: -1, y: 1 }
-   *
-   * console.log(result.toObject())
-   *
-   * @param {number|Vector2d} n - subtract a number to the vector or subtract a an other Vector2d object
-   * @returns {Vector2d}
-   */
-  subtract(n) {
-    if (n instanceof Vector2d) {
-      this.x -= n.x;
-      this.y -= n.y;
-    } else {
-      this.x -= n;
-      this.y -= n;
-    }
-    return this;
-  }
-
-  /**
-   * @example
-   * let vector = new Vector2d(1,3);
-   *
-   * // Our vector looks like this
-   * // { x: 1, y: 3 }
-   *
-   * // Lets multiply 2 to all values
-   * let result = vector.multiply(2);
-   *
-   * // Our resulting vector now looks like this
-   * // { x: 2, y: 6 }
-   *
-   * console.log(result.toObject())
-   *
-   * @param {number|Vector2d} n - multiply a number to the vector or multiply a an other Vector2d object
-   * @returns {Vector2d}
-   */
-  multiply(n) {
-    if (n instanceof Vector2d) {
-      this.x *= n.x;
-      this.y *= n.y;
-    } else {
-      this.x *= n;
-      this.y *= n;
-    }
-    return this;
-  }
-
-  /**
-   * @example
-   *
-   *  let vector = new Vector2d(8,8);
-   *
-   *  // Our vector looks like this
-   *  // { x: 8, y: 8 }
-   *
-   *  let result = v.devide(2)
-   *
-   *  // Our resulting vector now looks like this
-   *  // { x: 4, y: 4 }
-   *
-   *  console.log(result.toObject())
-   *
-   * @param {number|Vector2d} n - devide a number on the vector or devide a an other Vector3d object
-   * @returns {Vector3d}
-   */
-  devide(n) {
-    if (n instanceof Vector2d) {
-      this.x /= n.x;
-      this.y /= n.y;
-    } else {
-      this.x /= n;
-      this.y /= n;
-    }
-    return this;
-  }
-
-  /**
-   * Get the current x value
-   *
-   * @returns {number}
-   */
-  getX() {
-    return this.x;
-  }
-
-  /**
-   * Get the current y value
-   *
-   * @returns {number}
-   */
-  getY() {
-    return this.y;
-  }
-
-}
-
-if (true) {
-  module.exports = Vector2d;
-}
+webpackContext.id = 671;
 
 /***/ })
 ]);

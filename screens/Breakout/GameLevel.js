@@ -1,4 +1,4 @@
-define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput',  'gui/Statistics'], function (pixi, Matter, Scene, KeyboardInput, Statistics) {
+define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, KeyboardInput, Statistics) {
   var GameLevel = function (options) {
     Scene.call(this, options)
 
@@ -13,20 +13,18 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput',  'gui/Sta
 
     this.score = 0
     this.lives = 3
-
+    this.wall_inset = 10
     this.showPhysics = true
 
     if (this.showPhysics === false)
-      this.PhysicsManager.run();
+      this.PhysicsManager.run()
   }
 
   extend(GameLevel, Scene)
 
-
   GameLevel.prototype.setDisplayStats = function (visible) {
     this.statistics.visible = visible
   }
-
 
   GameLevel.prototype.onKeyPress = function (event) {
     /**
@@ -73,19 +71,19 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput',  'gui/Sta
 
     let inset = 10
     console.log(this.app.screen)
-    let ceiling = this.PhysicsManager.rectangle(0, 0, this.app.screen.width, inset, {isStatic: true})
+    let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, {isStatic: true})
     ceiling.label = 'ceiling'
     this.PhysicsManager.add(ceiling)
 
-    let floor = this.PhysicsManager.rectangle(0, this.app.screen.height - inset, this.app.screen.width, inset, {isStatic: true})
+    let floor = this.PhysicsManager.rectangle(this.app.screen.width / 2, this.app.screen.height, this.app.screen.width, this.wall_inset, {isStatic: true})
     floor.label = 'floor'
     this.PhysicsManager.add(floor)
 
-    let leftwall = this.PhysicsManager.rectangle(0, 0, inset, this.app.screen.height, {isStatic: true, isSleeping: true})
+    let leftwall = this.PhysicsManager.rectangle(0, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, {isSleeping: true})
     leftwall.label = 'leftwall'
     this.PhysicsManager.add(leftwall)
 
-    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width - inset, 0, inset, this.app.screen.height, {isStatic: true})
+    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, {isStatic: true})
     rightwall.label = 'rightwall'
     this.PhysicsManager.add(rightwall)
 
@@ -129,7 +127,7 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput',  'gui/Sta
     this.livesText.text = 'LIVES: ' + this.lives
   }
 
-  GameLevel.prototype.fixedUpdate = function(delta) {
+  GameLevel.prototype.fixedUpdate = function (delta) {
     // Empty
   }
 

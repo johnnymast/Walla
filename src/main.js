@@ -55,13 +55,16 @@ require([
   let app = new PIXI.Application(width, height, {
     backgroundColor: 0x0,
     autoResize: true,
-    resolution: window.devicePixelRatio
+    resolution: window.devicePixelRatio,
   })
   document.body.appendChild(app.view)
 
   app.renderer.resize(width, height)
+  // app.renderer.roundPixels = false;
+  app.renderer.antialias = true;
+  app.renderer.forceFXAA = true;
 
-
+  console.log('renderer.roundPixels', app.renderer.roundPixels)
   ge.set('App', app)
   ge.set('AssetManager', new AssetManager())
   ge.set('SceneManager', new SceneManager())

@@ -8,7 +8,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   let PhysicsSprite = function (texture) {
     GameObject.call(this)
 
-
     if (typeof this.setupBody != 'function') {
       throw new Error('If you subclass PhysicsSprite you need to implement the setupBody() method.')
     }
@@ -65,16 +64,18 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
 
   /**
    * Setup collision events on the body.
+   *
    * @private
    */
   PhysicsSprite.prototype._setupCollision = function () {
-    this.PhysicsManager.getEventHandler().on(this.PhysicsManager.getEngine(), 'collisionActive', (e) => {
+    this.PhysicsManager.getEventHandler().on(this.PhysicsManager.getEngine(), 'collisionStart', (e) => {
+
       for (let pair of e.pairs) {
         let bodyA = pair.bodyA
         let bodyB = pair.bodyB
 
-        if (bodyA === this.body) {
-          this.onCollisionWith(bodyB)
+        if (bodyB === this.body) {
+          this.onCollisionWith(bodyA)
         }
       }
     })

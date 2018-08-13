@@ -54,9 +54,9 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     this.bricks = {
       'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
-      // 'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
-      // 'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
-      // 'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
+      'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
+      'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
+      'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
     }
 
     this.PhysicsManager.getWorld().gravity.y = 0.75
@@ -64,10 +64,10 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     for (let key of Object.keys(this.bricks)) {
       let texture = this.bricks[key]
-      for (let x = 45; x < (this.num_bricks * texture.width); x += texture.width + 5) {
+      for (let x = 45; x < (this.num_bricks * texture.width); x += texture.width) {
         let brick = new Brick(key, texture)
         brick.name = 'Brick' + this.objects.length + 1
-        brick.setPosition(x, y)
+        brick.setPosition(x + (texture.width * 0.5), y + (texture.height * 0.5))
 
         this.objects.push(brick)
         this.addChild(brick.sprite)
@@ -83,20 +83,50 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     // PIXI.sound.play('game_over');
 
     this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'))
-    this.pad.setPosition(this.app.screen.width / 2, this.app.screen.height / 2 - 100)
+    this.pad.setPosition(this.app.screen.width/2, this.app.screen.height - 100)
 
     var tx = PIXI.Texture.fromFrame('ballBlue.png')
-    this.ball = new Ball(tx)
-    this.ball.setPosition(this.pad.body.position.x / 2 - tx.width / 2, 300)
+    this.ball = new Ball(tx); console.log('this.pad.height', this.pad.sprite.height)
+    this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height)
+
     //
-    // this.pad.onCollisionWith = (withOnbject) => {
-    //   let MAX_VELOCITY = 50
-    //   console.log('hi with pad', withOnbject)
-    //   this.PhysicsManager.setVelocity(this.ball.body, {
-    //     x: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
-    //     y: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
-    //   })
-    // }
+    this.ball.onCollisionWith = (withOnbject) => {
+      if (withOnbject.label == 'Pad') {
+        let MAX_VELOCITY = 50
+        var taxaAumentoVelocidade = .5
+        console.log('hi with pad', withOnbject)
+        if (this.ball.body.velocity.x > 0 && this.ball.body.velocity.y > 0) {
+          console.log('case 1')
+          this.PhysicsManager.setVelocity(this.ball.body, {
+            x: this.ball.body.velocity.x + taxaAumentoVelocidade,
+            y: this.ball.body.velocity.y + taxaAumentoVelocidade
+          });
+        } else if (this.ball.body.velocity.x < 0 && this.ball.body.velocity.y < 0) {
+          console.log('case 2')
+          this.PhysicsManager.setVelocity(this.ball.body, {
+            x: this.ball.body.velocity.x - taxaAumentoVelocidade,
+            y: this.ball.body.velocity.y - taxaAumentoVelocidade
+          });
+        } else if (this.ball.body.velocity.x > 0 && this.ball.body.velocity.y < 0) {
+          console.log('case 3')
+          this.PhysicsManager.setVelocity(this.ball.body, {
+            x: this.ball.body.velocity.x + taxaAumentoVelocidade,
+            y: this.ball.body.velocity.y - taxaAumentoVelocidade
+          });
+        } else {
+          console.log('case 4')
+          this.PhysicsManager.setVelocity(this.ball.body, {
+            x: this.ball.body.velocity.x - taxaAumentoVelocidade,
+            y: this.ball.body.velocity.y + taxaAumentoVelocidade
+          });
+        }
+      }
+      // this.PhysicsManager.setVelocity(this.ball.body, {
+      //   x: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
+      //   y: Math.max(Math.min(this.ball.body.velocity.x, MAX_VELOCITY), -MAX_VELOCITY),
+      // })
+     // this.ball.fire()
+    }
 
     this.objects.push(this.ball)
     this.objects.push(this.pad)
@@ -109,10 +139,10 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
   Level1.prototype.onMouseMove = function (event) {
     let coords = event.data.global
-    if (coords.x + this.pad._width > this.app.screen.width) {
-      coords.x = this.app.screen.width - this.pad._width
-    } else if (coords.x <= 0) {
-      coords.x = 0
+    if (coords.x + this.pad._width/2 > (this.app.screen.width - this.wall_inset)) {
+      coords.x = this.app.screen.width - (this.pad._width/2) - this.wall_inset
+    } else if (coords.x - this.pad._width/2 < this.pad._width/2) {
+      coords.x = this.wall_inset + this.pad._width / 2
     }
     this.pad.setX(coords.x)
   }
@@ -122,13 +152,13 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
    * @param event
    */
   Level1.prototype.onPointerDown = function (event) {
-    this.PhysicsManager.applyForce(this.ball.body,  0, 0.005)
+    //this.PhysicsManager.applyForce(this.ball.body,  0, -0.05)
     if (this.started === false) {
       for (let object of this.objects) {
         if (object instanceof Ball && this.didStart === false) {
           this.didStart = true
-          // object.wakeUp()
-          // object.fire()
+          object.wakeUp()
+          object.fire()
         }
       }
       this.started = true
@@ -158,12 +188,16 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.PhysicsManager.update(delta)
   }
 
+  /**
+   *
+   * @param {number} delta - the time difference since the last tick
+   */
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta)
 
     for (let object of this.objects) {
       if (object instanceof Ball && this.didStart === false) {
-        //  object.setPosition(this.pad.sprite.x + this.pad.sprite.width / 2 - object.sprite.width / 2, object.sprite.y)
+         object.setX(this.pad.body.position.x)
       }
       object.update(delta)
     }

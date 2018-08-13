@@ -4493,17 +4493,23 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   PIXI.utils.skipHello();
   sayHello();
 
-  var ge = GameEngine.get();
+  let width = 800;
+  let height = 600;
 
-  var app = new PIXI.Application(1920, 1080, {
+  let ge = GameEngine.get();
+  let app = new PIXI.Application(width, height, {
     backgroundColor: 0x0,
     autoResize: true,
     resolution: window.devicePixelRatio
   });
   document.body.appendChild(app.view);
 
-  app.renderer.resize(800, 600);
+  app.renderer.resize(width, height);
+  // app.renderer.roundPixels = false;
+  app.renderer.antialias = true;
+  app.renderer.forceFXAA = true;
 
+  console.log('renderer.roundPixels', app.renderer.roundPixels);
   ge.set('App', app);
   ge.set('AssetManager', new AssetManager());
   ge.set('SceneManager', new SceneManager());

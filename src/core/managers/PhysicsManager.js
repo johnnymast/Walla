@@ -23,6 +23,7 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
       element: document.body,
       canvas: canvas,
       engine: this.engine,
+      // controller: Matter.RenderPixi,
       options: {
         width: this.app.screen.width,
         height: this.app.screen.height,
@@ -45,7 +46,7 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
         constraint: {
           stiffness: 0.2,
           render: {
-            visible: false
+            visible: false,
           }
         }
       })
@@ -76,6 +77,7 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
   }
 
   PhysicsManager.prototype.PIXIToMatter = function (x, y, width, height) {
+
     return {
       x: x + (width * 0.5),
       y: y + (height * 0.5),
@@ -91,7 +93,7 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
   }
 
   PhysicsManager.prototype.applyForce = function (body, x, y) {
-    return Matter.Body.applyForce(body, new Vector2d(body.position.x, body.position.y), new Vector2d(0, -0.5))
+    return Matter.Body.applyForce(body, new Vector2d(body.position.x, body.position.y), new Vector2d(x, y))
   }
 
   PhysicsManager.prototype.setPosition = function (body, x, y) {
