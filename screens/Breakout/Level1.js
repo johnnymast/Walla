@@ -1,5 +1,6 @@
 // https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
-define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breakout/Brick', 'objects/Breakout/Pad', 'objects/Breakout/Ball'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball) {
+const Camera = require ('core/camera/Camera')
+define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breakout/Brick', 'objects/Breakout/Pad', 'objects/Breakout/Ball', 'core/geometry/rect'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, Rect) {
   let Level1 = function (options) {
     GameLevel.call(this, {backgroundColor: 0x1099bb})
 
@@ -135,6 +136,10 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.addChild(this.pad.sprite)
 
     this.PhysicsManager.run()
+
+    let cam = new Camera(new Rect(0,0, 200, 200), this);
+    this.mask = cam
+   // this.addChild(cam)
   }
 
   Level1.prototype.onMouseMove = function (event) {
