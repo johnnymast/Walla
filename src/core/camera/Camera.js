@@ -15,7 +15,6 @@ define(['pixi', 'core/geometry/rect'], function (PIXI, Rect) {
     this.y = frame.y
 
 
-    this.addChild(world)
     //this.mask = this.maskHolder
 
     //this.addChild(this.maskHolder)

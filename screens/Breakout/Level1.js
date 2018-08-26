@@ -137,9 +137,8 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     this.PhysicsManager.run()
 
-    let cam = new Camera(new Rect(0,0, 200, 200), this);
-    this.mask = cam
-   // this.addChild(cam)
+    let cam = new Camera(new Rect(0,0, 200, 200));
+    this.addChild(cam)
   }
 
   Level1.prototype.onMouseMove = function (event) {
