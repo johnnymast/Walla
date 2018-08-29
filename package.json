@@ -49,6 +49,7 @@
     "underscore": "^1.8.3"
   },
   "jest": {
+    "testURL": "http://localhost",
     "verbose": true,
     "testMatch": [
       "<rootDir>/tests/**/*.js?(x)",

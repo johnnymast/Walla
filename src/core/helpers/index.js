@@ -1,5 +1,19 @@
-require('./rand')
-require('./map2')
-require('./merge')
-require('./extend')
-require('./extend2')
+
+/**
+ * Include Objects helpers
+ */
+require('./objects')
+
+
+/**
+ * Include number helpers
+ */
+require('./numbers')
+
+
+/**
+ * Include math helpers
+ */
+require('./math')
+
+

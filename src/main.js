@@ -1,6 +1,6 @@
+import 'core/helpers'
 import 'core/polyfill'
 import 'core/geometry'
-import 'core/helpers'
 import 'babel-polyfill'
 import 'core/Transform'
 import 'core/math'
