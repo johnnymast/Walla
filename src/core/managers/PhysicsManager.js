@@ -1,4 +1,4 @@
-const Vector2d = require('core/math/Vector2d')
+// const Vector2d = require('core/math/Vector2d')
 
 /**
  * PhysicsManager

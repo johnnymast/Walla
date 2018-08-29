@@ -2,6 +2,9 @@ import 'core/polyfill'
 import 'core/geometry'
 import 'core/helpers'
 import 'babel-polyfill'
+import 'core/Transform'
+import 'core/math'
+
 
 const EngineInfo = {
   name: 'Stage Engine',
@@ -9,6 +12,25 @@ const EngineInfo = {
   url: 'https://github.com/johnnymast/Walla',
 }
 
+// window.onerror = function (msg, url, lineNo, columnNo, error) {
+//   var string = msg.toLowerCase();
+//   var substring = "script error";
+//   if (string.indexOf(substring) > -1){
+//     alert('Script Error: See Browser Console for Detail');
+//   } else {
+//     var message = [
+//       'Message: ' + msg,
+//       'URL: ' + url,
+//       'Line: ' + lineNo,
+//       'Column: ' + columnNo,
+//       'Error object: ' + JSON.stringify(error)
+//     ].join(' - ');
+//
+//     alert(message);
+//   }
+//
+//   return false;
+// };
 
 let sayHello = function() {
   if (window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1)
@@ -30,7 +52,7 @@ let sayHello = function() {
   }
   else if (window.console)
   {
-    window.console.log(`${EngineInfo.name} ${EngineInfo.version}`);
+    window.console.log(`${EngineInfo.name} ${EngineInfo.version.toFixed(2)}`);
   }
 
 }
@@ -60,11 +82,9 @@ require([
   document.body.appendChild(app.view)
 
   app.renderer.resize(width, height)
-  // app.renderer.roundPixels = false;
   app.renderer.antialias = true;
   app.renderer.forceFXAA = true;
 
-  console.log('renderer.roundPixels', app.renderer.roundPixels)
   ge.set('App', app)
   ge.set('AssetManager', new AssetManager())
   ge.set('SceneManager', new SceneManager())

@@ -3913,8 +3913,8 @@ if (fails(function () { return new $WeakMap().set((Object.freeze || Object)(tmp)
 /* 243 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(414);
 __webpack_require__(415);
+__webpack_require__(279);
 
 /***/ }),
 /* 244 */
@@ -4000,7 +4000,104 @@ define(String.prototype, "padRight", "".padEnd);
 /* 276 */,
 /* 277 */,
 /* 278 */,
-/* 279 */,
+/* 279 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Rect
+ * @namespace Geometry
+ */
+class Rect {
+
+  /**
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @param {number} [width=0] - width of the rect
+   * @param {number} [height=0] - height of the rect
+   */
+  constructor(x = 0, y = 0, width = 0, height = 0) {
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.x = x;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.y = y;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.width = width;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.height = height;
+  }
+
+  /**
+   * Clone the current Rect.
+   *
+   * @returns {Rect}
+   */
+  clone() {
+    return new Rect(this.x, this.y, this.width, this.height);
+  }
+
+  /**
+   * Copy the values of rect onto the current Rect.
+   *
+   * @param {Rect} rect - The rect to copy
+   */
+  copy(rect) {
+    this.set(rect.x, rect.y, rect.width, rect.height);
+  }
+
+  /**
+   * Compare the given Rect to this Rect.
+   *
+   * @param {Rect} rect - Compare this Rect to the passed Rect
+   * @returns {boolean}
+   */
+  equals(rect) {
+    return rect.x === this.x && rect.y === this.y && rect.width === this.width && rect.height === this.height;
+  }
+
+  /**
+   * Sets the rect to a new x and y position.
+   * If height is omitted, both width and height will be set to width.
+   *
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @param {number} [width=0] - width of the rect
+   * @param {number} [height=0] - height of the rect
+   */
+  set(x, y, width, height) {
+
+    this.x = x || 0;
+    this.y = y;
+
+    this.width = width;
+    this.height = height || (height !== 0 ? this.width : 0);
+  }
+}
+
+if (true) {
+  module.exports = Rect;
+}
+
+/***/ }),
 /* 280 */,
 /* 281 */,
 /* 282 */,
@@ -4135,7 +4232,8 @@ define(String.prototype, "padRight", "".padEnd);
 /* 411 */,
 /* 412 */,
 /* 413 */,
-/* 414 */
+/* 414 */,
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -4216,104 +4314,6 @@ class Point {
 
 if (true) {
   module.exports = Point;
-}
-
-/***/ }),
-/* 415 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * Rect
- * @namespace Geometry
- */
-class Rect {
-
-  /**
-   * @param {number} [x=0] - position of the point on the x axis
-   * @param {number} [y=0] - position of the point on the y axis
-   * @param {number} [width=0] - width of the rect
-   * @param {number} [height=0] - height of the rect
-   */
-  constructor(x = 0, y = 0, width = 0, height = 0) {
-
-    /**
-     *
-     * @type {number}
-     * @default = 0
-     */
-    this.x = x;
-
-    /**
-     *
-     * @type {number}
-     * @default = 0
-     */
-    this.y = y;
-
-    /**
-     *
-     * @type {number}
-     * @default = 0
-     */
-    this.width = width;
-
-    /**
-     *
-     * @type {number}
-     * @default = 0
-     */
-    this.height = height;
-  }
-
-  /**
-   * Clone the current Rect.
-   *
-   * @returns {Rect}
-   */
-  clone() {
-    return new Rect(this.x, this.y, this.width, this.height);
-  }
-
-  /**
-   * Copy the values of rect onto the current Rect.
-   *
-   * @param {Rect} rect - The rect to copy
-   */
-  copy(rect) {
-    this.set(rect.x, rect.y, rect.width, rect.height);
-  }
-
-  /**
-   * Compare the given Rect to this Rect.
-   *
-   * @param {Rect} rect - Compare this Rect to the passed Rect
-   * @returns {boolean}
-   */
-  equals(rect) {
-    return rect.x === this.x && rect.y === this.y && rect.width === this.width && rect.height === this.height;
-  }
-
-  /**
-   * Sets the rect to a new x and y position.
-   * If height is omitted, both width and height will be set to width.
-   *
-   * @param {number} [x=0] - position of the point on the x axis
-   * @param {number} [y=0] - position of the point on the y axis
-   * @param {number} [width=0] - width of the rect
-   * @param {number} [height=0] - height of the rect
-   */
-  set(x, y, width, height) {
-
-    this.x = x || 0;
-    this.y = y;
-
-    this.width = width;
-    this.height = height || (height !== 0 ? this.width : 0);
-  }
-}
-
-if (true) {
-  module.exports = Rect;
 }
 
 /***/ }),
@@ -4468,6 +4468,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_core_helpers___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_core_helpers__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_polyfill__ = __webpack_require__(246);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_babel_polyfill__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_core_Transform__ = __webpack_require__(671);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_core_Transform___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_core_Transform__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_core_math__ = __webpack_require__(672);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_core_math___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_core_math__);
+
+
 
 
 
@@ -4477,15 +4483,34 @@ const EngineInfo = {
   name: 'Stage Engine',
   version: 1.0,
   url: 'https://github.com/johnnymast/Walla'
-};
 
-let sayHello = function () {
+  // window.onerror = function (msg, url, lineNo, columnNo, error) {
+  //   var string = msg.toLowerCase();
+  //   var substring = "script error";
+  //   if (string.indexOf(substring) > -1){
+  //     alert('Script Error: See Browser Console for Detail');
+  //   } else {
+  //     var message = [
+  //       'Message: ' + msg,
+  //       'URL: ' + url,
+  //       'Line: ' + lineNo,
+  //       'Column: ' + columnNo,
+  //       'Error object: ' + JSON.stringify(error)
+  //     ].join(' - ');
+  //
+  //     alert(message);
+  //   }
+  //
+  //   return false;
+  // };
+
+};let sayHello = function () {
   if (window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
     const args = [`\n %c %c %c ${EngineInfo.name} ${EngineInfo.version.toFixed(2)} - ✰ ✰  %c  %c  ${EngineInfo.url}  %c %c ♥%c♥%c♥ \n\n`, 'background: #ff66a5; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'color: #ff66a5; background: #030307; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'background: #ffc3dc; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;'];
 
     window.console.log.apply(console, args);
   } else if (window.console) {
-    window.console.log(`${EngineInfo.name} ${EngineInfo.version}`);
+    window.console.log(`${EngineInfo.name} ${EngineInfo.version.toFixed(2)}`);
   }
 };
 
@@ -4505,11 +4530,9 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   document.body.appendChild(app.view);
 
   app.renderer.resize(width, height);
-  // app.renderer.roundPixels = false;
   app.renderer.antialias = true;
   app.renderer.forceFXAA = true;
 
-  console.log('renderer.roundPixels', app.renderer.roundPixels);
   ge.set('App', app);
   ge.set('AssetManager', new AssetManager());
   ge.set('SceneManager', new SceneManager());
@@ -9790,6 +9813,742 @@ module.exports = __webpack_require__(31);
 );
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+
+/***/ }),
+/* 628 */,
+/* 629 */,
+/* 630 */,
+/* 631 */,
+/* 632 */,
+/* 633 */,
+/* 634 */,
+/* 635 */,
+/* 636 */,
+/* 637 */,
+/* 638 */,
+/* 639 */,
+/* 640 */,
+/* 641 */,
+/* 642 */,
+/* 643 */,
+/* 644 */,
+/* 645 */,
+/* 646 */,
+/* 647 */,
+/* 648 */,
+/* 649 */,
+/* 650 */,
+/* 651 */,
+/* 652 */,
+/* 653 */,
+/* 654 */,
+/* 655 */,
+/* 656 */,
+/* 657 */,
+/* 658 */,
+/* 659 */,
+/* 660 */,
+/* 661 */,
+/* 662 */,
+/* 663 */,
+/* 664 */,
+/* 665 */,
+/* 666 */,
+/* 667 */,
+/* 668 */,
+/* 669 */,
+/* 670 */,
+/* 671 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+let Transform = function (k = 1, x = 0, y = 0) {
+  this.k = k;
+  this.x = x;
+  this.y = y;
+};
+
+Transform.prototype = {
+  constructor: Transform,
+  scale: function (k) {
+    return k === 1 ? this : new Transform(this.k * k, this.x, this.y);
+  },
+  translate: function (x, y) {
+    return x === 0 & y === 0 ? this : new Transform(this.k, this.x + this.k * x, this.y + this.k * y);
+  }
+};
+
+if (true) {
+  module.exports = Transform;
+}
+
+/***/ }),
+/* 672 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Matrix = __webpack_require__(673);
+const Vector2d = __webpack_require__(674);
+const Vector3d = __webpack_require__(675);
+
+module.exports = { Matrix, Vector2d, Vector3d };
+
+/***/ }),
+/* 673 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @namespace Math
+ */
+
+/**
+ * Class for Matrix math calculations. Please be aware
+ * of the fact that the rows and columns start of by 0 and
+ * not at 1.
+ *
+ * @class
+ */
+class Matrix {
+
+  /* Instantiate a new Matrix Object.
+   *
+   * @constructor
+   * @param {number} rows - the number of rows in the matrix
+   * @param {number} cols - the number of columns in the matrix
+   * @param {number} [fill=0] - the initial fill for the matrix
+   */
+  constructor(rows = 0, cols = 0, fill = 0) {
+    this.rows = rows;
+    this.cols = cols;
+    this.fill = fill;
+    this.data = Array(this.rows).fill().map(() => Array(this.cols).fill(this.fill));
+  }
+
+  /**
+   * Get the matrix data.
+   * @example
+   * let matrix = new Matrix(4,4, 2);
+   *
+   * // this will output
+   * // [ [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ], [ 2, 2, 2, 2 ] ]
+   * console.log(matrix.valueOf())
+   *
+   * @returns {Array}
+   */
+  valueOf() {
+    return this.data;
+  }
+
+  /**
+   * Alias for valueOf()
+   *
+   * @see {@Matrix valueOf}
+   * @returns {array}
+   */
+  toObject() {
+    return this.valueOf();
+  }
+
+  /**
+   * Clone the matrix into a new Matrix object.
+   *
+   * @returns {Matrix}
+   */
+  clone() {
+    let clone = new Matrix(this.rows, this.cols, this.fill);
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        clone.data[i][j] = this.data[i][j];
+      }
+    }
+    return clone;
+  }
+
+  /**
+   * Set the value inside the matrix
+   *
+   * @example
+   * let matrix = new Matrix(1,1, 1);
+   * matrix.setValue(0, 0, 2)
+   * matrix.setValue(0, 1, 3)
+   *
+   * // Our matrix now looks like
+   * // [ [ 1, 2, 3 ] ]
+   *
+   * // This will return
+   * // [ [ 2, 4, 6 ] ]
+   *
+   * console.table(matrix.valueOf())
+   *
+   * @param {number} row - the row on which to set the value
+   * @param {number} col - the column on which to set the value
+   * @param {number} value - the value to set on the coordinates
+   * @returns {Matrix}
+   */
+  setValue(row, col, value) {
+    this.data[row][col] = value;
+    return this;
+  }
+
+  /**
+   * Return a value stored in the Matrix at row and column
+   *
+   * @example
+   * let matrix = new Matrix(1,1, 10);
+   * matrix.setValue(0, 0, 9)
+   * matrix.setValue(0, 1, 8)
+   *
+   * // Our matrix looks like this
+   * // [ [ 9, 8 ] ]
+   *
+   * // This will output 8
+   * console.log(matrix.valueAt(0, 1))
+   *
+   * @param {number} row - the row on which to get the value
+   * @param {number} col - the column on which to get the value
+   * @returns {number}
+   */
+  valueAt(row, col) {
+    return this.data[row][col];
+  }
+
+  /**
+   * @example
+   * let matrix = new Matrix(1,3, 0);
+   * matrix.add(1)
+   *
+   * // Our matrix looks like this
+   * // [ [ 1, 1, 1 ] ]
+   *
+   * // Lets add 2 to all values
+   * let result = matrix.add(2);
+   *
+   * // Our resulting matrix now looks like this
+   * // [ [ 3, 3, 3 ] ]
+   *
+   * console.table(result.valueOf())
+   *
+   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
+   * @returns {Matrix}
+   */
+  add(n) {
+
+    if (n instanceof Matrix) {
+      if (n.rows !== this.rows || n.cols !== this.cols) {
+        throw 'Cannot add matrices together that don\'t share the same size.';
+      }
+
+      let src = n;
+
+      for (let i = 0; i < src.rows; i++) {
+        for (let j = 0; j < src.cols; j++) {
+          this.data[i][j] += n.data[i][j];
+        }
+      }
+    } else {
+      for (let i = 0; i < this.rows; i++) {
+        this.data[i] = this.data[i].map(v => v + n);
+      }
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let matrix = new Matrix(1,3);
+   * matrix.setValue(0, 0, 1)
+   * .setValue(0, 1, 2)
+   * .setValue(0, 2, 3)
+   *
+   * // Our matrix looks like this
+   * // [ [ 1, 2, 3 ] ]
+   *
+   * // Lets add 2 to all values
+   * let result = matrix.add(2);
+   *
+   * // Our resulting matrix now looks like this
+   * // [ [ 3, 4, 5 ] ]
+   *
+   * console.table(result.valueOf())
+   *
+   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
+   * @returns {Matrix}
+   */
+  subtract(n) {
+    if (n instanceof Matrix) {
+      if (n.rows !== this.rows || n.cols !== this.cols) {
+        throw 'Cannot subtract matrices from each other that don\'t share the same size.';
+      }
+
+      let src = n;
+
+      for (let i = 0; i < src.rows; i++) {
+        for (let j = 0; j < src.cols; j++) {
+          this.data[i][j] -= n.data[i][j];
+        }
+      }
+    } else {
+      for (let i = 0; i < this.rows; i++) {
+        this.data[i] = this.data[i].map(v => v - n);
+      }
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let matrix = new Matrix(1,3);
+   * matrix.setValue(0, 0, 1)
+   * .setValue(0, 1, 2)
+   * .setValue(0, 2, 3)
+   *
+   * // Our matrix looks like this
+   * // [ [ 1, 2, 3 ] ]
+   *
+   * // Lets add 2 to all values
+   * let result = matrix.multiply(2);
+   *
+   * // Our resulting matrix now looks like this
+   * // [ [ 2, 4, 6 ] ]
+   *
+   * console.table(result.valueOf())
+   *
+   * @param {number|Matrix} n - add a number to the matrix or add a an other Matrix object
+   * @returns {Matrix}
+   */
+  multiply(n) {
+    if (n instanceof Matrix) {
+      if (n.rows !== this.rows || n.cols !== this.cols) {
+        throw 'Cannot multiply matrices with each other that don\'t share the same size.';
+      }
+
+      let src = n;
+
+      for (let i = 0; i < src.rows; i++) {
+        for (let j = 0; j < src.cols; j++) {
+          this.data[i][j] *= n.data[i][j];
+        }
+      }
+    } else {
+      for (let i = 0; i < this.rows; i++) {
+        this.data[i] = this.data[i].map(v => v * n);
+      }
+    }
+    return this;
+  }
+}
+
+if (true) {
+  module.exports = Matrix;
+}
+
+/***/ }),
+/* 674 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @namespace Math
+ */
+
+/**
+ * Class for Vector2d math calculations.
+ *
+ * @class
+ */
+class Vector2d {
+  /**
+   * @param {number} [x=0] - the x value
+   * @param {number} [y=0] - the y value
+   */
+  constructor(x = 0, y = 0) {
+    this.x = x;
+    this.y = y;
+  }
+
+  /**
+   * @example
+   * let vector = new Vector2d(1,3);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3 }
+   *
+   * // Lets add 2 to all values
+   * let result = vector.add(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 3, y: 5 }
+   *
+   * console.log(result.toObject())
+   *
+   * @returns {object}
+   */
+  toObject() {
+    return { x: this.x, y: this.y };
+  }
+
+  /**
+   * Clone the vector into a new Vector2d object.
+   *
+   * @returns {Vector2d}
+   */
+  clone() {
+    return new Vector2d(this.x, this.y);
+  }
+
+  // element wise
+
+  /**
+   * @example
+   * let vector = new Vector2d(1,3);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3 }
+   *
+   * // Lets add 2 to all values
+   * let result = vector.add(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 2, y: 6 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - add a number to the vector or add a an other Vector2d object
+   * @returns {Vector2d}
+   */
+  add(n) {
+    if (n instanceof Vector2d) {
+      this.x += n.x;
+      this.y += n.y;
+    } else {
+      this.x += n;
+      this.y += n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let vector = new Vector2d(1,3);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3 }
+   *
+   * // Lets subtract 2 to all values
+   * let result = vector.subtract(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: -1, y: 1 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - subtract a number to the vector or subtract a an other Vector2d object
+   * @returns {Vector2d}
+   */
+  subtract(n) {
+    if (n instanceof Vector2d) {
+      this.x -= n.x;
+      this.y -= n.y;
+    } else {
+      this.x -= n;
+      this.y -= n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let vector = new Vector2d(1,3);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3 }
+   *
+   * // Lets multiply 2 to all values
+   * let result = vector.multiply(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 2, y: 6 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - multiply a number to the vector or multiply a an other Vector2d object
+   * @returns {Vector2d}
+   */
+  multiply(n) {
+    if (n instanceof Vector2d) {
+      this.x *= n.x;
+      this.y *= n.y;
+    } else {
+      this.x *= n;
+      this.y *= n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   *
+   *  let vector = new Vector2d(8,8);
+   *
+   *  // Our vector looks like this
+   *  // { x: 8, y: 8 }
+   *
+   *  let result = v.devide(2)
+   *
+   *  // Our resulting vector now looks like this
+   *  // { x: 4, y: 4 }
+   *
+   *  console.log(result.toObject())
+   *
+   * @param {number|Vector2d} n - devide a number on the vector or devide a an other Vector3d object
+   * @returns {Vector3d}
+   */
+  devide(n) {
+    if (n instanceof Vector2d) {
+      this.x /= n.x;
+      this.y /= n.y;
+    } else {
+      this.x /= n;
+      this.y /= n;
+    }
+    return this;
+  }
+
+  /**
+   * Get the current x value
+   *
+   * @returns {number}
+   */
+  getX() {
+    return this.x;
+  }
+
+  /**
+   * Get the current y value
+   *
+   * @returns {number}
+   */
+  getY() {
+    return this.y;
+  }
+
+}
+
+if (true) {
+  module.exports = Vector2d;
+}
+
+/***/ }),
+/* 675 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @namespace Math
+ */
+
+/**
+ * Class for Vector3d math calculations.
+ *
+ * @class
+ */
+class Vector3d {
+
+  /**
+   * @param {number} [x=0] - the x value
+   * @param {number} [y=0] - the y value
+   * @param {number} [z=0] - the z value
+   */
+  constructor(x = 0, y = 0, z = 0) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+
+  /**
+   * @example
+   * let v = new Vector3d(2, 5, 2)
+   *
+   * // Our vector looks like this
+   * // { x: 2, y: 5, z: 2 }
+   *
+   * // Lets add 2 to all values
+   * let result = v.add(2)
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 4, y: 7, z: 4 }
+   *
+   * console.log(result.toObject())
+   *
+   * @returns {object}
+   */
+  toObject() {
+    return { x: this.x, y: this.y, z: this.z };
+  }
+
+  /**
+   * Clone the vector into a new Vector3d object.
+   *
+   * @returns {Vector3d}
+   */
+  clone() {
+    return new Vector3d(this.x, this.y, this.z);
+  }
+
+  // element wise
+
+  /**
+   * @example
+   * let vector = new Vector3d(1,3, 9);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3, z: 9 }
+   *
+   * // Lets add 2 to all values
+   * let result = vector.add(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 2, y: 6, z: 11 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector3d} n - add a number to the vector or add an other Vector3d object
+   * @returns {Vector3d}
+   */
+  add(n) {
+    if (n instanceof Vector3d) {
+      this.x += n.x;
+      this.y += n.y;
+      this.z += n.z;
+    } else {
+      this.x += n;
+      this.y += n;
+      this.z += n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let vector = new Vector3d(1,3, 9);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3, z: 9 }
+   *
+   * // Lets subtract 2 to all values
+   * let result = vector.subtract(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: -1, y: 1, z: 7 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector3d} n - subtract a number to the vector or subtract a an other Vector3d object
+   * @returns {Vector3d}
+   */
+  subtract(n) {
+    if (n instanceof Vector3d) {
+      this.x -= n.x;
+      this.y -= n.y;
+      this.z -= n.z;
+    } else {
+      this.x -= n;
+      this.y -= n;
+      this.z -= n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   * let vector = new Vector3d(1,3,4);
+   *
+   * // Our vector looks like this
+   * // { x: 1, y: 3, z: 4 }
+   *
+   * // Lets multiply 2 to all values
+   * let result = vector.multiply(2);
+   *
+   * // Our resulting vector now looks like this
+   * // { x: 2, y: 6, z: 8 }
+   *
+   * console.log(result.toObject())
+   *
+   * @param {number|Vector3d} n - multiply a number to the vector or multiply a an other Vector3d object
+   * @returns {Vector3d}
+   */
+  multiply(n) {
+    if (n instanceof Vector3d) {
+      this.x *= n.x;
+      this.y *= n.y;
+      this.z *= n.z;
+    } else {
+      this.x *= n;
+      this.y *= n;
+      this.z *= n;
+    }
+    return this;
+  }
+
+  /**
+   * @example
+   *
+   *  let v = new Vector3d(4, 4, 2)
+   *
+   *  // Our vector looks like this
+   *  // { x: 4, y: 4, z: 2 }
+   *
+   *  let result = v.devide(2)
+   *
+   *  // Our resulting vector now looks like this
+   *  // { x: 2, y: 2, z: 1 }
+   *
+   *  console.log(result.toObject())
+   *
+   * @param {number|Vector3d} n - devide a number on the vector or devide a an other Vector3d object
+   * @returns {Vector3d}
+   */
+  devide(n) {
+    if (n instanceof Vector3d) {
+      this.x /= n.x;
+      this.y /= n.y;
+      this.z /= n.z;
+    } else {
+      this.x /= n;
+      this.y /= n;
+      this.z /= n;
+    }
+    return this;
+  }
+
+  /**
+   * Get the current x value
+   *
+   * @returns {number}
+   */
+  getX() {
+    return this.x;
+  }
+
+  /**
+   * Get the current y value
+   *
+   * @returns {number}
+   */
+  getY() {
+    return this.y;
+  }
+
+  /**
+   * Get the current z value
+   *
+   * @returns {number}
+   */
+  getZ() {
+    return this.z;
+  }
+}
+
+if (true) {
+  module.exports = Vector3d;
+}
 
 /***/ })
 /******/ ]);

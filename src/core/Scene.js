@@ -1,5 +1,3 @@
-const gesture = require('PIXI-simple-gesture').default
-
 define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   /**
    * @classdesc Scene
@@ -15,43 +13,12 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
       console.warn('Please add the update method to ' + this.childClass)
     }
 
-    gesture.pinchable(this, true)
-
-    this.on('panmove', e => {
-      sprite.x += e.deltaX
-      sprite.y += e.deltaY
-    })
-
-    this.on('panstart', () => {
-      console.log('panstart')
-    })
-
-    this.on('panend', () => {
-      console.log('panend')
-    })
-
-    this.on('pinchmove', e => {
-      sprite.scale.x = Math.max(0.5, sprite.scale.x * e.scale)
-      sprite.scale.y = Math.max(0.5, sprite.scale.y * e.scale)
-    })
-
-    this.on('pinchstart', () => {
-      console.log('pinchstart')
-    })
-
-    this.on('pinchend', () => {
-      console.log('pinchend')
-    })
-
-    this.on('simpletap', () => {
-      console.log('simpletap')
-    })
-
     this.cursor_sprite = new PIXI.Sprite()
     this.cursor_sprite.interactive = false
     this.cursor_sprite.buttonMode = false
     this.cursor_sprite.cursor = 'none'
     this.cursor_sprite.anchor.set(0.5)
+
 
     this.on('pointerover', function () {
       this.cursor_sprite.visible = true
