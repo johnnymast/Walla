@@ -67,7 +67,7 @@ describe('Math - Matrix', function () {
     })
   })
 
-  it ('valueOf() should return the Matrix as an array.', () => {
+  it('valueOf() should return the Matrix as an array.', () => {
     let m = new Matrix(2, 2)
     let actual = m.valueOf()
     let expected = [
@@ -78,7 +78,7 @@ describe('Math - Matrix', function () {
     expect(actual).toEqual(expected)
   })
 
-  it ('toObject() should return the Matrix as an array.', () => {
+  it('toObject() should return the Matrix as an array.', () => {
     let m = new Matrix(2, 2)
     let actual = m.toObject()
     let expected = [
@@ -163,6 +163,20 @@ describe('Math - Matrix', function () {
         [16, 16],
       ]
     })
+  })
+
+  it('setValue(row, col, 2) should make valueAt(row, col) equall 2', () => {
+    let m = new Matrix(2, 2)
+    let row = 1
+    let col = 2
+    let val = 2
+
+    m.setValue(row, col, val)
+
+    let expected = 2
+    let result = m.valueAt(row, col)
+
+    expect(result).toEqual(expected)
   })
 
   it('add() should return an instance of the matrix it self', () => {
