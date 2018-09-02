@@ -66,7 +66,8 @@ require([
   'core/managers/StateManager',
   'core/managers/PhysicsManager',
   'core/managers/InputManager',
-], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, InputManager) {
+  'core/managers/ResizeManager',
+], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, InputManager, ResizeManager) {
   PIXI.utils.skipHello()
   sayHello()
 
@@ -79,6 +80,12 @@ require([
     autoResize: true,
     resolution: window.devicePixelRatio,
   })
+
+
+  let resizeManager = new ResizeManager(app, {
+    autoFullScreen: true,
+
+  });
   document.body.appendChild(app.view)
 
   app.renderer.resize(width, height)
@@ -86,6 +93,7 @@ require([
   app.renderer.forceFXAA = true;
 
   ge.set('App', app)
+  ge.set('ResizeManager', resizeManager)
   ge.set('AssetManager', new AssetManager())
   ge.set('SceneManager', new SceneManager())
   ge.set('StateManager', new StateManager())
