@@ -194,8 +194,9 @@ class Vector2d {
   }
 
   /**
-   * Return a normalized version of the vector
+   * Return a normalized version of the vector.
    *
+   * @see http://www.fundza.com/vectors/normalize/
    * @example
    *
    * let vector = new Vector2d(3, 1)
