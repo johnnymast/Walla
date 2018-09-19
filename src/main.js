@@ -7,6 +7,7 @@ import 'core/Transform'
 // import 'core/math'
 
 const Vector2d = require('core/math/vector2d')
+const Vector3d = require('core/math/vector3d')
 
 const EngineInfo = {
   name: 'Stage Engine',
@@ -14,10 +15,12 @@ const EngineInfo = {
   url: 'https://github.com/johnnymast/Walla',
 }
 
-let v = new Vector2d(6, 3)
+let v1 = new Vector3d(6, 3, 2)
+let v2 = new Vector3d(10, 12, 9)
+let distance = v1.distanceTo(v2)
 
-console.log(v.magnitude())
-
+console.log('distance', distance)
+//distance 9.848857801796104
 // window.onerror = function (msg, url, lineNo, columnNo, error) {
 //   var string = msg.toLowerCase();
 //   var substring = "script error";

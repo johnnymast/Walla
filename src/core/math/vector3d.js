@@ -2,6 +2,8 @@
  * @namespace Math
  */
 
+// info https://www.intmath.com/vectors/4-adding-vectors-2-dimensions.php
+
 /**
  * Class for Vector3d math calculations.
  *
@@ -144,6 +146,35 @@ class Vector3d {
     }
     return this
   }
+
+  /**
+   * Calculate the distance to an other vector.
+   *
+   * @see https://www.calculatorsoup.com/calculators/geometry-plane/distance-two-points.php
+   * @example
+   *
+   * let v1 = new Vector3d(6, 3, 2)
+   * let v2 = new Vector3d(10, 12, 9)
+   *
+   * // v1 should look like { x: 6, y: 3, z: 2}
+   * // v2 should look like { x: 10, y: 12, z: 9 }
+   *
+   * let distance = v1.distanceTo(v2)
+   *
+   * // Output should be 9.848857801796104
+   * console.log(distance)
+   *
+   * @param {Vector3d} vector - calculate the distance to this vector
+   * @returns {number}
+   */
+  distanceTo (vector) {
+    if (vector instanceof Vector3d) {
+      return this.subtract(vector).magnitude()
+    } else {
+      throw new Error('Distance: Argument is not an instance of Vector3d')
+    }
+  }
+
 
   /**
    * @example

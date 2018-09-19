@@ -194,4 +194,11 @@ describe('Math - Vector3d Element-wise', function () {
       z: 4,
     })
   })
+
+  it('distanceTo() should calculate the correct distance between 2 vector3d\'s', () => {
+    let v1 = new Vector3d(6, 3, 2)
+    let v2 = new Vector3d(10, 12, 9)
+    let distance = v1.distanceTo(v2)
+    expect(distance).toBe(12.083045973594572)
+  })
 })

@@ -2,6 +2,8 @@
  * @namespace Math
  */
 
+// info https://www.intmath.com/vectors/4-adding-vectors-2-dimensions.php
+
 /**
  * Class for Vector2d math calculations.
  *
@@ -136,9 +138,29 @@ class Vector2d {
     return this
   }
 
-  distance (n) {
-    if (n instanceof Vector2d) {
-
+  /**
+   * Calculate the distance to an other vector.
+   *
+   * @see https://www.calculatorsoup.com/calculators/geometry-plane/distance-two-points.php
+   * @example
+   *
+   * let v1 = new Vector2d(6, 3)
+   * let v2 = new Vector2d(10, 12)
+   *
+   * // v1 should look like { x: 6, y: 3 }
+   * // v2 should look like { x: 10, y: 12 }
+   *
+   * let distance = v1.distanceTo(v2)
+   *
+   * // Output should be 9.848857801796104
+   * console.log(distance)
+   *
+   * @param {Vector2d} vector - calculate the distance to this vector
+   * @returns {number}
+   */
+  distanceTo (vector) {
+    if (vector instanceof Vector2d) {
+      return this.subtract(vector).magnitude()
     } else {
       throw new Error('Distance: Argument is not an instance of Vector2d')
     }
@@ -194,7 +216,7 @@ class Vector2d {
   magnitude () {
     return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2))
   }
-  
+
   /**
    * Get the current x value
    *

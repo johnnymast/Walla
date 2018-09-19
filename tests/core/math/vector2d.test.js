@@ -173,4 +173,11 @@ describe('Math - Vector2d Element-wise', function () {
       y: 2,
     })
   })
+
+  it('distanceTo() should calculate the correct distance between 2 vector2d\'s', () => {
+    let v1 = new Vector2d(6, 3)
+    let v2 = new Vector2d(10, 12)
+    let distance = v1.distanceTo(v2)
+    expect(distance).toBe(9.848857801796104)
+  })
 })
