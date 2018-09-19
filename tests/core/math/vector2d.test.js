@@ -130,6 +130,23 @@ describe('Math - Vector2d', function () {
       }
     )
   })
+
+  it('dot() should calculate the dot product of 2 vector2d\'s', () => {
+    let v1 = new Vector2d(2, 3)
+    let result = v1.dot()
+    expect(result).toBe(5)
+  })
+
+  it('normalize () should return the normalized value of the vector', () => {
+    let v = new Vector2d(3, 1)
+    let expected = v.normalize()
+    expect(expected).toEqual(
+      {
+        x: 0.9486832980505138,
+        y: 0.31622776601683794,
+      }
+    )
+  })
 })
  
 describe('Math - Vector2d Element-wise', function () {

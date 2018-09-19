@@ -146,6 +146,24 @@ describe('Math - Vector3d', function () {
       }
     )
   })
+
+  it('dot() should calculate the dot product of 2 vector2d\'s', () => {
+    let v1 = new Vector3d(2, 3, 4)
+    let result = v1.dot()
+    expect(result).toBe(9)
+  })
+
+  it('normalize () should return the normalized value of the vector', () => {
+    let v = new Vector3d(3, 1, 2)
+    let expected = v.normalize()
+    expect(expected).toEqual(
+      {
+        x: 0.8017837257372732,
+        y: 0.2672612419124244,
+        z: 0.5345224838248488,
+      }
+    )
+  })
 })
 
 

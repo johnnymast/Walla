@@ -191,14 +191,14 @@ class Vector3d {
    * // Output should be 76
    * console.log(result)
    *
-   * @param {Vector3d} vector - the other vector to calculate the dot product with.
+   * @param {Vector3d} [n=null] - the other vector to calculate the dot product with.
    * @returns {number}
    */
-  dot (vector) {
-    if (vector instanceof Vector3d) {
-      return (this.x * vector.x + this.y * vector.y + this.z * vector.z);
+  dot (n) {
+    if (n instanceof Vector3d) {
+      return (this.x * n.x + this.y * n.y + this.z * n.z);
     } else {
-      throw new Error('dot: Argument is not an instance of Vector3d')
+      return (this.x + this.y + this.z)
     }
   }
 
@@ -253,6 +253,32 @@ class Vector3d {
    */
   magnitude () {
     return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2))
+  }
+
+  /**
+   * Return a normalized version of the vector
+   *
+   * @example
+   *
+   * let vector = new Vector3d(3, 1, 2)
+   *
+   * // vector should look like {x: 3, y: 1, z: 2}
+   *
+   * let result = vector.normalize()
+   *
+   * // this should output {x: 0.8017837257372732, y: 0.2672612419124244, z: 0.5345224838248488}
+   * console.log(result)
+   *
+   * @returns {Vector3d}
+   */
+  normalize () {
+    let magnitude = this.magnitude()
+
+    let x = this.x / magnitude
+    let y = this.y / magnitude
+    let z = this.z / magnitude
+
+    return new Vector3d(x, y, z)
   }
 
   /**

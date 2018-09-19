@@ -4,7 +4,7 @@ import 'core/prototypes'
 import 'core/geometry'
 import 'babel-polyfill'
 import 'core/Transform'
-// import 'core/math'
+import 'core/math'
 
 const Vector2d = require('core/math/vector2d')
 const Vector3d = require('core/math/vector3d')
@@ -15,13 +15,7 @@ const EngineInfo = {
   url: 'https://github.com/johnnymast/Walla',
 }
 
-let v1 = new Vector2d(2, 3)
-let v2 = new Vector2d(4, 12)
-let dot = v1.dot(v2)
 
-// 8 + 36 = 44
-console.log('dot', dot)
-//distance 9.848857801796104
 // window.onerror = function (msg, url, lineNo, columnNo, error) {
 //   var string = msg.toLowerCase();
 //   var substring = "script error";

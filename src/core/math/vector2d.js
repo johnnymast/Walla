@@ -182,17 +182,41 @@ class Vector2d {
    * // Output should be 44
    * console.log(result)
    *
-   * @param {Vector2d} vector - the other vector to calculate the dot product with.
+   * @param {Vector2d} [n=null] - the other vector to calculate the dot product with.
    * @returns {number}
    */
-  dot (vector) {
-    if (vector instanceof Vector2d) {
-      return (this.x * vector.x + this.y * vector.y);
+  dot (n) {
+    if (n instanceof Vector2d) {
+      return (this.x * n.x + this.y * n.y)
     } else {
-      throw new Error('dot: Argument is not an instance of Vector2d')
+      return (this.x + this.y)
     }
   }
 
+  /**
+   * Return a normalized version of the vector
+   *
+   * @example
+   *
+   * let vector = new Vector2d(3, 1)
+   *
+   * // vector should look like {x: 3, y: 1}
+   *
+   * let result = vector.normalize()
+   *
+   * // this should output {x: 0.9486832980505138, y: 0.31622776601683794}
+   * console.log(result)
+   *
+   * @returns {Vector2d}
+   */
+  normalize () {
+    let magnitude = this.magnitude()
+
+    let x = this.x / magnitude
+    let y = this.y / magnitude
+
+    return new Vector2d(x, y)
+  }
 
   /**
    * @example
@@ -244,7 +268,6 @@ class Vector2d {
   magnitude () {
     return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2))
   }
-
 
   /**
    * Get the current x value
