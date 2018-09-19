@@ -147,7 +147,7 @@ describe('Math - Vector3d', function () {
     )
   })
 
-  it('dot() should calculate the dot product of 2 vector2d\'s', () => {
+  it('dot() should calculate the dot product of 2 vector3d\'s', () => {
     let v1 = new Vector3d(2, 3, 4)
     let result = v1.dot()
     expect(result).toBe(9)
@@ -220,7 +220,7 @@ describe('Math - Vector3d Element-wise', function () {
     expect(distance).toBe(12.083045973594572)
   })
 
-  it('dot() should calculate the dot product of 2 vector2d\'s', () => {
+  it('dot() should calculate the dot product of 2 vector3d\'s', () => {
     let v1 = new Vector3d(2, 3, 4)
     let v2 = new Vector3d(4, 12, 8)
     let result = v1.dot(v2)
