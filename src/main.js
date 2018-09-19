@@ -1,5 +1,6 @@
 import 'core/helpers'
 import 'core/polyfill'
+import 'core/prototypes'
 import 'core/geometry'
 import 'babel-polyfill'
 import 'core/Transform'
@@ -11,6 +12,9 @@ const EngineInfo = {
   version: 1.0,
   url: 'https://github.com/johnnymast/Walla',
 }
+
+let test = 10
+console.log(test.constrain(14, 16))
 
 // window.onerror = function (msg, url, lineNo, columnNo, error) {
 //   var string = msg.toLowerCase();
