@@ -15,11 +15,12 @@ const EngineInfo = {
   url: 'https://github.com/johnnymast/Walla',
 }
 
-let v1 = new Vector3d(6, 3, 2)
-let v2 = new Vector3d(10, 12, 9)
-let distance = v1.distanceTo(v2)
+let v1 = new Vector2d(2, 3)
+let v2 = new Vector2d(4, 12)
+let dot = v1.dot(v2)
 
-console.log('distance', distance)
+// 8 + 36 = 44
+console.log('dot', dot)
 //distance 9.848857801796104
 // window.onerror = function (msg, url, lineNo, columnNo, error) {
 //   var string = msg.toLowerCase();

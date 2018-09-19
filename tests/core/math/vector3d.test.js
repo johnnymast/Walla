@@ -201,4 +201,11 @@ describe('Math - Vector3d Element-wise', function () {
     let distance = v1.distanceTo(v2)
     expect(distance).toBe(12.083045973594572)
   })
+
+  it('dot() should calculate the dot product of 2 vector2d\'s', () => {
+    let v1 = new Vector3d(2, 3, 4)
+    let v2 = new Vector3d(4, 12, 8)
+    let result = v1.dot(v2)
+    expect(result).toBe(76)
+  })
 })

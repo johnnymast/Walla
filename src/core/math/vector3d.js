@@ -171,10 +171,36 @@ class Vector3d {
     if (vector instanceof Vector3d) {
       return this.subtract(vector).magnitude()
     } else {
-      throw new Error('Distance: Argument is not an instance of Vector3d')
+      throw new Error('distanceTo: Argument is not an instance of Vector3d')
     }
   }
 
+  /**
+   * Get the dot product of 2 vectors.
+   *
+   * @example
+   *
+   * let v1 = new Vector3d(2, 3, 4)
+   * let v2 = new Vector3d(4, 12, 8)
+   *
+   * // v1 should look like {x: 2, y: 3, z: 4}
+   * // v2 should look like {x: 4, y: 12, z: 8}
+   *
+   * let result = v1.dot(v2)
+   *
+   * // Output should be 76
+   * console.log(result)
+   *
+   * @param {Vector3d} vector - the other vector to calculate the dot product with.
+   * @returns {number}
+   */
+  dot (vector) {
+    if (vector instanceof Vector3d) {
+      return (this.x * vector.x + this.y * vector.y + this.z * vector.z);
+    } else {
+      throw new Error('dot: Argument is not an instance of Vector3d')
+    }
+  }
 
   /**
    * @example

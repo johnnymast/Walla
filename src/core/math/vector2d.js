@@ -162,9 +162,37 @@ class Vector2d {
     if (vector instanceof Vector2d) {
       return this.subtract(vector).magnitude()
     } else {
-      throw new Error('Distance: Argument is not an instance of Vector2d')
+      throw new Error('distanceTo: Argument is not an instance of Vector2d')
     }
   }
+
+  /**
+   * Get the dot product of 2 vectors.
+   *
+   * @example
+   *
+   * let v1 = new Vector2d(2, 3)
+   * let v2 = new Vector2d(4, 12)
+   *
+   * // v1 should look like {x: 2, y: 3}
+   * // v2 should look like {x: 4, y: 12}
+   *
+   * let result = v1.dot(v2)
+   *
+   * // Output should be 44
+   * console.log(result)
+   *
+   * @param {Vector2d} vector - the other vector to calculate the dot product with.
+   * @returns {number}
+   */
+  dot (vector) {
+    if (vector instanceof Vector2d) {
+      return (this.x * vector.x + this.y * vector.y);
+    } else {
+      throw new Error('dot: Argument is not an instance of Vector2d')
+    }
+  }
+
 
   /**
    * @example
@@ -216,6 +244,7 @@ class Vector2d {
   magnitude () {
     return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2))
   }
+
 
   /**
    * Get the current x value

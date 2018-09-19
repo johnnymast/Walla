@@ -180,4 +180,11 @@ describe('Math - Vector2d Element-wise', function () {
     let distance = v1.distanceTo(v2)
     expect(distance).toBe(9.848857801796104)
   })
+
+  it('dot() should calculate the dot product of 2 vector2d\'s', () => {
+    let v1 = new Vector2d(2, 3)
+    let v2 = new Vector2d(4, 12)
+    let result = v1.dot(v2)
+    expect(result).toBe(44)
+  })
 })
