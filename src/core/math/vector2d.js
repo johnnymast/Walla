@@ -136,6 +136,14 @@ class Vector2d {
     return this
   }
 
+  distance (n) {
+    if (n instanceof Vector2d) {
+
+    } else {
+      throw new Error('Distance: Argument is not an instance of Vector2d')
+    }
+  }
+
   /**
    * @example
    *
@@ -165,6 +173,28 @@ class Vector2d {
     return this
   }
 
+  /**
+   * Returns the magnitude of the vector.
+   * V(x*x + y+y)
+   *
+   * @example
+   * let vector = Vector2d(6, 3);
+   *
+   * // Our vector looks like this
+   * // { x: 6, y: 3 }
+   *
+   * // Lets get the magnitude
+   * let result = vector.magnitude();
+   *
+   * // The output should be 6.708203932499369
+   * console.log(result)
+   *
+   * @returns {number}
+   */
+  magnitude () {
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2))
+  }
+  
   /**
    * Get the current x value
    *

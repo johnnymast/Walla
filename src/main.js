@@ -4,8 +4,9 @@ import 'core/prototypes'
 import 'core/geometry'
 import 'babel-polyfill'
 import 'core/Transform'
-import 'core/math'
+// import 'core/math'
 
+const Vector2d = require('core/math/vector2d')
 
 const EngineInfo = {
   name: 'Stage Engine',
@@ -13,8 +14,9 @@ const EngineInfo = {
   url: 'https://github.com/johnnymast/Walla',
 }
 
-let test = 10
-console.log(test.constrain(14, 16))
+let v = new Vector2d(6, 3)
+
+console.log(v.magnitude())
 
 // window.onerror = function (msg, url, lineNo, columnNo, error) {
 //   var string = msg.toLowerCase();

@@ -57,6 +57,12 @@ describe('Math - Vector3d', function () {
     )
   })
 
+  it('mangitude() should calculate the correct magnitude from', () => {
+    let v = new Vector3d(2, 3, 5)
+    let expected = v.magnitude()
+    expect(expected).toBe(6.164414002968976)
+  })
+
   it('clone() should return a new cloned version of an existing Vector3d. And add() would not change the original', () => {
     let v = new Vector3d(2, 2, 5)
     let theclone = v.clone()

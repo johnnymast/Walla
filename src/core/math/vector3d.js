@@ -177,6 +177,28 @@ class Vector3d {
   }
 
   /**
+   * Returns the magnitude of the vector.
+   * V(x*x + y+y)
+   *
+   * @example
+   * let vector = Vector3d(2, 3, 5);
+   *
+   * // Our vector looks like this
+   * // { x: 2, y: 3, z: 5 }
+   *
+   * // Lets get the magnitude
+   * let result = vector.magnitude();
+   *
+   * // The output should be 6.164414002968976
+   * console.log(result)
+   *
+   * @returns {number}
+   */
+  magnitude () {
+    return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2))
+  }
+
+  /**
    * Get the current x value
    *
    * @returns {number}
@@ -199,7 +221,7 @@ class Vector3d {
    *
    * @returns {number}
    */
-  getZ() {
+  getZ () {
     return this.z
   }
 }

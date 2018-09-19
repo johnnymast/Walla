@@ -78,6 +78,12 @@ describe('Math - Vector2d', function () {
     )
   })
 
+  it('mangitude() should calculate the correct magnitude from', () => {
+    let v = new Vector2d(6, 3)
+    let expected = v.magnitude()
+    expect(expected).toBe(6.708203932499369)
+  })
+
   it('getX() should return the x value of the Vector2d.', () => {
     let v = new Vector2d(4, 6)
     let x = v.getX()
