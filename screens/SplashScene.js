@@ -125,7 +125,7 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
    * @private
    */
   SplashScene.prototype._preloadready = function (loader, resources) {
-    this.SceneManager.switchTo('P')
+    this.SceneManager.switchTo('MainMenu')
   }
 
   /**

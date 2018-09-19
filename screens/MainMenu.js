@@ -14,21 +14,21 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
      * @param {object} options - Options for PIXI.Container in GameObject
      * @class
      */
-    let MainScreen = function (options) {
+    let MainMenu = function (options) {
       Scene.call(this, options)
       this.backgrounds = []
 
       this.statistics = new Statistics()
     }
 
-    extend(MainScreen, Scene)
+    extend(MainMenu, Scene)
 
     /**
      * This function is called by the SceneManager after preloading has finished.
      * If your Scene does not have the preload function it will call this function
      * instantly.
      */
-    MainScreen.prototype.onStart = function () {
+    MainMenu.prototype.onStart = function () {
 
       /**
        * Setup the scrolling background tiles.
@@ -104,28 +104,28 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
     /**
      * Breakout menu option callback
      */
-    MainScreen.prototype.breakoutClicked = function () {
+    MainMenu.prototype.breakoutClicked = function () {
       this.SceneManager.switchTo('Breakout/Level1')
     }
 
     /**
      * PixelShooter menu option callback
      */
-    MainScreen.prototype.pixelShooterClicked = function () {
+    MainMenu.prototype.pixelShooterClicked = function () {
       this.SceneManager.switchTo('PixelShooter/Level1')
     }
 
     /**
      * RoundedRects menu option callback
      */
-    MainScreen.prototype.roundedRectsClicked = function () {
+    MainMenu.prototype.roundedRectsClicked = function () {
       this.SceneManager.switchTo('RoundedRects/Level1')
     }
 
     /**
      * RoundedRects menu option callback
      */
-    MainScreen.prototype.fullscreenClicked = function () {
+    MainMenu.prototype.fullscreenClicked = function () {
       if (this.isFullScreen() === false) {
         this.enterFullScreen()
       } else {
@@ -137,7 +137,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
      * Callback for when the main menu was left for an other
      * scene.
      */
-    MainScreen.prototype.onSwitchedAway = function() {
+    MainMenu.prototype.onSwitchedAway = function() {
       // console.log('SceneManager switched away from MainMenu')
     }
 
@@ -146,7 +146,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
      *
      * @param {number} delta
      */
-    MainScreen.prototype.update = function (delta) {
+    MainMenu.prototype.update = function (delta) {
       for (let i = 5; i > 0; i--) {
         let texture = 'main_bg_0' + i
         this.backgrounds[texture].tilePosition.x -= 1 / (i * 1.5)
@@ -155,5 +155,5 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       this.statistics.update(delta)
     }
 
-    return MainScreen
+    return MainMenu
   })
