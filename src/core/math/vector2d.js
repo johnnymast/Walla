@@ -220,6 +220,24 @@ class Vector2d {
   }
 
   /**
+   * Return the radian value of this vector.
+   *
+   * @returns {number}
+   */
+  radians () {
+    return Math.atan(this.y / this.x)
+  }
+
+  /**
+   * Return the degrees value of this vector.
+   *
+   * @returns {number}
+   */
+  degrees () {
+    return this.radians() *(180/Math.PI)
+  }
+
+  /**
    * @example
    *
    *  let vector = new Vector2d(8,8);

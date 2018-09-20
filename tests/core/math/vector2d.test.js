@@ -141,6 +141,19 @@ describe('Math - Vector2d', function () {
       }
     )
   })
+
+  it('radians () return the correct radians for a vector.', () => {
+    let v = new Vector2d(6, 3)
+    let r = v.radians()
+    expect(r).toEqual(0.4636476090008061)
+  })
+
+  it('degrees () return the correct radians for a vector.', () => {
+    let v = new Vector2d(6, 3)
+    let r = v.degrees()
+    expect(r).toEqual(26.56505117707799)
+  })
+
 })
  
 describe('Math - Vector2d Element-wise', function () {

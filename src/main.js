@@ -16,6 +16,11 @@ const EngineInfo = {
 }
 
 
+let v = new Vector2d(6, 3)
+let radians = v.radians()
+
+console.log(radians)
+
 // window.onerror = function (msg, url, lineNo, columnNo, error) {
 //   var string = msg.toLowerCase();
 //   var substring = "script error";
