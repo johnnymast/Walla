@@ -189,7 +189,7 @@ class Vector2d {
     if (n instanceof Vector2d) {
       return (this.x * n.x + this.y * n.y)
     } else {
-      return (this.x + this.y)
+      throw new error('Dot: Argument error, argument is not an instance of Vector2d')
     }
   }
 

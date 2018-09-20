@@ -198,7 +198,7 @@ class Vector3d {
     if (n instanceof Vector3d) {
       return (this.x * n.x + this.y * n.y + this.z * n.z);
     } else {
-      return (this.x + this.y + this.z)
+      throw new error('Dot: Argument error, argument is not an instance of Vector3d')
     }
   }
 
