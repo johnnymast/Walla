@@ -43,6 +43,14 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
      * @type {boolean}
      */
     this.mouse_down = false
+
+    /**
+     * Make the lever intractable
+     * via mouse input.
+     *
+     * @type {boolean}
+     */
+    this.interactive = true
   }
 
   extend(Level1, GameLevel)
