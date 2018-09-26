@@ -1,3 +1,5 @@
+const Vector2d = require('core/math/vector2d')
+
 define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
 
   /**
@@ -11,13 +13,31 @@ define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
     PhysicsSprite.call(this, texture)
     this.type = type
     this.health = 1
+    this.status = 'visible'
+    this.point_value = 2
 
     if (type === 'green') {
       this.health = 2
+      this.point_value = 5
     }
+
+    this.resetFlicker()
   }
 
   extend(Brick, PhysicsSprite)
+
+  Brick.prototype.getPointValue = function() {
+    return this.point_value;
+  }
+
+  Brick.prototype.resetFlicker = function () {
+    this.flicker_speed = 4
+    this.flicker_delay = 1.5
+    this.flicker_delta = 0
+    this.flicker_phase = 0
+    this.flicker_count = 0
+    this.flicker_max = 25
+  }
 
   /**
    * This function is internally called by the PhysicsSprite if
@@ -25,12 +45,12 @@ define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
    *
    * @param {Body} withObject
    */
-  Brick.prototype.onCollisionWith = function(withObject) {
+  Brick.prototype.onCollisionWith = function (withObject) {
     if (this.health === 0) {
-      this.PhysicsManager.remove(this.body);
+      this.PhysicsManager.remove(this.body)
       this.sprite.visible = false
     } else
-    this.decareaseHealth()
+      this.decareaseHealth()
   }
 
   /**
@@ -47,11 +67,30 @@ define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
     this.PhysicsManager.add(this.body)
   }
 
+  Brick.prototype.showHit = function () {
+    this.status = 'hit'
+  }
+
   /**
    * Remove 1 from the bricks health.
    */
   Brick.prototype.decareaseHealth = function () {
     this.health--
+  }
+
+  Brick.prototype.getHealth = function () {
+    return this.health
+  }
+
+  Brick.prototype.isDestroyed = function () {
+    return (this.status === 'destroyed')
+  }
+
+  Brick.prototype.destroy = function () {
+    this.sprite.alpha = 0
+    this.sprite.destroy()
+
+    this.PhysicsManager.remove(this.body)
   }
 
   /**
@@ -60,12 +99,37 @@ define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
    * @param {number} delta - The delta since last tick
    */
   Brick.prototype.update = function (delta) {
+
     let pos = this.body.position
     let angle = this.body.angle
 
     this.sprite.angle = angle
     this.sprite.x = pos.x
     this.sprite.y = pos.y
+
+    if (this.status === 'hit') {
+      this.flicker_delta += delta
+
+      if (this.flicker_delta > this.flicker_delay) {
+        this.flicker_delta = 0
+        this.flicker_phase += Math.PI * delta * 2 * this.flicker_speed
+
+        this.sprite.alpha = Math.abs(Math.sin(this.flicker_phase))
+
+        if (this.flicker_count == this.flicker_max) {
+          this.resetFlicker()
+
+          if (this.health == 0) {
+            this.status = 'destroyed'
+          } else {
+            this.status = 'visible'
+            this.sprite.alpha = 1
+          }
+        }
+
+        this.flicker_count++
+      }
+    }
   }
 
   return Brick

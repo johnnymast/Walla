@@ -70,7 +70,9 @@ define(['pixi', 'gui/dialogs/BaseDialog'], function (PIXI, BaseDialog) {
     }
 
     close_button.activate()
-    this.addChild(close_button)
+
+    this.close_button =close_button
+    this.addChild(this.close_button)
   }
 
   return CloseableDialog

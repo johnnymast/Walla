@@ -1,4 +1,4 @@
-define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Scene, KeyboardInput, Statistics) {
+define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Matter, Scene, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Scene.call(this, options)
 
@@ -11,8 +11,6 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.scoreText = null
     this.livesText = null
 
-    this.score = 0
-    this.lives = 3
     this.wall_inset = 10
     this.showPhysics = true
 
@@ -21,6 +19,14 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
   }
 
   extend(GameLevel, Scene)
+
+  GameLevel.prototype.reset = function() {
+    this.score = 0
+    this.lives = 5
+
+    this.setLives(this.lives)
+    this.setScore(this.score)
+  }
 
   GameLevel.prototype.setDisplayStats = function (visible) {
     this.statistics.visible = visible
@@ -69,21 +75,21 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     background.height = this.app.screen.height
     background.alpha = 0
 
-    let inset = 10
-    console.log(this.app.screen)
-    let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, {isStatic: true})
+    let wallOptions = { frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1 }
+
+    let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, wallOptions)
     ceiling.label = 'ceiling'
     this.PhysicsManager.add(ceiling)
 
-    let floor = this.PhysicsManager.rectangle(this.app.screen.width / 2, this.app.screen.height, this.app.screen.width, this.wall_inset, {isStatic: true})
+    let floor = this.PhysicsManager.rectangle(this.app.screen.width / 2, this.app.screen.height, this.app.screen.width, this.wall_inset, wallOptions)
     floor.label = 'floor'
     this.PhysicsManager.add(floor)
 
-    let leftwall = this.PhysicsManager.rectangle(0, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, {isSleeping: true})
+    let leftwall = this.PhysicsManager.rectangle(0, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions)
     leftwall.label = 'leftwall'
     this.PhysicsManager.add(leftwall)
 
-    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, {isStatic: true})
+    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions)
     rightwall.label = 'rightwall'
     this.PhysicsManager.add(rightwall)
 
@@ -115,6 +121,27 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.addChild(background)
     this.addChild(this.scoreText)
     this.addChild(this.livesText)
+
+    this.gameover = new GameOver()
+    this.gameover.on('gameover.respawn', () => {
+      this.gameover.hide()
+    })
+
+    this.gameover.on('gameover.closed', () => {
+      this.reset()
+    })
+
+    this.addChild(this.gameover)
+
+    this.reset()
+  }
+
+  GameLevel.prototype.getScore = function() {
+    return this.score
+  }
+
+  GameLevel.prototype.getLives = function() {
+    return this.lives
   }
 
   GameLevel.prototype.setScore = function (score) {

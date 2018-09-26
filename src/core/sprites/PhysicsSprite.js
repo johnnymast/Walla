@@ -96,6 +96,15 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
   }
 
   /**
+   * Call to see if this sprite is sleeping.
+   *
+   * @returns {boolean}
+   */
+  PhysicsSprite.prototype.isSleeping = function() {
+    return this.getProperty('isSleeping')
+  }
+
+  /**
    * Callback for the onKeyPress even. You can overwrite this your self
    * to receive the onKeyPress call.
 
