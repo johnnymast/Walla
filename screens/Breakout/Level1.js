@@ -17,13 +17,14 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     // TODO: Add keymapper
     // TODO: Reset force if dead
     // TODO: Move gameover to GameLevel
+    // TODO: Add key input
+    // FIXME: After respawn the ball if below the pad
   }
 
   extend(Level1, GameLevel)
 
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this)
-
 
     /**
      * Make the pad controllable with left and right arrows as well as
@@ -33,18 +34,16 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left'])
     this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right'])
 
-
     /**
      * Setup world physics
      * @type {Matter.World}
      */
     let world = this.PhysicsManager.getWorld()
-    world.gravity.y = .85
-
+    world.gravity.y = 0.85
 
     this.reset()
     //
-    // PIXI.sound.play('level1_music');
+    PIXI.sound.play('level1_music')
     // PIXI.sound.play('game_over');
 
     this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'))
@@ -54,7 +53,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.ball = new Ball(tx)
     this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height)
     this.ball.onCollisionWith = (withOnbject, object) => {
-
       if (withOnbject.label == 'Pad') {
         let MAX_VELOCITY = 50
         var taxaAumentoVelocidade = 5
@@ -63,9 +61,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
           x: this.ball.body.velocity.x + taxaAumentoVelocidade,
           y: this.ball.body.velocity.y + taxaAumentoVelocidade
         })
-
       } else if (withOnbject.label == 'Brick') {
-
         let brick = this.objects.filter((item) => {
           return (item.body.id === withOnbject.id)
         })
@@ -77,7 +73,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
         brick.decareaseHealth()
         brick.showHit()
       } else if (withOnbject.label == 'floor' && this.didStart == true) {
-
         this.lives--
 
         this.setLives(this.lives)
@@ -100,7 +95,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     this.PhysicsManager.run()
     //
-
   }
 
   Level1.prototype.reset = function () {
@@ -111,7 +105,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     for (let i = 0; i < this.objects.length; i++) {
       let object = this.objects[i]
       if (object instanceof Brick) {
-
         /**
          * Cleanup the Brick's internals
          */
@@ -133,12 +126,10 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
       'red': PIXI.Texture.fromFrame('element_red_rectangle.png'),
       'yellow': PIXI.Texture.fromFrame('element_yellow_rectangle.png'),
       'green': PIXI.Texture.fromFrame('element_green_rectangle.png'),
-      'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png'),
+      'blue': PIXI.Texture.fromFrame('element_blue_rectangle.png')
     }
 
-
     let y = this.startY
-
 
     for (let key of Object.keys(bricks)) {
       let texture = bricks[key]
@@ -152,8 +143,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
       }
       y += texture.height + 1
     }
-
-
 
     this.setLives(this.lives)
     this.setScore(this.score)
@@ -231,7 +220,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
       }
       if (object instanceof Brick) {
         if (object.isDestroyed() == true) {
-
           this.setScore(this.getScore() + object.getPointValue())
           /**
            * Cleanup the Brick's internals
