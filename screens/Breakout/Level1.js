@@ -10,12 +10,10 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.didStart = false
     this.objects = []
 
-    // TODO: Comments
+    // TODO: Comments to GameLevel
     // TODO: Sounds
-    // TODO: Add keymapper
-    // TODO: Reset force if dead
-    // TODO: Move gameover to GameLevel
-    // TODO: Add key input
+    // TODO: Add keymapper and allow keyboard events
+    // TODO: Reset force if dead (x/y(
     // FIXME: After respawn the ball if below the pad
   }
 
@@ -203,14 +201,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     }
   }
 
-  /**
-   * Show the gameover screen to the user.
-   */
-  Level1.prototype.showGameOver = function () {
-    this.interactive = false
-    PIXI.sound.play('game_over')
-    this.gameover.show()
-  }
 
   /**
    * Update the current scene for physics.

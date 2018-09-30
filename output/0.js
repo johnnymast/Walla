@@ -74396,6 +74396,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.reset();
   };
 
+  /**
+   * Show the gameover screen to the user.
+   */
+  GameLevel.prototype.showGameOver = function () {
+    this.interactive = false;
+    PIXI.sound.play('game_over');
+    this.gameover.show();
+  };
+
   GameLevel.prototype.getScore = function () {
     return this.score;
   };
@@ -75014,12 +75023,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.didStart = false;
     this.objects = [];
 
-    // TODO: Comments
+    // TODO: Comments to GameLevel
     // TODO: Sounds
-    // TODO: Add keymapper
-    // TODO: Reset force if dead
-    // TODO: Move gameover to GameLevel
-    // TODO: Add key input
+    // TODO: Add keymapper and allow keyboard events
+    // TODO: Reset force if dead (x/y(
     // FIXME: After respawn the ball if below the pad
   };
 
@@ -75205,15 +75212,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     } else if (this.InputManager.isDown('right')) {
       console.log('right');
     }
-  };
-
-  /**
-   * Show the gameover screen to the user.
-   */
-  Level1.prototype.showGameOver = function () {
-    this.interactive = false;
-    PIXI.sound.play('game_over');
-    this.gameover.show();
   };
 
   /**

@@ -136,6 +136,15 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.reset()
   }
 
+  /**
+   * Show the gameover screen to the user.
+   */
+  GameLevel.prototype.showGameOver = function () {
+    this.interactive = false
+    PIXI.sound.play('game_over')
+    this.gameover.show()
+  }
+
   GameLevel.prototype.getScore = function() {
     return this.score
   }
