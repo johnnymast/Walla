@@ -24,6 +24,8 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
   /**
    * Callback for the onKeyPress even. You can overwrite this your self
    * to receive the onKeyPress call.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
    */
   Level.prototype.onKeyPress = function (event) {
     /**
@@ -39,6 +41,8 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
   /**
    * Callback for the onKeyDown even. You can overwrite this your self
    * to receive the onKeyDown call.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
    */
   Level.prototype.onKeyDown = function (event) {
     /**
@@ -54,6 +58,8 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
   /**
    * Callback for the onKeyUp even. You can overwrite this your self
    * to receive the onKeyUp call.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
    */
   Level.prototype.onKeyUp = function (event) {
     /**

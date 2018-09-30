@@ -82,6 +82,7 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
       {name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3'},
       {name: 'level3_music', src: 'assets/breakout/sounds/music/level3.mp3'},
       {name: 'game_over', src: 'assets/breakout/sounds/game_over.mp3'},
+      {name: 'concrete_break', src: 'assets/breakout/sounds/concrete_break.mp3'},
       {name: 'mission_completed', src: 'assets/breakout/sounds/mission_completed.mp3'},
       {name: 'spritesheet-0', type: 'spritesheet', src: 'assets/breakout/spritesheets/spritesheet-1.json'},
 

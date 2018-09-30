@@ -6,14 +6,12 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     this.startY = 50
     this.num_bricks = 11
-    this.started = false
     this.setDisplayStats(true)
     this.didStart = false
     this.objects = []
 
     // TODO: Comments
     // TODO: Sounds
-    // TODO: Remove old code like this.started (should be this.
     // TODO: Add keymapper
     // TODO: Reset force if dead
     // TODO: Move gameover to GameLevel
@@ -23,6 +21,9 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
   extend(Level1, GameLevel)
 
+  /**
+   * The onStart callback will be called after all resources are loaded.
+   */
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this)
 
@@ -43,7 +44,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
     this.reset()
     //
-    PIXI.sound.play('level1_music')
+    //  PIXI.sound.play('level1_music')
     // PIXI.sound.play('game_over');
 
     this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'))
@@ -97,6 +98,9 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     //
   }
 
+  /**
+   * Reset the demo level.
+   */
   Level1.prototype.reset = function () {
     GameLevel.prototype.reset.call(this)
 
@@ -150,6 +154,11 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.interactive = true
   }
 
+  /**
+   * Respond to the mouse moving.
+   *
+   * @param {PIXI.interaction.InteractionEvent} event - the mouse event
+   */
   Level1.prototype.onMouseMove = function (event) {
     let coords = event.data.global
     if (coords.x + this.pad._width / 2 > (this.app.screen.width - this.wall_inset)) {
@@ -161,8 +170,9 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
   }
 
   /**
+   * Interact to the mouse click event.
    *
-   * @param event
+   * @param {PIXI.interaction.InteractionEvent} event - On the mouse click event
    */
   Level1.prototype.onPointerDown = function (event) {
     if (this.didStart === false) {
@@ -173,11 +183,14 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
           object.fire()
         }
       }
-      this.started = true
     }
-    console.log(this.pad.y)
   }
 
+  /**
+   * Handle the keypress event.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
+   */
   Level1.prototype.onKeyPress = function (event) {
     console.log('onKeyPress')
     /**
@@ -190,8 +203,12 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     }
   }
 
+  /**
+   * Show the gameover screen to the user.
+   */
   Level1.prototype.showGameOver = function () {
     this.interactive = false
+    PIXI.sound.play('game_over')
     this.gameover.show()
   }
 
@@ -206,6 +223,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
   }
 
   /**
+   * The update routine that will be called at every tick.
    *
    * @param {number} delta - the time difference since the last tick
    */
@@ -221,6 +239,9 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
       if (object instanceof Brick) {
         if (object.isDestroyed() == true) {
           this.setScore(this.getScore() + object.getPointValue())
+
+          // PIXI.sound.play('concrete_break');
+
           /**
            * Cleanup the Brick's internals
            */

@@ -26,10 +26,17 @@ define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
 
   extend(Brick, PhysicsSprite)
 
+  /**
+   * Return the points gained from this brick.
+   * @returns {number}
+   */
   Brick.prototype.getPointValue = function() {
     return this.point_value;
   }
 
+  /**+
+   * Reset the flicker animation.
+   */
   Brick.prototype.resetFlicker = function () {
     this.flicker_speed = 4
     this.flicker_delay = 1.5
@@ -78,14 +85,25 @@ define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
     this.health--
   }
 
+  /**
+   * Return the number of health points for this brick.
+   * @returns {number}
+   */
   Brick.prototype.getHealth = function () {
     return this.health
   }
 
+  /**
+   * Ask if the brick is destroyed or not.
+   * @returns {boolean}
+   */
   Brick.prototype.isDestroyed = function () {
     return (this.status === 'destroyed')
   }
 
+  /**
+   * Destroy the brick.
+   */
   Brick.prototype.destroy = function () {
     this.sprite.alpha = 0
     this.sprite.destroy()
@@ -95,7 +113,6 @@ define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
 
   /**
    * Update the physics of the brick.
-   *
    * @param {number} delta - The delta since last tick
    */
   Brick.prototype.update = function (delta) {

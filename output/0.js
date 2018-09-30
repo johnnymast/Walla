@@ -74735,7 +74735,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   /**
    * Callback for the onKeyPress even. You can overwrite this your self
    * to receive the onKeyPress call.
-    * @param {Body} withObject - The body the PhysicsSprite body collides with.
+     * @param {Body} withObject - The body the PhysicsSprite body collides with.
    */
   PhysicsSprite.prototype.onCollisionWith = function (withObject) {}
   /**
@@ -75010,14 +75010,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
     this.startY = 50;
     this.num_bricks = 11;
-    this.started = false;
     this.setDisplayStats(true);
     this.didStart = false;
     this.objects = [];
 
     // TODO: Comments
     // TODO: Sounds
-    // TODO: Remove old code like this.started (should be this.
     // TODO: Add keymapper
     // TODO: Reset force if dead
     // TODO: Move gameover to GameLevel
@@ -75027,6 +75025,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
   extend(Level1, GameLevel);
 
+  /**
+   * The onStart callback will be called after all resources are loaded.
+   */
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this);
 
@@ -75047,7 +75048,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
     this.reset();
     //
-    PIXI.sound.play('level1_music');
+    //  PIXI.sound.play('level1_music')
     // PIXI.sound.play('game_over');
 
     this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'));
@@ -75101,6 +75102,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     //
   };
 
+  /**
+   * Reset the demo level.
+   */
   Level1.prototype.reset = function () {
     GameLevel.prototype.reset.call(this);
 
@@ -75154,6 +75158,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.interactive = true;
   };
 
+  /**
+   * Respond to the mouse moving.
+   *
+   * @param {PIXI.interaction.InteractionEvent} event - the mouse event
+   */
   Level1.prototype.onMouseMove = function (event) {
     let coords = event.data.global;
     if (coords.x + this.pad._width / 2 > this.app.screen.width - this.wall_inset) {
@@ -75165,8 +75174,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
   };
 
   /**
+   * Interact to the mouse click event.
    *
-   * @param event
+   * @param {PIXI.interaction.InteractionEvent} event - On the mouse click event
    */
   Level1.prototype.onPointerDown = function (event) {
     if (this.didStart === false) {
@@ -75177,11 +75187,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
           object.fire();
         }
       }
-      this.started = true;
     }
-    console.log(this.pad.y);
   };
 
+  /**
+   * Handle the keypress event.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
+   */
   Level1.prototype.onKeyPress = function (event) {
     console.log('onKeyPress');
     /**
@@ -75194,8 +75207,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     }
   };
 
+  /**
+   * Show the gameover screen to the user.
+   */
   Level1.prototype.showGameOver = function () {
     this.interactive = false;
+    PIXI.sound.play('game_over');
     this.gameover.show();
   };
 
@@ -75210,6 +75227,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
   };
 
   /**
+   * The update routine that will be called at every tick.
    *
    * @param {number} delta - the time difference since the last tick
    */
@@ -75225,6 +75243,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
       if (object instanceof Brick) {
         if (object.isDestroyed() == true) {
           this.setScore(this.getScore() + object.getPointValue());
+
+          // PIXI.sound.play('concrete_break');
+
           /**
            * Cleanup the Brick's internals
            */
@@ -75632,7 +75653,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   /**
    * Handle the mousemove event
    *
-   * @param {InteractionEvent} event - The event for mousemove
+   * @param {PIXI.interaction.InteractionEvent} event - The event for mousemove
    */
   Level1.prototype.onMouseMove = function (event) {
     if (this.mouse_down) {
@@ -75648,7 +75669,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   /**
    * Handle the pointerdowm event
-   * @param {InteractionEvent} event - The event for pointerdown
+   * @param {PIXI.interaction.InteractionEvent} event - The event for pointerdown
    */
   Level1.prototype.onPointerDown = function (event) {
     this.mouse_down = true;
@@ -75656,7 +75677,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
   /**
    * Handle the pointerup event
-   * @param {InteractionEvent} event - The event for pointerup
+   * @param {PIXI.interaction.InteractionEvent} event - The event for pointerup
    */
   Level1.prototype.onPointerUp = function (event) {
     this.mouse_down = false;
@@ -75804,7 +75825,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
     { name: 'core_ui', type: 'spritesheet', src: 'assets/core/ui/core_ui.json' },
 
     // Breakout
-    { name: 'level1_music', src: 'assets/breakout/sounds/music/level1.mp3' }, { name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3' }, { name: 'level3_music', src: 'assets/breakout/sounds/music/level3.mp3' }, { name: 'game_over', src: 'assets/breakout/sounds/game_over.mp3' }, { name: 'mission_completed', src: 'assets/breakout/sounds/mission_completed.mp3' }, { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/breakout/spritesheets/spritesheet-1.json' },
+    { name: 'level1_music', src: 'assets/breakout/sounds/music/level1.mp3' }, { name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3' }, { name: 'level3_music', src: 'assets/breakout/sounds/music/level3.mp3' }, { name: 'game_over', src: 'assets/breakout/sounds/game_over.mp3' }, { name: 'concrete_break', src: 'assets/breakout/sounds/concrete_break.mp3' }, { name: 'mission_completed', src: 'assets/breakout/sounds/mission_completed.mp3' }, { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/breakout/spritesheets/spritesheet-1.json' },
 
     // Main
     { name: 'main_menu_music', src: 'assets/main/sounds/music/menu_music.wav' }, { name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png' }, { name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png' }, { name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png' }, { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' }, { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
@@ -75885,6 +75906,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   /**
    * Callback for the onKeyPress even. You can overwrite this your self
    * to receive the onKeyPress call.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
    */
   Level.prototype.onKeyPress = function (event) {}
   /**
@@ -75900,6 +75923,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   /**
    * Callback for the onKeyDown even. You can overwrite this your self
    * to receive the onKeyDown call.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
    */
   ;Level.prototype.onKeyDown = function (event) {}
   /**
@@ -75915,6 +75940,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   /**
    * Callback for the onKeyUp even. You can overwrite this your self
    * to receive the onKeyUp call.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
    */
   ;Level.prototype.onKeyUp = function (event) {}
   /**
@@ -76206,14 +76233,22 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = __webpack_require__(209);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+
+  /**
+   * The ball constructor.
+   *
+   * @param {string} texture - the texture name.
+   * @constructor
+   */
   let Ball = function (texture) {
     PhysicsSprite.call(this, texture);
-
-    this.sprite.filters = [new filters.OutlineFilter(2, 0x99ff99)];
   };
 
   extend(Ball, PhysicsSprite);
 
+  /**
+   * Setup the physics body. This is part of the PhysicsSprite.
+   */
   Ball.prototype.setupBody = function () {
     let options = {
       isSleeping: true,
@@ -76231,12 +76266,20 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = 
     this.PhysicsManager.add(this.body);
   };
 
+  /**
+   * Fire the ball of the paddle.
+   */
   Ball.prototype.fire = function () {
     console.log('Fire ball');
     let force = 10;
     this.PhysicsManager.setVelocity(this.body, { x: force, y: force });
   };
 
+  /**
+   * Update the ball object.
+   *
+   * @param {number} delta - the time difference since last tick.
+   */
   Ball.prototype.update = function (delta) {
     let pos = this.body.position;
     let angle = this.body.angle;
@@ -76282,10 +76325,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
 
   extend(Brick, PhysicsSprite);
 
+  /**
+   * Return the points gained from this brick.
+   * @returns {number}
+   */
   Brick.prototype.getPointValue = function () {
     return this.point_value;
   };
 
+  /**+
+   * Reset the flicker animation.
+   */
   Brick.prototype.resetFlicker = function () {
     this.flicker_speed = 4;
     this.flicker_delay = 1.5;
@@ -76333,14 +76383,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
     this.health--;
   };
 
+  /**
+   * Return the number of health points for this brick.
+   * @returns {number}
+   */
   Brick.prototype.getHealth = function () {
     return this.health;
   };
 
+  /**
+   * Ask if the brick is destroyed or not.
+   * @returns {boolean}
+   */
   Brick.prototype.isDestroyed = function () {
     return this.status === 'destroyed';
   };
 
+  /**
+   * Destroy the brick.
+   */
   Brick.prototype.destroy = function () {
     this.sprite.alpha = 0;
     this.sprite.destroy();
@@ -76350,7 +76411,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
 
   /**
    * Update the physics of the brick.
-   *
    * @param {number} delta - The delta since last tick
    */
   Brick.prototype.update = function (delta) {
@@ -76399,6 +76459,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = 
 const Buttons = __webpack_require__(645);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(206)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, TweenJS) {
+
+  /**
+   * GameOver screen constructor.
+   *
+   * @param {* } options
+   * @constructor
+   */
   let GameOver = function (options) {
     GameObject.call(this, options);
 
@@ -76490,6 +76557,9 @@ const Buttons = __webpack_require__(645);
 
   extend(GameOver, GameObject);
 
+  /**
+   * Tween in the GameOver screen.
+   */
   GameOver.prototype.show = function () {
     let coords = { x: this.init_x, y: this.init_y, useTicks: false };
     this.tween = new TweenJS.Tween(coords).to({ y: this.app.screen.height / 2 - this.height / 2 }, 500).easing(TweenJS.Easing.Circular.In).onUpdate(() => {
@@ -76500,6 +76570,9 @@ const Buttons = __webpack_require__(645);
     }).start();
   };
 
+  /**
+   * Tween away the GameOver screen.
+   */
   GameOver.prototype.hide = function () {
     let coords = { x: this.dialog.x, y: this.dialog.y, useTicks: false };
     this.tween = new TweenJS.Tween(coords).to({ y: this.init_y }, 500).easing(TweenJS.Easing.Circular.In).onUpdate(() => {
@@ -76510,6 +76583,11 @@ const Buttons = __webpack_require__(645);
     }).start();
   };
 
+  /**
+   * Update the objects for the GameOver screen.
+   *
+   * @param {number} delta - the time difference since last tick.
+   */
   GameOver.prototype.update = function (delta) {
     TweenJS.update();
   };
@@ -76522,12 +76600,21 @@ const Buttons = __webpack_require__(645);
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+
+  /**
+   * The Pad object constructor.
+   * @param {string} texture - the texture name.
+   * @constructor
+   */
   let Pad = function (texture) {
     PhysicsSprite.call(this, texture);
   };
 
   extend(Pad, PhysicsSprite);
 
+  /**
+   * Setup the physics object. This is part of the PhysicsSprite.
+   */
   Pad.prototype.setupBody = function () {
     let options = {
       isStatic: true
@@ -76537,6 +76624,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.PhysicsManager.add(this.body);
   };
 
+  /**
+   * Update the Pad object.
+   * @param {number} delta - the number of ticks since last update.
+   */
   Pad.prototype.update = function (delta) {
     let pos = this.body.position;
     let angle = this.body.angle;
@@ -76646,57 +76737,57 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS
 const GameObject = __webpack_require__(634);
 
 class RoundedRect extends GameObject {
-  constructor() {
-    super();
+    constructor() {
+        super();
+
+        /**
+         *
+         * @type {number}
+         */
+        this.alpha = 1;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.radius = 5;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.rectangle_width = 45;
+
+        /**
+         *
+         * @type {number}
+         */
+        this.rectangle_height = 45;
+
+        /**
+         *
+         * @type {number[]}
+         */
+        this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
+
+        this.init();
+    }
 
     /**
-     *
-     * @type {number}
+     * Create the RoundedRect.
      */
-    this.alpha = 1;
+    init() {
+        let lineColor = this.randomColors[Math.round(rand(0, this.randomColors.length - 1))];
+        let rect = new PIXI.Graphics();
+        rect.name = 'circle';
 
-    /**
-     *
-     * @type {number}
-     */
-    this.radius = 5;
+        let content_outline_alpha = 1;
+        rect.lineStyle(2, lineColor, content_outline_alpha);
+        rect.beginFill(0xFFFFFF, 0);
+        rect.drawRoundedRect(0, 0, this.rectangle_width, this.rectangle_height, this.radius);
 
-    /**
-     *
-     * @type {number}
-     */
-    this.rectangle_width = 45;
-
-    /**
-     *
-     * @type {number}
-     */
-    this.rectangle_height = 45;
-
-    /**
-     *
-     * @type {number[]}
-     */
-    this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
-
-    this.init();
-  }
-
-  /**
-   * Create the RoundedRect.
-   */
-  init() {
-    let lineColor = this.randomColors[Math.round(rand(0, this.randomColors.length - 1))];
-    let rect = new PIXI.Graphics();
-    rect.name = 'circle';
-
-    let content_outline_alpha = 1;
-    rect.lineStyle(2, lineColor, content_outline_alpha);
-    rect.beginFill(0xFFFFFF, 0);
-    rect.drawRoundedRect(0, 0, this.rectangle_width, this.rectangle_height, this.radius);
-
-    this.addChild(rect);
-  }
+        this.addChild(rect);
+    }
 
 }
 

@@ -2,6 +2,13 @@ const Dialogs = require('gui/dialogs')
 const Buttons = require('gui/buttons')
 
 define(['pixi', 'core/GameObject', 'tweenjs'], function (PIXI, GameObject, TweenJS) {
+
+  /**
+   * GameOver screen constructor.
+   *
+   * @param {* } options
+   * @constructor
+   */
   let GameOver = function (options) {
     GameObject.call(this, options)
 
@@ -93,6 +100,9 @@ define(['pixi', 'core/GameObject', 'tweenjs'], function (PIXI, GameObject, Tween
 
   extend(GameOver, GameObject)
 
+  /**
+   * Tween in the GameOver screen.
+   */
   GameOver.prototype.show = function () {
     let coords = {x: this.init_x, y: this.init_y, useTicks: false}
     this.tween = new TweenJS.Tween(coords)
@@ -108,6 +118,9 @@ define(['pixi', 'core/GameObject', 'tweenjs'], function (PIXI, GameObject, Tween
       .start()
   }
 
+  /**
+   * Tween away the GameOver screen.
+   */
   GameOver.prototype.hide = function () {
     let coords = {x: this.dialog.x, y: this.dialog.y, useTicks: false}
     this.tween = new TweenJS.Tween(coords)
@@ -123,6 +136,11 @@ define(['pixi', 'core/GameObject', 'tweenjs'], function (PIXI, GameObject, Tween
       .start()
   }
 
+  /**
+   * Update the objects for the GameOver screen.
+   *
+   * @param {number} delta - the time difference since last tick.
+   */
   GameOver.prototype.update = function(delta) {
     TweenJS.update()
   }

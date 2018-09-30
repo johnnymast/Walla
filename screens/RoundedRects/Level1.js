@@ -82,7 +82,7 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
   /**
    * Handle the mousemove event
    *
-   * @param {InteractionEvent} event - The event for mousemove
+   * @param {PIXI.interaction.InteractionEvent} event - The event for mousemove
    */
   Level1.prototype.onMouseMove = function (event) {
     if (this.mouse_down) {
@@ -98,7 +98,7 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
 
   /**
    * Handle the pointerdowm event
-   * @param {InteractionEvent} event - The event for pointerdown
+   * @param {PIXI.interaction.InteractionEvent} event - The event for pointerdown
    */
   Level1.prototype.onPointerDown = function (event) {
     this.mouse_down = true
@@ -106,7 +106,7 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
 
   /**
    * Handle the pointerup event
-   * @param {InteractionEvent} event - The event for pointerup
+   * @param {PIXI.interaction.InteractionEvent} event - The event for pointerup
    */
   Level1.prototype.onPointerUp = function (event) {
     this.mouse_down = false
