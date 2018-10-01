@@ -55,7 +55,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     this._width = this.texture.width
     this._height = this.texture.height
 
-
     this.setupBody()
     this._setupCollision()
   }
@@ -100,7 +99,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    *
    * @returns {boolean}
    */
-  PhysicsSprite.prototype.isSleeping = function() {
+  PhysicsSprite.prototype.isSleeping = function () {
     return this.getProperty('isSleeping')
   }
 
@@ -125,13 +124,16 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    * @returns {PhysicsSprite}
    */
   PhysicsSprite.prototype.setPosition = function (x = 0, y = 0) {
-
-    // x = x || this._x
-    // y = y || this._y
-
     this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height)
-
     return this
+  }
+
+  /**
+   * Return the body object.
+   * @returns {Matter.Body}
+   */
+  PhysicsSprite.prototype.getBody = function() {
+    return this.body
   }
 
   /**

@@ -22,23 +22,6 @@ define(['core/Scene', 'core/input/KeyboardInput'], function (Scene, KeyboardInpu
   extend(Level, Scene)
 
   /**
-   * Callback for the onKeyPress even. You can overwrite this your self
-   * to receive the onKeyPress call.
-   *
-   * @param {KeyboardEvent} event - the keyboard event
-   */
-  Level.prototype.onKeyPress = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See InputManager.mapInput
-     * for more information.
-     */
-  }
-
-  /**
    * Callback for the onKeyDown even. You can overwrite this your self
    * to receive the onKeyDown call.
    *

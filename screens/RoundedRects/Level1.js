@@ -113,9 +113,9 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
   }
 
   /**
-   * Update the GameObjects
+   * Update the game scene.
    *
-   * @param {number} delta
+   * @param {number} delta - the time passed since last tick.
    */
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta)

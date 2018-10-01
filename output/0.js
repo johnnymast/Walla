@@ -73099,9 +73099,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     for (let i = 0; i < this.map[name].length; i++) {
 
       if (!(this.map[name][i] instanceof KeyboardInput)) {
+        console.log('continue');
         continue;
       }
 
+      console.log('continue this.map[name][i].isDown()', name, this.map[name][i].isDown());
       if (this.map[name][i].isDown() === true) {
         return true;
       }
@@ -74259,27 +74261,48 @@ const DIALOG_STATE = {
 /* 639 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(207), __webpack_require__(635), __webpack_require__(642), __webpack_require__(636), __webpack_require__(658)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Scene, KeyboardInput, Statistics, GameOver) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(207), __webpack_require__(652), __webpack_require__(642), __webpack_require__(636), __webpack_require__(658)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
-    Scene.call(this, options);
-
-    this.on('mousemove', this.onMouseMove);
-    this.on('pointerdown', this.onPointerDown);
+    Level.call(this, options);
 
     this.statistics = new Statistics();
     this.addChild(this.statistics);
 
+    /**
+     * The score text on the screen.
+     * @type {PIXI.Text}
+     */
     this.scoreText = null;
+
+    /**
+     * The lives text on the screen.
+     * @type {null}
+     */
     this.livesText = null;
 
+    /**
+     * The physics engine the inside the wall is leaning into the level.
+     * @type {number}
+     * @default 10
+     */
     this.wall_inset = 10;
+
+    /**
+     * If you want to debug the physics engine set this value
+     * to true.
+     * @type {boolean}
+     * @default false
+     */
     this.showPhysics = true;
 
     if (this.showPhysics === false) this.PhysicsManager.run();
   };
 
-  extend(GameLevel, Scene);
+  extend(GameLevel, Level);
 
+  /**
+   * Reset the level to the default values.
+   */
   GameLevel.prototype.reset = function () {
     this.score = 0;
     this.lives = 5;
@@ -74288,46 +74311,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.setScore(this.score);
   };
 
-  GameLevel.prototype.setDisplayStats = function (visible) {
+  /**
+   * Switch the FPS counter on/off.
+   * @param {boolean} visible - should the FPS tracker be visible.
+   */
+  GameLevel.prototype.setDisplayStats = function (visible = false) {
     this.statistics.visible = visible;
   };
 
-  GameLevel.prototype.onKeyPress = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  GameLevel.prototype.onKeyUp = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyUp events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  };
-
-  GameLevel.prototype.onMouseMove = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive mouse move events.
-     */
-  };
-
-  GameLevel.prototype.onPointerDown = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive pointer down events.
-     */
-  };
-
+  /**
+   * The onStart callback.
+   */
   GameLevel.prototype.onStart = function () {
 
     let background = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -74356,7 +74350,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     let style = new PIXI.TextStyle({
       fontFamily: 'Arial',
       fontSize: 20,
-      // fontStyle: 'italic',
       fontWeight: 'bold',
       fill: ['#ffffff', '#00ff99'], // gradient
       stroke: '#4a1850',
@@ -74382,6 +74375,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.addChild(this.scoreText);
     this.addChild(this.livesText);
 
+    /**
+     * Create the GameOver screen
+     * @type {GameOver}
+     */
     this.gameover = new GameOver();
     this.gameover.on('gameover.respawn', () => {
       this.gameover.hide();
@@ -74392,7 +74389,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     });
 
     this.addChild(this.gameover);
-
     this.reset();
   };
 
@@ -74405,29 +74401,53 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.gameover.show();
   };
 
+  /**
+   * Return the score for this round.
+   * @returns {number}
+   */
   GameLevel.prototype.getScore = function () {
     return this.score;
   };
 
+  /**
+   * Return the remaining lives for this round.
+   * @returns {number}
+   */
   GameLevel.prototype.getLives = function () {
     return this.lives;
   };
 
-  GameLevel.prototype.setScore = function (score) {
+  /**
+   * Update the score on the screen.
+   * @param {number} [score=0] - the score to display.
+   */
+  GameLevel.prototype.setScore = function (score = 0) {
     this.score = score;
     this.scoreText.text = 'SCORE: ' + this.score;
   };
 
-  GameLevel.prototype.setLives = function (lives) {
+  /**
+   * Update the number of lives on the screen.
+   * @param {number} [lives=0] - the number of lives to display.
+   */
+  GameLevel.prototype.setLives = function (lives = 0) {
     this.lives = lives;
     this.livesText.text = 'LIVES: ' + this.lives;
   };
 
-  GameLevel.prototype.fixedUpdate = function (delta) {
-    // Empty
-  };
+  /**
+   * The update function for the physics.
+   * @param {number} delta - the time passed since last tick.
+   */
+  GameLevel.prototype.fixedUpdate = function (delta) {}
+  // Not implemented yet
 
-  GameLevel.prototype.update = function (delta) {
+
+  /**
+   * Update the game scene.
+   * @param {number} delta - the time passed since last tick.
+   */
+  ;GameLevel.prototype.update = function (delta) {
     this.statistics.update(delta);
   };
 
@@ -74605,11 +74625,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   KeyboardInput.prototype.downHandler = function (event) {
     if (event.key === this.info.key) {
-      if (this.info.isUp && this.info.down) {
-        this.info.down(event);
-      }
       this.info.isDown = true;
       this.info.isUp = false;
+
+      if (this.info.down) {
+        this.info.down(event);
+      }
     }
     event.preventDefault();
   };
@@ -74621,9 +74642,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   KeyboardInput.prototype.upHandler = function (event) {
     if (event.key === this.info.key) {
-      if (this.info.isDown && this.info.up) this.info.up(event);
       this.info.isDown = false;
       this.info.isUp = true;
+
+      if (this.info.up) {
+        this.info.up(event);
+      }
     }
     event.preventDefault();
   };
@@ -74761,13 +74785,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @returns {PhysicsSprite}
    */
   ;PhysicsSprite.prototype.setPosition = function (x = 0, y = 0) {
-
-    // x = x || this._x
-    // y = y || this._y
-
     this.PhysicsManager.setPosition(this.body, x, y, this._width, this._height);
-
     return this;
+  };
+
+  /**
+   * Return the body object.
+   * @returns {Matter.Body}
+   */
+  PhysicsSprite.prototype.getBody = function () {
+    return this.body;
   };
 
   /**
@@ -75012,6 +75039,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
+const Vector2d = __webpack_require__(115);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(639), __webpack_require__(254), __webpack_require__(657), __webpack_require__(659), __webpack_require__(656)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, GameOver) {
   let Level1 = function (options) {
@@ -75023,10 +75051,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.didStart = false;
     this.objects = [];
 
-    // TODO: Comments to GameLevel
     // TODO: Sounds
-    // TODO: Add keymapper and allow keyboard events
-    // TODO: Reset force if dead (x/y(
     // FIXME: After respawn the ball if below the pad
   };
 
@@ -75045,6 +75070,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
      */
     this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left']);
     this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right']);
+    this.InputManager.mapInput([this.InputManager.keys.Space], ['fire']);
 
     /**
      * Setup world physics
@@ -75066,9 +75092,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height);
     this.ball.onCollisionWith = (withOnbject, object) => {
       if (withOnbject.label == 'Pad') {
+
+        // FIXME: Add this
         let MAX_VELOCITY = 50;
         var taxaAumentoVelocidade = 5;
-        // console.log('hi with pad', withOnbject)
+
         this.PhysicsManager.setVelocity(this.ball.body, {
           x: this.ball.body.velocity.x + taxaAumentoVelocidade,
           y: this.ball.body.velocity.y + taxaAumentoVelocidade
@@ -75092,6 +75120,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
         this.ball.sleep();
         this.didStart = false;
         this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height);
+        this.ball.reset();
 
         if (this.getLives() === 0) {
           this.showGameOver();
@@ -75106,7 +75135,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.addChild(this.pad.sprite);
 
     this.PhysicsManager.run();
-    //
   };
 
   /**
@@ -75165,6 +75193,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
     this.interactive = true;
   };
 
+  Level1.prototype.movePaddle = function (coords) {
+    if (coords.x + this.pad._width / 2 > this.app.screen.width - this.wall_inset) {
+      coords.x = this.app.screen.width - this.pad._width / 2 - this.wall_inset;
+    } else if (coords.x - this.pad._width / 2 < this.pad._width / 2) {
+      coords.x = this.wall_inset + this.pad._width / 2;
+    }
+    this.pad.setX(coords.x);
+  };
+
   /**
    * Respond to the mouse moving.
    *
@@ -75172,12 +75209,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
    */
   Level1.prototype.onMouseMove = function (event) {
     let coords = event.data.global;
-    if (coords.x + this.pad._width / 2 > this.app.screen.width - this.wall_inset) {
-      coords.x = this.app.screen.width - this.pad._width / 2 - this.wall_inset;
-    } else if (coords.x - this.pad._width / 2 < this.pad._width / 2) {
-      coords.x = this.wall_inset + this.pad._width / 2;
-    }
-    this.pad.setX(coords.x);
+    return this.movePaddle(coords);
   };
 
   /**
@@ -75199,19 +75231,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://githu
 
   /**
    * Handle the keypress event.
-   *
    * @param {KeyboardEvent} event - the keyboard event
    */
-  Level1.prototype.onKeyPress = function (event) {
-    console.log('onKeyPress');
+  Level1.prototype.onKeyDown = function (event) {
+    let keyMoveSpeed = 15;
+    let position = new Vector2d(this.pad.sprite.position.x, this.pad.sprite.position.y);
+
     /**
      * Moving the character.
      */
     if (this.InputManager.isDown('left')) {
-      console.log('left');
+      position.x -= keyMoveSpeed;
     } else if (this.InputManager.isDown('right')) {
-      console.log('right');
+      position.x += keyMoveSpeed;
+    } else if (this.InputManager.isDown('fire') && this.didStart === false) {
+      this.didStart = true;
+      this.ball.wakeUp();
+      return this.ball.fire();
     }
+
+    return this.movePaddle(position);
   };
 
   /**
@@ -75682,9 +75721,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   };
 
   /**
-   * Update the GameObjects
+   * Update the game scene.
    *
-   * @param {number} delta
+   * @param {number} delta - the time passed since last tick.
    */
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta);
@@ -75902,29 +75941,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   extend(Level, Scene);
 
   /**
-   * Callback for the onKeyPress even. You can overwrite this your self
-   * to receive the onKeyPress call.
-   *
-   * @param {KeyboardEvent} event - the keyboard event
-   */
-  Level.prototype.onKeyPress = function (event) {}
-  /**
-   * You can overwrite this function if you wish
-   * to receive keyboard keyPress events.
-   *
-   * Please note: These events will only be triggered
-   * by registered keys. See InputManager.mapInput
-   * for more information.
-   */
-
-
-  /**
    * Callback for the onKeyDown even. You can overwrite this your self
    * to receive the onKeyDown call.
    *
    * @param {KeyboardEvent} event - the keyboard event
    */
-  ;Level.prototype.onKeyDown = function (event) {}
+  Level.prototype.onKeyDown = function (event) {}
   /**
    * You can overwrite this function if you wish
    * to receive keyboard onKeyDown events.
@@ -76266,11 +76288,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = 
 
   /**
    * Fire the ball of the paddle.
+   * @param {number} [force=10] - Fire the ball with this force.
    */
-  Ball.prototype.fire = function () {
-    console.log('Fire ball');
-    let force = 10;
+  Ball.prototype.fire = function (force = 10) {
     this.PhysicsManager.setVelocity(this.body, { x: force, y: force });
+  };
+
+  /**
+   * Reset the ball velocity.
+   */
+  Ball.prototype.reset = function () {
+    this.PhysicsManager.setVelocity(this.body, { x: 0, y: 0 });
   };
 
   /**

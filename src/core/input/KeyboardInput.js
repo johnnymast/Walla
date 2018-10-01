@@ -76,9 +76,12 @@ define([], function () {
    */
   KeyboardInput.prototype.downHandler = function (event) {
     if (event.key === this.info.key) {
-      if (this.info.isUp && this.info.down) { this.info.down(event) }
       this.info.isDown = true
       this.info.isUp = false
+
+      if (this.info.down) {
+        this.info.down(event)
+      }
     }
     event.preventDefault()
   }
@@ -90,9 +93,12 @@ define([], function () {
    */
   KeyboardInput.prototype.upHandler = function (event) {
     if (event.key === this.info.key) {
-      if (this.info.isDown && this.info.up) this.info.up(event)
       this.info.isDown = false
       this.info.isUp = true
+
+      if (this.info.up) {
+        this.info.up(event)
+      }
     }
     event.preventDefault()
   }

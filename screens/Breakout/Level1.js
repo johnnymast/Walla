@@ -1,4 +1,6 @@
 // https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
+const Vector2d = require('core/math/vector2d')
+
 
 define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breakout/Brick', 'objects/Breakout/Pad', 'objects/Breakout/Ball'], function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, GameOver) {
   let Level1 = function (options) {
@@ -10,10 +12,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.didStart = false
     this.objects = []
 
-    // TODO: Comments to GameLevel
     // TODO: Sounds
-    // TODO: Add keymapper and allow keyboard events
-    // TODO: Reset force if dead (x/y(
     // FIXME: After respawn the ball if below the pad
   }
 
@@ -32,6 +31,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
      */
     this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left'])
     this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right'])
+    this.InputManager.mapInput([this.InputManager.keys.Space], ['fire'])
 
     /**
      * Setup world physics
@@ -53,9 +53,11 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height)
     this.ball.onCollisionWith = (withOnbject, object) => {
       if (withOnbject.label == 'Pad') {
+
+        // FIXME: Add this
         let MAX_VELOCITY = 50
         var taxaAumentoVelocidade = 5
-        // console.log('hi with pad', withOnbject)
+
         this.PhysicsManager.setVelocity(this.ball.body, {
           x: this.ball.body.velocity.x + taxaAumentoVelocidade,
           y: this.ball.body.velocity.y + taxaAumentoVelocidade
@@ -79,6 +81,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
         this.ball.sleep()
         this.didStart = false
         this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height)
+        this.ball.reset()
 
         if (this.getLives() === 0) {
           this.showGameOver()
@@ -93,7 +96,6 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.addChild(this.pad.sprite)
 
     this.PhysicsManager.run()
-    //
   }
 
   /**
@@ -152,6 +154,15 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
     this.interactive = true
   }
 
+  Level1.prototype.movePaddle = function(coords) {
+    if (coords.x + this.pad._width / 2 > (this.app.screen.width - this.wall_inset)) {
+      coords.x = this.app.screen.width - (this.pad._width / 2) - this.wall_inset
+    } else if (coords.x - this.pad._width / 2 < this.pad._width / 2) {
+      coords.x = this.wall_inset + this.pad._width / 2
+    }
+    this.pad.setX(coords.x)
+  }
+
   /**
    * Respond to the mouse moving.
    *
@@ -159,12 +170,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
    */
   Level1.prototype.onMouseMove = function (event) {
     let coords = event.data.global
-    if (coords.x + this.pad._width / 2 > (this.app.screen.width - this.wall_inset)) {
-      coords.x = this.app.screen.width - (this.pad._width / 2) - this.wall_inset
-    } else if (coords.x - this.pad._width / 2 < this.pad._width / 2) {
-      coords.x = this.wall_inset + this.pad._width / 2
-    }
-    this.pad.setX(coords.x)
+    return this.movePaddle(coords)
   }
 
   /**
@@ -186,19 +192,26 @@ define(['pixi', 'screens/Breakout/GameLevel', 'core/GameEngine', 'objects/Breako
 
   /**
    * Handle the keypress event.
-   *
    * @param {KeyboardEvent} event - the keyboard event
    */
-  Level1.prototype.onKeyPress = function (event) {
-    console.log('onKeyPress')
+  Level1.prototype.onKeyDown = function (event) {
+    let keyMoveSpeed = 15
+    let position = new Vector2d(this.pad.sprite.position.x, this.pad.sprite.position.y)
+
     /**
      * Moving the character.
      */
     if (this.InputManager.isDown('left')) {
-      console.log('left')
+      position.x -= keyMoveSpeed
     } else if (this.InputManager.isDown('right')) {
-      console.log('right')
+      position.x += keyMoveSpeed
+    } else if (this.InputManager.isDown('fire') && this.didStart === false) {
+      this.didStart = true
+      this.ball.wakeUp()
+      return this.ball.fire()
     }
+
+    return this.movePaddle(position)
   }
 
 

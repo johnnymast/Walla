@@ -1,26 +1,48 @@
-define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Matter, Scene, KeyboardInput, Statistics, GameOver) {
+define(['pixi', 'matter-js', 'core/Level', 'core/input/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
-    Scene.call(this, options)
+    Level.call(this, options)
 
-    this.on('mousemove', this.onMouseMove)
-    this.on('pointerdown', this.onPointerDown)
 
     this.statistics = new Statistics()
     this.addChild(this.statistics)
 
+    /**
+     * The score text on the screen.
+     * @type {PIXI.Text}
+     */
     this.scoreText = null
+
+    /**
+     * The lives text on the screen.
+     * @type {null}
+     */
     this.livesText = null
 
+    /**
+     * The physics engine the inside the wall is leaning into the level.
+     * @type {number}
+     * @default 10
+     */
     this.wall_inset = 10
+
+    /**
+     * If you want to debug the physics engine set this value
+     * to true.
+     * @type {boolean}
+     * @default false
+     */
     this.showPhysics = true
 
     if (this.showPhysics === false)
       this.PhysicsManager.run()
   }
 
-  extend(GameLevel, Scene)
+  extend(GameLevel, Level)
 
-  GameLevel.prototype.reset = function() {
+  /**
+   * Reset the level to the default values.
+   */
+  GameLevel.prototype.reset = function () {
     this.score = 0
     this.lives = 5
 
@@ -28,46 +50,17 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.setScore(this.score)
   }
 
-  GameLevel.prototype.setDisplayStats = function (visible) {
+  /**
+   * Switch the FPS counter on/off.
+   * @param {boolean} visible - should the FPS tracker be visible.
+   */
+  GameLevel.prototype.setDisplayStats = function (visible = false) {
     this.statistics.visible = visible
   }
 
-  GameLevel.prototype.onKeyPress = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyPress events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  }
-
-  GameLevel.prototype.onKeyUp = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyUp events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See listenForKeyboardInputs
-     * for more information.
-     */
-  }
-
-  GameLevel.prototype.onMouseMove = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive mouse move events.
-     */
-  }
-
-  GameLevel.prototype.onPointerDown = function (event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive pointer down events.
-     */
-  }
-
+  /**
+   * The onStart callback.
+   */
   GameLevel.prototype.onStart = function () {
 
     let background = new PIXI.Sprite(PIXI.Texture.WHITE)
@@ -75,7 +68,7 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     background.height = this.app.screen.height
     background.alpha = 0
 
-    let wallOptions = { frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1 }
+    let wallOptions = {frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1}
 
     let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, wallOptions)
     ceiling.label = 'ceiling'
@@ -96,7 +89,6 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     let style = new PIXI.TextStyle({
       fontFamily: 'Arial',
       fontSize: 20,
-      // fontStyle: 'italic',
       fontWeight: 'bold',
       fill: ['#ffffff', '#00ff99'], // gradient
       stroke: '#4a1850',
@@ -122,6 +114,10 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.addChild(this.scoreText)
     this.addChild(this.livesText)
 
+    /**
+     * Create the GameOver screen
+     * @type {GameOver}
+     */
     this.gameover = new GameOver()
     this.gameover.on('gameover.respawn', () => {
       this.gameover.hide()
@@ -132,7 +128,6 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     })
 
     this.addChild(this.gameover)
-
     this.reset()
   }
 
@@ -145,28 +140,52 @@ define(['pixi', 'matter-js', 'core/Scene', 'core/input/KeyboardInput', 'gui/Stat
     this.gameover.show()
   }
 
-  GameLevel.prototype.getScore = function() {
+  /**
+   * Return the score for this round.
+   * @returns {number}
+   */
+  GameLevel.prototype.getScore = function () {
     return this.score
   }
 
-  GameLevel.prototype.getLives = function() {
+  /**
+   * Return the remaining lives for this round.
+   * @returns {number}
+   */
+  GameLevel.prototype.getLives = function () {
     return this.lives
   }
 
-  GameLevel.prototype.setScore = function (score) {
+  /**
+   * Update the score on the screen.
+   * @param {number} [score=0] - the score to display.
+   */
+  GameLevel.prototype.setScore = function (score = 0) {
     this.score = score
     this.scoreText.text = 'SCORE: ' + this.score
   }
 
-  GameLevel.prototype.setLives = function (lives) {
+  /**
+   * Update the number of lives on the screen.
+   * @param {number} [lives=0] - the number of lives to display.
+   */
+  GameLevel.prototype.setLives = function (lives = 0) {
     this.lives = lives
     this.livesText.text = 'LIVES: ' + this.lives
   }
 
+  /**
+   * The update function for the physics.
+   * @param {number} delta - the time passed since last tick.
+   */
   GameLevel.prototype.fixedUpdate = function (delta) {
-    // Empty
+    // Not implemented yet
   }
 
+  /**
+   * Update the game scene.
+   * @param {number} delta - the time passed since last tick.
+   */
   GameLevel.prototype.update = function (delta) {
     this.statistics.update(delta)
   }

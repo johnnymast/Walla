@@ -93,9 +93,11 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
     for (let i = 0; i < this.map[name].length; i++) {
 
       if (!(this.map[name][i] instanceof KeyboardInput)) {
+        console.log('continue')
         continue
       }
 
+      console.log('continue this.map[name][i].isDown()', name, this.map[name][i].isDown())
       if (this.map[name][i].isDown() === true) {
         return true
       }

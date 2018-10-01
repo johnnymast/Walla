@@ -36,11 +36,17 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
 
   /**
    * Fire the ball of the paddle.
+   * @param {number} [force=10] - Fire the ball with this force.
    */
-  Ball.prototype.fire = function () {
-    console.log('Fire ball')
-    let force = 10
+  Ball.prototype.fire = function (force = 10) {
     this.PhysicsManager.setVelocity(this.body, {x: force, y: force})
+  }
+
+  /**
+   * Reset the ball velocity.
+   */
+  Ball.prototype.reset = function() {
+    this.PhysicsManager.setVelocity(this.body, {x: 0, y: 0})
   }
 
   /**
