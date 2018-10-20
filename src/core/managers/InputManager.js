@@ -3,8 +3,6 @@
  * @namespace Core Managers
  */
 define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameObject, KeyboardInput) {
-
-
   /**
    * @classdesc InputManager
    * @exports  core/managers/InputManager
@@ -38,7 +36,6 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
    */
   InputManager.prototype.mapInput = function (input = '', actions = []) {
     if (!(input instanceof KeyboardInput)) {
-
       if (!(input instanceof Array)) {
         input = new Array(input)
       }
@@ -49,18 +46,17 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
 
         key.info.down = function (event) {
           parent.emit('InputManager.keyDown', event)
-        }.bind(this)
+        }
 
         key.info.up = function (event) {
           parent.emit('InputManager.keyUp', event)
-        }.bind(this)
+        }
 
         input[i] = key
       }
     } else {
       throw new Error('InputManager: Unsupported input')
     }
-
 
     if (!(actions instanceof Array)) {
       throw new Error('InputManager: To is not an array.')
@@ -91,7 +87,6 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
     }
 
     for (let i = 0; i < this.map[name].length; i++) {
-
       if (!(this.map[name][i] instanceof KeyboardInput)) {
         console.log('continue')
         continue
@@ -117,9 +112,7 @@ define(['pixi', 'core/GameObject', 'input/KeyboardInput'], function (PIXI, GameO
     }
 
     for (let i = 0; i < this.map[name].length; i++) {
-
-      if (!(this.map[name][i] instanceof KeyboardInput))
-        continue
+      if (!(this.map[name][i] instanceof KeyboardInput)) { continue }
 
       if (this.map[name][i].isUp() === true) {
         return true

@@ -5442,34 +5442,28 @@ const EngineInfo = {
   name: 'Stage Engine',
   version: 1.0,
   url: 'https://github.com/johnnymast/Walla'
-};
 
-let v = new Vector2d(6, 3);
-let radians = v.radians();
+  // window.onerror = function (msg, url, lineNo, columnNo, error) {
+  //   var string = msg.toLowerCase();
+  //   var substring = "script error";
+  //   if (string.indexOf(substring) > -1){
+  //     alert('Script Error: See Browser Console for Detail');
+  //   } else {
+  //     var message = [
+  //       'Message: ' + msg,
+  //       'URL: ' + url,
+  //       'Line: ' + lineNo,
+  //       'Column: ' + columnNo,
+  //       'Error object: ' + JSON.stringify(error)
+  //     ].join(' - ');
+  //
+  //     alert(message);
+  //   }
+  //
+  //   return false;
+  // };
 
-console.log(radians);
-
-// window.onerror = function (msg, url, lineNo, columnNo, error) {
-//   var string = msg.toLowerCase();
-//   var substring = "script error";
-//   if (string.indexOf(substring) > -1){
-//     alert('Script Error: See Browser Console for Detail');
-//   } else {
-//     var message = [
-//       'Message: ' + msg,
-//       'URL: ' + url,
-//       'Line: ' + lineNo,
-//       'Column: ' + columnNo,
-//       'Error object: ' + JSON.stringify(error)
-//     ].join(' - ');
-//
-//     alert(message);
-//   }
-//
-//   return false;
-// };
-
-let sayHello = function () {
+};let sayHello = function () {
   if (window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
     const args = [`\n %c %c %c ${EngineInfo.name} ${EngineInfo.version.toFixed(2)} - ✰ ✰  %c  %c  ${EngineInfo.url}  %c %c ♥%c♥%c♥ \n\n`, 'background: #ff66a5; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'color: #ff66a5; background: #030307; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'background: #ffc3dc; padding:5px 0;', 'background: #ff66a5; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;', 'color: #ff2424; background: #fff; padding:5px 0;'];
 

@@ -12,14 +12,8 @@ const Vector3d = require('core/math/vector3d')
 const EngineInfo = {
   name: 'Stage Engine',
   version: 1.0,
-  url: 'https://github.com/johnnymast/Walla',
+  url: 'https://github.com/johnnymast/Walla'
 }
-
-
-let v = new Vector2d(6, 3)
-let radians = v.radians()
-
-console.log(radians)
 
 // window.onerror = function (msg, url, lineNo, columnNo, error) {
 //   var string = msg.toLowerCase();
@@ -41,9 +35,8 @@ console.log(radians)
 //   return false;
 // };
 
-let sayHello = function() {
-  if (window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1)
-  {
+let sayHello = function () {
+  if (window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
     const args = [
       `\n %c %c %c ${EngineInfo.name} ${EngineInfo.version.toFixed(2)} - ✰ ✰  %c  %c  ${EngineInfo.url}  %c %c ♥%c♥%c♥ \n\n`,
       'background: #ff66a5; padding:5px 0;',
@@ -54,18 +47,14 @@ let sayHello = function() {
       'background: #ff66a5; padding:5px 0;',
       'color: #ff2424; background: #fff; padding:5px 0;',
       'color: #ff2424; background: #fff; padding:5px 0;',
-      'color: #ff2424; background: #fff; padding:5px 0;',
-    ];
+      'color: #ff2424; background: #fff; padding:5px 0;'
+    ]
 
-    window.console.log.apply(console, args);
+    window.console.log.apply(console, args)
+  } else if (window.console) {
+    window.console.log(`${EngineInfo.name} ${EngineInfo.version.toFixed(2)}`)
   }
-  else if (window.console)
-  {
-    window.console.log(`${EngineInfo.name} ${EngineInfo.version.toFixed(2)}`);
-  }
-
 }
-
 
 require([
   'pixi',
@@ -75,7 +64,7 @@ require([
   'core/managers/StateManager',
   'core/managers/PhysicsManager',
   'core/managers/InputManager',
-  'core/managers/ResizeManager',
+  'core/managers/ResizeManager'
 ], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, InputManager, ResizeManager) {
   PIXI.utils.skipHello()
   sayHello()
@@ -87,19 +76,18 @@ require([
   let app = new PIXI.Application(width, height, {
     backgroundColor: 0x0,
     autoResize: true,
-    resolution: window.devicePixelRatio,
+    resolution: window.devicePixelRatio
   })
 
-
   let resizeManager = new ResizeManager(app, {
-    autoFullScreen: true,
+    autoFullScreen: true
 
-  });
+  })
   document.body.appendChild(app.view)
 
   app.renderer.resize(width, height)
-  app.renderer.antialias = true;
-  app.renderer.forceFXAA = true;
+  app.renderer.antialias = true
+  app.renderer.forceFXAA = true
 
   ge.set('App', app)
   ge.set('ResizeManager', resizeManager)

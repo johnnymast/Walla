@@ -1,6 +1,6 @@
 class LocalStorage {
   constructor () {
-    if (typeof(Storage) === 'undefined') {
+    if (typeof (Storage) === 'undefined') {
       throw new Error('LocalStorage: localStorage is not suppored by this browser.')
     }
   }

@@ -73010,8 +73010,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * InputManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(642)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput) {
-
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput) {
   /**
    * @classdesc InputManager
    * @exports  core/managers/InputManager
@@ -73045,7 +73044,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   InputManager.prototype.mapInput = function (input = '', actions = []) {
     if (!(input instanceof KeyboardInput)) {
-
       if (!(input instanceof Array)) {
         input = new Array(input);
       }
@@ -73056,11 +73054,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 
         key.info.down = function (event) {
           parent.emit('InputManager.keyDown', event);
-        }.bind(this);
+        };
 
         key.info.up = function (event) {
           parent.emit('InputManager.keyUp', event);
-        }.bind(this);
+        };
 
         input[i] = key;
       }
@@ -73097,7 +73095,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     }
 
     for (let i = 0; i < this.map[name].length; i++) {
-
       if (!(this.map[name][i] instanceof KeyboardInput)) {
         console.log('continue');
         continue;
@@ -73123,8 +73120,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     }
 
     for (let i = 0; i < this.map[name].length; i++) {
-
-      if (!(this.map[name][i] instanceof KeyboardInput)) continue;
+      if (!(this.map[name][i] instanceof KeyboardInput)) {
+        continue;
+      }
 
       if (this.map[name][i].isUp() === true) {
         return true;
@@ -73141,7 +73139,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(663);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(664);
 
 /**
  * PhysicsManager
@@ -73443,7 +73441,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(673)("./" + scene);
+      let _scene = __webpack_require__(674)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -73495,7 +73493,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(664);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(665);
 
 /**
  * StateManager
@@ -73827,6 +73825,490 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 635 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
+  /**
+   * Statistics constructor
+   *
+   * @constructor
+   */
+  let Statistics = function () {
+    GameObject.call(this);
+    this.paddingX = 10;
+    this.paddingY = 10;
+
+    this.setup();
+  };
+
+  extend(Statistics, GameObject);
+
+  /**
+   * Setup the Statistics view
+   */
+  Statistics.prototype.setup = function () {
+
+    var style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 18,
+      fill: ['#ffffff'] // gradient
+    });
+    this.fps = new pixi.Text('FPS: ' + this.app.ticker.FPS.toFixed(2), style);
+
+    this.addChild(this.fps);
+    this.x = this.paddingX;
+    this.y = this.app.screen.height - this.height - this.paddingY;
+  };
+
+  Statistics.prototype.update = function (delta) {
+    this.fps.text = 'FPS: ' + this.app.ticker.FPS.toFixed(2);
+  };
+
+  return Statistics;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 636 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+const BUTTON_STATE = {
+  OPEN: 'open',
+  OPENING: 'opening'
+};
+/* harmony export (immutable) */ __webpack_exports__["BUTTON_STATE"] = BUTTON_STATE;
+
+
+const BUTTON_TYPE = {
+  BASE: 'base',
+  IMAGE: 'image'
+};
+/* harmony export (immutable) */ __webpack_exports__["BUTTON_TYPE"] = BUTTON_TYPE;
+
+
+/***/ }),
+/* 637 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+const DIALOG_TYPE = {
+  DEFAULT: 'default',
+  CLOSEABLE: 'closeable'
+};
+/* harmony export (immutable) */ __webpack_exports__["DIALOG_TYPE"] = DIALOG_TYPE;
+
+
+const DIALOG_STATE = {
+  OPEN: 'open',
+  OPENING: 'opening'
+};
+/* harmony export (immutable) */ __webpack_exports__["DIALOG_STATE"] = DIALOG_STATE;
+
+
+/***/ }),
+/* 638 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(207), __webpack_require__(641), __webpack_require__(643), __webpack_require__(635), __webpack_require__(658)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+  var GameLevel = function (options) {
+    Level.call(this, options);
+
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
+
+    /**
+     * The score text on the screen.
+     * @type {PIXI.Text}
+     */
+    this.scoreText = null;
+
+    /**
+     * The lives text on the screen.
+     * @type {null}
+     */
+    this.livesText = null;
+
+    /**
+     * The physics engine the inside the wall is leaning into the level.
+     * @type {number}
+     * @default 10
+     */
+    this.wall_inset = 10;
+
+    /**
+     * If you want to debug the physics engine set this value
+     * to true.
+     * @type {boolean}
+     * @default false
+     */
+    this.showPhysics = true;
+
+    if (this.showPhysics === false) this.PhysicsManager.run();
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * Reset the level to the default values.
+   */
+  GameLevel.prototype.reset = function () {
+    this.score = 0;
+    this.lives = 5;
+
+    this.setLives(this.lives);
+    this.setScore(this.score);
+  };
+
+  /**
+   * Switch the FPS counter on/off.
+   * @param {boolean} visible - should the FPS tracker be visible.
+   */
+  GameLevel.prototype.setDisplayStats = function (visible = false) {
+    this.statistics.visible = visible;
+  };
+
+  /**
+   * The onStart callback.
+   */
+  GameLevel.prototype.onStart = function () {
+
+    let background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    background.width = this.app.screen.width;
+    background.height = this.app.screen.height;
+    background.alpha = 0;
+
+    let wallOptions = { frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1 };
+
+    let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, wallOptions);
+    ceiling.label = 'ceiling';
+    this.PhysicsManager.add(ceiling);
+
+    let floor = this.PhysicsManager.rectangle(this.app.screen.width / 2, this.app.screen.height, this.app.screen.width, this.wall_inset, wallOptions);
+    floor.label = 'floor';
+    this.PhysicsManager.add(floor);
+
+    let leftwall = this.PhysicsManager.rectangle(0, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions);
+    leftwall.label = 'leftwall';
+    this.PhysicsManager.add(leftwall);
+
+    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions);
+    rightwall.label = 'rightwall';
+    this.PhysicsManager.add(rightwall);
+
+    let style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 20,
+      fontWeight: 'bold',
+      fill: ['#ffffff', '#00ff99'], // gradient
+      stroke: '#4a1850',
+      strokeThickness: 5,
+      dropShadow: true,
+      dropShadowColor: '#000000',
+      dropShadowBlur: 4,
+      dropShadowAngle: Math.PI / 6,
+      dropShadowDistance: 6,
+      wordWrap: true,
+      wordWrapWidth: 440
+    });
+
+    this.scoreText = new PIXI.Text('SCORE: 0', style);
+    this.scoreText.x = this.app.screen.width - this.scoreText.width - 45;
+    this.scoreText.y = 10;
+
+    this.livesText = new PIXI.Text('LIVES: 3', style);
+    this.livesText.x = 45;
+    this.livesText.y = 10;
+
+    this.addChild(background);
+    this.addChild(this.scoreText);
+    this.addChild(this.livesText);
+
+    /**
+     * Create the GameOver screen
+     * @type {GameOver}
+     */
+    this.gameover = new GameOver();
+    this.gameover.on('gameover.respawn', () => {
+      this.gameover.hide();
+    });
+
+    this.gameover.on('gameover.closed', () => {
+      this.reset();
+    });
+
+    this.addChild(this.gameover);
+    this.reset();
+  };
+
+  /**
+   * Show the gameover screen to the user.
+   */
+  GameLevel.prototype.showGameOver = function () {
+    this.interactive = false;
+    PIXI.sound.play('game_over');
+    this.gameover.show();
+  };
+
+  /**
+   * Return the score for this round.
+   * @returns {number}
+   */
+  GameLevel.prototype.getScore = function () {
+    return this.score;
+  };
+
+  /**
+   * Return the remaining lives for this round.
+   * @returns {number}
+   */
+  GameLevel.prototype.getLives = function () {
+    return this.lives;
+  };
+
+  /**
+   * Update the score on the screen.
+   * @param {number} [score=0] - the score to display.
+   */
+  GameLevel.prototype.setScore = function (score = 0) {
+    this.score = score;
+    this.scoreText.text = 'SCORE: ' + this.score;
+  };
+
+  /**
+   * Update the number of lives on the screen.
+   * @param {number} [lives=0] - the number of lives to display.
+   */
+  GameLevel.prototype.setLives = function (lives = 0) {
+    this.lives = lives;
+    this.livesText.text = 'LIVES: ' + this.lives;
+  };
+
+  /**
+   * The update function for the physics.
+   * @param {number} delta - the time passed since last tick.
+   */
+  GameLevel.prototype.fixedUpdate = function (delta) {}
+  // Not implemented yet
+
+
+  /**
+   * Update the game scene.
+   * @param {number} delta - the time passed since last tick.
+   */
+  ;GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 639 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(641), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+  var GameLevel = function (options) {
+    Level.call(this, options);
+
+    /**
+     * Add the FPS counter.
+     */
+    this.statistics = new Statistics();
+  };
+
+  extend(GameLevel, Level);
+
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+    this.addChild(this.statistics);
+  };
+
+  GameLevel.prototype.fixedUpdate = function (delta) {
+    // Empty
+  };
+
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 640 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(641), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+  /**
+   * GameLevel Constructor
+   *
+   * @constructor
+   */
+  let GameLevel = function () {
+    Level.call(this);
+
+    /**
+     * Add the FPS counter.
+     */
+    this.statistics = new Statistics();
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * The onStart callback
+   */
+  GameLevel.prototype.onStart = function () {
+    let background = new PIXI.Graphics();
+    background.name = 'background';
+
+    background.lineStyle(2, 0xFF0000, 1);
+    background.beginFill(0xFFFFFF, 0);
+    background.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
+
+    this.addChild(background);
+    this.setDisplayStats(true);
+  };
+
+  /**
+   * Enable or disable the onscreen FPS counter.
+   *
+   * @param {boolean) visible - The FPS counter visibility flag true|false
+   */
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+    this.addChild(this.statistics);
+  };
+
+  /**
+   * Update the GameLevel scene.
+   *
+   * @param delta
+   */
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 641 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(642), __webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
+
+  /**
+   * @classdesc Level
+   * @exports  core/Level
+   * @class
+   */
+  let Level = function (options) {
+    Scene.call(this, options);
+
+    /**
+     * Start listening for events.
+     */
+    this.on('mousemove', this.onMouseMove);
+    this.on('pointerdown', this.onPointerDown);
+    this.on('pointerup', this.onPointerUp);
+
+    this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this));
+    this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this));
+  };
+
+  extend(Level, Scene);
+
+  /**
+   * Callback for the onKeyDown even. You can overwrite this your self
+   * to receive the onKeyDown call.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
+   */
+  Level.prototype.onKeyDown = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive keyboard onKeyDown events.
+   *
+   * Please note: These events will only be triggered
+   * by registered keys. See InputManager.mapInput
+   * for more information.
+   */
+
+
+  /**
+   * Callback for the onKeyUp even. You can overwrite this your self
+   * to receive the onKeyUp call.
+   *
+   * @param {KeyboardEvent} event - the keyboard event
+   */
+  ;Level.prototype.onKeyUp = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive keyboard keyUp events.
+   *
+   * Please note: These events will only be triggered
+   * by registered keys. See InputManager.mapInput
+   * for more information.
+   */
+
+
+  /**
+   * Callback for the onMouseMove even. You can overwrite this your self
+   * to receive the onMouseMove call.
+   */
+  ;Level.prototype.onMouseMove = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive mouse move events.
+   */
+
+
+  /**
+   * Callback for the onPointerDown even. You can overwrite this your self
+   * to receive the onPointerDown call.
+   */
+  ;Level.prototype.onPointerDown = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive pointer down events.
+   */
+
+
+  /**
+   * Callback for the onPointerUp even. You can overwrite this your self
+   * to receive the onPointerUp call.
+   */
+  ;Level.prototype.onPointerUp = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive pointer up events.
+   */
+
+
+  /**
+   * Callback for the onStart even. You can overwrite this your self
+   * to receive the onStart call.
+   */
+  ;Level.prototype.onStart = function () {
+    /**
+     * You can overwrite this function if you wish
+     * to receive onStart up events.
+     */
+  };
+
+  return Level;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 642 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
@@ -74173,382 +74655,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 636 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
-  /**
-   * Statistics constructor
-   *
-   * @constructor
-   */
-  let Statistics = function () {
-    GameObject.call(this);
-    this.paddingX = 10;
-    this.paddingY = 10;
-
-    this.setup();
-  };
-
-  extend(Statistics, GameObject);
-
-  /**
-   * Setup the Statistics view
-   */
-  Statistics.prototype.setup = function () {
-
-    var style = new PIXI.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 18,
-      fill: ['#ffffff'] // gradient
-    });
-    this.fps = new pixi.Text('FPS: ' + this.app.ticker.FPS.toFixed(2), style);
-
-    this.addChild(this.fps);
-    this.x = this.paddingX;
-    this.y = this.app.screen.height - this.height - this.paddingY;
-  };
-
-  Statistics.prototype.update = function (delta) {
-    this.fps.text = 'FPS: ' + this.app.ticker.FPS.toFixed(2);
-  };
-
-  return Statistics;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 637 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-const BUTTON_STATE = {
-  OPEN: 'open',
-  OPENING: 'opening'
-};
-/* harmony export (immutable) */ __webpack_exports__["BUTTON_STATE"] = BUTTON_STATE;
-
-
-const BUTTON_TYPE = {
-  BASE: 'base',
-  IMAGE: 'image'
-};
-/* harmony export (immutable) */ __webpack_exports__["BUTTON_TYPE"] = BUTTON_TYPE;
-
-
-/***/ }),
-/* 638 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-const DIALOG_TYPE = {
-  DEFAULT: 'default',
-  CLOSEABLE: 'closeable'
-};
-/* harmony export (immutable) */ __webpack_exports__["DIALOG_TYPE"] = DIALOG_TYPE;
-
-
-const DIALOG_STATE = {
-  OPEN: 'open',
-  OPENING: 'opening'
-};
-/* harmony export (immutable) */ __webpack_exports__["DIALOG_STATE"] = DIALOG_STATE;
-
-
-/***/ }),
-/* 639 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(207), __webpack_require__(652), __webpack_require__(642), __webpack_require__(636), __webpack_require__(658)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
-  var GameLevel = function (options) {
-    Level.call(this, options);
-
-    this.statistics = new Statistics();
-    this.addChild(this.statistics);
-
-    /**
-     * The score text on the screen.
-     * @type {PIXI.Text}
-     */
-    this.scoreText = null;
-
-    /**
-     * The lives text on the screen.
-     * @type {null}
-     */
-    this.livesText = null;
-
-    /**
-     * The physics engine the inside the wall is leaning into the level.
-     * @type {number}
-     * @default 10
-     */
-    this.wall_inset = 10;
-
-    /**
-     * If you want to debug the physics engine set this value
-     * to true.
-     * @type {boolean}
-     * @default false
-     */
-    this.showPhysics = true;
-
-    if (this.showPhysics === false) this.PhysicsManager.run();
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * Reset the level to the default values.
-   */
-  GameLevel.prototype.reset = function () {
-    this.score = 0;
-    this.lives = 5;
-
-    this.setLives(this.lives);
-    this.setScore(this.score);
-  };
-
-  /**
-   * Switch the FPS counter on/off.
-   * @param {boolean} visible - should the FPS tracker be visible.
-   */
-  GameLevel.prototype.setDisplayStats = function (visible = false) {
-    this.statistics.visible = visible;
-  };
-
-  /**
-   * The onStart callback.
-   */
-  GameLevel.prototype.onStart = function () {
-
-    let background = new PIXI.Sprite(PIXI.Texture.WHITE);
-    background.width = this.app.screen.width;
-    background.height = this.app.screen.height;
-    background.alpha = 0;
-
-    let wallOptions = { frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1 };
-
-    let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, wallOptions);
-    ceiling.label = 'ceiling';
-    this.PhysicsManager.add(ceiling);
-
-    let floor = this.PhysicsManager.rectangle(this.app.screen.width / 2, this.app.screen.height, this.app.screen.width, this.wall_inset, wallOptions);
-    floor.label = 'floor';
-    this.PhysicsManager.add(floor);
-
-    let leftwall = this.PhysicsManager.rectangle(0, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions);
-    leftwall.label = 'leftwall';
-    this.PhysicsManager.add(leftwall);
-
-    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions);
-    rightwall.label = 'rightwall';
-    this.PhysicsManager.add(rightwall);
-
-    let style = new PIXI.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 20,
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff99'], // gradient
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
-    });
-
-    this.scoreText = new PIXI.Text('SCORE: 0', style);
-    this.scoreText.x = this.app.screen.width - this.scoreText.width - 45;
-    this.scoreText.y = 10;
-
-    this.livesText = new PIXI.Text('LIVES: 3', style);
-    this.livesText.x = 45;
-    this.livesText.y = 10;
-
-    this.addChild(background);
-    this.addChild(this.scoreText);
-    this.addChild(this.livesText);
-
-    /**
-     * Create the GameOver screen
-     * @type {GameOver}
-     */
-    this.gameover = new GameOver();
-    this.gameover.on('gameover.respawn', () => {
-      this.gameover.hide();
-    });
-
-    this.gameover.on('gameover.closed', () => {
-      this.reset();
-    });
-
-    this.addChild(this.gameover);
-    this.reset();
-  };
-
-  /**
-   * Show the gameover screen to the user.
-   */
-  GameLevel.prototype.showGameOver = function () {
-    this.interactive = false;
-    PIXI.sound.play('game_over');
-    this.gameover.show();
-  };
-
-  /**
-   * Return the score for this round.
-   * @returns {number}
-   */
-  GameLevel.prototype.getScore = function () {
-    return this.score;
-  };
-
-  /**
-   * Return the remaining lives for this round.
-   * @returns {number}
-   */
-  GameLevel.prototype.getLives = function () {
-    return this.lives;
-  };
-
-  /**
-   * Update the score on the screen.
-   * @param {number} [score=0] - the score to display.
-   */
-  GameLevel.prototype.setScore = function (score = 0) {
-    this.score = score;
-    this.scoreText.text = 'SCORE: ' + this.score;
-  };
-
-  /**
-   * Update the number of lives on the screen.
-   * @param {number} [lives=0] - the number of lives to display.
-   */
-  GameLevel.prototype.setLives = function (lives = 0) {
-    this.lives = lives;
-    this.livesText.text = 'LIVES: ' + this.lives;
-  };
-
-  /**
-   * The update function for the physics.
-   * @param {number} delta - the time passed since last tick.
-   */
-  GameLevel.prototype.fixedUpdate = function (delta) {}
-  // Not implemented yet
-
-
-  /**
-   * Update the game scene.
-   * @param {number} delta - the time passed since last tick.
-   */
-  ;GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 640 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(652), __webpack_require__(636)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
-  var GameLevel = function (options) {
-    Level.call(this, options);
-
-    /**
-     * Add the FPS counter.
-     */
-    this.statistics = new Statistics();
-  };
-
-  extend(GameLevel, Level);
-
-  GameLevel.prototype.setDisplayStats = function (visible) {
-    this.statistics.visible = visible;
-    this.addChild(this.statistics);
-  };
-
-  GameLevel.prototype.fixedUpdate = function (delta) {
-    // Empty
-  };
-
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 641 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(652), __webpack_require__(636)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
-  /**
-   * GameLevel Constructor
-   *
-   * @constructor
-   */
-  let GameLevel = function () {
-    Level.call(this);
-
-    /**
-     * Add the FPS counter.
-     */
-    this.statistics = new Statistics();
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * The onStart callback
-   */
-  GameLevel.prototype.onStart = function () {
-    let background = new PIXI.Graphics();
-    background.name = 'background';
-
-    background.lineStyle(2, 0xFF0000, 1);
-    background.beginFill(0xFFFFFF, 0);
-    background.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
-
-    this.addChild(background);
-    this.setDisplayStats(true);
-  };
-
-  /**
-   * Enable or disable the onscreen FPS counter.
-   *
-   * @param {boolean) visible - The FPS counter visibility flag true|false
-   */
-  GameLevel.prototype.setDisplayStats = function (visible) {
-    this.statistics.visible = visible;
-    this.addChild(this.statistics);
-  };
-
-  /**
-   * Update the GameLevel scene.
-   *
-   * @param delta
-   */
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 642 */
+/* 643 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -74657,7 +74764,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 643 */
+/* 644 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
@@ -74876,11 +74983,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 644 */
+/* 645 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(637).BUTTON_STATE;
-const Type = __webpack_require__(637).BUTTON_TYPE;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(636).BUTTON_STATE;
+const Type = __webpack_require__(636).BUTTON_TYPE;
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   let Button = function (options, ...items) {
@@ -74995,7 +75102,7 @@ const Type = __webpack_require__(637).BUTTON_TYPE;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 645 */
+/* 646 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -75005,16 +75112,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Type", function() { return Type; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseButton", function() { return BaseButton; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
-const State = __webpack_require__(637).BUTTON_STATE;
-const Type = __webpack_require__(637).BUTTON_TYPE;
-const BaseButton = __webpack_require__(665);
-const ImageButton = __webpack_require__(666);
-const Button = __webpack_require__(644);
+const State = __webpack_require__(636).BUTTON_STATE;
+const Type = __webpack_require__(636).BUTTON_TYPE;
+const BaseButton = __webpack_require__(666);
+const ImageButton = __webpack_require__(667);
+const Button = __webpack_require__(645);
 
 
 
 /***/ }),
-/* 646 */
+/* 647 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -75035,13 +75142,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 647 */
+/* 648 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 const Vector2d = __webpack_require__(115);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(639), __webpack_require__(254), __webpack_require__(657), __webpack_require__(659), __webpack_require__(656)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, GameEngine, Brick, Pad, Ball, GameOver) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(638), __webpack_require__(657), __webpack_require__(659), __webpack_require__(656), __webpack_require__(663)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball, GamePadInput) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -75051,6 +75158,9 @@ const Vector2d = __webpack_require__(115);
     this.didStart = false;
     this.objects = [];
 
+    this.gamepad = new GamePadInput();
+
+    window.bleep = this.gamepad;
     // TODO: Sounds
     // FIXME: After respawn the ball if below the pad
   };
@@ -75058,24 +75168,24 @@ const Vector2d = __webpack_require__(115);
   extend(Level1, GameLevel);
 
   /**
-   * The onStart callback will be called after all resources are loaded.
-   */
+  * The onStart callback will be called after all resources are loaded.
+  */
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this);
 
     /**
-     * Make the pad controllable with left and right arrows as well as
-     * a and d for moving left and right. This is in addition to mouse
-     * support.
-     */
+    * Make the pad controllable with left and right arrows as well as
+    * a and d for moving left and right. This is in addition to mouse
+    * support.
+    */
     this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left']);
     this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right']);
     this.InputManager.mapInput([this.InputManager.keys.Space], ['fire']);
 
     /**
-     * Setup world physics
-     * @type {Matter.World}
-     */
+    * Setup world physics
+    * @type {Matter.World}
+    */
     let world = this.PhysicsManager.getWorld();
     world.gravity.y = 0.85;
 
@@ -75092,7 +75202,6 @@ const Vector2d = __webpack_require__(115);
     this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height);
     this.ball.onCollisionWith = (withOnbject, object) => {
       if (withOnbject.label == 'Pad') {
-
         // FIXME: Add this
         let MAX_VELOCITY = 50;
         var taxaAumentoVelocidade = 5;
@@ -75138,8 +75247,8 @@ const Vector2d = __webpack_require__(115);
   };
 
   /**
-   * Reset the demo level.
-   */
+  * Reset the demo level.
+  */
   Level1.prototype.reset = function () {
     GameLevel.prototype.reset.call(this);
 
@@ -75154,13 +75263,13 @@ const Vector2d = __webpack_require__(115);
         object.destroy();
 
         /**
-         * Remove the Brick from the scene.
-         */
+        * Remove the Brick from the scene.
+        */
         this.removeChild(object);
 
         /**
-         * Stop tracking this Brick. Its destroyed.
-         */
+        * Stop tracking this Brick. Its destroyed.
+        */
         this.objects.splice(i, 1);
       }
     }
@@ -75203,20 +75312,20 @@ const Vector2d = __webpack_require__(115);
   };
 
   /**
-   * Respond to the mouse moving.
-   *
-   * @param {PIXI.interaction.InteractionEvent} event - the mouse event
-   */
+  * Respond to the mouse moving.
+  *
+  * @param {PIXI.interaction.InteractionEvent} event - the mouse event
+  */
   Level1.prototype.onMouseMove = function (event) {
     let coords = event.data.global;
     return this.movePaddle(coords);
   };
 
   /**
-   * Interact to the mouse click event.
-   *
-   * @param {PIXI.interaction.InteractionEvent} event - On the mouse click event
-   */
+  * Interact to the mouse click event.
+  *
+  * @param {PIXI.interaction.InteractionEvent} event - On the mouse click event
+  */
   Level1.prototype.onPointerDown = function (event) {
     if (this.didStart === false) {
       for (let object of this.objects) {
@@ -75230,16 +75339,16 @@ const Vector2d = __webpack_require__(115);
   };
 
   /**
-   * Handle the keypress event.
-   * @param {KeyboardEvent} event - the keyboard event
-   */
+  * Handle the keypress event.
+  * @param {KeyboardEvent} event - the keyboard event
+  */
   Level1.prototype.onKeyDown = function (event) {
     let keyMoveSpeed = 15;
     let position = new Vector2d(this.pad.sprite.position.x, this.pad.sprite.position.y);
 
     /**
-     * Moving the character.
-     */
+    * Moving the character.
+    */
     if (this.InputManager.isDown('left')) {
       position.x -= keyMoveSpeed;
     } else if (this.InputManager.isDown('right')) {
@@ -75254,20 +75363,20 @@ const Vector2d = __webpack_require__(115);
   };
 
   /**
-   * Update the current scene for physics.
-   *
-   * @param {number} delta - the delta since last update
-   */
+  * Update the current scene for physics.
+  *
+  * @param {number} delta - the delta since last update
+  */
   Level1.prototype.fixedUpdate = function (delta) {
     GameLevel.prototype.fixedUpdate.call(this, delta);
     this.PhysicsManager.update(delta);
   };
 
   /**
-   * The update routine that will be called at every tick.
-   *
-   * @param {number} delta - the time difference since the last tick
-   */
+  * The update routine that will be called at every tick.
+  *
+  * @param {number} delta - the time difference since the last tick
+  */
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta);
 
@@ -75284,18 +75393,18 @@ const Vector2d = __webpack_require__(115);
           // PIXI.sound.play('concrete_break');
 
           /**
-           * Cleanup the Brick's internals
-           */
+          * Cleanup the Brick's internals
+          */
           object.destroy();
 
           /**
-           * Remove the Brick from the scene.
-           */
+          * Remove the Brick from the scene.
+          */
           this.removeChild(object);
 
           /**
-           * Stop tracking this Brick. Its destroyed.
-           */
+          * Stop tracking this Brick. Its destroyed.
+          */
           this.objects.splice(i, 1);
           continue;
         }
@@ -75311,16 +75420,16 @@ const Vector2d = __webpack_require__(115);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 648 */
+/* 649 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(669);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(670);
 const Dialogs = __webpack_require__(654);
 
 /**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(635), __webpack_require__(254), __webpack_require__(636), __webpack_require__(206)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(642), __webpack_require__(254), __webpack_require__(635), __webpack_require__(206)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS) {
 
   /**
    * @classdesc MainScreen
@@ -75468,13 +75577,13 @@ const Dialogs = __webpack_require__(654);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 649 */
+/* 650 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
-const DIRECTIONS = __webpack_require__(646).DIRECTIONS;
+const DIRECTIONS = __webpack_require__(647).DIRECTIONS;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(640), __webpack_require__(254), __webpack_require__(660)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(639), __webpack_require__(254), __webpack_require__(660)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -75603,10 +75712,10 @@ const DIRECTIONS = __webpack_require__(646).DIRECTIONS;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 650 */
+/* 651 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(641), __webpack_require__(661), __webpack_require__(662)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(640), __webpack_require__(661), __webpack_require__(662)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
 
   /**
    * Level1 constructor
@@ -75780,14 +75889,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 651 */
+/* 652 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 /**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(642)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene) {
 
   /**
    * @classdesc SplashScene
@@ -75914,120 +76023,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 652 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(635), __webpack_require__(642)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
-
-  /**
-   * @classdesc Level
-   * @exports  core/Level
-   * @class
-   */
-  let Level = function (options) {
-    Scene.call(this, options);
-
-    /**
-     * Start listening for events.
-     */
-    this.on('mousemove', this.onMouseMove);
-    this.on('pointerdown', this.onPointerDown);
-    this.on('pointerup', this.onPointerUp);
-
-    this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this));
-    this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this));
-  };
-
-  extend(Level, Scene);
-
-  /**
-   * Callback for the onKeyDown even. You can overwrite this your self
-   * to receive the onKeyDown call.
-   *
-   * @param {KeyboardEvent} event - the keyboard event
-   */
-  Level.prototype.onKeyDown = function (event) {}
-  /**
-   * You can overwrite this function if you wish
-   * to receive keyboard onKeyDown events.
-   *
-   * Please note: These events will only be triggered
-   * by registered keys. See InputManager.mapInput
-   * for more information.
-   */
-
-
-  /**
-   * Callback for the onKeyUp even. You can overwrite this your self
-   * to receive the onKeyUp call.
-   *
-   * @param {KeyboardEvent} event - the keyboard event
-   */
-  ;Level.prototype.onKeyUp = function (event) {}
-  /**
-   * You can overwrite this function if you wish
-   * to receive keyboard keyUp events.
-   *
-   * Please note: These events will only be triggered
-   * by registered keys. See InputManager.mapInput
-   * for more information.
-   */
-
-
-  /**
-   * Callback for the onMouseMove even. You can overwrite this your self
-   * to receive the onMouseMove call.
-   */
-  ;Level.prototype.onMouseMove = function (event) {}
-  /**
-   * You can overwrite this function if you wish
-   * to receive mouse move events.
-   */
-
-
-  /**
-   * Callback for the onPointerDown even. You can overwrite this your self
-   * to receive the onPointerDown call.
-   */
-  ;Level.prototype.onPointerDown = function (event) {}
-  /**
-   * You can overwrite this function if you wish
-   * to receive pointer down events.
-   */
-
-
-  /**
-   * Callback for the onPointerUp even. You can overwrite this your self
-   * to receive the onPointerUp call.
-   */
-  ;Level.prototype.onPointerUp = function (event) {}
-  /**
-   * You can overwrite this function if you wish
-   * to receive pointer up events.
-   */
-
-
-  /**
-   * Callback for the onStart even. You can overwrite this your self
-   * to receive the onStart call.
-   */
-  ;Level.prototype.onStart = function () {
-    /**
-     * You can overwrite this function if you wish
-     * to receive onStart up events.
-     */
-  };
-
-  return Level;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
 /* 653 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(638).DIALOG_TYPE;
-const STATE = __webpack_require__(638).DIALOG_STATE;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(637).DIALOG_TYPE;
+const STATE = __webpack_require__(637).DIALOG_STATE;
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
   let BaseDialog = function (options) {
@@ -76169,10 +76169,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TYPE", function() { return TYPE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CloseableDialog", function() { return CloseableDialog; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
-const TYPE = __webpack_require__(638).DIALOG_TYPE;
-const STATE = __webpack_require__(638).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(667);
-const DefaultDialog = __webpack_require__(668);
+const TYPE = __webpack_require__(637).DIALOG_TYPE;
+const STATE = __webpack_require__(637).DIALOG_STATE;
+const CloseableDialog = __webpack_require__(668);
+const DefaultDialog = __webpack_require__(669);
 
 
 
@@ -76252,7 +76252,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = __webpack_require__(209);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(644)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
 
   /**
    * The ball constructor.
@@ -76325,7 +76325,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = 
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(115);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(644)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
 
   /**
    * Brick constructor.
@@ -76482,7 +76482,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = __webpack_require__(654);
-const Buttons = __webpack_require__(645);
+const Buttons = __webpack_require__(646);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(206)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, TweenJS) {
 
@@ -76625,7 +76625,7 @@ const Buttons = __webpack_require__(645);
 /* 659 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(644)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
 
   /**
    * The Pad object constructor.
@@ -76671,7 +76671,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 660 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(646).DIRECTIONS;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(647).DIRECTIONS;
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
   let Character = function (playerId = 1) {
     GameObject.call(this, null);
@@ -76852,6 +76852,98 @@ module.exports = Text;
 
 /***/ }),
 /* 663 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
+  /**
+   * Take control over GamePad input by using this class.
+   * You construct the class with a keycode.
+   * See https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API#Browser_compatibility for more information.
+   * @exports core/input/GamePadInput
+   * @module GamePadInput
+   * @example
+   *
+   * // FIXME: TODO
+   * @constructor
+   */
+  let GamePadInput = function (ke) {
+    GameObject.call(this);
+
+    this.gamepads = [];
+
+    this.ch = this._connectionHandler.bind(this);
+
+    /**
+     * Automatically start listening.
+     */
+    this.startListeners();
+  };
+
+  extend(GamePadInput, GameObject);
+
+  /**
+   * Query if there are gamepad's connected to the system.
+   *
+   * @returns {boolean}
+   */
+  GamePadInput.prototype.isConnected = function () {
+    return this.gamepads.length > 0;
+  };
+
+  /**
+   * Return a single connected gamepad.
+   *
+   * @param {number} [index=1] - The index of the Gamepad to get.
+   * @returns {boolean|gamepad}
+   */
+  GamePadInput.prototype.getGamepad = function (index = 1) {
+    if (typeof this.gamepads[index] !== 'undefined') {
+      return this.gamepads[index];
+    }
+    return false;
+  };
+
+  /**
+   * Start listening for game controller events.
+   */
+  GamePadInput.prototype.startListeners = function () {
+    window.addEventListener('gamepadconnected', this.ch, false);
+    window.addEventListener('gamepaddisconnected', this.ch, false);
+  };
+
+  /**
+   * Stop listening for game controller events.
+   */
+  GamePadInput.prototype.stopListeners = function () {
+    window.removeEventListener('gamepadconnected', this.ch);
+    window.removeEventListener('gamepaddisconnected', this.ch);
+  };
+
+  /**
+   * This function will be called if a gamepad is connected
+   * or disconnected.
+   *
+   * @param {GamepadEvent} event - The connect/disconnect event.
+   * @private
+   */
+  GamePadInput.prototype._connectionHandler = function (event) {
+    let gamepad = event.gamepad;
+
+    if (gamepad) {
+      if (event.type === 'gamepadconnected') {
+        this.gamepads[event.gamepad.index] = gamepad;
+      } else {
+        this.gamepads.splice(event.gamepad.index, 1);
+      }
+    }
+  };
+
+  return GamePadInput;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 664 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -77169,7 +77261,7 @@ if (true) {
 }
 
 /***/ }),
-/* 664 */
+/* 665 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -77195,10 +77287,10 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 665 */
+/* 666 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(644);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(645);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(208), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
   let BaseButton = function (options) {
@@ -77402,10 +77494,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 666 */
+/* 667 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(644);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(645);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(208), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
   let ImageButton = function (options) {
@@ -77609,10 +77701,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 667 */
+/* 668 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(645);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(646);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(653)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
   let CloseableDialog = function (options) {
@@ -77694,7 +77786,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 668 */
+/* 669 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(653)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
@@ -77713,7 +77805,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 669 */
+/* 670 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77721,13 +77813,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(670);
-const MenuItemText = __webpack_require__(672);
-const MenuItemImageButton = __webpack_require__(671);
+const Menu = __webpack_require__(671);
+const MenuItemText = __webpack_require__(673);
+const MenuItemImageButton = __webpack_require__(672);
 
 
 /***/ }),
-/* 670 */
+/* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -77801,10 +77893,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 671 */
+/* 672 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(645);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(646);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(655)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
@@ -77891,7 +77983,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 672 */
+/* 673 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(655)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
@@ -77977,26 +78069,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 673 */
+/* 674 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Breakout/GameLevel": 639,
-	"./Breakout/GameLevel.js": 639,
-	"./Breakout/Level1": 647,
-	"./Breakout/Level1.js": 647,
-	"./MainMenu": 648,
-	"./MainMenu.js": 648,
-	"./PixelShooter/GameLevel": 640,
-	"./PixelShooter/GameLevel.js": 640,
-	"./PixelShooter/Level1": 649,
-	"./PixelShooter/Level1.js": 649,
-	"./RoundedRects/GameLevel": 641,
-	"./RoundedRects/GameLevel.js": 641,
-	"./RoundedRects/Level1": 650,
-	"./RoundedRects/Level1.js": 650,
-	"./SplashScene": 651,
-	"./SplashScene.js": 651
+	"./Breakout/GameLevel": 638,
+	"./Breakout/GameLevel.js": 638,
+	"./Breakout/Level1": 648,
+	"./Breakout/Level1.js": 648,
+	"./MainMenu": 649,
+	"./MainMenu.js": 649,
+	"./PixelShooter/GameLevel": 639,
+	"./PixelShooter/GameLevel.js": 639,
+	"./PixelShooter/Level1": 650,
+	"./PixelShooter/Level1.js": 650,
+	"./RoundedRects/GameLevel": 640,
+	"./RoundedRects/GameLevel.js": 640,
+	"./RoundedRects/Level1": 651,
+	"./RoundedRects/Level1.js": 651,
+	"./SplashScene": 652,
+	"./SplashScene.js": 652
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -78012,7 +78104,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 673;
+webpackContext.id = 674;
 
 /***/ })
 ]);
