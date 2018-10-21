@@ -67,6 +67,7 @@ const config = {
   resolve: {
     alias: {
       'require': path.resolve(__dirname, './node_modules/require.js'),
+      'eventemitter': path.resolve(__dirname, './node_modules/eventemitter3/index.js'),
       'pixi': path.resolve(__dirname, './node_modules/pixi.js'),
       'pixi-sound': path.resolve(__dirname, './node_modules/pixi-sound'),
       'pixi-tiledmap': path.resolve(__dirname, './node_modules/pixi-tiledmap'),

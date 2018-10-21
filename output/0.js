@@ -73139,7 +73139,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(664);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(667);
 
 /**
  * PhysicsManager
@@ -73423,6 +73423,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   let SceneManager = function (scene = '') {
     this.scenes = [];
+    this.plugins = [];
     this.currentScene = null;
     this.app = GameEngine.get().get('App');
 
@@ -73441,7 +73442,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(674)("./" + scene);
+      let _scene = __webpack_require__(677)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -73455,6 +73456,36 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.getScene = function (scene) {
     return this.scenes[scene];
+  };
+
+  /**
+   * Return an array of registered plugins.
+   *
+   * @returns {Array}
+   */
+  SceneManager.prototype.getPlugins = function () {
+    return this.plugins;
+  };
+
+  /**
+   * Register a plugin for the scene.
+   *
+   * @param {string} key - The key to identify the plugin.
+   * @param {object} instance - The plugin instance.
+   */
+  SceneManager.prototype.registerPlugin = function (key = '', instance = null) {
+    this.plugins[key] = instance;
+  };
+
+  /**
+   * Remove a registered plugin.
+   *
+   * @param {string} key - The key to identify the plugin.
+   */
+  SceneManager.prototype.removePlugin = function (key = '') {
+    if (typeof this.plugins[key] !== 'undefined') {
+      delete this.plugins[key];
+    }
   };
 
   /**
@@ -73493,7 +73524,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(665);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(668);
 
 /**
  * StateManager
@@ -74646,7 +74677,21 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    */
   Scene.prototype._update = function (delta) {
     if (!this.isPaused()) {
+      let plugins = this.SceneManager.getPlugins();
+
+      for (key in plugins) {
+        if (plugins[key].runsPre()) {
+          plugins[key].update(delta);
+        }
+      }
+
       this.update(delta);
+
+      for (key in plugins) {
+        if (plugins[key].runsPost()) {
+          plugins[key].update(delta);
+        }
+      }
     }
   };
 
@@ -75114,8 +75159,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(636).BUTTON_STATE;
 const Type = __webpack_require__(636).BUTTON_TYPE;
-const BaseButton = __webpack_require__(666);
-const ImageButton = __webpack_require__(667);
+const BaseButton = __webpack_require__(669);
+const ImageButton = __webpack_require__(670);
 const Button = __webpack_require__(645);
 
 
@@ -75148,7 +75193,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 const Vector2d = __webpack_require__(115);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(638), __webpack_require__(657), __webpack_require__(659), __webpack_require__(656), __webpack_require__(663)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball, GamePadInput) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(638), __webpack_require__(657), __webpack_require__(659), __webpack_require__(656), __webpack_require__(664)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball, GamePadInput) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -75161,6 +75206,9 @@ const Vector2d = __webpack_require__(115);
     this.gamepad = new GamePadInput();
 
     window.bleep = this.gamepad;
+    window.scenemanager = this.SceneManager;
+
+    // TODO: Add controler vibration
     // TODO: Sounds
     // FIXME: After respawn the ball if below the pad
   };
@@ -75423,7 +75471,7 @@ const Vector2d = __webpack_require__(115);
 /* 649 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(670);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(673);
 const Dialogs = __webpack_require__(654);
 
 /**
@@ -76171,8 +76219,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(637).DIALOG_TYPE;
 const STATE = __webpack_require__(637).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(668);
-const DefaultDialog = __webpack_require__(669);
+const CloseableDialog = __webpack_require__(671);
+const DefaultDialog = __webpack_require__(672);
 
 
 
@@ -76855,6 +76903,59 @@ module.exports = Text;
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
+
+  let ScenePlugin = function (ke) {
+    GameObject.call(this);
+    this.setPreMode();
+  };
+
+  extend(ScenePlugin, GameObject);
+
+  /**
+   * Set update before the main scene.
+   */
+  ScenePlugin.prototype.setPreMode = function () {
+    this.pre = true;
+    this.post = false;
+  };
+
+  /**
+   * Set update after the main scene.
+   */
+  ScenePlugin.prototype.setPostMode = function () {
+    this.post = true;
+    this.pre = false;
+  };
+
+  /**
+   * Ask if the plugin updates before (pre) or after (post) the
+   * main scene.
+   *
+   * @returns {boolean}
+   */
+  ScenePlugin.prototype.runsPre = function () {
+    return this.pre == true;
+  };
+
+  /**
+   * Ask if the plugin updates before (pre) or after (post) the
+   * main scene.
+   *
+   * @returns {boolean}
+   */
+  ScenePlugin.prototype.runsPost = function () {
+    return this.post == true;
+  };
+
+  return ScenePlugin;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 664 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(663), __webpack_require__(666)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
   /**
    * Take control over GamePad input by using this class.
    * You construct the class with a keycode.
@@ -76867,19 +76968,22 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @constructor
    */
   let GamePadInput = function (ke) {
-    GameObject.call(this);
+    ScenePlugin.call(this);
 
     this.gamepads = [];
 
+    this.enabled = true;
     this.ch = this._connectionHandler.bind(this);
 
     /**
      * Automatically start listening.
      */
     this.startListeners();
+
+    this.SceneManager.registerPlugin('input-gamepad', this);
   };
 
-  extend(GamePadInput, GameObject);
+  extend(GamePadInput, ScenePlugin);
 
   /**
    * Query if there are gamepad's connected to the system.
@@ -76904,11 +77008,21 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   };
 
   /**
+   * Return an array of registered gamepads.
+   *
+   * @returns {Array}
+   */
+  GamePadInput.prototype.getGamePads = function () {
+    return this.gamepads;
+  };
+
+  /**
    * Start listening for game controller events.
    */
   GamePadInput.prototype.startListeners = function () {
     window.addEventListener('gamepadconnected', this.ch, false);
     window.addEventListener('gamepaddisconnected', this.ch, false);
+    this.enabled = true;
   };
 
   /**
@@ -76917,6 +77031,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   GamePadInput.prototype.stopListeners = function () {
     window.removeEventListener('gamepadconnected', this.ch);
     window.removeEventListener('gamepaddisconnected', this.ch);
+    this.enabled = false;
   };
 
   /**
@@ -76931,9 +77046,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
     if (gamepad) {
       if (event.type === 'gamepadconnected') {
-        this.gamepads[event.gamepad.index] = gamepad;
+        this.gamepads[event.gamepad.index] = new GamePad(gamepad);
       } else {
         this.gamepads.splice(event.gamepad.index, 1);
+      }
+    }
+  };
+
+  GamePadInput.prototype.update = function (delta) {
+
+    if (!this.enabled) {
+      return;
+    }
+
+    gamepads = navigator.getGamepads ? navigator.getGamepads() : navigator.webkitGetGamepads ? navigator.webkitGetGamepads : [];
+
+    for (let gamepad of gamepads) {
+      if (gamepad) {
+        if (typeof this.gamepads[gamepad.index] !== 'undefined') {
+          this.gamepads[gamepad.index].update(delta);
+        }
       }
     }
   };
@@ -76943,7 +77075,98 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 664 */
+/* 665 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter) {
+  let Button = function (button) {
+    EventEmitter.call(this);
+    this.button = button;
+  };
+
+  extend(Button, EventEmitter);
+
+  /**
+   * Update the button object.
+   *
+   * @param {number} delta - Time passed since last update
+   */
+  Button.prototype.update = function (delta) {
+    if (this.button.pressed) {
+      this.emit('GamePadInput:pressed', this);
+    }
+  };
+
+  return Button;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 666 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43), __webpack_require__(665), __webpack_require__(678)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
+  let GamePad = function (gamepad) {
+    EventEmitter.call(this);
+
+    this.buttons = [];
+    this.axes = [];
+
+    this.gamepad = gamepad;
+
+    this.id = gamepad.id;
+    this.index = gamepad.index;
+    this.vibration = gamepad.vibrationActuator;
+    this.connected = gamepad.connected;
+    this.mapping = gamepad.mapping;
+
+    var weakEffect = { duration: 300, weakMagnitude: 1.0 };
+
+    this.vibration.playEffect('dual-rumble', weakEffect); //.then(success, failure);
+    console.log(gamepad);
+    for (let button of gamepad.buttons) {
+      let btn = new Button(button);
+      btn.on('GamePadInput:pressed', this.button_pressed);
+
+      this.buttons.push(btn);
+    }
+
+    for (let axle of gamepad.axes) {
+      let axl = new Axis(axle);
+      // btn.on('pressed', this.axle_moved)
+
+
+      this.axes.push(axl);
+    }
+  };
+
+  extend(GamePad, EventEmitter);
+
+  GamePad.prototype.axle_moved = function (button) {
+    console.log('Button pressed');
+  };
+
+  GamePad.prototype.button_pressed = function (button) {
+    console.log('Button pressed');
+  };
+
+  GamePad.prototype.update = function (delta) {
+    for (let button of this.buttons) {
+      button.update(delta);
+    }
+
+    for (let axle of this.axes) {
+      axle.update(delta);
+    }
+  };
+
+  return GamePad;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 667 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -77261,7 +77484,7 @@ if (true) {
 }
 
 /***/ }),
-/* 665 */
+/* 668 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -77287,7 +77510,7 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 666 */
+/* 669 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(645);
@@ -77494,7 +77717,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 667 */
+/* 670 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(645);
@@ -77701,7 +77924,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 668 */
+/* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(646);
@@ -77786,7 +78009,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 669 */
+/* 672 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(653)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
@@ -77805,7 +78028,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 670 */
+/* 673 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77813,13 +78036,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(671);
-const MenuItemText = __webpack_require__(673);
-const MenuItemImageButton = __webpack_require__(672);
+const Menu = __webpack_require__(674);
+const MenuItemText = __webpack_require__(676);
+const MenuItemImageButton = __webpack_require__(675);
 
 
 /***/ }),
-/* 671 */
+/* 674 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -77893,7 +78116,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 672 */
+/* 675 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(646);
@@ -77983,7 +78206,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 673 */
+/* 676 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(655)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
@@ -78069,7 +78292,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 674 */
+/* 677 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -78104,7 +78327,56 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 674;
+webpackContext.id = 677;
+
+/***/ }),
+/* 678 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter) {
+  let Axis = function (axis) {
+    EventEmitter.call(this);
+    this.axis = axis;
+    console.log(axis);
+
+    /**
+     * Movement tolerance threshold below which axis values are ignored in `getValue`.
+     *
+     * @name Phaser.Input.Gamepad.Axis#threshold
+     * @type {number}
+     * @default 0.1
+     * @since 3.0.0
+     */
+    this.threshold = 0.1;
+  };
+
+  extend(Axis, EventEmitter);
+
+  /**
+   * Applies the `threshold` value to the axis and returns it.
+   *
+   * @method Phaser.Input.Gamepad.Axis#getValue
+   * @since 3.0.0
+   *
+   * @return {number} The axis value, adjusted for the movement threshold.
+   */
+  Axis.prototype.getValue = function () {
+    return Math.abs(this.value) < this.threshold ? 0 : this.value;
+  };
+
+  /**
+   * Update the Axis object.
+   *
+   * @param {number} delta - Time passed since last update
+   */
+  Axis.prototype.update = function (delta) {
+
+    this.value = this.axis;
+  };
+
+  return Axis;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ })
 ]);

@@ -15,6 +15,9 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
       this.gamepad = new GamePadInput()
 
       window.bleep = this.gamepad
+      window.scenemanager = this.SceneManager;
+
+      // TODO: Add controler vibration
     // TODO: Sounds
     // FIXME: After respawn the ball if below the pad
     }

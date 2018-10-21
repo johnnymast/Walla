@@ -352,6 +352,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     }
   }
 
+
   /**
    * Internal update function. This is called per tick.
    *
@@ -360,7 +361,21 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    */
   Scene.prototype._update = function (delta) {
     if (!this.isPaused()) {
+      let plugins = this.SceneManager.getPlugins()
+
+      for (key in plugins) {
+        if (plugins[key].runsPre()) {
+          plugins[key].update(delta)
+        }
+      }
+
       this.update(delta)
+
+      for (key in plugins) {
+        if (plugins[key].runsPost()) {
+          plugins[key].update(delta)
+        }
+      }
     }
   }
 

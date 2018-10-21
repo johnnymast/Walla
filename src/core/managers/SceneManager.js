@@ -11,6 +11,7 @@ define(['core/GameEngine'], function (GameEngine) {
    */
   let SceneManager = function (scene = '') {
     this.scenes = []
+    this.plugins = []
     this.currentScene = null
     this.app = GameEngine.get().get('App')
 
@@ -43,6 +44,36 @@ define(['core/GameEngine'], function (GameEngine) {
    */
   SceneManager.prototype.getScene = function (scene) {
     return this.scenes[scene]
+  }
+
+  /**
+   * Return an array of registered plugins.
+   *
+   * @returns {Array}
+   */
+  SceneManager.prototype.getPlugins = function() {
+    return this.plugins
+  }
+
+  /**
+   * Register a plugin for the scene.
+   *
+   * @param {string} key - The key to identify the plugin.
+   * @param {object} instance - The plugin instance.
+   */
+  SceneManager.prototype.registerPlugin = function(key = '', instance = null) {
+    this.plugins[key] = instance
+  }
+
+  /**
+   * Remove a registered plugin.
+   *
+   * @param {string} key - The key to identify the plugin.
+   */
+  SceneManager.prototype.removePlugin = function(key = '') {
+    if (typeof this.plugins[key] !== 'undefined') {
+      delete this.plugins[key]
+    }
   }
 
   /**
