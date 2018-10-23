@@ -5,7 +5,6 @@ const LocalStorage = require('core/storage/localStorage')
  * @namespace Core Managers
  */
 define([], function () {
-
   /**
    * @classdesc StateManager
    * @exports  core/managers/StateManager
@@ -13,16 +12,16 @@ define([], function () {
    */
   let StateManager = function () {
     this.adapter = new LocalStorage()
-    if (typeof this.adapter.set != 'function') {
-      throw new Error("StateManager: Adapter is not supporting the set method.")
+    if (typeof this.adapter.set !== 'function') {
+      throw new Error('StateManager: Adapter is not supporting the set method.')
     }
 
-    if (typeof this.adapter.get != 'function') {
-      throw new Error("StateManager: Adapter is not supporting the get method.")
+    if (typeof this.adapter.get !== 'function') {
+      throw new Error('StateManager: Adapter is not supporting the get method.')
     }
 
-    if (typeof this.adapter.unset != 'function') {
-      throw new Error("StateManager: Adapter is not supporting the unset method.")
+    if (typeof this.adapter.unset !== 'function') {
+      throw new Error('StateManager: Adapter is not supporting the unset method.')
     }
   }
 

@@ -5,7 +5,6 @@ const Vector2d = require('core/math/Vector2d')
  * @namespace Core Managers
  */
 define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObject) {
-
   /**
    * @classdesc PhysicsManager
    * @exports  core/managers/PhysicsManager
@@ -56,7 +55,7 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
         constraint: {
           stiffness: 0.2,
           render: {
-            visible: false,
+            visible: false
           }
         }
       })
@@ -67,7 +66,8 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
   extend(PhysicsManager, GameObject)
 
   /**
-   * Return the
+   * Return the Events object.
+   *
    * @returns {Matter.Events}
    */
   PhysicsManager.prototype.getEventHandler = function () {
@@ -75,6 +75,7 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
   }
 
   /**
+   * Return the engine object.
    *
    * @returns {Matter.Engine}
    */
@@ -106,6 +107,7 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
 
   /**
    * Translate a PIXI x/y to matter js coordinates.
+   *
    * @param {number} x
    * @param {number} y
    * @param {number} width
@@ -115,7 +117,7 @@ define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObj
   PhysicsManager.prototype.PIXIToMatter = function (x, y, width, height) {
     return {
       x: x + (width * 0.5),
-      y: y + (height * 0.5),
+      y: y + (height * 0.5)
     }
   }
 
