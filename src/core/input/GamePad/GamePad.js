@@ -1,7 +1,8 @@
-
 define(['eventemitter', 'input/GamePad/Button', 'input/GamePad/Axis'], function (EventEmitter, Button, Axis) {
   let GamePad = function (gamepad) {
     EventEmitter.call(this)
+
+    this.gamepad = gamepad
 
     /**
      * The buttons available on this controller.
@@ -42,47 +43,60 @@ define(['eventemitter', 'input/GamePad/Button', 'input/GamePad/Axis'], function 
     this.vibration = gamepad.vibrationActuator || null
 
     /**
-     * This has no meaning yet accoring to the specs (RFC) this
+     * This has no meaning yet according to the specs (RFC) this
      * value will always be 'standard'
      *
      * @type {GamepadMappingType}
      */
     this.mapping = gamepad.mapping
 
-    // var weakEffect = { duration: 300, weakMagnitude: 1.0 }
-    //
-    // if (this.supportsVibration() === true) {
-    //   this.vibrate(weakEffect) // .then(success, failure);
-    // }
-    // console.log(gamepad)
-
+    let index = 0
     for (let button of gamepad.buttons) {
-      let btn = new Button(button)
+      let btn = new Button(button, index)
       btn.on('GamePadInput:pressed', this.button_pressed)
 
       this.buttons.push(btn)
+      index++
     }
 
+    index = 0
     for (let axle of gamepad.axes) {
-      let axl = new Axis(axle)
-      // btn.on('pressed', this.axle_moved)
-
+      let axl = new Axis(axle, index)
       this.axes.push(axl)
+      index++
     }
   }
 
   extend(GamePad, EventEmitter)
 
   /**
+   * Return the GamePad buttons.
+   *
+   * @returns {Array}
+   */
+  GamePad.prototype.getButtons = function () {
+    return this.buttons
+  }
+
+  /**
+   * Return the GamePad Axis.
+   *
+   * @returns {Array}
+   */
+  GamePad.prototype.getAxis = function () {
+    return this.axes
+  }
+
+  /**
    * Query the gamepad if it supports vibration or not.
    *
    * @returns {boolean}
    */
-  GamePad.prototype.supportsVibration = function() {
+  GamePad.prototype.supportsVibration = function () {
     return (this.vibration !== null)
   }
 
-  GamePad.prototype.getMapping = function() {
+  GamePad.prototype.getMapping = function () {
     return this.mapping
   }
 
@@ -91,28 +105,10 @@ define(['eventemitter', 'input/GamePad/Button', 'input/GamePad/Axis'], function 
    *
    * @param {object} effect - The vibration effect object.
    */
-  GamePad.prototype.vibrate = function(effect = null) {
+  GamePad.prototype.vibrate = function (effect = null) {
     if (this.supportsVibration() === true && effect) {
       this.vibration.playEffect('dual-rumble', effect)
     }
-  }
-
-  /**
-   * Callback for when an axle has been moved.
-   *
-   * @param {Button} axle - The axle that was moved.
-   */
-  GamePad.prototype.axle_moved = function (axle) {
-    console.log('Button pressed')
-  }
-
-  /**
-   * Called when a button on the gamepad has been pushed.
-   *
-   * @param {Button} button - The button that was pressed.
-   */
-  GamePad.prototype.button_pressed = function (button) {
-    console.log('Button pressed')
   }
 
   /**
@@ -121,12 +117,13 @@ define(['eventemitter', 'input/GamePad/Button', 'input/GamePad/Axis'], function 
    * @param {number} delta - Time passed since last update
    */
   GamePad.prototype.update = function (delta) {
+
     for (let button of this.buttons) {
       button.update(delta)
     }
 
     for (let axle of this.axes) {
-      axle.update(delta)
+      axle.update(this.gamepad.axes[axle.getIndex()])
     }
   }
 

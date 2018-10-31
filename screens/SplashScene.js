@@ -127,7 +127,7 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
    */
   SplashScene.prototype._preloadready = function (loader, resources) {
     // this.SceneManager.switchTo('MainMenu')
-    this.SceneManager.switchTo('Breakout/Level1')
+    this.SceneManager.switchTo('Gamepad/Level1')
   }
 
   /**
