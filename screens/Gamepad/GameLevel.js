@@ -1,4 +1,4 @@
-define(['pixi', 'matter-js', 'core/Level', 'core/input/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Level.call(this, options)
 

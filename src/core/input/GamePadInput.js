@@ -3,6 +3,7 @@ define(['core/ScenePlugin', 'input/GamePad/GamePad'], function (ScenePlugin, Gam
    * Take control over GamePad input by using this class.
    * You construct the class with a keycode.
    * See https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API#Browser_compatibility for more information.
+   * See http://www.linux-usb.org/usb.ids
    * @exports core/input/GamePadInput
    * @module GamePadInput
    * @exampl
@@ -12,7 +13,7 @@ define(['core/ScenePlugin', 'input/GamePad/GamePad'], function (ScenePlugin, Gam
    * // FIXME: TODO
    * @constructor
    */
-  let GamePadInput = function (ke) {
+  let GamePadInput = function () {
     ScenePlugin.call(this)
 
     /**

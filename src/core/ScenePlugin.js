@@ -10,7 +10,7 @@ define(['core/GameObject'], function (GameObject) {
   /**
    * Set update before the main scene.
    */
-  ScenePlugin.prototype.setPreMode = function() {
+  ScenePlugin.prototype.setPreMode = function () {
     this.pre = true
     this.post = false
   }
@@ -18,7 +18,7 @@ define(['core/GameObject'], function (GameObject) {
   /**
    * Set update after the main scene.
    */
-  ScenePlugin.prototype.setPostMode = function() {
+  ScenePlugin.prototype.setPostMode = function () {
     this.post = true
     this.pre = false
   }
@@ -29,8 +29,8 @@ define(['core/GameObject'], function (GameObject) {
    *
    * @returns {boolean}
    */
-  ScenePlugin.prototype.runsPre = function() {
-    return (this.pre == true)
+  ScenePlugin.prototype.runsPre = function () {
+    return (this.pre === true)
   }
 
   /**
@@ -39,9 +39,9 @@ define(['core/GameObject'], function (GameObject) {
    *
    * @returns {boolean}
    */
-  ScenePlugin.prototype.runsPost = function() {
-    return (this.post == true)
+  ScenePlugin.prototype.runsPost = function () {
+    return (this.post === true)
   }
 
-  return ScenePlugin;
+  return ScenePlugin
 })

@@ -73010,7 +73010,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * InputManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(637)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(685), __webpack_require__(656)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
   /**
    * @classdesc InputManager
    * @exports  core/managers/InputManager
@@ -73031,10 +73031,46 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
       Escape: 'Escape'
     };
 
+    this.gamepads = [];
+    this.buttons = {};
     this.map = [];
+
+    for (let i = 0; i < 100; i++) {
+      this.addButton(`Button{i}`, i);
+    }
+
+    /**
+     *
+     * @type {GamePadInput}
+     */
+    this.gamepadController = new GamePadInput();
+    this.gamepadController.on('gamepad_connected', this.gamepadConnected.bind(this));
+    this.gamepadController.on('gamepad_disconnected', this.gamepadDisconnected.bind(this));
   };
 
   extend(InputManager, GameObject);
+
+  InputManager.prototype.addButton = function (name = '', index = 0) {
+    this.buttons[name] = { name: name, index: index };
+  };
+
+  /**
+   * Return the registered buttons.
+   *
+   * @returns {{}}
+   */
+  InputManager.prototype.getButtons = function () {
+    return this.buttons;
+  };
+
+  /**
+   * Return the registered keys.
+   *
+   * @returns {{}}
+   */
+  InputManager.prototype.getKeys = function () {
+    return this.keys;
+  };
 
   /**
    * Add a key binding to action names.
@@ -73043,14 +73079,33 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    * @param {array} actions - an array with strings identifying the actions this key(s) is|are used for
    */
   InputManager.prototype.mapInput = function (input = '', actions = []) {
-    if (!(input instanceof KeyboardInput)) {
-      if (!(input instanceof Array)) {
-        input = new Array(input);
-      }
 
-      for (let i = 0; i < input.length; i++) {
-        let key = new KeyboardInput(input[i]);
-        let parent = this;
+    if (!(input instanceof Array)) {
+      input = new Array(input);
+    }
+
+    let index = 0;
+    let parent = this;
+
+    for (let name of input) {
+
+      if (Object.keys(this.buttons).indexOf(name) !== -1) {
+        let info = this.buttons[name];
+
+        for (let gamepad of this.gamepads) {
+          if (gamepad.buttons[info.index] !== 'undefined') {
+
+            gamepad.buttons[info.index].on('GamePad.button.pressed', function (event) {
+              parent.emit('InputManager.GamepadButtonPressed', event);
+            });
+
+            input[index] = gamepad.buttons[info.index];
+            index++;
+          }
+        }
+      } else {
+
+        let key = new KeyboardInput(name);
 
         key.info.down = function (event) {
           parent.emit('InputManager.keyDown', event);
@@ -73060,10 +73115,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
           parent.emit('InputManager.keyUp', event);
         };
 
-        input[i] = key;
+        input[index] = key;
+        index++;
       }
-    } else {
-      throw new Error('InputManager: Unsupported input');
     }
 
     if (!(actions instanceof Array)) {
@@ -73090,17 +73144,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    * @return {boolean}
    */
   InputManager.prototype.isDown = function (name) {
+
     if (typeof this.map[name] === 'undefined') {
       throw new Error('InputManager: name is not defined in mapping');
     }
 
     for (let i = 0; i < this.map[name].length; i++) {
       if (!(this.map[name][i] instanceof KeyboardInput)) {
-        console.log('continue');
-        continue;
+        //    continue
       }
 
-      console.log('continue this.map[name][i].isDown()', name, this.map[name][i].isDown());
       if (this.map[name][i].isDown() === true) {
         return true;
       }
@@ -73131,6 +73184,42 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     return false;
   };
 
+  /**
+   * Check to see if there are any gamepads connected.
+   *
+   * @returns {boolean|*}
+   */
+  InputManager.prototype.haveGamePads = function () {
+    return this.gamepadController.isConnected();
+  };
+
+  InputManager.prototype.getGamePad = function (index) {
+    return this.gamepadController.getGamepad(index);
+  };
+  /**
+   * Gamepad connected handler
+   *
+   * @param {Gamepad} gamepad - The connected gamepad
+   */
+  InputManager.prototype.gamepadConnected = function (gamepad) {
+    this.gamepads[gamepad.index] = gamepad;
+
+    for (let button of gamepad.buttons) {
+      this.addButton('Button' + button.index, button.index);
+    }
+  };
+
+  /**
+   * Gamepad disconnected handler.
+   *
+   * @param {Gamepad} gamepad - The disconnected gamepad
+   */
+  InputManager.prototype.gamepadDisconnected = function (gamepad) {
+    if (typeof this.gamepads[gamepad.index] !== 'undefined') {
+      delete this.gamepads[gamepad.index];
+    }
+  };
+
   return InputManager;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -73139,7 +73228,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(670);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(673);
 
 /**
  * PhysicsManager
@@ -73444,7 +73533,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(680)("./" + scene);
+      let _scene = __webpack_require__(683)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -73526,7 +73615,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(671);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(674);
 
 /**
  * StateManager
@@ -73904,7 +73993,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 636 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(643), __webpack_require__(637)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(644), __webpack_require__(685)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
 
   /**
    * @classdesc Level
@@ -73921,6 +74010,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.on('pointerdown', this.onPointerDown);
     this.on('pointerup', this.onPointerUp);
 
+    this.InputManager.on('InputManager.GamepadButtonPressed', this.onGamepadButtonDown.bind(this));
     this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this));
     this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this));
   };
@@ -73928,12 +74018,29 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   extend(Level, Scene);
 
   /**
+   * Callback for the onButtonDown even. You can overwrite this your self
+   * to receive the onButtonDown call.
+   *
+   * @param {GamepadEvent} event - the gamepad event
+   */
+  Level.prototype.onGamepadButtonDown = function (event) {}
+  /**
+   * You can overwrite this function if you wish
+   * to receive gamepad onButtonDown events.
+   *
+   * Please note: These events will only be triggered
+   * by registered keys. See InputManager.mapInput
+   * for more information.
+   */
+
+
+  /**
    * Callback for the onKeyDown even. You can overwrite this your self
    * to receive the onKeyDown call.
    *
    * @param {KeyboardEvent} event - the keyboard event
    */
-  Level.prototype.onKeyDown = function (event) {}
+  ;Level.prototype.onKeyDown = function (event) {}
   /**
    * You can overwrite this function if you wish
    * to receive keyboard onKeyDown events.
@@ -74010,115 +74117,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 637 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
- * KeyboardInput
- * @namespace Interaction
- */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-
-  /**
-   * Take control over Keyboard input by using this class.
-   * You construct the class with a keycode.
-   * See http://keycode.info/ for more information.
-   * @exports core/input/KeyboardInput
-   * @module KeyboardInput
-   * @example
-   * let char = 32 // spacebar
-   * const space = new KeyboardInput(char)
-   * space.press = function() {
-   *  console.log('spacebar pressed')
-   * }
-   * space.release = function() {
-   *     console.log('spacebar released')
-   * }
-   * @constructor
-   * @param {number} keyCode - The keycode to listen for
-   */
-  let KeyboardInput = function (key) {
-
-    let info = {};
-    info.key = key;
-    info.isDown = false;
-    info.isUp = true;
-    info.down = undefined;
-    info.up = undefined;
-
-    this.info = info;
-
-    window.addEventListener('keydown', this.downHandler.bind(this), false);
-
-    window.addEventListener('keyup', this.upHandler.bind(this), false);
-  };
-
-  /**
-   * Return the information object.
-   *
-   * @returns {object}
-   */
-  KeyboardInput.prototype.getInfo = function () {
-    return this.info;
-  };
-
-  /**
-   * Check to see if the key is down.
-   *
-   * @returns {boolean}
-   */
-  KeyboardInput.prototype.isDown = function () {
-    return this.info.isDown;
-  };
-
-  /**
-   * Check to see if the key is up.
-   *
-   * @returns {boolean}
-   */
-  KeyboardInput.prototype.isUp = function () {
-    return this.info.isUp;
-  };
-
-  /**
-   * The internal keyboard event handler for keydown.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.downHandler = function (event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = true;
-      this.info.isUp = false;
-
-      if (this.info.down) {
-        this.info.down(event);
-      }
-    }
-    event.preventDefault();
-  };
-
-  /**
-   * The internal keyboard event handler for keyup.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.upHandler = function (event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = false;
-      this.info.isUp = true;
-
-      if (this.info.up) {
-        this.info.up(event);
-      }
-    }
-    event.preventDefault();
-  };
-
-  return KeyboardInput;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
+/* 637 */,
 /* 638 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -74162,7 +74161,7 @@ const DIALOG_STATE = {
 /* 640 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(145), __webpack_require__(636), __webpack_require__(637), __webpack_require__(635), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(145), __webpack_require__(636), __webpack_require__(685), __webpack_require__(635), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Level.call(this, options);
 
@@ -74281,11 +74280,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      * @type {GameOver}
      */
     this.gameover = new GameOver();
+
     this.gameover.on('gameover.respawn', () => {
       this.gameover.hide();
     });
 
+    this.gameover.on('gameover.opended', () => {
+      this.interactive = false;
+    });
+
     this.gameover.on('gameover.closed', () => {
+      this.interactive = true;
       this.reset();
     });
 
@@ -74297,7 +74302,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * Show the gameover screen to the user.
    */
   GameLevel.prototype.showGameOver = function () {
-    this.interactive = false;
     PIXI.sound.play('game_over');
     this.gameover.show();
   };
@@ -74360,6 +74364,45 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 641 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(145), __webpack_require__(636), __webpack_require__(685), __webpack_require__(635), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+  var GameLevel = function (options) {
+    Level.call(this, options);
+
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * Switch the FPS counter on/off.
+   * @param {boolean} visible - should the FPS tracker be visible.
+   */
+  GameLevel.prototype.setDisplayStats = function (visible = false) {
+    this.statistics.visible = visible;
+  };
+
+  /**
+   * The onStart callback.
+   */
+  GameLevel.prototype.onStart = function () {};
+
+  /**
+   * Update the game scene.
+   * @param {number} delta - the time passed since last tick.
+   */
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 642 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(636), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
   var GameLevel = function (options) {
     Level.call(this, options);
@@ -74390,7 +74433,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 642 */
+/* 643 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(636), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
@@ -74449,7 +74492,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 643 */
+/* 644 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
@@ -74786,10 +74829,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @private
    */
   Scene.prototype._update = function (delta) {
+
     if (!this.isPaused()) {
       let plugins = this.SceneManager.getPlugins();
 
-      for (key in plugins) {
+      for (let key in plugins) {
         if (plugins[key].runsPre()) {
           plugins[key].update(delta);
         }
@@ -74797,7 +74841,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
       this.update(delta);
 
-      for (key in plugins) {
+      for (let key in plugins) {
         if (plugins[key].runsPost()) {
           plugins[key].update(delta);
         }
@@ -74810,7 +74854,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 644 */
+/* 645 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
@@ -75029,7 +75073,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 645 */
+/* 646 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(638).BUTTON_STATE;
@@ -75148,7 +75192,7 @@ const Type = __webpack_require__(638).BUTTON_TYPE;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 646 */
+/* 647 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -75160,18 +75204,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(638).BUTTON_STATE;
 const Type = __webpack_require__(638).BUTTON_TYPE;
-const BaseButton = __webpack_require__(672);
-const ImageButton = __webpack_require__(673);
-const Button = __webpack_require__(645);
+const BaseButton = __webpack_require__(675);
+const ImageButton = __webpack_require__(676);
+const Button = __webpack_require__(646);
 
 
 
 /***/ }),
-/* 647 */
+/* 648 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = __webpack_require__(658);
-const Buttons = __webpack_require__(646);
+const Buttons = __webpack_require__(647);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(207)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, TweenJS) {
 
@@ -75311,7 +75355,7 @@ const Buttons = __webpack_require__(646);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 648 */
+/* 649 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -75332,13 +75376,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 649 */
+/* 650 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 const Vector2d = __webpack_require__(115);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(640), __webpack_require__(661), __webpack_require__(662), __webpack_require__(660), __webpack_require__(656)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball, GamePadInput) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(640), __webpack_require__(661), __webpack_require__(662), __webpack_require__(660)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -75348,9 +75392,6 @@ const Vector2d = __webpack_require__(115);
     this.didStart = false;
     this.objects = [];
 
-    this.gamepad = new GamePadInput();
-
-    window.bleep = this.gamepad;
     window.scenemanager = this.SceneManager;
 
     // TODO: Add controler vibration
@@ -75361,30 +75402,30 @@ const Vector2d = __webpack_require__(115);
   extend(Level1, GameLevel);
 
   /**
-  * The onStart callback will be called after all resources are loaded.
-  */
+   * The onStart callback will be called after all resources are loaded.
+   */
   Level1.prototype.onStart = function () {
     GameLevel.prototype.onStart.call(this);
 
     /**
-    * Make the pad controllable with left and right arrows as well as
-    * a and d for moving left and right. This is in addition to mouse
-    * support.
-    */
+     * Make the pad controllable with left and right arrows as well as
+     * a and d for moving left and right. This is in addition to mouse
+     * support.
+     */
     this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left']);
     this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right']);
-    this.InputManager.mapInput([this.InputManager.keys.Space], ['fire']);
+    this.InputManager.mapInput([this.InputManager.keys.Space, 'Button0'], ['fire']);
 
     /**
-    * Setup world physics
-    * @type {Matter.World}
-    */
+     * Setup world physics
+     * @type {Matter.World}
+     */
     let world = this.PhysicsManager.getWorld();
     world.gravity.y = 0.85;
 
     this.reset();
     //
-    //  PIXI.sound.play('level1_music')
+    PIXI.sound.play('level1_music');
     // PIXI.sound.play('game_over');
 
     this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'));
@@ -75394,7 +75435,7 @@ const Vector2d = __webpack_require__(115);
     this.ball = new Ball(tx);
     this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height);
     this.ball.onCollisionWith = (withOnbject, object) => {
-      if (withOnbject.label == 'Pad') {
+      if (withOnbject.label === 'Pad') {
         // FIXME: Add this
         let MAX_VELOCITY = 50;
         var taxaAumentoVelocidade = 5;
@@ -75403,7 +75444,15 @@ const Vector2d = __webpack_require__(115);
           x: this.ball.body.velocity.x + taxaAumentoVelocidade,
           y: this.ball.body.velocity.y + taxaAumentoVelocidade
         });
-      } else if (withOnbject.label == 'Brick') {
+
+        if (this.InputManager.haveGamePads() === true && this.interactive === true) {
+          let gamepad = this.InputManager.getGamePad(0);
+          if (gamepad.supportsVibration() === true) {
+            let hit = { duration: 300, weakMagnitude: 1.0 };
+            gamepad.vibrate(hit);
+          }
+        }
+      } else if (withOnbject.label === 'Brick') {
         let brick = this.objects.filter(item => {
           return item.body.id === withOnbject.id;
         });
@@ -75412,9 +75461,17 @@ const Vector2d = __webpack_require__(115);
           brick = brick[0];
         }
 
+        if (this.InputManager.haveGamePads() === true && this.interactive === true) {
+          let gamepad = this.InputManager.getGamePad(0);
+          if (gamepad.supportsVibration() === true) {
+            let hit = { duration: 300, weakMagnitude: 1.0 };
+            gamepad.vibrate(hit);
+          }
+        }
+
         brick.decareaseHealth();
         brick.showHit();
-      } else if (withOnbject.label == 'floor' && this.didStart == true) {
+      } else if (withOnbject.label === 'floor' && this.didStart === true) {
         this.lives--;
 
         this.setLives(this.lives);
@@ -75425,6 +75482,7 @@ const Vector2d = __webpack_require__(115);
         this.ball.reset();
 
         if (this.getLives() === 0) {
+          this.interactive = false;
           this.showGameOver();
         }
       }
@@ -75440,8 +75498,8 @@ const Vector2d = __webpack_require__(115);
   };
 
   /**
-  * Reset the demo level.
-  */
+   * Reset the demo level.
+   */
   Level1.prototype.reset = function () {
     GameLevel.prototype.reset.call(this);
 
@@ -75456,13 +75514,13 @@ const Vector2d = __webpack_require__(115);
         object.destroy();
 
         /**
-        * Remove the Brick from the scene.
-        */
+         * Remove the Brick from the scene.
+         */
         this.removeChild(object);
 
         /**
-        * Stop tracking this Brick. Its destroyed.
-        */
+         * Stop tracking this Brick. Its destroyed.
+         */
         this.objects.splice(i, 1);
       }
     }
@@ -75498,27 +75556,27 @@ const Vector2d = __webpack_require__(115);
   Level1.prototype.movePaddle = function (coords) {
     if (coords.x + this.pad._width / 2 > this.app.screen.width - this.wall_inset) {
       coords.x = this.app.screen.width - this.pad._width / 2 - this.wall_inset;
-    } else if (coords.x - this.pad._width / 2 < this.pad._width / 2) {
+    } else if (coords.x <= this.wall_inset + this.pad._width / 2) {
       coords.x = this.wall_inset + this.pad._width / 2;
     }
     this.pad.setX(coords.x);
   };
 
   /**
-  * Respond to the mouse moving.
-  *
-  * @param {PIXI.interaction.InteractionEvent} event - the mouse event
-  */
+   * Respond to the mouse moving.
+   *
+   * @param {PIXI.interaction.InteractionEvent} event - the mouse event
+   */
   Level1.prototype.onMouseMove = function (event) {
     let coords = event.data.global;
     return this.movePaddle(coords);
   };
 
   /**
-  * Interact to the mouse click event.
-  *
-  * @param {PIXI.interaction.InteractionEvent} event - On the mouse click event
-  */
+   * Interact to the mouse click event.
+   *
+   * @param {PIXI.interaction.InteractionEvent} event - On the mouse click event
+   */
   Level1.prototype.onPointerDown = function (event) {
     if (this.didStart === false) {
       for (let object of this.objects) {
@@ -75531,17 +75589,16 @@ const Vector2d = __webpack_require__(115);
     }
   };
 
-  /**
-  * Handle the keypress event.
-  * @param {KeyboardEvent} event - the keyboard event
-  */
-  Level1.prototype.onKeyDown = function (event) {
+  Level1.prototype.readInput = function () {
+
+    if (!this.interactive) return;
+
     let keyMoveSpeed = 15;
     let position = new Vector2d(this.pad.sprite.position.x, this.pad.sprite.position.y);
 
     /**
-    * Moving the character.
-    */
+     * Moving the character.
+     */
     if (this.InputManager.isDown('left')) {
       position.x -= keyMoveSpeed;
     } else if (this.InputManager.isDown('right')) {
@@ -75554,24 +75611,47 @@ const Vector2d = __webpack_require__(115);
 
     return this.movePaddle(position);
   };
+  /**
+   * Handle the keypress event.
+   * @param {KeyboardEvent} event - the keyboard event
+   */
+  Level1.prototype.onKeyDown = function (event) {
+    return this.readInput();
+  };
+
+  Level1.prototype.onGamepadButtonDown = function () {
+    return this.readInput();
+  };
 
   /**
-  * Update the current scene for physics.
-  *
-  * @param {number} delta - the delta since last update
-  */
+   * Update the current scene for physics.
+   *
+   * @param {number} delta - the delta since last update
+   */
   Level1.prototype.fixedUpdate = function (delta) {
     GameLevel.prototype.fixedUpdate.call(this, delta);
     this.PhysicsManager.update(delta);
   };
 
   /**
-  * The update routine that will be called at every tick.
-  *
-  * @param {number} delta - the time difference since the last tick
-  */
+   * The update routine that will be called at every tick.
+   *
+   * @param {number} delta - the time difference since the last tick
+   */
   Level1.prototype.update = function (delta) {
     GameLevel.prototype.update.call(this, delta);
+
+    if (this.InputManager.haveGamePads() === true && this.interactive === true) {
+      let gamepad = this.InputManager.getGamePad(0);
+      var axisH = gamepad.axes[0].getValue();
+
+      let position = new Vector2d(this.pad.sprite.position.x, this.pad.sprite.position.y);
+      position.x += 18 * axisH;
+
+      if (axisH !== 0) {
+        this.movePaddle(position);
+      }
+    }
 
     for (let i = 0; i < this.objects.length; i++) {
       let object = this.objects[i];
@@ -75580,24 +75660,24 @@ const Vector2d = __webpack_require__(115);
         object.setX(this.pad.body.position.x);
       }
       if (object instanceof Brick) {
-        if (object.isDestroyed() == true) {
+        if (object.isDestroyed() === true) {
           this.setScore(this.getScore() + object.getPointValue());
 
-          // PIXI.sound.play('concrete_break');
+          PIXI.sound.play('concrete_break');
 
           /**
-          * Cleanup the Brick's internals
-          */
+           * Cleanup the Brick's internals
+           */
           object.destroy();
 
           /**
-          * Remove the Brick from the scene.
-          */
+           * Remove the Brick from the scene.
+           */
           this.removeChild(object);
 
           /**
-          * Stop tracking this Brick. Its destroyed.
-          */
+           * Stop tracking this Brick. Its destroyed.
+           */
           this.objects.splice(i, 1);
           continue;
         }
@@ -75613,45 +75693,6 @@ const Vector2d = __webpack_require__(115);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 650 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(145), __webpack_require__(636), __webpack_require__(637), __webpack_require__(635), __webpack_require__(647)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
-  var GameLevel = function (options) {
-    Level.call(this, options);
-
-    this.statistics = new Statistics();
-    this.addChild(this.statistics);
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * Switch the FPS counter on/off.
-   * @param {boolean} visible - should the FPS tracker be visible.
-   */
-  GameLevel.prototype.setDisplayStats = function (visible = false) {
-    this.statistics.visible = visible;
-  };
-
-  /**
-   * The onStart callback.
-   */
-  GameLevel.prototype.onStart = function () {};
-
-  /**
-   * Update the game scene.
-   * @param {number} delta - the time passed since last tick.
-   */
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
 /* 651 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -75659,7 +75700,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * To keep the level file as small as possible i have added a view file that
  * handles the gamepad input. The file is located at screens/GamepadView.js
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(650), __webpack_require__(656), __webpack_require__(681)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, GamePadInput, GamepadView) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(641), __webpack_require__(656), __webpack_require__(663)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, GamePadInput, GamepadView) {
   let Level1 = function () {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -75730,7 +75771,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   Level1.prototype.disconnected = function (gamepad) {
 
-    this.view.deconstruct();
+    if (this.view) {
+      this.view.deconstruct();
+    }
 
     this.removeChild(this.view);
     this.message.visible = true;
@@ -75759,13 +75802,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 652 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(676);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(679);
 const Dialogs = __webpack_require__(658);
 
 /**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(643), __webpack_require__(254), __webpack_require__(635), __webpack_require__(207)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(644), __webpack_require__(254), __webpack_require__(635), __webpack_require__(207)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS) {
 
   /**
    * @classdesc MainScreen
@@ -75777,7 +75820,6 @@ const Dialogs = __webpack_require__(658);
   let MainMenu = function (options) {
     Scene.call(this, options);
     this.backgrounds = [];
-
     this.statistics = new Statistics();
   };
 
@@ -75917,9 +75959,9 @@ const Dialogs = __webpack_require__(658);
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
-const DIRECTIONS = __webpack_require__(648).DIRECTIONS;
+const DIRECTIONS = __webpack_require__(649).DIRECTIONS;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(641), __webpack_require__(254), __webpack_require__(663)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(642), __webpack_require__(254), __webpack_require__(666)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -76051,7 +76093,7 @@ const DIRECTIONS = __webpack_require__(648).DIRECTIONS;
 /* 654 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(642), __webpack_require__(664), __webpack_require__(665)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(643), __webpack_require__(667), __webpack_require__(668)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
 
   /**
    * Level1 constructor
@@ -76232,7 +76274,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 /**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(643)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(644)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene) {
 
   /**
    * @classdesc SplashScene
@@ -76341,8 +76383,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
    * @private
    */
   SplashScene.prototype._preloadready = function (loader, resources) {
-    // this.SceneManager.switchTo('MainMenu')
-    this.SceneManager.switchTo('Gamepad/Level1');
+    this.SceneManager.switchTo('MainMenu');
   };
 
   /**
@@ -76362,11 +76403,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 /* 656 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(666), __webpack_require__(669)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(669), __webpack_require__(672)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
   /**
    * Take control over GamePad input by using this class.
    * You construct the class with a keycode.
    * See https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API#Browser_compatibility for more information.
+   * See http://www.linux-usb.org/usb.ids
    * @exports core/input/GamePadInput
    * @module GamePadInput
    * @exampl
@@ -76376,7 +76418,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * // FIXME: TODO
    * @constructor
    */
-  let GamePadInput = function (ke) {
+  let GamePadInput = function () {
     ScenePlugin.call(this);
 
     /**
@@ -76658,8 +76700,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(639).DIALOG_TYPE;
 const STATE = __webpack_require__(639).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(674);
-const DefaultDialog = __webpack_require__(675);
+const CloseableDialog = __webpack_require__(677);
+const DefaultDialog = __webpack_require__(678);
 
 
 
@@ -76739,7 +76781,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = __webpack_require__(209);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(644)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(645)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
 
   /**
    * The ball constructor.
@@ -76812,7 +76854,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = 
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(115);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(644)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(645)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
 
   /**
    * Brick constructor.
@@ -76968,7 +77010,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
 /* 662 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(644)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(645)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
 
   /**
    * The Pad object constructor.
@@ -77014,7 +77056,321 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 663 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(648).DIRECTIONS;
+const GameObject = __webpack_require__(634);
+const Button = __webpack_require__(664);
+const Progress = __webpack_require__(665);
+
+class GamepadView extends GameObject {
+  /**
+   * @constructor
+   * @param {GamePad} gamepad - The connected GamePad.
+   */
+  constructor(gamepad) {
+    super();
+
+    /**
+     * Store a reference to the the connected gamepad.
+     *
+     * @type {GamePad}
+     */
+    this.gamepad = gamepad;
+
+    /**
+     * Storage container for the gamepad buttons.
+     *
+     * @type {Array}
+     */
+    this.buttons = [];
+
+    /**
+     * Storage container for the gamepad axis.
+     *
+     * @type {Array}
+     */
+    this.axis = [];
+
+    /**
+     * Add the objects to the view.
+     */
+    this.init();
+  }
+
+  /**
+   * Initialize the GamepadView and place it's components
+   * on the view.
+   */
+  init() {
+
+    let style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 20,
+      fontWeight: 'bold',
+      fill: ['#ffffff', '#00ff99'], // gradient
+      stroke: '#4a1850',
+      strokeThickness: 5,
+      dropShadow: true,
+      dropShadowColor: '#000000',
+      dropShadowBlur: 4,
+      dropShadowAngle: Math.PI / 6,
+      dropShadowDistance: 6
+    });
+
+    this.title = new PIXI.Text(this.gamepad.id, style);
+    this.title.x = this.app.screen.width / 2 - this.title.width / 2;
+    this.title.y = 10;
+
+    this.addChild(this.title);
+
+    let padding = 10;
+    let x = padding;
+    let y = this.title.y + this.title.height + padding;
+
+    /**
+     * Place the buttons for the axis on the screen
+     */
+    for (let _button of this.gamepad.getButtons()) {
+      let button = new Button(_button);
+
+      if (x + button.width > this.app.screen.width - padding) {
+        x = padding;
+        y += button.height + padding;
+      }
+
+      button.position.x = x;
+      button.position.y = y;
+
+      x += button.width + padding;
+
+      this.buttons.push(button);
+      this.addChild(button);
+    }
+
+    x = padding;
+    y += this.buttons[this.buttons.length - 1].height + padding * 2;
+
+    /**
+     * Place the progressbars for the axis on the screen
+     */
+    for (let _axis of this.gamepad.getAxis()) {
+
+      let axis = new Progress(_axis);
+
+      if (x + axis.width > this.app.screen.width - padding) {
+        x = padding;
+        y += axis.height + padding;
+      }
+
+      axis.position.x = x;
+      axis.position.y = y;
+
+      x += axis.width + padding;
+
+      this.axis.push(axis);
+      this.addChild(axis);
+    }
+  }
+
+  /**
+   * Remove all components from the view.
+   */
+  deconstruct() {
+    this.removeChild(this.title);
+
+    for (let button of this.buttons) {
+      this.removeChild(button);
+    }
+
+    for (let axis of this.axis) {
+      this.removeChild(axis);
+    }
+  }
+
+  /**
+   * Update the GamepadView.
+   *
+   * @param {number} delta - The time passed since last update
+   */
+  update(delta) {
+    for (let button of this.buttons) {
+      button.update(delta);
+    }
+
+    for (let axis of this.axis) {
+      axis.update(delta);
+    }
+  }
+}
+
+module.exports = GamepadView;
+
+/***/ }),
+/* 664 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameObject = __webpack_require__(634);
+
+class Button extends GameObject {
+  constructor(button) {
+    super();
+
+    /**
+     * Reference to the Gamepad button.
+     *
+     * @type {Button}
+     */
+    this.button = button;
+
+    /**
+     * Component options.
+     *
+     * @type {{fillAlpha: number, width: number, height: number, radius: number}}
+     */
+    this.options = {
+      fillAlpha: 0.25,
+      width: 45,
+      height: 45,
+      radius: 15
+
+      /**
+       * Setup the component.
+       */
+    };this.init();
+  }
+
+  /**
+   * Initialize the graphics
+   */
+  init() {
+
+    let style = new PIXI.TextStyle({
+      fill: ['#ffffff'] // gradient
+    });
+
+    let number = new PIXI.Text(this.button.getIndex(), style);
+    number.position.x = this.options.width / 2 - number.width / 2;
+    number.position.y = this.options.height / 2 - number.height / 2;
+
+    this.graphics = new PIXI.Graphics();
+    this.render();
+
+    this.addChild(this.graphics);
+    this.addChild(number);
+  }
+
+  /**
+   * Update the progress bar.
+   */
+  render() {
+    this.graphics.clear();
+    this.graphics.beginFill(0xFF00BB, this.options.fillAlpha);
+    this.graphics.lineStyle(2, 0xFF00FF, 1);
+    this.graphics.drawRoundedRect(0, 0, this.options.width, this.options.height, this.options.radius);
+    this.graphics.endFill();
+  }
+
+  /**
+   * Update the button.
+   *
+   * @param {number} delta - The time passed since last update
+   */
+  update(delta) {
+    this.options.fillAlpha = this.button.getValue();
+    this.render();
+  }
+}
+
+module.exports = Button;
+
+/***/ }),
+/* 665 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameObject = __webpack_require__(634);
+
+class Progress extends GameObject {
+  constructor(axl) {
+    super();
+
+    /**
+     * Reference to the GamePad Axis.
+     *
+     * @type {Axis}
+     */
+    this.axl = axl;
+
+    /**
+     * The axis index.
+     *
+     * @type {number}
+     */
+    this.index = this.axl.getIndex();
+
+    /**
+     * Component options.
+     *
+     * @type {{track_color: number, progress_color: number, width: number, height: number, value: number}}
+     */
+    this.options = {
+      track_color: 0x202226,
+      progress_color: 0xFF00FF,
+      width: 200,
+      height: 16,
+      value: 0
+
+      /**
+       * Setup the component.
+       */
+    };this.init();
+  }
+
+  /**
+   * Initialize the graphics
+   */
+  init() {
+
+    this.graphics = new PIXI.Graphics();
+    this.render();
+    this.addChild(this.graphics);
+  }
+
+  /**
+   * Update the progress bar.
+   */
+  render() {
+    this.graphics.clear();
+
+    /**
+     * Render track
+     */
+    this.graphics.beginFill(this.options.track_color, 1);
+    this.graphics.drawRect(0, 0, this.options.width, this.options.height);
+    this.graphics.endFill();
+
+    /**
+     * Render progress
+     */
+    this.graphics.beginFill(this.options.progress_color, 1);
+    this.graphics.drawRect(this.width / 2, 0, this.options.width * this.axl.getValue() / 2, this.options.height);
+    this.graphics.endFill();
+  }
+
+  /**
+   * Update the progress bar.
+   *
+   * @param {number} delta - The time passed since last update
+   */
+  update(delta) {
+    this.render();
+  }
+}
+
+module.exports = Progress;
+
+/***/ }),
+/* 666 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(649).DIRECTIONS;
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
   let Character = function (playerId = 1) {
     GameObject.call(this, null);
@@ -77100,7 +77456,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 664 */
+/* 667 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(634);
@@ -77163,7 +77519,7 @@ class RoundedRect extends GameObject {
 module.exports = RoundedRect;
 
 /***/ }),
-/* 665 */
+/* 668 */
 /***/ (function(module, exports) {
 
 class Text extends PIXI.Container {
@@ -77194,7 +77550,7 @@ class Text extends PIXI.Container {
 module.exports = Text;
 
 /***/ }),
-/* 666 */
+/* 669 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
@@ -77229,7 +77585,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @returns {boolean}
    */
   ScenePlugin.prototype.runsPre = function () {
-    return this.pre == true;
+    return this.pre === true;
   };
 
   /**
@@ -77239,7 +77595,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @returns {boolean}
    */
   ScenePlugin.prototype.runsPost = function () {
-    return this.post == true;
+    return this.post === true;
   };
 
   return ScenePlugin;
@@ -77247,7 +77603,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 667 */
+/* 670 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter) {
@@ -77319,11 +77675,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 668 */
+/* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter) {
-  let Button = function (button, index = 0) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43), __webpack_require__(686)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
+  let Button = function (button, index = 0, gamepad) {
     EventEmitter.call(this);
 
     /**
@@ -77333,6 +77689,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      * @type {GamepadButton}
      */
     this.button = button;
+
+    /**
+     * Reference to the Gamepad it self.
+     *
+     * @type {Gamepad}
+     */
+    this.gamepad = gamepad;
 
     /**
      * If supported this number will represent how far the button
@@ -77356,6 +77719,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   extend(Button, EventEmitter);
 
   /**
+   * Return the gamepad the button is on.
+   *
+   * @returns {Gamepad}
+   */
+  Button.prototype.getGamePad = function () {
+    return this.gamepad;
+  };
+
+  /**
    * Return the button number.
    *
    * @returns {number}
@@ -77373,6 +77745,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     return this.value;
   };
 
+  Button.prototype.isDown = function () {
+    return this.value > 0;
+  };
+
   /**
    * Update the button object.
    *
@@ -77380,7 +77756,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    */
   Button.prototype.update = function (delta) {
     if (this.button.pressed) {
-      this.emit('GamePadInput:pressed', this);
+      this.emit('GamePad.button.pressed', new GamepadEvent(this.getGamePad(), this));
     }
 
     this.value = this.button.value;
@@ -77391,10 +77767,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 669 */
+/* 672 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43), __webpack_require__(668), __webpack_require__(667)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43), __webpack_require__(671), __webpack_require__(670)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
   let GamePad = function (gamepad) {
     EventEmitter.call(this);
 
@@ -77448,9 +77824,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
     let index = 0;
     for (let button of gamepad.buttons) {
-      let btn = new Button(button, index);
-      btn.on('GamePadInput:pressed', this.button_pressed);
-
+      let btn = new Button(button, index, gamepad);
       this.buttons.push(btn);
       index++;
     }
@@ -77528,7 +77902,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 670 */
+/* 673 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -77846,7 +78220,7 @@ if (true) {
 }
 
 /***/ }),
-/* 671 */
+/* 674 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -77872,10 +78246,10 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 672 */
+/* 675 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(645);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(646);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(208), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
   let BaseButton = function (options) {
@@ -78079,10 +78453,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 673 */
+/* 676 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(645);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(646);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(208), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
   let ImageButton = function (options) {
@@ -78286,10 +78660,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 674 */
+/* 677 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(646);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(647);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(657)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
   let CloseableDialog = function (options) {
@@ -78371,7 +78745,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 675 */
+/* 678 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(657)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
@@ -78390,7 +78764,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 676 */
+/* 679 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78398,13 +78772,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(677);
-const MenuItemText = __webpack_require__(679);
-const MenuItemImageButton = __webpack_require__(678);
+const Menu = __webpack_require__(680);
+const MenuItemText = __webpack_require__(682);
+const MenuItemImageButton = __webpack_require__(681);
 
 
 /***/ }),
-/* 677 */
+/* 680 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -78478,10 +78852,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 678 */
+/* 681 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(646);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(647);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(659)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
@@ -78568,7 +78942,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 679 */
+/* 682 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(659)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
@@ -78654,26 +79028,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 680 */
+/* 683 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"./Breakout/GameLevel": 640,
 	"./Breakout/GameLevel.js": 640,
-	"./Breakout/Level1": 649,
-	"./Breakout/Level1.js": 649,
-	"./Gamepad/GameLevel": 650,
-	"./Gamepad/GameLevel.js": 650,
+	"./Breakout/Level1": 650,
+	"./Breakout/Level1.js": 650,
+	"./Gamepad/GameLevel": 641,
+	"./Gamepad/GameLevel.js": 641,
 	"./Gamepad/Level1": 651,
 	"./Gamepad/Level1.js": 651,
 	"./MainMenu": 652,
 	"./MainMenu.js": 652,
-	"./PixelShooter/GameLevel": 641,
-	"./PixelShooter/GameLevel.js": 641,
+	"./PixelShooter/GameLevel": 642,
+	"./PixelShooter/GameLevel.js": 642,
 	"./PixelShooter/Level1": 653,
 	"./PixelShooter/Level1.js": 653,
-	"./RoundedRects/GameLevel": 642,
-	"./RoundedRects/GameLevel.js": 642,
+	"./RoundedRects/GameLevel": 643,
+	"./RoundedRects/GameLevel.js": 643,
 	"./RoundedRects/Level1": 654,
 	"./RoundedRects/Level1.js": 654,
 	"./SplashScene": 655,
@@ -78693,321 +79067,155 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 680;
+webpackContext.id = 683;
 
 /***/ }),
-/* 681 */
+/* 684 */,
+/* 685 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const GameObject = __webpack_require__(634);
-const Button = __webpack_require__(682);
-const Progress = __webpack_require__(683);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * KeyboardInput
+ * @namespace Interaction
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 
-class GamepadView extends GameObject {
   /**
+   * Take control over Keyboard input by using this class.
+   * You construct the class with a keycode.
+   * See http://keycode.info/ for more information.
+   * @exports core/input/KeyboardInput
+   * @module KeyboardInput
+   * @example
+   * let char = 32 // spacebar
+   * const space = new KeyboardInput(char)
+   * space.press = function() {
+   *  console.log('spacebar pressed')
+   * }
+   * space.release = function() {
+   *     console.log('spacebar released')
+   * }
    * @constructor
-   * @param {GamePad} gamepad - The connected GamePad.
+   * @param {number} keyCode - The keycode to listen for
    */
-  constructor(gamepad) {
-    super();
+  let KeyboardInput = function (key) {
 
-    /**
-     * Store a reference to the the connected gamepad.
-     *
-     * @type {GamePad}
-     */
+    let info = {};
+    info.key = key;
+    info.isDown = false;
+    info.isUp = true;
+    info.down = undefined;
+    info.up = undefined;
+
+    this.info = info;
+
+    window.addEventListener('keydown', this.downHandler.bind(this), false);
+
+    window.addEventListener('keyup', this.upHandler.bind(this), false);
+  };
+
+  /**
+   * Return the information object.
+   *
+   * @returns {object}
+   */
+  KeyboardInput.prototype.getInfo = function () {
+    return this.info;
+  };
+
+  /**
+   * Check to see if the key is down.
+   *
+   * @returns {boolean}
+   */
+  KeyboardInput.prototype.isDown = function () {
+    return this.info.isDown;
+  };
+
+  /**
+   * Check to see if the key is up.
+   *
+   * @returns {boolean}
+   */
+  KeyboardInput.prototype.isUp = function () {
+    return this.info.isUp;
+  };
+
+  /**
+   * The internal keyboard event handler for keydown.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.downHandler = function (event) {
+    if (event.key === this.info.key) {
+      this.info.isDown = true;
+      this.info.isUp = false;
+
+      if (this.info.down) {
+        this.info.down(event);
+      }
+    }
+    event.preventDefault();
+  };
+
+  /**
+   * The internal keyboard event handler for keyup.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.upHandler = function (event) {
+    if (event.key === this.info.key) {
+      this.info.isDown = false;
+      this.info.isUp = true;
+
+      if (this.info.up) {
+        this.info.up(event);
+      }
+    }
+    event.preventDefault();
+  };
+
+  KeyboardInput.prototype.update = function (delta) {
+    // Unused but required by the InputManager
+  };
+
+  return KeyboardInput;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 686 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+  let GamepadEvent = function (gamepad, button) {
     this.gamepad = gamepad;
-
-    /**
-     * Storage container for the gamepad buttons.
-     *
-     * @type {Array}
-     */
-    this.buttons = [];
-
-    /**
-     * Storage container for the gamepad axis.
-     *
-     * @type {Array}
-     */
-    this.axis = [];
-
-    /**
-     * Add the objects to the view.
-     */
-    this.init();
-  }
-
-  /**
-   * Initialize the GamepadView and place it's components
-   * on the view.
-   */
-  init() {
-
-    let style = new PIXI.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 20,
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff99'], // gradient
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6
-    });
-
-    this.title = new PIXI.Text(this.gamepad.id, style);
-    this.title.x = this.app.screen.width / 2 - this.title.width / 2;
-    this.title.y = 10;
-
-    this.addChild(this.title);
-
-    let padding = 10;
-    let x = padding;
-    let y = this.title.y + this.title.height + padding;
-
-    /**
-     * Place the buttons for the axis on the screen
-     */
-    for (let _button of this.gamepad.getButtons()) {
-      let button = new Button(_button);
-
-      if (x + button.width > this.app.screen.width - padding) {
-        x = padding;
-        y += button.height + padding;
-      }
-
-      button.position.x = x;
-      button.position.y = y;
-
-      x += button.width + padding;
-
-      this.buttons.push(button);
-      this.addChild(button);
-    }
-
-    x = padding;
-    y += this.buttons[this.buttons.length - 1].height + padding * 2;
-
-    /**
-     * Place the progressbars for the axis on the screen
-     */
-    for (let _axis of this.gamepad.getAxis()) {
-
-      let axis = new Progress(_axis);
-
-      if (x + axis.width > this.app.screen.width - padding) {
-        x = padding;
-        y += axis.height + padding;
-      }
-
-      axis.position.x = x;
-      axis.position.y = y;
-
-      x += axis.width + padding;
-
-      this.axis.push(axis);
-      this.addChild(axis);
-    }
-  }
-
-  /**
-   * Remove all components from the view.
-   */
-  deconstruct() {
-    this.removeChild(this.title);
-
-    for (let button of this.buttons) {
-      this.removeChild(button);
-    }
-
-    for (let axis of this.axis) {
-      this.removeChild(axis);
-    }
-  }
-
-  /**
-   * Update the GamepadView.
-   *
-   * @param {number} delta - The time passed since last update
-   */
-  update(delta) {
-    for (let button of this.buttons) {
-      button.update(delta);
-    }
-
-    for (let axis of this.axis) {
-      axis.update(delta);
-    }
-  }
-}
-
-module.exports = GamepadView;
-
-/***/ }),
-/* 682 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const GameObject = __webpack_require__(634);
-
-class Button extends GameObject {
-  constructor(button) {
-    super();
-
-    /**
-     * Reference to the Gamepad button.
-     *
-     * @type {Button}
-     */
     this.button = button;
-
-    /**
-     * Component options.
-     *
-     * @type {{fillAlpha: number, width: number, height: number, radius: number}}
-     */
-    this.options = {
-      fillAlpha: 0.25,
-      width: 45,
-      height: 45,
-      radius: 15
-
-      /**
-       * Setup the component.
-       */
-    };this.init();
-  }
+  };
 
   /**
-   * Initialize the graphics
-   */
-  init() {
-
-    let style = new PIXI.TextStyle({
-      fill: ['#ffffff'] // gradient
-    });
-
-    let number = new PIXI.Text(this.button.getIndex(), style);
-    number.position.x = this.options.width / 2 - number.width / 2;
-    number.position.y = this.options.height / 2 - number.height / 2;
-
-    this.graphics = new PIXI.Graphics();
-    this.render();
-
-    this.addChild(this.graphics);
-    this.addChild(number);
-  }
-
-  /**
-   * Update the progress bar.
-   */
-  render() {
-    this.graphics.clear();
-    this.graphics.beginFill(0xFF00BB, this.options.fillAlpha);
-    this.graphics.lineStyle(2, 0xFF00FF, 1);
-    this.graphics.drawRoundedRect(0, 0, this.options.width, this.options.height, this.options.radius);
-    this.graphics.endFill();
-  }
-
-  /**
-   * Update the button.
+   * Return the parent GamePad.
    *
-   * @param {number} delta - The time passed since last update
+   * @returns {*|Gamepad}
    */
-  update(delta) {
-    this.options.fillAlpha = this.button.getValue();
-    this.render();
-  }
-}
-
-module.exports = Button;
-
-/***/ }),
-/* 683 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const GameObject = __webpack_require__(634);
-
-class Progress extends GameObject {
-  constructor(axl) {
-    super();
-
-    /**
-     * Reference to the GamePad Axis.
-     *
-     * @type {Axis}
-     */
-    this.axl = axl;
-
-    /**
-     * The axis index.
-     *
-     * @type {number}
-     */
-    this.index = this.axl.getIndex();
-
-    /**
-     * Component options.
-     *
-     * @type {{track_color: number, progress_color: number, width: number, height: number, value: number}}
-     */
-    this.options = {
-      track_color: 0x202226,
-      progress_color: 0xFF00FF,
-      width: 200,
-      height: 16,
-      value: 0
-
-      /**
-       * Setup the component.
-       */
-    };this.init();
-  }
+  GamepadEvent.prototype.getGamepad = function () {
+    return this.gamepad;
+  };
 
   /**
-   * Initialize the graphics
-   */
-  init() {
-
-    this.graphics = new PIXI.Graphics();
-    this.render();
-    this.addChild(this.graphics);
-  }
-
-  /**
-   * Update the progress bar.
-   */
-  render() {
-    this.graphics.clear();
-
-    /**
-     * Render track
-     */
-    this.graphics.beginFill(this.options.track_color, 1);
-    this.graphics.drawRect(0, 0, this.options.width, this.options.height);
-    this.graphics.endFill();
-
-    /**
-     * Render progress
-     */
-    this.graphics.beginFill(this.options.progress_color, 1);
-    this.graphics.drawRect(this.width / 2, 0, this.options.width * this.axl.getValue() / 2, this.options.height);
-    this.graphics.endFill();
-  }
-
-  /**
-   * Update the progress bar.
+   * Return the pressed button.
    *
-   * @param {number} delta - The time passed since last update
+   * @returns {*}
    */
-  update(delta) {
-    this.render();
-  }
-}
+  GamepadEvent.prototype.getButton = function () {
+    return this.button;
+  };
 
-module.exports = Progress;
+  return GamepadEvent;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+module.exports = GamepadEvent;
 
 /***/ })
 ]);

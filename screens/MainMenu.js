@@ -17,7 +17,6 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
     let MainMenu = function (options) {
       Scene.call(this, options)
       this.backgrounds = []
-
       this.statistics = new Statistics()
     }
 

@@ -1,8 +1,8 @@
 // https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 const Vector2d = require('core/math/vector2d')
 
-define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects/Breakout/Pad', 'objects/Breakout/Ball', 'input/GamePadInput'],
-  function (PIXI, GameLevel, Brick, Pad, Ball, GamePadInput) {
+define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects/Breakout/Pad', 'objects/Breakout/Ball'],
+  function (PIXI, GameLevel, Brick, Pad, Ball) {
     let Level1 = function (options) {
       GameLevel.call(this, {backgroundColor: 0x1099bb})
 
@@ -12,43 +12,41 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
       this.didStart = false
       this.objects = []
 
-      this.gamepad = new GamePadInput()
-
-      window.bleep = this.gamepad
-      window.scenemanager = this.SceneManager;
+      window.scenemanager = this.SceneManager
 
       // TODO: Add controler vibration
-    // TODO: Sounds
-    // FIXME: After respawn the ball if below the pad
+      // TODO: Sounds
+      // FIXME: After respawn the ball if below the pad
+
     }
 
     extend(Level1, GameLevel)
 
     /**
-   * The onStart callback will be called after all resources are loaded.
-   */
+     * The onStart callback will be called after all resources are loaded.
+     */
     Level1.prototype.onStart = function () {
       GameLevel.prototype.onStart.call(this)
 
       /**
-     * Make the pad controllable with left and right arrows as well as
-     * a and d for moving left and right. This is in addition to mouse
-     * support.
-     */
+       * Make the pad controllable with left and right arrows as well as
+       * a and d for moving left and right. This is in addition to mouse
+       * support.
+       */
       this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left'])
       this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right'])
-      this.InputManager.mapInput([this.InputManager.keys.Space], ['fire'])
+      this.InputManager.mapInput([this.InputManager.keys.Space, 'Button0'], ['fire'])
 
       /**
-     * Setup world physics
-     * @type {Matter.World}
-     */
+       * Setup world physics
+       * @type {Matter.World}
+       */
       let world = this.PhysicsManager.getWorld()
       world.gravity.y = 0.85
 
       this.reset()
       //
-      //  PIXI.sound.play('level1_music')
+      PIXI.sound.play('level1_music')
       // PIXI.sound.play('game_over');
 
       this.pad = new Pad(PIXI.Texture.fromFrame('paddleBlu.png'))
@@ -58,8 +56,8 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
       this.ball = new Ball(tx)
       this.ball.setPosition(this.pad.body.position.x, this.pad.body.position.y - this.pad.sprite.height)
       this.ball.onCollisionWith = (withOnbject, object) => {
-        if (withOnbject.label == 'Pad') {
-        // FIXME: Add this
+        if (withOnbject.label === 'Pad') {
+          // FIXME: Add this
           let MAX_VELOCITY = 50
           var taxaAumentoVelocidade = 5
 
@@ -67,7 +65,16 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
             x: this.ball.body.velocity.x + taxaAumentoVelocidade,
             y: this.ball.body.velocity.y + taxaAumentoVelocidade
           })
-        } else if (withOnbject.label == 'Brick') {
+
+          if (this.InputManager.haveGamePads() === true && this.interactive === true) {
+            let gamepad = this.InputManager.getGamePad(0)
+            if (gamepad.supportsVibration() === true) {
+              let hit = {duration: 300, weakMagnitude: 1.0}
+              gamepad.vibrate(hit)
+            }
+          }
+
+        } else if (withOnbject.label === 'Brick') {
           let brick = this.objects.filter((item) => {
             return (item.body.id === withOnbject.id)
           })
@@ -76,9 +83,17 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
             brick = brick[0]
           }
 
+          if (this.InputManager.haveGamePads() === true && this.interactive === true) {
+            let gamepad = this.InputManager.getGamePad(0)
+            if (gamepad.supportsVibration() === true) {
+              let hit = {duration: 300, weakMagnitude: 1.0}
+              gamepad.vibrate(hit)
+            }
+          }
+
           brick.decareaseHealth()
           brick.showHit()
-        } else if (withOnbject.label == 'floor' && this.didStart == true) {
+        } else if (withOnbject.label === 'floor' && this.didStart === true) {
           this.lives--
 
           this.setLives(this.lives)
@@ -89,6 +104,7 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
           this.ball.reset()
 
           if (this.getLives() === 0) {
+            this.interactive = false
             this.showGameOver()
           }
         }
@@ -104,8 +120,8 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
     }
 
     /**
-   * Reset the demo level.
-   */
+     * Reset the demo level.
+     */
     Level1.prototype.reset = function () {
       GameLevel.prototype.reset.call(this)
 
@@ -114,19 +130,19 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
       for (let i = 0; i < this.objects.length; i++) {
         let object = this.objects[i]
         if (object instanceof Brick) {
-        /**
-         * Cleanup the Brick's internals
-         */
+          /**
+           * Cleanup the Brick's internals
+           */
           object.destroy()
 
           /**
-         * Remove the Brick from the scene.
-         */
+           * Remove the Brick from the scene.
+           */
           this.removeChild(object)
 
           /**
-         * Stop tracking this Brick. Its destroyed.
-         */
+           * Stop tracking this Brick. Its destroyed.
+           */
           this.objects.splice(i, 1)
         }
       }
@@ -162,27 +178,27 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
     Level1.prototype.movePaddle = function (coords) {
       if (coords.x + this.pad._width / 2 > (this.app.screen.width - this.wall_inset)) {
         coords.x = this.app.screen.width - (this.pad._width / 2) - this.wall_inset
-      } else if (coords.x - this.pad._width / 2 < this.pad._width / 2) {
+      } else if (coords.x <= this.wall_inset + this.pad._width / 2) {
         coords.x = this.wall_inset + this.pad._width / 2
       }
       this.pad.setX(coords.x)
     }
 
     /**
-   * Respond to the mouse moving.
-   *
-   * @param {PIXI.interaction.InteractionEvent} event - the mouse event
-   */
+     * Respond to the mouse moving.
+     *
+     * @param {PIXI.interaction.InteractionEvent} event - the mouse event
+     */
     Level1.prototype.onMouseMove = function (event) {
       let coords = event.data.global
       return this.movePaddle(coords)
     }
 
     /**
-   * Interact to the mouse click event.
-   *
-   * @param {PIXI.interaction.InteractionEvent} event - On the mouse click event
-   */
+     * Interact to the mouse click event.
+     *
+     * @param {PIXI.interaction.InteractionEvent} event - On the mouse click event
+     */
     Level1.prototype.onPointerDown = function (event) {
       if (this.didStart === false) {
         for (let object of this.objects) {
@@ -195,17 +211,17 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
       }
     }
 
-    /**
-   * Handle the keypress event.
-   * @param {KeyboardEvent} event - the keyboard event
-   */
-    Level1.prototype.onKeyDown = function (event) {
+    Level1.prototype.readInput = function () {
+
+      if (!this.interactive)
+        return
+
       let keyMoveSpeed = 15
       let position = new Vector2d(this.pad.sprite.position.x, this.pad.sprite.position.y)
 
       /**
-     * Moving the character.
-     */
+       * Moving the character.
+       */
       if (this.InputManager.isDown('left')) {
         position.x -= keyMoveSpeed
       } else if (this.InputManager.isDown('right')) {
@@ -218,24 +234,47 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
 
       return this.movePaddle(position)
     }
+    /**
+     * Handle the keypress event.
+     * @param {KeyboardEvent} event - the keyboard event
+     */
+    Level1.prototype.onKeyDown = function (event) {
+      return this.readInput()
+    }
+
+    Level1.prototype.onGamepadButtonDown = function () {
+      return this.readInput()
+    }
 
     /**
-   * Update the current scene for physics.
-   *
-   * @param {number} delta - the delta since last update
-   */
+     * Update the current scene for physics.
+     *
+     * @param {number} delta - the delta since last update
+     */
     Level1.prototype.fixedUpdate = function (delta) {
       GameLevel.prototype.fixedUpdate.call(this, delta)
       this.PhysicsManager.update(delta)
     }
 
     /**
-   * The update routine that will be called at every tick.
-   *
-   * @param {number} delta - the time difference since the last tick
-   */
+     * The update routine that will be called at every tick.
+     *
+     * @param {number} delta - the time difference since the last tick
+     */
     Level1.prototype.update = function (delta) {
       GameLevel.prototype.update.call(this, delta)
+
+      if (this.InputManager.haveGamePads() === true && this.interactive === true) {
+        let gamepad = this.InputManager.getGamePad(0)
+        var axisH = gamepad.axes[0].getValue()
+
+        let position = new Vector2d(this.pad.sprite.position.x, this.pad.sprite.position.y)
+        position.x += 18 * axisH
+
+        if (axisH !== 0) {
+          this.movePaddle(position)
+        }
+      }
 
       for (let i = 0; i < this.objects.length; i++) {
         let object = this.objects[i]
@@ -244,24 +283,24 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
           object.setX(this.pad.body.position.x)
         }
         if (object instanceof Brick) {
-          if (object.isDestroyed() == true) {
+          if (object.isDestroyed() === true) {
             this.setScore(this.getScore() + object.getPointValue())
 
-            // PIXI.sound.play('concrete_break');
+            PIXI.sound.play('concrete_break');
 
             /**
-           * Cleanup the Brick's internals
-           */
+             * Cleanup the Brick's internals
+             */
             object.destroy()
 
             /**
-           * Remove the Brick from the scene.
-           */
+             * Remove the Brick from the scene.
+             */
             this.removeChild(object)
 
             /**
-           * Stop tracking this Brick. Its destroyed.
-           */
+             * Stop tracking this Brick. Its destroyed.
+             */
             this.objects.splice(i, 1)
             continue
           }

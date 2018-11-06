@@ -360,10 +360,11 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    * @private
    */
   Scene.prototype._update = function (delta) {
+
     if (!this.isPaused()) {
       let plugins = this.SceneManager.getPlugins()
 
-      for (key in plugins) {
+      for (let key in plugins) {
         if (plugins[key].runsPre()) {
           plugins[key].update(delta)
         }
@@ -371,7 +372,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
 
       this.update(delta)
 
-      for (key in plugins) {
+      for (let key in plugins) {
         if (plugins[key].runsPost()) {
           plugins[key].update(delta)
         }

@@ -103,5 +103,9 @@ define([], function () {
     event.preventDefault()
   }
 
+  KeyboardInput.prototype.update = function (delta) {
+    // Unused but required by the InputManager
+  }
+
   return KeyboardInput
 })

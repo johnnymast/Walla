@@ -1,4 +1,4 @@
-define(['pixi', 'matter-js', 'core/Level', 'core/input/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Level.call(this, options)
 
@@ -119,11 +119,19 @@ define(['pixi', 'matter-js', 'core/Level', 'core/input/KeyboardInput', 'gui/Stat
      * @type {GameOver}
      */
     this.gameover = new GameOver()
+
+
+
     this.gameover.on('gameover.respawn', () => {
       this.gameover.hide()
     })
 
+    this.gameover.on('gameover.opended', () => {
+      this.interactive = false
+    })
+
     this.gameover.on('gameover.closed', () => {
+      this.interactive = true
       this.reset()
     })
 
@@ -135,7 +143,6 @@ define(['pixi', 'matter-js', 'core/Level', 'core/input/KeyboardInput', 'gui/Stat
    * Show the gameover screen to the user.
    */
   GameLevel.prototype.showGameOver = function () {
-    this.interactive = false
     PIXI.sound.play('game_over')
     this.gameover.show()
   }

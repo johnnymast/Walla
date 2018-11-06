@@ -74,7 +74,9 @@ define(['pixi', 'screens/Gamepad/GameLevel', 'input/GamePadInput', 'objects/Game
      */
     Level1.prototype.disconnected = function (gamepad) {
 
-      this.view.deconstruct()
+      if (this.view) {
+        this.view.deconstruct()
+      }
 
       this.removeChild(this.view)
       this.message.visible = true
