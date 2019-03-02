@@ -44,7 +44,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
         this.addChild(tilingSprite)
       }
 
-      var menu = new Menus.Menu()
+      let menu = new Menus.Menu()
 
       let dialog = new Dialogs.CloseableDialog({
         width: 400,

@@ -32,14 +32,14 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
    */
   SplashScene.prototype.onStart = function () {
 
-    var background = new PIXI.Sprite(PIXI.Texture.BLACK)
+    let background = new PIXI.Sprite(PIXI.Texture.BLACK)
     background.width = this.app.screen.width
     background.height = this.app.screen.height
     background.alpha = 1
 
     this.addChild(background)
 
-    var logoTexture = PIXI.Texture.fromImage('/assets/main/images/engine.png')
+    let logoTexture = PIXI.Texture.fromImage('/assets/main/images/engine.png')
     logoTexture.on('update', () => {
       this.logo = new PIXI.Sprite(logoTexture)
       this.logo.anchor.set(0.5)

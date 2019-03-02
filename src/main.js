@@ -1,5 +1,4 @@
 import 'core/helpers'
-import 'core/polyfill'
 import 'core/prototypes'
 import 'core/geometry'
 import 'babel-polyfill'

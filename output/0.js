@@ -73010,7 +73010,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * InputManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(685), __webpack_require__(656)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634), __webpack_require__(637), __webpack_require__(656)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
   /**
    * @classdesc InputManager
    * @exports  core/managers/InputManager
@@ -73228,7 +73228,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(673);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(674);
 
 /**
  * PhysicsManager
@@ -73533,7 +73533,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(683)("./" + scene);
+      let _scene = __webpack_require__(684)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -73615,7 +73615,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(674);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(675);
 
 /**
  * StateManager
@@ -73993,7 +73993,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 636 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(644), __webpack_require__(685)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(644), __webpack_require__(637)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
 
   /**
    * @classdesc Level
@@ -74117,7 +74117,119 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 637 */,
+/* 637 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * KeyboardInput
+ * @namespace Interaction
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+
+  /**
+   * Take control over Keyboard input by using this class.
+   * You construct the class with a keycode.
+   * See http://keycode.info/ for more information.
+   * @exports core/input/KeyboardInput
+   * @module KeyboardInput
+   * @example
+   * let char = 32 // spacebar
+   * const space = new KeyboardInput(char)
+   * space.press = function() {
+   *  console.log('spacebar pressed')
+   * }
+   * space.release = function() {
+   *     console.log('spacebar released')
+   * }
+   * @constructor
+   * @param {number} keyCode - The keycode to listen for
+   */
+  let KeyboardInput = function (key) {
+
+    let info = {};
+    info.key = key;
+    info.isDown = false;
+    info.isUp = true;
+    info.down = undefined;
+    info.up = undefined;
+
+    this.info = info;
+
+    window.addEventListener('keydown', this.downHandler.bind(this), false);
+
+    window.addEventListener('keyup', this.upHandler.bind(this), false);
+  };
+
+  /**
+   * Return the information object.
+   *
+   * @returns {object}
+   */
+  KeyboardInput.prototype.getInfo = function () {
+    return this.info;
+  };
+
+  /**
+   * Check to see if the key is down.
+   *
+   * @returns {boolean}
+   */
+  KeyboardInput.prototype.isDown = function () {
+    return this.info.isDown;
+  };
+
+  /**
+   * Check to see if the key is up.
+   *
+   * @returns {boolean}
+   */
+  KeyboardInput.prototype.isUp = function () {
+    return this.info.isUp;
+  };
+
+  /**
+   * The internal keyboard event handler for keydown.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.downHandler = function (event) {
+    if (event.key === this.info.key) {
+      this.info.isDown = true;
+      this.info.isUp = false;
+
+      if (this.info.down) {
+        this.info.down(event);
+      }
+    }
+    event.preventDefault();
+  };
+
+  /**
+   * The internal keyboard event handler for keyup.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.upHandler = function (event) {
+    if (event.key === this.info.key) {
+      this.info.isDown = false;
+      this.info.isUp = true;
+
+      if (this.info.up) {
+        this.info.up(event);
+      }
+    }
+    event.preventDefault();
+  };
+
+  KeyboardInput.prototype.update = function (delta) {
+    // Unused but required by the InputManager
+  };
+
+  return KeyboardInput;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
 /* 638 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -74161,7 +74273,7 @@ const DIALOG_STATE = {
 /* 640 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(145), __webpack_require__(636), __webpack_require__(685), __webpack_require__(635), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(145), __webpack_require__(636), __webpack_require__(637), __webpack_require__(635), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Level.call(this, options);
 
@@ -74364,7 +74476,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 641 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(145), __webpack_require__(636), __webpack_require__(685), __webpack_require__(635), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(145), __webpack_require__(636), __webpack_require__(637), __webpack_require__(635), __webpack_require__(648)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Level.call(this, options);
 
@@ -75204,8 +75316,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(638).BUTTON_STATE;
 const Type = __webpack_require__(638).BUTTON_TYPE;
-const BaseButton = __webpack_require__(675);
-const ImageButton = __webpack_require__(676);
+const BaseButton = __webpack_require__(676);
+const ImageButton = __webpack_require__(677);
 const Button = __webpack_require__(646);
 
 
@@ -75802,7 +75914,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 652 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(679);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(680);
 const Dialogs = __webpack_require__(658);
 
 /**
@@ -75847,7 +75959,7 @@ const Dialogs = __webpack_require__(658);
       this.addChild(tilingSprite);
     }
 
-    var menu = new Menus.Menu();
+    let menu = new Menus.Menu();
 
     let dialog = new Dialogs.CloseableDialog({
       width: 400,
@@ -76304,14 +76416,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
    */
   SplashScene.prototype.onStart = function () {
 
-    var background = new PIXI.Sprite(PIXI.Texture.BLACK);
+    let background = new PIXI.Sprite(PIXI.Texture.BLACK);
     background.width = this.app.screen.width;
     background.height = this.app.screen.height;
     background.alpha = 1;
 
     this.addChild(background);
 
-    var logoTexture = PIXI.Texture.fromImage('/assets/main/images/engine.png');
+    let logoTexture = PIXI.Texture.fromImage('/assets/main/images/engine.png');
     logoTexture.on('update', () => {
       this.logo = new PIXI.Sprite(logoTexture);
       this.logo.anchor.set(0.5);
@@ -76700,8 +76812,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(639).DIALOG_TYPE;
 const STATE = __webpack_require__(639).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(677);
-const DefaultDialog = __webpack_require__(678);
+const CloseableDialog = __webpack_require__(678);
+const DefaultDialog = __webpack_require__(679);
 
 
 
@@ -77678,7 +77790,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43), __webpack_require__(686)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(43), __webpack_require__(673)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
   let Button = function (button, index = 0, gamepad) {
     EventEmitter.call(this);
 
@@ -77903,6 +78015,40 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 673 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+  let GamepadEvent = function (gamepad, button) {
+    this.gamepad = gamepad;
+    this.button = button;
+  };
+
+  /**
+   * Return the parent GamePad.
+   *
+   * @returns {*|Gamepad}
+   */
+  GamepadEvent.prototype.getGamepad = function () {
+    return this.gamepad;
+  };
+
+  /**
+   * Return the pressed button.
+   *
+   * @returns {*}
+   */
+  GamepadEvent.prototype.getButton = function () {
+    return this.button;
+  };
+
+  return GamepadEvent;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+module.exports = GamepadEvent;
+
+/***/ }),
+/* 674 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -78220,7 +78366,7 @@ if (true) {
 }
 
 /***/ }),
-/* 674 */
+/* 675 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -78246,7 +78392,7 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 675 */
+/* 676 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(646);
@@ -78453,7 +78599,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 676 */
+/* 677 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(646);
@@ -78660,7 +78806,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 677 */
+/* 678 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(647);
@@ -78745,7 +78891,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 678 */
+/* 679 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(657)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
@@ -78764,7 +78910,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 679 */
+/* 680 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78772,13 +78918,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(680);
-const MenuItemText = __webpack_require__(682);
-const MenuItemImageButton = __webpack_require__(681);
+const Menu = __webpack_require__(681);
+const MenuItemText = __webpack_require__(683);
+const MenuItemImageButton = __webpack_require__(682);
 
 
 /***/ }),
-/* 680 */
+/* 681 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(634)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -78852,7 +78998,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 681 */
+/* 682 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(647);
@@ -78942,7 +79088,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 682 */
+/* 683 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(659)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
@@ -79028,7 +79174,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 683 */
+/* 684 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -79067,155 +79213,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 683;
-
-/***/ }),
-/* 684 */,
-/* 685 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
- * KeyboardInput
- * @namespace Interaction
- */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-
-  /**
-   * Take control over Keyboard input by using this class.
-   * You construct the class with a keycode.
-   * See http://keycode.info/ for more information.
-   * @exports core/input/KeyboardInput
-   * @module KeyboardInput
-   * @example
-   * let char = 32 // spacebar
-   * const space = new KeyboardInput(char)
-   * space.press = function() {
-   *  console.log('spacebar pressed')
-   * }
-   * space.release = function() {
-   *     console.log('spacebar released')
-   * }
-   * @constructor
-   * @param {number} keyCode - The keycode to listen for
-   */
-  let KeyboardInput = function (key) {
-
-    let info = {};
-    info.key = key;
-    info.isDown = false;
-    info.isUp = true;
-    info.down = undefined;
-    info.up = undefined;
-
-    this.info = info;
-
-    window.addEventListener('keydown', this.downHandler.bind(this), false);
-
-    window.addEventListener('keyup', this.upHandler.bind(this), false);
-  };
-
-  /**
-   * Return the information object.
-   *
-   * @returns {object}
-   */
-  KeyboardInput.prototype.getInfo = function () {
-    return this.info;
-  };
-
-  /**
-   * Check to see if the key is down.
-   *
-   * @returns {boolean}
-   */
-  KeyboardInput.prototype.isDown = function () {
-    return this.info.isDown;
-  };
-
-  /**
-   * Check to see if the key is up.
-   *
-   * @returns {boolean}
-   */
-  KeyboardInput.prototype.isUp = function () {
-    return this.info.isUp;
-  };
-
-  /**
-   * The internal keyboard event handler for keydown.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.downHandler = function (event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = true;
-      this.info.isUp = false;
-
-      if (this.info.down) {
-        this.info.down(event);
-      }
-    }
-    event.preventDefault();
-  };
-
-  /**
-   * The internal keyboard event handler for keyup.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.upHandler = function (event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = false;
-      this.info.isUp = true;
-
-      if (this.info.up) {
-        this.info.up(event);
-      }
-    }
-    event.preventDefault();
-  };
-
-  KeyboardInput.prototype.update = function (delta) {
-    // Unused but required by the InputManager
-  };
-
-  return KeyboardInput;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 686 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-  let GamepadEvent = function (gamepad, button) {
-    this.gamepad = gamepad;
-    this.button = button;
-  };
-
-  /**
-   * Return the parent GamePad.
-   *
-   * @returns {*|Gamepad}
-   */
-  GamepadEvent.prototype.getGamepad = function () {
-    return this.gamepad;
-  };
-
-  /**
-   * Return the pressed button.
-   *
-   * @returns {*}
-   */
-  GamepadEvent.prototype.getButton = function () {
-    return this.button;
-  };
-
-  return GamepadEvent;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-module.exports = GamepadEvent;
+webpackContext.id = 684;
 
 /***/ })
 ]);
