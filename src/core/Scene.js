@@ -55,7 +55,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
      */
     this.paused = true
 
-
     this.app.ticker.add((delta) => {
       this._update(delta)
     })

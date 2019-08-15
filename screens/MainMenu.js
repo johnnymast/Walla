@@ -98,6 +98,8 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
           dialog.y = coords.y
         })
         .start()
+
+      console.log ( GameEngine.get().get('DebugManager').init() ) //.init();
     }
 
     /**

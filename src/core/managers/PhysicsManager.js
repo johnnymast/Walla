@@ -1,10 +1,10 @@
-const Vector2d = require('core/math/Vector2d')
+// const Vector2d = require('core/math/Vector2d')
 
 /**
  * PhysicsManager
  * @namespace Core Managers
  */
-define(['pixi', 'matter-js', 'core/GameObject'], function (PIXI, Matter, GameObject) {
+define(['pixi', 'matter-js', 'core/GameObject', 'core/math/vector2d'], function (PIXI, Matter, GameObject, Vector2d) {
   /**
    * @classdesc PhysicsManager
    * @exports  core/managers/PhysicsManager

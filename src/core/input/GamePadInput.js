@@ -6,7 +6,7 @@ define(['core/ScenePlugin', 'input/GamePad/GamePad'], function (ScenePlugin, Gam
    * See http://www.linux-usb.org/usb.ids
    * @exports core/input/GamePadInput
    * @module GamePadInput
-   * @exampl
+   * @example
    *
    * Note: Internet explorer does not support this set of api's nor do mobile browsers :(
    *

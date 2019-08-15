@@ -13,12 +13,20 @@ define(['core/GameEngine'], function (GameEngine) {
     this.scenes = []
     this.plugins = []
     this.currentScene = null
-    this.app = GameEngine.get().get('App')
+    this.gameEngine = GameEngine.get();
+    this.debugManager = this.gameEngine.get('DebugManager')
+    this.app = this.gameEngine.get('App')
+
+
 
     if (scene.length > 0) {
       this.add(scene)
       this.switchTo(scene)
     }
+  }
+
+  SceneManager.prototype._listScenePlugins = function () {
+    return this.getPlugins()
   }
 
   /**
@@ -51,7 +59,7 @@ define(['core/GameEngine'], function (GameEngine) {
    *
    * @returns {Array}
    */
-  SceneManager.prototype.getPlugins = function() {
+  SceneManager.prototype.getPlugins = function () {
     return this.plugins
   }
 
@@ -61,7 +69,7 @@ define(['core/GameEngine'], function (GameEngine) {
    * @param {string} key - The key to identify the plugin.
    * @param {object} instance - The plugin instance.
    */
-  SceneManager.prototype.registerPlugin = function(key = '', instance = null) {
+  SceneManager.prototype.registerPlugin = function (key = '', instance = null) {
     this.plugins[key] = instance
   }
 
@@ -70,7 +78,7 @@ define(['core/GameEngine'], function (GameEngine) {
    *
    * @param {string} key - The key to identify the plugin.
    */
-  SceneManager.prototype.removePlugin = function(key = '') {
+  SceneManager.prototype.removePlugin = function (key = '') {
     if (typeof this.plugins[key] !== 'undefined') {
       delete this.plugins[key]
     }
@@ -97,9 +105,9 @@ define(['core/GameEngine'], function (GameEngine) {
         this.currentScene.switchedAway()
       }
 
+      this.currentScene = nextScene
       nextScene.start()
 
-      this.currentScene = nextScene
       this.app.stage.addChild(this.currentScene)
     }
   }

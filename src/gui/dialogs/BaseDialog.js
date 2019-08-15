@@ -30,7 +30,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
       throw new Error('BaseDialog: init() is not defined.')
     }
 
-
     this.on('internal.state.closing', this._closing)
 
     this.x = this._options.x
@@ -63,13 +62,12 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
 
     this.addChild(this.content)
 
-
     // this.init()
   }
 
   extend(BaseDialog, GameObject)
 
-  BaseDialog.prototype._closing = function() {
+  BaseDialog.prototype._closing = function () {
     this.onClose()
   }
 
@@ -77,15 +75,10 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     // overwrite
   }
 
-
   BaseDialog.prototype.onClose = function () {
     console.log('BaseDialog.onClose')
     // overwrite
   }
-
-  // BaseDialog.prototype.init = function () {
-  //   this.on('internal.state.closing', this._closing)
-  // }
 
   /**
    * Check if the Dialog is open or not.
@@ -109,7 +102,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    *
    * @param {GameObject} content
    */
-  BaseDialog.prototype.addContent = function(content) {
+  BaseDialog.prototype.addContent = function (content) {
     if (content && this.instance) {
       this.instance.addContent(content)
     }

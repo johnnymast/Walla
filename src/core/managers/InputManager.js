@@ -98,6 +98,7 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
           }
         } else {
 
+          console.log('make: ', name)
           let key = new KeyboardInput(name)
 
           key.info.down = function (event) {

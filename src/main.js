@@ -5,8 +5,8 @@ import 'babel-polyfill'
 import 'core/Transform'
 import 'core/math'
 
-const Vector2d = require('core/math/vector2d')
-const Vector3d = require('core/math/vector3d')
+// const Vector2d = require('core/math/vector2d')
+// const Vector3d = require('core/math/vector3d')
 
 const EngineInfo = {
   name: 'Stage Engine',
@@ -63,8 +63,9 @@ require([
   'core/managers/StateManager',
   'core/managers/PhysicsManager',
   'core/managers/InputManager',
-  'core/managers/ResizeManager'
-], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, InputManager, ResizeManager) {
+  'core/managers/ResizeManager',
+  'core/managers/DebugManager'
+], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, InputManager, ResizeManager, DebugManager) {
   PIXI.utils.skipHello()
   sayHello()
 
@@ -95,8 +96,9 @@ require([
   ge.set('StateManager', new StateManager())
   ge.set('PhysicsManager', new PhysicsManager())
   ge.set('InputManager', new InputManager())
+  ge.set('DebugManager', new DebugManager())
 
   ge.get('SceneManager')
-    .add('SplashScene')
-    .switchTo('SplashScene')
+    .add('Lerp/Level1')
+    .switchTo('Lerp/Level1')
 })
