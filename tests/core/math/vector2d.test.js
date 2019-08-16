@@ -67,9 +67,9 @@ describe('Math - Vector2d', function () {
     )
   })
 
-  it('devide () should devide the value of the Vector2d.', () => {
+  it('divide () should divide the value of the Vector2d.', () => {
     let v = new Vector2d(4, 4)
-    v.devide(2)
+    v.divide(2)
     expect(v).toEqual(
       {
         x: 2,
@@ -114,10 +114,10 @@ describe('Math - Vector2d', function () {
     expect(multiply).toBeInstanceOf(Vector2d)
   })
 
-  it('devide () should return an instance of the Vector2d it self', () => {
+  it('divide () should return an instance of the Vector2d it self', () => {
     let v = new Vector2d(2, 2, 4)
-    let devide = v.devide(2)
-    expect(devide).toBeInstanceOf(Vector2d)
+    let divide = v.divide(2)
+    expect(divide).toBeInstanceOf(Vector2d)
   })
 
   it('toObject() returns the values as an object', () => {
@@ -188,10 +188,10 @@ describe('Math - Vector2d Element-wise', function () {
     })
   })
 
-  it('devide() should take an other Vector2d as argument and devide that Vector2d with the existing Vector2d.', () => {
+  it('divide() should take an other Vector2d as argument and divide that Vector2d with the existing Vector2d.', () => {
     let v1 = new Vector2d(12, 12)
     let v2 = new Vector2d(6, 6)
-    v1 = v1.devide(v2)
+    v1 = v1.divide(v2)
     expect(v1).toEqual({
       x: 2,
       y: 2,

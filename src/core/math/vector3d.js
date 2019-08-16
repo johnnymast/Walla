@@ -210,17 +210,17 @@ class Vector3d {
    *  // Our vector looks like this
    *  // { x: 4, y: 4, z: 2 }
    *
-   *  let result = v.devide(2)
+   *  let result = v.divide(2)
    *
    *  // Our resulting vector now looks like this
    *  // { x: 2, y: 2, z: 1 }
    *
    *  console.log(result.toObject())
    *
-   * @param {number|Vector3d} n - devide a number on the vector or devide a an other Vector3d object
+   * @param {number|Vector3d} n - divide a number on the vector or divide a an other Vector3d object
    * @returns {Vector3d}
    */
-  devide (n) {
+  divide (n) {
     if (n instanceof Vector3d) {
       this.x /= n.x
       this.y /= n.y
