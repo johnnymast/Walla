@@ -77205,8 +77205,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      */
     this.paused = true;
 
+    this.app.ticker.maxFPS = 60;
     this.app.ticker.add(delta => {
+      //if (this.app.ticker.FPS == 60) {
       this._update(delta);
+      //}
     });
 
     this.physicsTicker = new PIXI.ticker.Ticker();

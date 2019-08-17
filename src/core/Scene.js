@@ -19,7 +19,6 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     this.cursor_sprite.cursor = 'none'
     this.cursor_sprite.anchor.set(0.5)
 
-
     this.on('pointerover', function () {
       this.cursor_sprite.visible = true
     }.bind(this))
@@ -55,8 +54,11 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
      */
     this.paused = true
 
+    this.app.ticker.maxFPS = 60
     this.app.ticker.add((delta) => {
-      this._update(delta)
+      //if (this.app.ticker.FPS == 60) {
+        this._update(delta)
+      //}
     })
 
     this.physicsTicker = new PIXI.ticker.Ticker()
@@ -90,7 +92,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
         return document[this.fullscreen.check]
       }
     }
-    return false;
+    return false
   }
 
   /**
@@ -203,7 +205,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    * Callback for the onSwitchedAway event. You can overwrite this your self
    * to receive the onResume call.
    */
-  Scene.prototype.onSwitchedAway = function() {
+  Scene.prototype.onSwitchedAway = function () {
     /**
      * This function will be called when the scene is been switched away from. You can overwrite this in
      * your Scene to act on this event.
@@ -311,15 +313,12 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
       'mozFullScreen',
     ]
 
-
     for (let i = 0; i < cff.length; i++) {
       if (typeof document[cff[i]] == 'boolean') {
         this.fullscreen.check = cff[i]
         break
       }
     }
-
-
 
     //  Keyboard Input?
     if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT']) {
@@ -333,7 +332,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    *
    * @param {number} delta - the delta since the last tick
    */
-  Scene.prototype.fixedUpdate = function(delta) {
+  Scene.prototype.fixedUpdate = function (delta) {
     // Overwrite this function
   }
 
@@ -345,12 +344,11 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    * @param {number} delta - the delta since the last tick
    * @private
    */
-  Scene.prototype._fixedupdate = function(delta) {
+  Scene.prototype._fixedupdate = function (delta) {
     if (!this.isPaused()) {
       this.fixedUpdate(delta)
     }
   }
-
 
   /**
    * Internal update function. This is called per tick.
