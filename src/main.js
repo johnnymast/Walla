@@ -98,6 +98,11 @@ require([
   ge.set('InputManager', new InputManager())
   ge.set('DebugManager', new DebugManager())
 
+  if (typeof PLUGIN_MATTER)
+  {
+    // Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
+  }
+
   ge.get('SceneManager')
     .add('SplashScene')
     .switchTo('SplashScene')

@@ -5508,6 +5508,10 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   ge.set('InputManager', new InputManager());
   ge.set('DebugManager', new DebugManager());
 
+  if (typeof PLUGIN_MATTER) {
+    // Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
+  }
+
   ge.get('SceneManager').add('SplashScene').switchTo('SplashScene');
   // .add('Lerp/Level1')
   // .switchTo('Lerp/Level1')

@@ -21,6 +21,12 @@ if (PROD) {
   )
 }
 
+plugins.push(
+  new webpack.DefinePlugin({
+    "typeof 'PLUGIN_MATTER'": JSON.stringify(true)
+  })
+);
+
 const config = {
   entry: {
     build: path.resolve(__dirname, './src/main.js'),
@@ -76,6 +82,7 @@ const config = {
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
       'tweenjs': path.resolve(__dirname, './node_modules/@tweenjs/tween.js'),
       'core': path.resolve(__dirname, 'src/core'),
+      'plugins': path.resolve(__dirname, 'plugins'),
       'gui': path.resolve(__dirname, 'src/gui'),
       'input': path.resolve(__dirname, 'src/core/input'),
       'screens': path.resolve(__dirname, 'screens'),
