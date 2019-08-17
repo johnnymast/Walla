@@ -20,6 +20,11 @@ describe('Math Helpers - constrain', function () {
     let expected = constrain(11, 10 , 20)
     expect(expected).toEqual(11)
   })
+
+  it('lerp() Should calculate its values correctly', () => {
+    let expected = lerp(0, 100 , 0.5)
+    expect(expected).toEqual(50)
+  })
 })
 
 

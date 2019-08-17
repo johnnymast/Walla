@@ -72,13 +72,9 @@ define(['pixi', 'screens/Lerp/GameLevel', 'objects/Lerp/Circle'], function (PIXI
    */
   Level1.prototype.onMouseMove = function (event) {
     let pos = event.data.global
-    this.lerp_to = pos;
+    this.lerp_to = pos
   }
-
-  Level1.prototype.lerp = function (start, stop, amt) {
-    return amt * (stop - start) + start
-  }
-
+  
   /**
    * Update the game scene.
    *
@@ -92,16 +88,10 @@ define(['pixi', 'screens/Lerp/GameLevel', 'objects/Lerp/Circle'], function (PIXI
     if (this.time_passed > this.delay) {
 
       if (this.lerp_to) {
-        this.circle.position.x = this.lerp(this.circle.position.x, this.lerp_to.x, 0.3)
-        this.circle.position.y = this.lerp(this.circle.position.y, this.lerp_to.y, 0.3)
+        this.circle.position.x = lerp(this.circle.position.x, this.lerp_to.x, 0.3)
+        this.circle.position.y = lerp(this.circle.position.y, this.lerp_to.y, 0.3)
       }
 
-      /**
-       * Reset the time that has passed
-       * since the last update.
-       *
-       * @type {number}
-       */
       this.time_passed = 0
     }
   }

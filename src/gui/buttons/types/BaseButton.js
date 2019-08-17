@@ -160,7 +160,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
 
   /**
    * You can overwrite this function if you wish
-   * to handle if the button clicke is released.
+   * to handle if the button click is released.
    *
    * @param {event} event - The event object
    */

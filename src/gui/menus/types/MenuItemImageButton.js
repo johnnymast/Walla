@@ -15,16 +15,14 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi, MenuItem) {
 
     this._options = {
       background_texture: 'panel_woodWear.png',
-      text: text,
+      text: text
     }
 
     this.options = extend2(true, this._options, options)
 
     let style = new pixi.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 16,
-      // fontStyle: 'italic',
-      // fontWeight: 'bold',
+      fontSize: 10,
       fill: ['#ffffff'],
     })
 

@@ -4242,6 +4242,30 @@ class Vector2d {
   }
 
   /**
+   * Linearly interpolates between 2 points.
+   *
+   * @see https://github.com/processing/p5.js/blob/0.9.0/src/math/p5.Vector.js#L12
+   * @example
+   *
+   * let v = new Vector2d(0, 0)
+   * let v2 = v.lerp(100, 100, 0.5)
+   *
+   * this should output {x: 50, y: 50}
+   * console.log(v2)
+   *
+   * @param {number} [x=0] - the initial value.
+   * @param {number} [y=0] - destination value.
+   * @param {number} [amt=0] - the distance
+   *
+   * @returns {Vector2d}
+   */
+  lerp(x = 0, y = 0, amt = 0) {
+    this.x += (x - this.x) * amt || 0;
+    this.y += (y - this.y) * amt || 0;
+    return this;
+  }
+
+  /**
    * @example
    *
    *  let vector = new Vector2d(8,8);
@@ -4249,17 +4273,17 @@ class Vector2d {
    *  // Our vector looks like this
    *  // { x: 8, y: 8 }
    *
-   *  let result = v.devide(2)
+   *  let result = v.divide(2)
    *
    *  // Our resulting vector now looks like this
    *  // { x: 4, y: 4 }
    *
    *  console.log(result.toObject())
    *
-   * @param {number|Vector2d} n - devide a number on the vector or devide a an other Vector3d object
+   * @param {number|Vector2d} n - divide a number on the vector or divide a an other Vector3d object
    * @returns {Vector3d}
    */
-  devide(n) {
+  divide(n) {
     if (n instanceof Vector2d) {
       this.x /= n.x;
       this.y /= n.y;
@@ -4641,13 +4665,28 @@ if (true) {
 
 /**
  * Constrain a value between a minimum and maximum value.
+ * This function sometimes has the name minmax()
  *
- * @param {number} [n=0]
- * @param {number} [min=0]
- * @param {number} [max=0]
+ * @param {number} [n=0] - The current value
+ * @param {number} [min=0] - The minimal value
+ * @param {number} [max=0] - The maximum value
  */
 window.constrain = function (n = 0, min = 0, max = 0) {
   return Math.max(Math.min(n, max), min);
+};
+
+/**
+ * Linear interpolate start value to the stop value.
+ * and add x percentage of amt's value.
+ *
+ * @param {number} [start=0] - the initial value.
+ * @param {number} [stop=0] - destination value.
+ * @param {number} [amt=0] - the distance
+ *
+ * @returns {number} The calculated value.
+ */
+window.lerp = function (start = 0, stop = 0, amt = 0) {
+  return amt * (stop - start) + start;
 };
 
 /***/ }),
@@ -5227,17 +5266,17 @@ class Vector3d {
    *  // Our vector looks like this
    *  // { x: 4, y: 4, z: 2 }
    *
-   *  let result = v.devide(2)
+   *  let result = v.divide(2)
    *
    *  // Our resulting vector now looks like this
    *  // { x: 2, y: 2, z: 1 }
    *
    *  console.log(result.toObject())
    *
-   * @param {number|Vector3d} n - devide a number on the vector or devide a an other Vector3d object
+   * @param {number|Vector3d} n - divide a number on the vector or divide a an other Vector3d object
    * @returns {Vector3d}
    */
-  devide(n) {
+  divide(n) {
     if (n instanceof Vector3d) {
       this.x /= n.x;
       this.y /= n.y;
@@ -5297,6 +5336,30 @@ class Vector3d {
     let z = this.z / magnitude;
 
     return new Vector3d(x, y, z);
+  }
+
+  /**
+   * Linearly interpolates between 2 points.
+   *
+   * @see https://github.com/processing/p5.js/blob/0.9.0/src/math/p5.Vector.js#L12
+   * @example
+   *
+   * let v = new Vector3d(0, 0, 0)
+   * let v2 = v.lerp(100, 100, 100, 0.5)
+   *
+   * this should output {x: 50, y: 50, z: 50}
+   * console.log(v2)
+   *
+   * @param {number} [x=0] - the x value.
+   * @param {number} [y=0] - the y value.
+   * @param {number} [z=0] - the z value.
+   * @param {number} [amt=0] - the distance
+   */
+  lerp(x = 0, y = 0, z = 0, amt = 0) {
+    this.x += (x - this.x) * amt || 0;
+    this.y += (y - this.y) * amt || 0;
+    this.z += (z - this.z) * amt || 0;
+    return this;
   }
 
   /**
@@ -5445,7 +5508,9 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   ge.set('InputManager', new InputManager());
   ge.set('DebugManager', new DebugManager());
 
-  ge.get('SceneManager').add('Lerp/Level1').switchTo('Lerp/Level1');
+  ge.get('SceneManager').add('SplashScene').switchTo('SplashScene');
+  // .add('Lerp/Level1')
+  // .switchTo('Lerp/Level1')
 }.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 /***/ }),

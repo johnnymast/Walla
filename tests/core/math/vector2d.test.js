@@ -154,8 +154,23 @@ describe('Math - Vector2d', function () {
     expect(r).toEqual(26.56505117707799)
   })
 
+  it('lerp () returns the minified vector2d.', () => {
+    let v = new Vector2d(10, 20)
+    let v2 = v.lerp(12, 13, 0.10)
+    expect(v2).toBeInstanceOf(Vector2d)
+  })
+
+  it('lerp () returns the correct value.', () => {
+    let v = new Vector2d(0, 0)
+    let expected = v.lerp(100, 100, 0.5)
+    expect(expected).toEqual({
+      x: 50,
+      y: 50,
+    })
+  })
+
 })
- 
+
 describe('Math - Vector2d Element-wise', function () {
 
   it('add() should take an other matrix as argument and add that Matrix to the existing Matrix.', () => {

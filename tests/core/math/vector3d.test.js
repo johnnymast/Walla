@@ -158,8 +158,24 @@ describe('Math - Vector3d', function () {
       }
     )
   })
-})
 
+  it('lerp () returns the minified Vector3d.', () => {
+    let v = new Vector3d(10, 20, 20)
+    let v2 = v.lerp(12, 13, 20, 0.10)
+    expect(v2).toBeInstanceOf(Vector3d)
+  })
+
+  it('lerp () returns the correct value.', () => {
+    let v = new Vector3d(0, 0, 0)
+    let expected = v.lerp(100, 100, 100, 0.5)
+    expect(expected).toEqual({
+      x: 50,
+      y: 50,
+      z: 50,
+    })
+  })
+
+})
 
 describe('Math - Vector3d Element-wise', function () {
 
@@ -175,7 +191,7 @@ describe('Math - Vector3d Element-wise', function () {
   })
 
   it('subtract() should take an other vector as argument and subtract that Vector3d from the existing Vector3d.', () => {
-    let v1 = new Vector3d(2, 4 ,2)
+    let v1 = new Vector3d(2, 4, 2)
     let v2 = new Vector3d(2, 2, 9)
     v1 = v1.subtract(v2)
     expect(v1).toEqual({

@@ -37,7 +37,7 @@ class Vector2d {
    * @returns {object}
    */
   toObject () {
-    return {x: this.x, y: this.y}
+    return { x: this.x, y: this.y }
   }
 
   /**
@@ -234,7 +234,31 @@ class Vector2d {
    * @returns {number}
    */
   degrees () {
-    return this.radians() *(180/Math.PI)
+    return this.radians() * (180 / Math.PI)
+  }
+
+  /**
+   * Linearly interpolates between 2 points.
+   *
+   * @see https://github.com/processing/p5.js/blob/0.9.0/src/math/p5.Vector.js#L12
+   * @example
+   *
+   * let v = new Vector2d(0, 0)
+   * let v2 = v.lerp(100, 100, 0.5)
+   *
+   * this should output {x: 50, y: 50}
+   * console.log(v2)
+   *
+   * @param {number} [x=0] - the initial value.
+   * @param {number} [y=0] - destination value.
+   * @param {number} [amt=0] - the distance
+   *
+   * @returns {Vector2d}
+   */
+  lerp (x = 0, y = 0, amt = 0) {
+    this.x += (x - this.x) * amt || 0
+    this.y += (y - this.y) * amt || 0
+    return this
   }
 
   /**

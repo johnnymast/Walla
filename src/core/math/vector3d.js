@@ -283,6 +283,30 @@ class Vector3d {
   }
 
   /**
+   * Linearly interpolates between 2 points.
+   *
+   * @see https://github.com/processing/p5.js/blob/0.9.0/src/math/p5.Vector.js#L12
+   * @example
+   *
+   * let v = new Vector3d(0, 0, 0)
+   * let v2 = v.lerp(100, 100, 100, 0.5)
+   *
+   * this should output {x: 50, y: 50, z: 50}
+   * console.log(v2)
+   *
+   * @param {number} [x=0] - the x value.
+   * @param {number} [y=0] - the y value.
+   * @param {number} [z=0] - the z value.
+   * @param {number} [amt=0] - the distance
+   */
+  lerp (x = 0, y = 0, z = 0, amt = 0) {
+    this.x += (x - this.x) * amt || 0
+    this.y += (y - this.y) * amt || 0
+    this.z += (z - this.z) * amt || 0
+    return this
+  }
+
+  /**
    * Get the current x value
    *
    * @returns {number}

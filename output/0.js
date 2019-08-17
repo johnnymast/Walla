@@ -75442,7 +75442,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * DebugManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(618)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, DebugScenePlugin) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(621)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, DebugScenePlugin) {
 
   /**
    * @classdesc AssetManager
@@ -75499,7 +75499,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * InputManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581), __webpack_require__(584), __webpack_require__(604)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581), __webpack_require__(584), __webpack_require__(606)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
   /**
    * @classdesc InputManager
    * @exports  core/managers/InputManager
@@ -76029,7 +76029,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(632)("./" + scene);
+      let _scene = __webpack_require__(635)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -76111,7 +76111,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 374 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(623);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(626);
 
 /**
  * StateManager
@@ -76495,7 +76495,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 583 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(591), __webpack_require__(584)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(592), __webpack_require__(584)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
 
   /**
    * @classdesc Level
@@ -76775,7 +76775,7 @@ const DIALOG_STATE = {
 /* 587 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(130), __webpack_require__(583), __webpack_require__(584), __webpack_require__(582), __webpack_require__(595)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(130), __webpack_require__(583), __webpack_require__(584), __webpack_require__(582), __webpack_require__(596)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Level.call(this, options);
 
@@ -76978,7 +76978,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 588 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(130), __webpack_require__(583), __webpack_require__(584), __webpack_require__(582), __webpack_require__(595)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(130), __webpack_require__(583), __webpack_require__(584), __webpack_require__(582), __webpack_require__(596)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Level.call(this, options);
 
@@ -77017,6 +77017,46 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 589 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(583), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Level, Statistics) {
+  var GameLevel = function (options) {
+    Level.call(this, options);
+
+    this.interactive = true;
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * Switch the FPS counter on/off.
+   * @param {boolean} visible - should the FPS tracker be visible.
+   */
+  GameLevel.prototype.setDisplayStats = function (visible = false) {
+    this.statistics.visible = visible;
+  };
+
+  /**
+   * The onStart callback.
+   */
+  GameLevel.prototype.onStart = function () {};
+
+  /**
+   * Update the game scene.
+   * @param {number} delta - the time passed since last tick.
+   */
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 590 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(583), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
   var GameLevel = function (options) {
     Level.call(this, options);
@@ -77047,7 +77087,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 590 */
+/* 591 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(583), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
@@ -77106,7 +77146,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 591 */
+/* 592 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
@@ -77468,7 +77508,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 592 */
+/* 593 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
@@ -77687,7 +77727,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 593 */
+/* 594 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(585).BUTTON_STATE;
@@ -77806,7 +77846,7 @@ const Type = __webpack_require__(585).BUTTON_TYPE;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 594 */
+/* 595 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77818,18 +77858,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(585).BUTTON_STATE;
 const Type = __webpack_require__(585).BUTTON_TYPE;
-const BaseButton = __webpack_require__(624);
-const ImageButton = __webpack_require__(625);
-const Button = __webpack_require__(593);
+const BaseButton = __webpack_require__(627);
+const ImageButton = __webpack_require__(628);
+const Button = __webpack_require__(594);
 
 
 
 /***/ }),
-/* 595 */
+/* 596 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = __webpack_require__(606);
-const Buttons = __webpack_require__(594);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = __webpack_require__(608);
+const Buttons = __webpack_require__(595);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581), __webpack_require__(183)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, TweenJS) {
 
@@ -77969,7 +78009,7 @@ const Buttons = __webpack_require__(594);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 596 */
+/* 597 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -77990,13 +78030,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 597 */
+/* 598 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 const Vector2d = __webpack_require__(230);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(587), __webpack_require__(609), __webpack_require__(610), __webpack_require__(608)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(587), __webpack_require__(611), __webpack_require__(612), __webpack_require__(610)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -78307,14 +78347,14 @@ const Vector2d = __webpack_require__(230);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 598 */
+/* 599 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * To keep the level file as small as possible i have added a view file that
  * handles the gamepad input. The file is located at screens/GamepadView.js
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(588), __webpack_require__(604), __webpack_require__(611)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, GamePadInput, GamepadView) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(588), __webpack_require__(606), __webpack_require__(613)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, GamePadInput, GamepadView) {
   let Level1 = function () {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -78413,16 +78453,122 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 599 */
+/* 600 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(628);
-const Dialogs = __webpack_require__(606);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(589), __webpack_require__(616)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Circle) {
+
+  /**
+   * Level1 constructor
+   *
+   * @constructor
+   */
+  let Level1 = function () {
+    GameLevel.call(this);
+
+    /**
+     *
+     * @type {number}
+     */
+    this.delay = 2;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.time_passed = 0;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.circle_radius = 20;
+
+    /**
+     *
+     * @type {null}
+     */
+    this.lerp_to = null;
+  };
+
+  extend(Level1, GameLevel);
+
+  /**
+   * onStart callback
+   */
+  Level1.prototype.onStart = function () {
+    GameLevel.prototype.onStart.call(this);
+
+    /**
+     * @type {Circle}
+     */
+    this.circle = new Circle(this.circle_radius);
+
+    /**
+     * @type {PIXI.TextStyle}
+     */
+    let textStyle = new PIXI.TextStyle({
+      fontFamily: 'Helvetica',
+      fontSize: 20,
+      fill: ['#ffffff']
+    });
+
+    /*
+     * @type {PIXI.Text}
+     */
+    this.richText = new PIXI.Text('Move your mouse', textStyle);
+    this.richText.x = this.app.renderer.screen.width / 2 - this.richText.width / 2;
+
+    this.addChild(this.richText);
+    this.addChild(this.circle);
+  };
+
+  /**
+   * Handle the mousemove event
+   *
+   * @param {PIXI.interaction.InteractionEvent} event - The event for mousemove
+   */
+  Level1.prototype.onMouseMove = function (event) {
+    let pos = event.data.global;
+    this.lerp_to = pos;
+  };
+
+  /**
+   * Update the game scene.
+   *
+   * @param {number} delta - the time passed since last tick.
+   */
+  Level1.prototype.update = function (delta) {
+    GameLevel.prototype.update.call(this, delta);
+    this.circle.update(delta);
+
+    this.time_passed += delta;
+    if (this.time_passed > this.delay) {
+
+      if (this.lerp_to) {
+        this.circle.position.x = lerp(this.circle.position.x, this.lerp_to.x, 0.3);
+        this.circle.position.y = lerp(this.circle.position.y, this.lerp_to.y, 0.3);
+      }
+
+      this.time_passed = 0;
+    }
+  };
+
+  return Level1;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 601 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(631);
+const Dialogs = __webpack_require__(608);
 
 /**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(591), __webpack_require__(229), __webpack_require__(582), __webpack_require__(183)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(592), __webpack_require__(229), __webpack_require__(582), __webpack_require__(183)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS) {
 
   /**
    * @classdesc MainScreen
@@ -78464,8 +78610,8 @@ const Dialogs = __webpack_require__(606);
     let menu = new Menus.Menu();
 
     let dialog = new Dialogs.CloseableDialog({
-      width: 400,
-      height: 500,
+      width: 300,
+      height: 250,
       x: this.app.screen.width / 2 - 400 / 2,
       y: this.app.screen.height / 2
     });
@@ -78477,19 +78623,28 @@ const Dialogs = __webpack_require__(606);
     let item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked);
     let item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked);
     let item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked);
+    let item4 = new Menus.MenuItemImageButton('Gamepad', this.gamePadClicked);
+    let item5 = new Menus.MenuItemImageButton('Lerp', this.lerpClicked);
 
     item1.setPosition(menu.x, menu.y);
     item2.setPosition(menu.x, item1.y + item1.height + 5);
     item3.setPosition(menu.x, item2.y + item2.height + 5);
+    item4.setPosition(menu.x, item3.y + item3.height + 5);
+    item5.setPosition(menu.x, item4.y + item4.height + 5);
 
     menu.addMenuItem(item1);
     menu.addMenuItem(item2);
     menu.addMenuItem(item3);
+    menu.addMenuItem(item4);
+    menu.addMenuItem(item5);
 
     if (this.isFullScreenAvailable() === true) {
-      let item4 = new Menus.MenuItemImageButton('Toggle Fullscreen', this.fullscreenClicked.bind(this));
-      item4.setPosition(menu.x, item3.y + item3.height + 5);
-      menu.addMenuItem(item4);
+      let fullscreen = new Menus.MenuItemImageButton('Toggle Fullscreen', this.fullscreenClicked.bind(this));
+      let menuItems = menu.getMenuItems();
+      let lastItem = menuItems[menuItems.length - 1];
+
+      fullscreen.setPosition(menu.x, lastItem.y + lastItem.height + 5);
+      menu.addMenuItem(fullscreen);
     }
 
     /**
@@ -78508,8 +78663,6 @@ const Dialogs = __webpack_require__(606);
       dialog.x = coords.x;
       dialog.y = coords.y;
     }).start();
-
-    console.log(GameEngine.get().get('DebugManager').init()); //.init();
   };
 
   /**
@@ -78531,6 +78684,20 @@ const Dialogs = __webpack_require__(606);
    */
   MainMenu.prototype.roundedRectsClicked = function () {
     this.SceneManager.switchTo('RoundedRects/Level1');
+  };
+
+  /**
+   * Gamepad menu option callback
+   */
+  MainMenu.prototype.gamePadClicked = function () {
+    this.SceneManager.switchTo('Gamepad/Level1');
+  };
+
+  /**
+   * Lerp menu option callback
+   */
+  MainMenu.prototype.lerpClicked = function () {
+    this.SceneManager.switchTo('Lerp/Level1');
   };
 
   /**
@@ -78571,13 +78738,13 @@ const Dialogs = __webpack_require__(606);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 600 */
+/* 602 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
-const DIRECTIONS = __webpack_require__(596).DIRECTIONS;
+const DIRECTIONS = __webpack_require__(597).DIRECTIONS;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(589), __webpack_require__(229), __webpack_require__(614)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(590), __webpack_require__(229), __webpack_require__(617)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -78706,10 +78873,10 @@ const DIRECTIONS = __webpack_require__(596).DIRECTIONS;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 601 */
+/* 603 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(590), __webpack_require__(615), __webpack_require__(616)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(591), __webpack_require__(618), __webpack_require__(619)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
 
   /**
    * Level1 constructor
@@ -78883,14 +79050,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 602 */
+/* 604 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 /**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(591)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(592)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene) {
 
   /**
    * @classdesc SplashScene
@@ -79016,7 +79183,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 603 */
+/* 605 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
@@ -79069,10 +79236,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 604 */
+/* 606 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(603), __webpack_require__(621)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(605), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
   /**
    * Take control over GamePad input by using this class.
    * You construct the class with a keycode.
@@ -79221,7 +79388,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 605 */
+/* 607 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(586).DIALOG_TYPE;
@@ -79355,7 +79522,7 @@ const STATE = __webpack_require__(586).DIALOG_STATE;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 606 */
+/* 608 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -79365,13 +79532,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(586).DIALOG_TYPE;
 const STATE = __webpack_require__(586).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(626);
-const DefaultDialog = __webpack_require__(627);
+const CloseableDialog = __webpack_require__(629);
+const DefaultDialog = __webpack_require__(630);
 
 
 
 /***/ }),
-/* 607 */
+/* 609 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -79441,12 +79608,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 608 */
+/* 610 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = __webpack_require__(185);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(592)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(593)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
 
   /**
    * The ball constructor.
@@ -79514,12 +79681,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const filters = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 609 */
+/* 611 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(230);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(592)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(593)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
 
   /**
    * Brick constructor.
@@ -79672,10 +79839,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 610 */
+/* 612 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(592)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(593)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
 
   /**
    * The Pad object constructor.
@@ -79718,12 +79885,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 611 */
+/* 613 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
-const Button = __webpack_require__(612);
-const Progress = __webpack_require__(613);
+const Button = __webpack_require__(614);
+const Progress = __webpack_require__(615);
 
 class GamepadView extends GameObject {
   /**
@@ -79869,7 +80036,7 @@ class GamepadView extends GameObject {
 module.exports = GamepadView;
 
 /***/ }),
-/* 612 */
+/* 614 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
@@ -79947,7 +80114,7 @@ class Button extends GameObject {
 module.exports = Button;
 
 /***/ }),
-/* 613 */
+/* 615 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
@@ -80032,10 +80199,49 @@ class Progress extends GameObject {
 module.exports = Progress;
 
 /***/ }),
-/* 614 */
+/* 616 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(596).DIRECTIONS;
+const GameObject = __webpack_require__(581);
+
+class Circle extends GameObject {
+  constructor(radius) {
+    super();
+
+    this.radius = radius;
+    this.graphics = new PIXI.Graphics();
+
+    this.init_line_color = 0xFEEB77;
+    this.line_color = this.init_line_color;
+
+    this.init_fill_color = 0x650A5A;
+    this.fill_color = this.init_line_color;
+
+    /**
+     *
+     * @type {number[]}
+     */
+    this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
+    this.addChild(this.graphics);
+  }
+
+  update(delta) {
+    this.graphics.clear();
+    this.graphics.lineStyle(2, this.line_color, 1);
+    this.graphics.beginFill(this.fill_color, 1);
+    this.graphics.drawCircle(0, 0, this.radius);
+    this.graphics.endFill();
+  }
+
+}
+
+module.exports = Circle;
+
+/***/ }),
+/* 617 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(597).DIRECTIONS;
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
   let Character = function (playerId = 1) {
     GameObject.call(this, null);
@@ -80121,7 +80327,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 615 */
+/* 618 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
@@ -80184,7 +80390,7 @@ class RoundedRect extends GameObject {
 module.exports = RoundedRect;
 
 /***/ }),
-/* 616 */
+/* 619 */
 /***/ (function(module, exports) {
 
 class Text extends PIXI.Container {
@@ -80215,7 +80421,7 @@ class Text extends PIXI.Container {
 module.exports = Text;
 
 /***/ }),
-/* 617 */
+/* 620 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
@@ -80420,10 +80626,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 618 */
+/* 621 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(603), __webpack_require__(617)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, DebugDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(605), __webpack_require__(620)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, DebugDialog) {
 
   let DebugScenePlugin = function () {
     ScenePlugin.call(this);
@@ -80451,7 +80657,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 619 */
+/* 622 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter) {
@@ -80523,10 +80729,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 620 */
+/* 623 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(622)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
   let Button = function (button, index = 0, gamepad) {
     EventEmitter.call(this);
 
@@ -80615,10 +80821,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 621 */
+/* 624 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(620), __webpack_require__(619)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(623), __webpack_require__(622)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
   let GamePad = function (gamepad) {
     EventEmitter.call(this);
 
@@ -80750,7 +80956,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 622 */
+/* 625 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -80784,7 +80990,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 module.exports = GamepadEvent;
 
 /***/ }),
-/* 623 */
+/* 626 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -80810,10 +81016,10 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 624 */
+/* 627 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(593);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(594);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(184), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
   let BaseButton = function (options) {
@@ -80974,7 +81180,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 
   /**
    * You can overwrite this function if you wish
-   * to handle if the button clicke is released.
+   * to handle if the button click is released.
    *
    * @param {event} event - The event object
    */
@@ -81017,17 +81223,17 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 625 */
+/* 628 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(593);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(594);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(184), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, _, GameObject) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(184), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, _, GameObject) {
   let ImageButton = function (options) {
 
-    this.textStyle = new pixi.TextStyle({
+    this.textStyle = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 16,
+      fontSize: 4,
       fill: ['#ffffff'] // gradient
     });
 
@@ -81035,8 +81241,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
       text: '',
       x: 0,
       y: 0,
-      width: 300,
-      height: 100,
+      width: 180,
+      height: 24,
       state: {
         default: {
           texture: 'panel_woodDetail.png',
@@ -81114,13 +81320,14 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
     state_default.width = this.options.width;
     state_default.height = this.options.height;
 
+    console.log('state', state_default.height);
     state_hover.width = this.options.width;
     state_hover.height = this.options.height;
 
     state_clicked.width = this.options.width;
     state_clicked.height = this.options.height;
 
-    this.textLabel = new pixi.Text(this.options.text, options.state.default.textstyle);
+    this.textLabel = new PIXI.Text(this.options.text, options.state.default.textstyle);
 
     state_default.visible = true;
     state_clicked.visible = false;
@@ -81224,12 +81431,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 626 */
+/* 629 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(594);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(595);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(605)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(607)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
   let CloseableDialog = function (options) {
 
     this.options = {
@@ -81309,10 +81516,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 627 */
+/* 630 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(605)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(607)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
   let DefaultDialog = function (options) {
     BaseDialog.call(this, options);
   };
@@ -81328,7 +81535,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 628 */
+/* 631 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81336,13 +81543,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(629);
-const MenuItemText = __webpack_require__(631);
-const MenuItemImageButton = __webpack_require__(630);
+const Menu = __webpack_require__(632);
+const MenuItemText = __webpack_require__(634);
+const MenuItemImageButton = __webpack_require__(633);
 
 
 /***/ }),
-/* 629 */
+/* 632 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -81371,6 +81578,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.items.push(item);
     this.addChild(item);
     this.arangeItems();
+  };
+
+  Menu.prototype.getMenuItems = function () {
+    return this.items;
   };
 
   /**
@@ -81416,12 +81627,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 630 */
+/* 633 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(594);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(595);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(607)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemImageButton module
@@ -81443,9 +81654,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 
     let style = new pixi.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 16,
-      // fontStyle: 'italic',
-      // fontWeight: 'bold',
+      fontSize: 10,
       fill: ['#ffffff']
     });
 
@@ -81506,10 +81715,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 631 */
+/* 634 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(607)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemText module
@@ -81592,34 +81801,34 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 632 */
+/* 635 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"./Breakout/GameLevel": 587,
 	"./Breakout/GameLevel.js": 587,
-	"./Breakout/Level1": 597,
-	"./Breakout/Level1.js": 597,
+	"./Breakout/Level1": 598,
+	"./Breakout/Level1.js": 598,
 	"./Gamepad/GameLevel": 588,
 	"./Gamepad/GameLevel.js": 588,
-	"./Gamepad/Level1": 598,
-	"./Gamepad/Level1.js": 598,
-	"./Lerp/GameLevel": 633,
-	"./Lerp/GameLevel.js": 633,
-	"./Lerp/Level1": 634,
-	"./Lerp/Level1.js": 634,
-	"./MainMenu": 599,
-	"./MainMenu.js": 599,
-	"./PixelShooter/GameLevel": 589,
-	"./PixelShooter/GameLevel.js": 589,
-	"./PixelShooter/Level1": 600,
-	"./PixelShooter/Level1.js": 600,
-	"./RoundedRects/GameLevel": 590,
-	"./RoundedRects/GameLevel.js": 590,
-	"./RoundedRects/Level1": 601,
-	"./RoundedRects/Level1.js": 601,
-	"./SplashScene": 602,
-	"./SplashScene.js": 602
+	"./Gamepad/Level1": 599,
+	"./Gamepad/Level1.js": 599,
+	"./Lerp/GameLevel": 589,
+	"./Lerp/GameLevel.js": 589,
+	"./Lerp/Level1": 600,
+	"./Lerp/Level1.js": 600,
+	"./MainMenu": 601,
+	"./MainMenu.js": 601,
+	"./PixelShooter/GameLevel": 590,
+	"./PixelShooter/GameLevel.js": 590,
+	"./PixelShooter/Level1": 602,
+	"./PixelShooter/Level1.js": 602,
+	"./RoundedRects/GameLevel": 591,
+	"./RoundedRects/GameLevel.js": 591,
+	"./RoundedRects/Level1": 603,
+	"./RoundedRects/Level1.js": 603,
+	"./SplashScene": 604,
+	"./SplashScene.js": 604
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -81635,202 +81844,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 632;
-
-/***/ }),
-/* 633 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(583), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Level, Statistics) {
-  var GameLevel = function (options) {
-    Level.call(this, options);
-
-    this.interactive = true;
-    this.statistics = new Statistics();
-    this.addChild(this.statistics);
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * Switch the FPS counter on/off.
-   * @param {boolean} visible - should the FPS tracker be visible.
-   */
-  GameLevel.prototype.setDisplayStats = function (visible = false) {
-    this.statistics.visible = visible;
-  };
-
-  /**
-   * The onStart callback.
-   */
-  GameLevel.prototype.onStart = function () {};
-
-  /**
-   * Update the game scene.
-   * @param {number} delta - the time passed since last tick.
-   */
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 634 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(633), __webpack_require__(635)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Circle) {
-
-  /**
-   * Level1 constructor
-   *
-   * @constructor
-   */
-  let Level1 = function () {
-    GameLevel.call(this);
-
-    /**
-     *
-     * @type {number}
-     */
-    this.delay = 2;
-
-    /**
-     *
-     * @type {number}
-     */
-    this.time_passed = 0;
-
-    /**
-     *
-     * @type {number}
-     */
-    this.circle_radius = 20;
-
-    /**
-     *
-     * @type {null}
-     */
-    this.lerp_to = null;
-  };
-
-  extend(Level1, GameLevel);
-
-  /**
-   * onStart callback
-   */
-  Level1.prototype.onStart = function () {
-    GameLevel.prototype.onStart.call(this);
-
-    /**
-     * @type {Circle}
-     */
-    this.circle = new Circle(this.circle_radius);
-
-    /**
-     * @type {PIXI.TextStyle}
-     */
-    let textStyle = new PIXI.TextStyle({
-      fontFamily: 'Helvetica',
-      fontSize: 20,
-      fill: ['#ffffff']
-    });
-
-    /*
-     * @type {PIXI.Text}
-     */
-    this.richText = new PIXI.Text('Move your mouse', textStyle);
-    this.richText.x = this.app.renderer.screen.width / 2 - this.richText.width / 2;
-
-    this.addChild(this.richText);
-    this.addChild(this.circle);
-  };
-
-  /**
-   * Handle the mousemove event
-   *
-   * @param {PIXI.interaction.InteractionEvent} event - The event for mousemove
-   */
-  Level1.prototype.onMouseMove = function (event) {
-    let pos = event.data.global;
-    this.lerp_to = pos;
-  };
-
-  Level1.prototype.lerp = function (start, stop, amt) {
-    return amt * (stop - start) + start;
-  };
-
-  /**
-   * Update the game scene.
-   *
-   * @param {number} delta - the time passed since last tick.
-   */
-  Level1.prototype.update = function (delta) {
-    GameLevel.prototype.update.call(this, delta);
-    this.circle.update(delta);
-
-    this.time_passed += delta;
-    if (this.time_passed > this.delay) {
-
-      if (this.lerp_to) {
-        this.circle.position.x = this.lerp(this.circle.position.x, this.lerp_to.x, 0.3);
-        this.circle.position.y = this.lerp(this.circle.position.y, this.lerp_to.y, 0.3);
-      }
-
-      /**
-       * Reset the time that has passed
-       * since the last update.
-       *
-       * @type {number}
-       */
-      this.time_passed = 0;
-    }
-  };
-
-  return Level1;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 635 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const GameObject = __webpack_require__(581);
-
-class Circle extends GameObject {
-  constructor(radius) {
-    super();
-
-    this.radius = radius;
-    this.graphics = new PIXI.Graphics();
-
-    this.init_line_color = 0xFEEB77;
-    this.line_color = this.init_line_color;
-
-    this.init_fill_color = 0x650A5A;
-    this.fill_color = this.init_line_color;
-
-    /**
-     *
-     * @type {number[]}
-     */
-    this.randomColors = [0xFFFF00, 0xFF0000, 0x00FF00, 0x00FFFF, 0xFF00FF, 0x9D00FF];
-    this.addChild(this.graphics);
-  }
-
-  update(delta) {
-    this.graphics.clear();
-    this.graphics.lineStyle(2, this.line_color, 1);
-    this.graphics.beginFill(this.fill_color, 1);
-    this.graphics.drawCircle(0, 0, this.radius);
-    this.graphics.endFill();
-  }
-
-}
-
-module.exports = Circle;
+webpackContext.id = 635;
 
 /***/ })
 ]);

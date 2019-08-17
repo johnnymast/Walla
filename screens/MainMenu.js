@@ -47,12 +47,11 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       let menu = new Menus.Menu()
 
       let dialog = new Dialogs.CloseableDialog({
-        width: 400,
-        height: 500,
-        x: this.app.screen.width / 2 - 400 /2,
-        y: this.app.screen.height / 2 ,
+        width: 300,
+        height: 250,
+        x: this.app.screen.width / 2 - 400 / 2,
+        y: this.app.screen.height / 2,
       })
-
 
       dialog.onClose = function () {
         alert('Dialog onclose called')
@@ -61,22 +60,29 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       let item1 = new Menus.MenuItemImageButton('Breakout', this.breakoutClicked)
       let item2 = new Menus.MenuItemImageButton('PixelShooter', this.pixelShooterClicked)
       let item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked)
+      let item4 = new Menus.MenuItemImageButton('Gamepad', this.gamePadClicked)
+      let item5 = new Menus.MenuItemImageButton('Lerp', this.lerpClicked)
 
       item1.setPosition(menu.x, menu.y)
       item2.setPosition(menu.x, item1.y + item1.height + 5)
       item3.setPosition(menu.x, item2.y + item2.height + 5)
-
+      item4.setPosition(menu.x, item3.y + item3.height + 5)
+      item5.setPosition(menu.x, item4.y + item4.height + 5)
 
       menu.addMenuItem(item1)
       menu.addMenuItem(item2)
       menu.addMenuItem(item3)
+      menu.addMenuItem(item4)
+      menu.addMenuItem(item5)
 
       if (this.isFullScreenAvailable() === true) {
-        let item4 = new Menus.MenuItemImageButton('Toggle Fullscreen', this.fullscreenClicked.bind(this))
-        item4.setPosition(menu.x, item3.y + item3.height + 5)
-        menu.addMenuItem(item4)
-      }
+        let fullscreen = new Menus.MenuItemImageButton('Toggle Fullscreen', this.fullscreenClicked.bind(this))
+        let menuItems = menu.getMenuItems()
+        let lastItem = menuItems[menuItems.length - 1]
 
+        fullscreen.setPosition(menu.x, lastItem.y + lastItem.height + 5)
+        menu.addMenuItem(fullscreen)
+      }
 
       /**
        * Position the Menu on the Dialog
@@ -89,17 +95,15 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
       this.addChild(dialog)
       this.addChild(this.statistics)
 
-      let coords = {x: dialog.x, y: 0, useTicks: false}
+      let coords = { x: dialog.x, y: 0, useTicks: false }
       this.tween = new TweenJS.Tween(coords)
-        .to({y: this.app.screen.height / 2 - dialog.height / 2}, 500)
+        .to({ y: this.app.screen.height / 2 - dialog.height / 2 }, 500)
         .easing(TweenJS.Easing.Circular.In)
         .onUpdate(function () {
           dialog.x = coords.x
           dialog.y = coords.y
         })
         .start()
-
-      console.log ( GameEngine.get().get('DebugManager').init() ) //.init();
     }
 
     /**
@@ -124,6 +128,20 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
     }
 
     /**
+     * Gamepad menu option callback
+     */
+    MainMenu.prototype.gamePadClicked = function () {
+      this.SceneManager.switchTo('Gamepad/Level1')
+    }
+
+    /**
+     * Lerp menu option callback
+     */
+    MainMenu.prototype.lerpClicked = function () {
+      this.SceneManager.switchTo('Lerp/Level1')
+    }
+
+    /**
      * RoundedRects menu option callback
      */
     MainMenu.prototype.fullscreenClicked = function () {
@@ -138,7 +156,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
      * Callback for when the main menu was left for an other
      * scene.
      */
-    MainMenu.prototype.onSwitchedAway = function() {
+    MainMenu.prototype.onSwitchedAway = function () {
       // console.log('SceneManager switched away from MainMenu')
     }
 

@@ -1,11 +1,11 @@
 const Button = require('../BaseButton')
 
-define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject) {
+define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject) {
   let ImageButton = function (options) {
 
-    this.textStyle = new pixi.TextStyle({
+    this.textStyle = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 16,
+      fontSize: 4,
       fill: ['#ffffff'], // gradient
     })
 
@@ -13,8 +13,8 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
       text: '',
       x: 0,
       y: 0,
-      width: 300,
-      height: 100,
+      width: 180,
+      height: 24,
       state: {
         default: {
           texture: 'panel_woodDetail.png',
@@ -75,8 +75,8 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     this.options.text = text
     this.textLabel.text = this.options.text
 
-    this.textLabel.x = this.width /2 - this.textLabel.width /2
-    this.textLabel.y = this.height /2 - this.textLabel.height /2
+    this.textLabel.x = this.width / 2 - this.textLabel.width / 2
+    this.textLabel.y = this.height / 2 - this.textLabel.height / 2
   }
 
   /**
@@ -92,13 +92,14 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     state_default.width = this.options.width
     state_default.height = this.options.height
 
+    console.log('state', state_default.height)
     state_hover.width = this.options.width
     state_hover.height = this.options.height
 
     state_clicked.width = this.options.width
     state_clicked.height = this.options.height
 
-    this.textLabel = new pixi.Text(this.options.text, options.state.default.textstyle)
+    this.textLabel = new PIXI.Text(this.options.text, options.state.default.textstyle)
 
     state_default.visible = true
     state_clicked.visible = false
@@ -111,10 +112,10 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     this.addChild(this.states.default)
     this.addChild(this.states.hover)
     this.addChild(this.states.clicked)
-    this.addChild(this.textLabel);
+    this.addChild(this.textLabel)
 
-    this.textLabel.x = this.width /2 - this.textLabel.width /2
-    this.textLabel.y = this.height /2 - this.textLabel.height /2
+    this.textLabel.x = this.width / 2 - this.textLabel.width / 2
+    this.textLabel.y = this.height / 2 - this.textLabel.height / 2
   }
 
   /**
@@ -156,7 +157,6 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
       this.onHover()
     }
   }
-
 
   /**
    * You can overwrite this function if you wish

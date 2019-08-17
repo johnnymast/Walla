@@ -99,6 +99,8 @@ require([
   ge.set('DebugManager', new DebugManager())
 
   ge.get('SceneManager')
-    .add('Lerp/Level1')
-    .switchTo('Lerp/Level1')
+    .add('SplashScene')
+    .switchTo('SplashScene')
+    // .add('Lerp/Level1')
+    // .switchTo('Lerp/Level1')
 })

@@ -26,6 +26,10 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.arangeItems()
   }
 
+  Menu.prototype.getMenuItems = function () {
+    return this.items
+  }
+
   /**
    * Place menu items on their given position.
    *
