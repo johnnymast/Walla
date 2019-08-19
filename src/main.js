@@ -61,11 +61,11 @@ require([
   'core/managers/SceneManager',
   'core/managers/AssetManager',
   'core/managers/StateManager',
-  'core/managers/PhysicsManager',
   'core/managers/InputManager',
   'core/managers/ResizeManager',
-  'core/managers/DebugManager'
-], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, InputManager, ResizeManager, DebugManager) {
+  'core/managers/DebugManager',
+  'core/managers/PluginManager'
+], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, DebugManager, PluginManager) {
   PIXI.utils.skipHello()
   sayHello()
 
@@ -94,18 +94,15 @@ require([
   ge.set('AssetManager', new AssetManager())
   ge.set('SceneManager', new SceneManager())
   ge.set('StateManager', new StateManager())
-  ge.set('PhysicsManager', new PhysicsManager())
   ge.set('InputManager', new InputManager())
   ge.set('DebugManager', new DebugManager())
+  ge.set('PluginManager', new PluginManager(ge))
 
-  if (typeof PLUGIN_MATTER)
-  {
-    // Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
+  if (PLUGIN_MATTERJS) {
+    ge.get('PluginManager').loadPlugin('matterjs', 'Matter')
   }
 
   ge.get('SceneManager')
     .add('SplashScene')
     .switchTo('SplashScene')
-    // .add('Lerp/Level1')
-    // .switchTo('Lerp/Level1')
 })

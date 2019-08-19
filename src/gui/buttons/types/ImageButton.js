@@ -92,7 +92,6 @@ define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject)
     state_default.width = this.options.width
     state_default.height = this.options.height
 
-    console.log('state', state_default.height)
     state_hover.width = this.options.width
     state_hover.height = this.options.height
 

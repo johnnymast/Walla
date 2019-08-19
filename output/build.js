@@ -5475,7 +5475,7 @@ const EngineInfo = {
   }
 };
 
-__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(2), __webpack_require__(229), __webpack_require__(373), __webpack_require__(368), __webpack_require__(374), __webpack_require__(371), __webpack_require__(370), __webpack_require__(372), __webpack_require__(369)]; (function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, PhysicsManager, InputManager, ResizeManager, DebugManager) {
+__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(2), __webpack_require__(229), __webpack_require__(373), __webpack_require__(368), __webpack_require__(374), __webpack_require__(370), __webpack_require__(372), __webpack_require__(369), __webpack_require__(371)]; (function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, DebugManager, PluginManager) {
   PIXI.utils.skipHello();
   sayHello();
 
@@ -5504,17 +5504,15 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   ge.set('AssetManager', new AssetManager());
   ge.set('SceneManager', new SceneManager());
   ge.set('StateManager', new StateManager());
-  ge.set('PhysicsManager', new PhysicsManager());
   ge.set('InputManager', new InputManager());
   ge.set('DebugManager', new DebugManager());
+  ge.set('PluginManager', new PluginManager(ge));
 
-  if (typeof PLUGIN_MATTER) {
-    // Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
+  if (true) {
+    ge.get('PluginManager').loadPlugin('matterjs', 'Matter');
   }
 
   ge.get('SceneManager').add('SplashScene').switchTo('SplashScene');
-  // .add('Lerp/Level1')
-  // .switchTo('Lerp/Level1')
 }.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 /***/ }),

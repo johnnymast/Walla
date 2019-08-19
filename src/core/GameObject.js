@@ -33,11 +33,6 @@ define(['pixi', 'core/GameEngine'], function (PIXI, GameEngine) {
     this.StateManager = this.ge.get('StateManager')
 
     /**
-     * @type {PhysicsManager}
-     */
-    this.PhysicsManager = this.ge.get('PhysicsManager')
-
-    /**
      * @type {InputManager}
      */
     this.InputManager = this.ge.get('InputManager')
@@ -51,6 +46,13 @@ define(['pixi', 'core/GameEngine'], function (PIXI, GameEngine) {
      * @type DebugManager
      */
     this.DebugManager = this.ge.get('DebugManager')
+
+    /**
+     * @type DebugManager
+     */
+    this.PluginManager = this.ge.get('PluginManager')
+
+
 
     /**
      * @type {PIXI.interaction.InteractionManager}

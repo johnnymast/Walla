@@ -33,6 +33,11 @@ define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 
      */
     this.showPhysics = true
 
+    /**
+     *
+     */
+    this.PhysicsManager = new this.PluginManager.getPlugin('Matter').PhysicsManager
+
     if (this.showPhysics === false)
       this.PhysicsManager.run()
   }

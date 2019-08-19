@@ -75442,7 +75442,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * DebugManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(621)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, DebugScenePlugin) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, DebugScenePlugin) {
 
   /**
    * @classdesc AssetManager
@@ -75718,216 +75718,64 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 371 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// const Vector2d = require('core/math/Vector2d')
-
-/**
- * PhysicsManager
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * PluginManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(130), __webpack_require__(581), __webpack_require__(230)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Matter, GameObject, Vector2d) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
   /**
-   * @classdesc PhysicsManager
-   * @exports  core/managers/PhysicsManager
+   * @classdesc PluginManager
+   * @exports  core/managers/PluginManager
    * @class
    */
-  let PhysicsManager = function (options) {
-    GameObject.call(this, options);
-
-    const canvas = document.getElementById('canvas');
-
-    /**
-     * @type {Matter.Engine}
-     */
-    this.engine = Matter.Engine.create();
-
-    /**
-     * @type {Matter.Engine}
-     */
-    this.world = this.engine.world;
-
-    /**
-     * @type {Matter.Render}
-     */
-    this.render = Matter.Render.create({
-      element: document.body,
-      canvas: canvas,
-      engine: this.engine,
-      // controller: Matter.RenderPixi,
-      options: {
-        width: this.app.screen.width,
-        height: this.app.screen.height,
-        center: true,
-        wireframes: true,
-        wireframe: true,
-        pixelRatio: window.devicePixelRatio,
-        // showIds: true,
-        showLabels: true,
-        showAngleIndicator: true,
-        showCollisions: true,
-        showVelocity: true
-      }
-    });
-
-    // add mouse control
-    let mouse = Matter.Mouse.create(this.render.canvas),
-        mouseConstraint = Matter.MouseConstraint.create(this.engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: {
-          visible: false
-        }
-      }
-    });
-
-    Matter.World.add(this.world, mouseConstraint);
+  let PluginManager = function (GameEngine) {
+    this.GameEngine = GameEngine;
+    this.plugins = [];
   };
 
-  extend(PhysicsManager, GameObject);
-
   /**
-   * Return the Events object.
+   * Load a plugin into the game engine.
    *
-   * @returns {Matter.Events}
+   * @param {string} name - The folder name of the plugin
+   * @param {string} alias - register the plugin under this alias.
+   * @returns {object}
    */
-  PhysicsManager.prototype.getEventHandler = function () {
-    return Matter.Events;
+  PluginManager.prototype.loadPlugin = function (name = '', alias = '') {
+    if (!name.length) {
+      throw new Error('loadPlugin: Empty plugin name.');
+    }
+
+    let plugin = __webpack_require__(638)("./" + name + '/index');
+
+    if (!alias) {
+      alias = name;
+    }
+
+    this.plugins[alias] = plugin;
+
+    return plugin;
   };
 
   /**
-   * Return the engine object.
+   * Load a plugin into the game engine.
    *
-   * @returns {Matter.Engine}
+   * @param {string} alias - Alias of the plugin
+   * @returns {object}
    */
-  PhysicsManager.prototype.getEngine = function () {
-    return this.engine;
+  PluginManager.prototype.getPlugin = function (alias) {
+    if (!alias.length) {
+      throw new Error('getPlugin: Empty plugin alias.');
+    }
+    console.log('this ', this);
+    console.log('hallo ', this.plugins);
+    if (!this.plugins[alias]) {
+      throw new Error('getPlugin: Plugin not found.');
+    }
+
+    return this.plugins[alias];
   };
 
-  /**
-   * Return the world object.
-   *
-   * @returns {Matter.World}
-   */
-  PhysicsManager.prototype.getWorld = function () {
-    return this.world;
-  };
-
-  /**
-   * Add a new body.
-   *
-   * @param {Matter.Body} body - the body to add to the world.
-   */
-  PhysicsManager.prototype.add = function (body) {
-    Matter.World.add(this.world, body);
-  };
-
-  PhysicsManager.prototype.remove = function (body) {
-    Matter.World.remove(this.world, body);
-  };
-
-  /**
-   * Translate a PIXI x/y to matter js coordinates.
-   *
-   * @param {number} x
-   * @param {number} y
-   * @param {number} width
-   * @param {number} height
-   * @returns {{x: *, y: *}}
-   */
-  PhysicsManager.prototype.PIXIToMatter = function (x, y, width, height) {
-    return {
-      x: x + width * 0.5,
-      y: y + height * 0.5
-    };
-  };
-
-  /**
-   * Apply velocity on a given body.
-   *
-   * @param {Matter.Body} body - the body to apply velocity on
-   * @param {object|null} [options=null] - optional arguments
-   */
-  PhysicsManager.prototype.setVelocity = function (body, options) {
-    return Matter.Body.setVelocity(body, options);
-  };
-
-  /**
-   * Sets the angular velocity of the body instantly. Position, angle, force etc. are unchanged.
-   *
-   * @param {Matter.Body} body - the body to apply velocity on
-   * @param {number} [velocity=0] - the velocity value
-   */
-  PhysicsManager.prototype.setAngularVelocity = function (body, velocity = 0) {
-    return Matter.Body.setAngularVelocity(body, velocity);
-  };
-
-  /**
-   * Apply force to the body.
-   *
-   * @param {Matter.Body} body - the body to apply force on
-   * @param {number} x - the force of the x position
-   * @param {number} y - the force of the y position
-   */
-  PhysicsManager.prototype.applyForce = function (body, x, y) {
-    return Matter.Body.applyForce(body, new Vector2d(body.position.x, body.position.y), new Vector2d(x, y));
-  };
-
-  /**
-   * Set the position of the body.
-   *
-   * @param {Matter.Body} body - the body to set the position on
-   * @param {number} x - x position for the body
-   * @param {number} y - y position for the body
-   */
-  PhysicsManager.prototype.setPosition = function (body, x, y) {
-    return Matter.Body.setPosition(body, new Vector2d(x, y));
-  };
-
-  /**
-   * Create a rectangle body.
-   *
-   * @param {number} x - the x position
-   * @param {number} y = the y position
-   * @param {number} width - the width of the rectangle
-   * @param {number} height - the height of the rectangle
-   * @param {object} [options=null] - optional options for the circle body.
-   * @returns {Matter.Body}
-   */
-  PhysicsManager.prototype.rectangle = function (x, y, width, height, options = null) {
-    return Matter.Bodies.rectangle(x, y, width, height, options);
-  };
-
-  /**
-   * Create a circle body.
-   *
-   * @param {number} x - the x position
-   * @param {number} y = the y position
-   * @param {number} radius - the radius of the circle
-   * @param {object} [options=null] - optional options for the circle body.
-   * @returns {Matter.Body}
-   */
-  PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
-    return Matter.Bodies.circle(x, y, radius, options);
-  };
-
-  /**
-   * Update the physics engine.
-   *
-   * @param {number} delta - the time diffrence since last time tick.
-   * @returns {Matter.Engine}
-   */
-  PhysicsManager.prototype.update = function (delta) {
-    return Matter.Engine.update(this.engine);
-  };
-
-  /**
-   * Run the Physics Engine
-   */
-  PhysicsManager.prototype.run = function () {
-    return Matter.Render.run(this.render);
-  };
-
-  return PhysicsManager;
+  return PluginManager;
 }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -76029,7 +75877,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(635)("./" + scene);
+      let _scene = __webpack_require__(639)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -76111,7 +75959,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 374 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(626);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(629);
 
 /**
  * StateManager
@@ -76415,11 +76263,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.StateManager = this.ge.get('StateManager');
 
     /**
-     * @type {PhysicsManager}
-     */
-    this.PhysicsManager = this.ge.get('PhysicsManager');
-
-    /**
      * @type {InputManager}
      */
     this.InputManager = this.ge.get('InputManager');
@@ -76433,6 +76276,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      * @type DebugManager
      */
     this.DebugManager = this.ge.get('DebugManager');
+
+    /**
+     * @type DebugManager
+     */
+    this.PluginManager = this.ge.get('PluginManager');
 
     /**
      * @type {PIXI.interaction.InteractionManager}
@@ -76808,6 +76656,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
      * @default false
      */
     this.showPhysics = true;
+
+    /**
+     *
+     */
+    this.PhysicsManager = new this.PluginManager.getPlugin('Matter').PhysicsManager;
 
     if (this.showPhysics === false) this.PhysicsManager.run();
   };
@@ -77861,8 +77714,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(585).BUTTON_STATE;
 const Type = __webpack_require__(585).BUTTON_TYPE;
-const BaseButton = __webpack_require__(627);
-const ImageButton = __webpack_require__(628);
+const BaseButton = __webpack_require__(630);
+const ImageButton = __webpack_require__(631);
 const Button = __webpack_require__(594);
 
 
@@ -78565,7 +78418,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 601 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(631);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(634);
 const Dialogs = __webpack_require__(608);
 
 /**
@@ -79242,7 +79095,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 606 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(605), __webpack_require__(624)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(605), __webpack_require__(627)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
   /**
    * Take control over GamePad input by using this class.
    * You construct the class with a keycode.
@@ -79535,8 +79388,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(586).DIALOG_TYPE;
 const STATE = __webpack_require__(586).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(629);
-const DefaultDialog = __webpack_require__(630);
+const CloseableDialog = __webpack_require__(632);
+const DefaultDialog = __webpack_require__(633);
 
 
 
@@ -80425,6 +80278,266 @@ module.exports = Text;
 
 /***/ }),
 /* 620 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["moduleExists"] = moduleExists;
+function moduleExists(module) {
+
+  return new Promise((resolve, reject) => {
+
+    try {
+      // import module
+      resolve();
+    } catch (e) {
+      reject();
+    }
+  });
+}
+
+/***/ }),
+/* 621 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * PhysicsManager
+ * @namespace Core Managers
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(130), __webpack_require__(581), __webpack_require__(230)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Matter, GameObject, Vector2d) {
+  /**
+   * @classdesc PhysicsManager
+   * @exports  plugins/matterjs/PhysicsManager
+   * @class
+   */
+  let PhysicsManager = function (options) {
+    GameObject.call(this, options);
+
+    const canvas = document.getElementById('canvas');
+
+    /**
+     * @type {Matter.Engine}
+     */
+    this.engine = Matter.Engine.create();
+
+    /**
+     * @type {Matter.Engine}
+     */
+    this.world = this.engine.world;
+
+    /**
+     * @type {Matter.Render}
+     */
+    this.render = Matter.Render.create({
+      element: document.body,
+      canvas: canvas,
+      engine: this.engine,
+      // controller: Matter.RenderPixi,
+      options: {
+        width: this.app.screen.width,
+        height: this.app.screen.height,
+        center: true,
+        wireframes: true,
+        wireframe: true,
+        pixelRatio: window.devicePixelRatio,
+        // showIds: true,
+        showLabels: true,
+        showAngleIndicator: true,
+        showCollisions: true,
+        showVelocity: true
+      }
+    });
+
+    // add mouse control
+    let mouse = Matter.Mouse.create(this.render.canvas),
+        mouseConstraint = Matter.MouseConstraint.create(this.engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: {
+          visible: false
+        }
+      }
+    });
+
+    Matter.World.add(this.world, mouseConstraint);
+  };
+
+  extend(PhysicsManager, GameObject);
+
+  /**
+   * Return the Events object.
+   *
+   * @returns {Matter.Events}
+   */
+  PhysicsManager.prototype.getEventHandler = function () {
+    return Matter.Events;
+  };
+
+  /**
+   * Return the engine object.
+   *
+   * @returns {Matter.Engine}
+   */
+  PhysicsManager.prototype.getEngine = function () {
+    return this.engine;
+  };
+
+  /**
+   * Return the world object.
+   *
+   * @returns {Matter.World}
+   */
+  PhysicsManager.prototype.getWorld = function () {
+    return this.world;
+  };
+
+  /**
+   * Add a new body.
+   *
+   * @param {Matter.Body} body - the body to add to the world.
+   */
+  PhysicsManager.prototype.add = function (body) {
+    Matter.World.add(this.world, body);
+  };
+
+  PhysicsManager.prototype.remove = function (body) {
+    Matter.World.remove(this.world, body);
+  };
+
+  /**
+   * Translate a PIXI x/y to matter js coordinates.
+   *
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   * @returns {{x: *, y: *}}
+   */
+  PhysicsManager.prototype.PIXIToMatter = function (x, y, width, height) {
+    return {
+      x: x + width * 0.5,
+      y: y + height * 0.5
+    };
+  };
+
+  /**
+   * Apply velocity on a given body.
+   *
+   * @param {Matter.Body} body - the body to apply velocity on
+   * @param {object|null} [options=null] - optional arguments
+   */
+  PhysicsManager.prototype.setVelocity = function (body, options) {
+    return Matter.Body.setVelocity(body, options);
+  };
+
+  /**
+   * Sets the angular velocity of the body instantly. Position, angle, force etc. are unchanged.
+   *
+   * @param {Matter.Body} body - the body to apply velocity on
+   * @param {number} [velocity=0] - the velocity value
+   */
+  PhysicsManager.prototype.setAngularVelocity = function (body, velocity = 0) {
+    return Matter.Body.setAngularVelocity(body, velocity);
+  };
+
+  /**
+   * Apply force to the body.
+   *
+   * @param {Matter.Body} body - the body to apply force on
+   * @param {number} x - the force of the x position
+   * @param {number} y - the force of the y position
+   */
+  PhysicsManager.prototype.applyForce = function (body, x, y) {
+    return Matter.Body.applyForce(body, new Vector2d(body.position.x, body.position.y), new Vector2d(x, y));
+  };
+
+  /**
+   * Set the position of the body.
+   *
+   * @param {Matter.Body} body - the body to set the position on
+   * @param {number} x - x position for the body
+   * @param {number} y - y position for the body
+   */
+  PhysicsManager.prototype.setPosition = function (body, x, y) {
+    return Matter.Body.setPosition(body, new Vector2d(x, y));
+  };
+
+  /**
+   * Create a rectangle body.
+   *
+   * @param {number} x - the x position
+   * @param {number} y = the y position
+   * @param {number} width - the width of the rectangle
+   * @param {number} height - the height of the rectangle
+   * @param {object} [options=null] - optional options for the circle body.
+   * @returns {Matter.Body}
+   */
+  PhysicsManager.prototype.rectangle = function (x, y, width, height, options = null) {
+    return Matter.Bodies.rectangle(x, y, width, height, options);
+  };
+
+  /**
+   * Create a circle body.
+   *
+   * @param {number} x - the x position
+   * @param {number} y = the y position
+   * @param {number} radius - the radius of the circle
+   * @param {object} [options=null] - optional options for the circle body.
+   * @returns {Matter.Body}
+   */
+  PhysicsManager.prototype.circle = function (x, y, radius, options = null) {
+    return Matter.Bodies.circle(x, y, radius, options);
+  };
+
+  /**
+   * Update the physics engine.
+   *
+   * @param {number} delta - the time diffrence since last time tick.
+   * @returns {Matter.Engine}
+   */
+  PhysicsManager.prototype.update = function (delta) {
+    return Matter.Engine.update(this.engine);
+  };
+
+  /**
+   * Run the Physics Engine
+   */
+  PhysicsManager.prototype.run = function () {
+    return Matter.Render.run(this.render);
+  };
+
+  return PhysicsManager;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 622 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const pkg = __webpack_require__(620);
+
+const PhysicsManager = __webpack_require__(621);
+
+module.exports = {
+  PhysicsManager: new PhysicsManager()
+};
+
+// pkg.moduleExists('pixi' /* take care of absolute paths */)
+//   .then(() => {
+//
+//     const PhysicsManager = require('./PhysicsManager')
+//
+//     module.exports = {
+//       PhysicsManager
+//     };
+//
+//     console.log('did export')
+//   })
+//   .catch(() => { throw Error('Plugins: Module matter-js was not found'); });
+
+/***/ }),
+/* 623 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
@@ -80629,10 +80742,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 621 */
+/* 624 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(605), __webpack_require__(620)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, DebugDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(605), __webpack_require__(623)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, DebugDialog) {
 
   let DebugScenePlugin = function () {
     ScenePlugin.call(this);
@@ -80660,7 +80773,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 622 */
+/* 625 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter) {
@@ -80732,10 +80845,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 623 */
+/* 626 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(628)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
   let Button = function (button, index = 0, gamepad) {
     EventEmitter.call(this);
 
@@ -80824,10 +80937,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 624 */
+/* 627 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(623), __webpack_require__(622)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(626), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
   let GamePad = function (gamepad) {
     EventEmitter.call(this);
 
@@ -80959,7 +81072,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 625 */
+/* 628 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -80993,7 +81106,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 module.exports = GamepadEvent;
 
 /***/ }),
-/* 626 */
+/* 629 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -81019,7 +81132,7 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 627 */
+/* 630 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(594);
@@ -81226,7 +81339,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 628 */
+/* 631 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(594);
@@ -81323,7 +81436,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
     state_default.width = this.options.width;
     state_default.height = this.options.height;
 
-    console.log('state', state_default.height);
     state_hover.width = this.options.width;
     state_hover.height = this.options.height;
 
@@ -81434,7 +81546,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 629 */
+/* 632 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(595);
@@ -81519,7 +81631,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 630 */
+/* 633 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(607)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
@@ -81538,7 +81650,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 631 */
+/* 634 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81546,13 +81658,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(632);
-const MenuItemText = __webpack_require__(634);
-const MenuItemImageButton = __webpack_require__(633);
+const Menu = __webpack_require__(635);
+const MenuItemText = __webpack_require__(637);
+const MenuItemImageButton = __webpack_require__(636);
 
 
 /***/ }),
-/* 632 */
+/* 635 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -81630,7 +81742,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 633 */
+/* 636 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(595);
@@ -81718,7 +81830,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 634 */
+/* 637 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
@@ -81804,7 +81916,30 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 635 */
+/* 638 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./matterjs/index": 622
+};
+function webpackContext(req) {
+	return __webpack_require__(webpackContextResolve(req));
+};
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+};
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 638;
+
+/***/ }),
+/* 639 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -81847,7 +81982,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 635;
+webpackContext.id = 639;
 
 /***/ })
 ]);

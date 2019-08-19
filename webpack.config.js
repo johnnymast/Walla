@@ -23,7 +23,7 @@ if (PROD) {
 
 plugins.push(
   new webpack.DefinePlugin({
-    "typeof 'PLUGIN_MATTER'": JSON.stringify(true)
+    PLUGIN_MATTERJS: JSON.stringify(true)
   })
 );
 
