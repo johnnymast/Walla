@@ -46,8 +46,7 @@ define([], function () {
     if (!alias.length) {
       throw new Error('getPlugin: Empty plugin alias.')
     }
-    console.log('this ', this)
-    console.log('hallo ', this.plugins)
+    
     if (!this.plugins[alias]) {
       throw new Error('getPlugin: Plugin not found.')
     }
