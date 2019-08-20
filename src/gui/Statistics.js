@@ -24,7 +24,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
       fontSize: 18,
       fill: ['#ffffff'], // gradient
     })
-    this.fps = new pixi.Text('FPS: ' + this.app.ticker.FPS.toFixed(2), style)
+    this.fps = new pixi.Text('FPS: ' + this.app.gameloop.FPS.toFixed(2), style)
 
     this.addChild(this.fps)
     this.x = this.paddingX
@@ -32,7 +32,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   }
 
   Statistics.prototype.update = function (delta) {
-    this.fps.text = 'FPS: ' + this.app.ticker.FPS.toFixed(2)
+    this.fps.text = 'FPS: ' + this.app.gameloop.FPS.toFixed(2)
   }
 
   return Statistics

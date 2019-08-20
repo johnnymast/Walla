@@ -1,4 +1,4 @@
-define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
+define(['pixi', 'core/GameObject', 'core/Gameloop'], function (PIXI, GameObject, Gameloop) {
   /**
    * @classdesc Scene
    * @exports  core/Scene
@@ -54,19 +54,16 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
      */
     this.paused = true
 
-    this.app.ticker.maxFPS = 60
-    this.app.ticker.add((delta) => {
-      //if (this.app.ticker.FPS == 60) {
-        this._update(delta)
-      //}
+    this.app.gameloop.add((delta) => {
+      this._update(delta)
     })
 
-    this.physicsTicker = new PIXI.ticker.Ticker()
-    this.physicsTicker.speed = PIXI.ticker.shared.speed + 0.5
-    this.physicsTicker.autoStart = true
-    this.physicsTicker.add((delta) => {
-      this._fixedupdate(delta)
-    })
+    // this.physicsTicker = new PIXI.ticker.Ticker()
+    // this.physicsTicker.speed = PIXI.ticker.shared.speed + 0.5
+    // this.physicsTicker.autoStart = true
+    // this.physicsTicker.add((delta) => {
+    //   this._fixedupdate(delta)
+    // })
   }
 
   extend(Scene, GameObject)

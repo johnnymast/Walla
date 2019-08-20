@@ -5475,7 +5475,7 @@ const EngineInfo = {
   }
 };
 
-__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(2), __webpack_require__(229), __webpack_require__(373), __webpack_require__(368), __webpack_require__(374), __webpack_require__(370), __webpack_require__(372), __webpack_require__(369), __webpack_require__(371)]; (function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, DebugManager, PluginManager) {
+__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(2), __webpack_require__(229), __webpack_require__(640), __webpack_require__(373), __webpack_require__(368), __webpack_require__(374), __webpack_require__(370), __webpack_require__(372), __webpack_require__(369), __webpack_require__(371)]; (function (PIXI, GameEngine, Gameloop, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, DebugManager, PluginManager) {
   PIXI.utils.skipHello();
   sayHello();
 
@@ -5498,6 +5498,10 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   app.renderer.resize(width, height);
   app.renderer.antialias = true;
   app.renderer.forceFXAA = true;
+
+  app.gameloop = new Gameloop();
+  app.gameloop.maxFPS = 60;
+  app.gameloop.start();
 
   ge.set('App', app);
   ge.set('ResizeManager', resizeManager);

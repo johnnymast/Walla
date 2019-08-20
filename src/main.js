@@ -58,6 +58,7 @@ let sayHello = function () {
 require([
   'pixi',
   'core/GameEngine',
+  'core/Gameloop',
   'core/managers/SceneManager',
   'core/managers/AssetManager',
   'core/managers/StateManager',
@@ -65,7 +66,7 @@ require([
   'core/managers/ResizeManager',
   'core/managers/DebugManager',
   'core/managers/PluginManager'
-], function (PIXI, GameEngine, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, DebugManager, PluginManager) {
+], function (PIXI, GameEngine, Gameloop, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, DebugManager, PluginManager) {
   PIXI.utils.skipHello()
   sayHello()
 
@@ -88,6 +89,10 @@ require([
   app.renderer.resize(width, height)
   app.renderer.antialias = true
   app.renderer.forceFXAA = true
+
+  app.gameloop = new Gameloop()
+  app.gameloop.maxFPS = 60
+  app.gameloop.start()
 
   ge.set('App', app)
   ge.set('ResizeManager', resizeManager)
