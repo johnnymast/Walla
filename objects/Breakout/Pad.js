@@ -1,4 +1,4 @@
-define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
+define(['pixi', './PhysicsSprite'], function (pixi, PhysicsSprite) {
 
   /**
    * The Pad object constructor.
@@ -29,9 +29,7 @@ define(['pixi', 'core/sprites/PhysicsSprite'], function (pixi, PhysicsSprite) {
    */
   Pad.prototype.update = function (delta) {
     let pos = this.body.position
-    let angle = this.body.angle
-
-    this.sprite.angle = angle
+    this.sprite.angle = this.body.angle
     this.sprite.x = pos.x
     this.sprite.y = pos.y
   }

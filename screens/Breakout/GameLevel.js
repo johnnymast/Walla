@@ -1,7 +1,6 @@
-define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+define(['pixi', 'core/Level', 'core/input/Keyboard/KeyboardInput', 'gui/Statistics', 'objects/Breakout/GameOver'], function (pixi, Level, KeyboardInput, Statistics, GameOver) {
   var GameLevel = function (options) {
     Level.call(this, options)
-
 
     this.statistics = new Statistics()
     this.addChild(this.statistics)
@@ -36,7 +35,10 @@ define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 
     /**
      *
      */
-    this.PhysicsManager = new this.PluginManager.getPlugin('Matter').PhysicsManager
+    const Matter = this.PluginManager.getPlugin('Matter')
+    this.PhysicsManager = Matter.PhysicsManager.get()
+    //
+    // this.ge.set('Matter')
 
     if (this.showPhysics === false)
       this.PhysicsManager.run()
@@ -73,7 +75,7 @@ define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 
     background.height = this.app.screen.height
     background.alpha = 0
 
-    let wallOptions = {frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1}
+    let wallOptions = { frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1 }
 
     let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, wallOptions)
     ceiling.label = 'ceiling'
@@ -124,8 +126,6 @@ define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 
      * @type {GameOver}
      */
     this.gameover = new GameOver()
-
-
 
     this.gameover.on('gameover.respawn', () => {
       this.gameover.hide()

@@ -1,6 +1,6 @@
 const Vector2d = require('core/math/vector2d')
 
-define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
+define(['./PhysicsSprite'], function (PhysicsSprite) {
 
   /**
    * Brick constructor.
@@ -30,8 +30,8 @@ define(['core/sprites/PhysicsSprite'], function (PhysicsSprite) {
    * Return the points gained from this brick.
    * @returns {number}
    */
-  Brick.prototype.getPointValue = function() {
-    return this.point_value;
+  Brick.prototype.getPointValue = function () {
+    return this.point_value
   }
 
   /**+

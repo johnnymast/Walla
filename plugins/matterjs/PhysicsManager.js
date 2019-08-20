@@ -64,6 +64,19 @@ define(['pixi', 'matter-js', 'core/GameObject', 'core/math/vector2d'], function 
   extend(PhysicsManager, GameObject)
 
   /**
+   * Return a singleton version of
+   * the PhysicsManager.
+   *
+   * @returns {PhysicsManager}
+   */
+  PhysicsManager.get = function () {
+    if (!this.instance) {
+      this.instance = new PhysicsManager()
+    }
+    return this.instance
+  }
+
+  /**
    * Return the Events object.
    *
    * @returns {Matter.Events}

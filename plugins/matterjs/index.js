@@ -1,10 +1,12 @@
 const pkg = require('./../deps')
 
 const PhysicsManager = require('./PhysicsManager')
+const PhysicsSprite = require('./PhysicsSprite')
 
 module.exports = {
-  PhysicsManager: new PhysicsManager()
-};
+  PhysicsManager: PhysicsManager,
+  PhysicsSprite: PhysicsSprite,
+}
 
 // pkg.moduleExists('pixi' /* take care of absolute paths */)
 //   .then(() => {

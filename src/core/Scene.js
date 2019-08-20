@@ -58,6 +58,10 @@ define(['pixi', 'core/GameObject', 'core/Gameloop'], function (PIXI, GameObject,
       this._update(delta)
     })
 
+    this.app.gameloop.add((delta) => {
+      this._fixedupdate(delta)
+    })
+
     // this.physicsTicker = new PIXI.ticker.Ticker()
     // this.physicsTicker.speed = PIXI.ticker.shared.speed + 0.5
     // this.physicsTicker.autoStart = true

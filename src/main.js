@@ -104,7 +104,8 @@ require([
   ge.set('PluginManager', new PluginManager(ge))
 
   if (PLUGIN_MATTERJS) {
-    ge.get('PluginManager').loadPlugin('matterjs', 'Matter')
+    const Matter = ge.get('PluginManager').loadPlugin('matterjs', 'Matter')
+    ge.set('Matter', Matter)
   }
 
   ge.get('SceneManager')
