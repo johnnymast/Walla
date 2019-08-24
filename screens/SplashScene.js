@@ -1,8 +1,7 @@
-
 /**
  * @namespace Screens
  */
-define(['pixi', 'core/Scene'], function (PIXI, Scene) {
+define(['pixi', 'core/Scene', 'core/transitions/Transition'], function (PIXI, Scene, Transition) {
 
   /**
    * @classdesc SplashScene
@@ -58,7 +57,6 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
       this.precentageText.y = (this.logo.y + this.logo.height / 2) + 15
       this.precentageText.x = (((this.app.screen.width / 2) - this.logo.width) + this.logo.width * 2) + 10
 
-
       this.addChild(this.loaderHolder)
       this.addChild(this.loaderFill)
       this.addChild(this.precentageText)
@@ -75,28 +73,28 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
     this.ge.get('AssetManager').loadManifest([
 
       // Core
-      {name: 'core_ui', type: 'spritesheet', src: 'assets/core/ui/core_ui.json'},
+      { name: 'core_ui', type: 'spritesheet', src: 'assets/core/ui/core_ui.json' },
 
       // Breakout
-      {name: 'level1_music', src: 'assets/breakout/sounds/music/level1.mp3'},
-      {name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3'},
-      {name: 'level3_music', src: 'assets/breakout/sounds/music/level3.mp3'},
-      {name: 'game_over', src: 'assets/breakout/sounds/game_over.mp3'},
-      {name: 'concrete_break', src: 'assets/breakout/sounds/concrete_break.mp3'},
-      {name: 'mission_completed', src: 'assets/breakout/sounds/mission_completed.mp3'},
-      {name: 'spritesheet-0', type: 'spritesheet', src: 'assets/breakout/spritesheets/spritesheet-1.json'},
+      { name: 'level1_music', src: 'assets/breakout/sounds/music/level1.mp3' },
+      { name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3' },
+      { name: 'level3_music', src: 'assets/breakout/sounds/music/level3.mp3' },
+      { name: 'game_over', src: 'assets/breakout/sounds/game_over.mp3' },
+      { name: 'concrete_break', src: 'assets/breakout/sounds/concrete_break.mp3' },
+      { name: 'mission_completed', src: 'assets/breakout/sounds/mission_completed.mp3' },
+      { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/breakout/spritesheets/spritesheet-1.json' },
 
       // Main
-      {name: 'main_menu_music', src: 'assets/main/sounds/music/menu_music.wav'},
-      {name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png'},
-      {name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png'},
-      {name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png'},
-      {name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png'},
-      {name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png'},
+      { name: 'main_menu_music', src: 'assets/main/sounds/music/menu_music.wav' },
+      { name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png' },
+      { name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png' },
+      { name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png' },
+      { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' },
+      { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
 
       // // PixelShooter
-      {name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx'},
-      {name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json'},
+      { name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx' },
+      { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json' },
       {
         name: 'pixelshooter_character_animations',
         type: 'json',
@@ -126,7 +124,7 @@ define(['pixi', 'core/Scene'], function (PIXI, Scene) {
    * @private
    */
   SplashScene.prototype._preloadready = function (loader, resources) {
-    this.SceneManager.switchTo('MainMenu')
+    this.SceneManager.switchToUsingTransaction('MainMenu', Transition.named('ScrollFrom', { direction: 'top' }))
   }
 
   /**

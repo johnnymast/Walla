@@ -2,7 +2,7 @@
  * SceneManager
  * @namespace Core Managers
  */
-define(['core/GameEngine'], function (GameEngine) {
+define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (GameEngine, TransactionType) {
 
   /**
    * @classdesc SceneManager
@@ -13,11 +13,9 @@ define(['core/GameEngine'], function (GameEngine) {
     this.scenes = []
     this.plugins = []
     this.currentScene = null
-    this.gameEngine = GameEngine.get();
+    this.gameEngine = GameEngine.get()
     this.debugManager = this.gameEngine.get('DebugManager')
     this.app = this.gameEngine.get('App')
-
-
 
     if (scene.length > 0) {
       this.add(scene)
@@ -110,6 +108,55 @@ define(['core/GameEngine'], function (GameEngine) {
 
       this.app.stage.addChild(this.currentScene)
     }
+
+    return nextScene
+  }
+
+  /**
+   * Transition to a different scene.
+   *
+   * @param {string} scene - The name of the scene
+   * @param {Transition} transition - The transition to execute.
+   */
+  SceneManager.prototype.switchToUsingTransaction = function (scene, transition) {
+    let nextScene = null
+
+    if (typeof this.scenes[scene] !== 'undefined') {
+      nextScene = this.getScene(scene)
+    } else {
+      nextScene = this.add(scene).getScene(scene)
+    }
+
+    if (!nextScene) {
+      throw new Error('switchToUsingTransaction: Error finding scene to switch to.')
+    }
+
+    if (!transition instanceof TransactionType) {
+      throw new Error('switchToUsingTransaction: Unknown transition')
+    }
+
+    if (nextScene) {
+
+      transition.on('animation_complete', (event) => {
+
+        this.app.stage.removeChild(event.getFrom())
+        event.getFrom().switchedAway()
+
+        this.currentScene = nextScene
+        this.currentScene.start()
+      })
+
+      // FIXME: Moet worden init of autostart de scene (haal van pauze af)
+
+      nextScene.start()
+
+      transition
+        .setFrom(this.currentScene)
+        .setTo(nextScene)
+        .animate()
+
+    }
+
   }
 
   return SceneManager

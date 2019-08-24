@@ -74990,7 +74990,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * DebugManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(626)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, DebugScenePlugin) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(627)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, DebugScenePlugin) {
 
   /**
    * @classdesc AssetManager
@@ -75047,7 +75047,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * InputManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582), __webpack_require__(585), __webpack_require__(608)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582), __webpack_require__(586), __webpack_require__(608)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
   /**
    * @classdesc InputManager
    * @exports  core/managers/InputManager
@@ -75293,7 +75293,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
       throw new Error('loadPlugin: Empty plugin name.');
     }
 
-    let plugin = __webpack_require__(640)("./" + name + '/index');
+    let plugin = __webpack_require__(643)("./" + name + '/index');
 
     if (!alias) {
       alias = name;
@@ -75390,7 +75390,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * SceneManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(229)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameEngine) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(229), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameEngine, TransactionType) {
 
   /**
    * @classdesc SceneManager
@@ -75424,7 +75424,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(641)("./" + scene);
+      let _scene = __webpack_require__(644)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -75496,6 +75496,50 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 
       this.app.stage.addChild(this.currentScene);
     }
+
+    return nextScene;
+  };
+
+  /**
+   * Transition to a different scene.
+   *
+   * @param {string} scene - The name of the scene
+   * @param {Transition} transition - The transition to execute.
+   */
+  SceneManager.prototype.switchToUsingTransaction = function (scene, transition) {
+    let nextScene = null;
+
+    if (typeof this.scenes[scene] !== 'undefined') {
+      nextScene = this.getScene(scene);
+    } else {
+      nextScene = this.add(scene).getScene(scene);
+    }
+
+    if (!nextScene) {
+      throw new Error('switchToUsingTransaction: Error finding scene to switch to.');
+    }
+
+    if (!transition instanceof TransactionType) {
+      throw new Error('switchToUsingTransaction: Unknown transition');
+    }
+
+    if (nextScene) {
+
+      transition.on('animation_complete', event => {
+
+        this.app.stage.removeChild(event.getFrom());
+        event.getFrom().switchedAway();
+
+        this.currentScene = nextScene;
+        this.currentScene.start();
+      });
+
+      // FIXME: Moet worden init of autostart de scene (haal van pauze af)
+
+      nextScene.start();
+
+      transition.setFrom(this.currentScene).setTo(nextScene).animate();
+    }
   };
 
   return SceneManager;
@@ -75506,7 +75550,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 375 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(631);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(632);
 
 /**
  * StateManager
@@ -75890,7 +75934,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 584 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(594), __webpack_require__(585)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(585), __webpack_require__(586)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Scene, KeyboardInput) {
 
   /**
    * @classdesc Level
@@ -76015,564 +76059,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 585 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
- * KeyboardInput
- * @namespace Interaction
- */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-
-  /**
-   * Take control over Keyboard input by using this class.
-   * You construct the class with a keycode.
-   * See http://keycode.info/ for more information.
-   * @exports core/input/KeyboardInput
-   * @module KeyboardInput
-   * @example
-   * let char = 32 // spacebar
-   * const space = new KeyboardInput(char)
-   * space.press = function() {
-   *  console.log('spacebar pressed')
-   * }
-   * space.release = function() {
-   *     console.log('spacebar released')
-   * }
-   * @constructor
-   * @param {number} keyCode - The keycode to listen for
-   */
-  let KeyboardInput = function (key) {
-
-    let info = {};
-    info.key = key;
-    info.isDown = false;
-    info.isUp = true;
-    info.down = undefined;
-    info.up = undefined;
-
-    this.info = info;
-
-    window.addEventListener('keydown', this.downHandler.bind(this), false);
-
-    window.addEventListener('keyup', this.upHandler.bind(this), false);
-  };
-
-  /**
-   * Return the information object.
-   *
-   * @returns {object}
-   */
-  KeyboardInput.prototype.getInfo = function () {
-    return this.info;
-  };
-
-  /**
-   * Check to see if the key is down.
-   *
-   * @returns {boolean}
-   */
-  KeyboardInput.prototype.isDown = function () {
-    return this.info.isDown;
-  };
-
-  /**
-   * Check to see if the key is up.
-   *
-   * @returns {boolean}
-   */
-  KeyboardInput.prototype.isUp = function () {
-    return this.info.isUp;
-  };
-
-  /**
-   * The internal keyboard event handler for keydown.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.downHandler = function (event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = true;
-      this.info.isUp = false;
-
-      if (this.info.down) {
-        this.info.down(event);
-      }
-    }
-    event.preventDefault();
-  };
-
-  /**
-   * The internal keyboard event handler for keyup.
-   * @access private
-   * @param {KeyboardEvent} event - The browser KeyboardEvent
-   */
-  KeyboardInput.prototype.upHandler = function (event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = false;
-      this.info.isUp = true;
-
-      if (this.info.up) {
-        this.info.up(event);
-      }
-    }
-    event.preventDefault();
-  };
-
-  KeyboardInput.prototype.update = function (delta) {
-    // Unused but required by the InputManager
-  };
-
-  return KeyboardInput;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 586 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-const BUTTON_STATE = {
-  OPEN: 'open',
-  OPENING: 'opening'
-};
-/* harmony export (immutable) */ __webpack_exports__["BUTTON_STATE"] = BUTTON_STATE;
-
-
-const BUTTON_TYPE = {
-  BASE: 'base',
-  IMAGE: 'image'
-};
-/* harmony export (immutable) */ __webpack_exports__["BUTTON_TYPE"] = BUTTON_TYPE;
-
-
-/***/ }),
-/* 587 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-const DIALOG_TYPE = {
-  DEFAULT: 'default',
-  CLOSEABLE: 'closeable'
-};
-/* harmony export (immutable) */ __webpack_exports__["DIALOG_TYPE"] = DIALOG_TYPE;
-
-
-const DIALOG_STATE = {
-  OPEN: 'open',
-  OPENING: 'opening'
-};
-/* harmony export (immutable) */ __webpack_exports__["DIALOG_STATE"] = DIALOG_STATE;
-
-
-/***/ }),
-/* 588 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(599)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Matter) {
-
-  /**
-   * The Pad object constructor.
-   * @param {string} texture - the texture name.
-   * @constructor
-   */
-  let PhysicsSprite = function (texture) {
-    // this.PhysicsManager = new Matter.PhysicsManager()
-    this.PhysicsManager = Matter.PhysicsManager.get();
-    Matter.PhysicsSprite.call(this, texture);
-  };
-
-  extend(PhysicsSprite, Matter.PhysicsSprite);
-
-  return PhysicsSprite;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 589 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(584), __webpack_require__(585), __webpack_require__(583), __webpack_require__(597)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Level, KeyboardInput, Statistics, GameOver) {
-  var GameLevel = function (options) {
-    Level.call(this, options);
-
-    this.statistics = new Statistics();
-    this.addChild(this.statistics);
-
-    /**
-     * The score text on the screen.
-     * @type {PIXI.Text}
-     */
-    this.scoreText = null;
-
-    /**
-     * The lives text on the screen.
-     * @type {null}
-     */
-    this.livesText = null;
-
-    /**
-     * The physics engine the inside the wall is leaning into the level.
-     * @type {number}
-     * @default 10
-     */
-    this.wall_inset = 10;
-
-    /**
-     * If you want to debug the physics engine set this value
-     * to true.
-     * @type {boolean}
-     * @default false
-     */
-    this.showPhysics = true;
-
-    /**
-     *
-     */
-    const Matter = this.PluginManager.getPlugin('Matter');
-    this.PhysicsManager = Matter.PhysicsManager.get();
-    //
-    // this.ge.set('Matter')
-
-    if (this.showPhysics === false) this.PhysicsManager.run();
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * Reset the level to the default values.
-   */
-  GameLevel.prototype.reset = function () {
-    this.score = 0;
-    this.lives = 5;
-
-    this.setLives(this.lives);
-    this.setScore(this.score);
-  };
-
-  /**
-   * Switch the FPS counter on/off.
-   * @param {boolean} visible - should the FPS tracker be visible.
-   */
-  GameLevel.prototype.setDisplayStats = function (visible = false) {
-    this.statistics.visible = visible;
-  };
-
-  /**
-   * The onStart callback.
-   */
-  GameLevel.prototype.onStart = function () {
-
-    let background = new PIXI.Sprite(PIXI.Texture.WHITE);
-    background.width = this.app.screen.width;
-    background.height = this.app.screen.height;
-    background.alpha = 0;
-
-    let wallOptions = { frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1 };
-
-    let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, wallOptions);
-    ceiling.label = 'ceiling';
-    this.PhysicsManager.add(ceiling);
-
-    let floor = this.PhysicsManager.rectangle(this.app.screen.width / 2, this.app.screen.height, this.app.screen.width, this.wall_inset, wallOptions);
-    floor.label = 'floor';
-    this.PhysicsManager.add(floor);
-
-    let leftwall = this.PhysicsManager.rectangle(0, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions);
-    leftwall.label = 'leftwall';
-    this.PhysicsManager.add(leftwall);
-
-    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions);
-    rightwall.label = 'rightwall';
-    this.PhysicsManager.add(rightwall);
-
-    let style = new PIXI.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 20,
-      fontWeight: 'bold',
-      fill: ['#ffffff', '#00ff99'], // gradient
-      stroke: '#4a1850',
-      strokeThickness: 5,
-      dropShadow: true,
-      dropShadowColor: '#000000',
-      dropShadowBlur: 4,
-      dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 6,
-      wordWrap: true,
-      wordWrapWidth: 440
-    });
-
-    this.scoreText = new PIXI.Text('SCORE: 0', style);
-    this.scoreText.x = this.app.screen.width - this.scoreText.width - 45;
-    this.scoreText.y = 10;
-
-    this.livesText = new PIXI.Text('LIVES: 3', style);
-    this.livesText.x = 45;
-    this.livesText.y = 10;
-
-    this.addChild(background);
-    this.addChild(this.scoreText);
-    this.addChild(this.livesText);
-
-    /**
-     * Create the GameOver screen
-     * @type {GameOver}
-     */
-    this.gameover = new GameOver();
-
-    this.gameover.on('gameover.respawn', () => {
-      this.gameover.hide();
-    });
-
-    this.gameover.on('gameover.opended', () => {
-      this.interactive = false;
-    });
-
-    this.gameover.on('gameover.closed', () => {
-      this.interactive = true;
-      this.reset();
-    });
-
-    this.addChild(this.gameover);
-    this.reset();
-  };
-
-  /**
-   * Show the gameover screen to the user.
-   */
-  GameLevel.prototype.showGameOver = function () {
-    PIXI.sound.play('game_over');
-    this.gameover.show();
-  };
-
-  /**
-   * Return the score for this round.
-   * @returns {number}
-   */
-  GameLevel.prototype.getScore = function () {
-    return this.score;
-  };
-
-  /**
-   * Return the remaining lives for this round.
-   * @returns {number}
-   */
-  GameLevel.prototype.getLives = function () {
-    return this.lives;
-  };
-
-  /**
-   * Update the score on the screen.
-   * @param {number} [score=0] - the score to display.
-   */
-  GameLevel.prototype.setScore = function (score = 0) {
-    this.score = score;
-    this.scoreText.text = 'SCORE: ' + this.score;
-  };
-
-  /**
-   * Update the number of lives on the screen.
-   * @param {number} [lives=0] - the number of lives to display.
-   */
-  GameLevel.prototype.setLives = function (lives = 0) {
-    this.lives = lives;
-    this.livesText.text = 'LIVES: ' + this.lives;
-  };
-
-  /**
-   * The update function for the physics.
-   * @param {number} delta - the time passed since last tick.
-   */
-  GameLevel.prototype.fixedUpdate = function (delta) {}
-  // Not implemented yet
-
-
-  /**
-   * Update the game scene.
-   * @param {number} delta - the time passed since last tick.
-   */
-  ;GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 590 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(183), __webpack_require__(584), __webpack_require__(585), __webpack_require__(583), __webpack_require__(597)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
-  var GameLevel = function (options) {
-    Level.call(this, options);
-
-    this.statistics = new Statistics();
-    this.addChild(this.statistics);
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * Switch the FPS counter on/off.
-   * @param {boolean} visible - should the FPS tracker be visible.
-   */
-  GameLevel.prototype.setDisplayStats = function (visible = false) {
-    this.statistics.visible = visible;
-  };
-
-  /**
-   * The onStart callback.
-   */
-  GameLevel.prototype.onStart = function () {};
-
-  /**
-   * Update the game scene.
-   * @param {number} delta - the time passed since last tick.
-   */
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 591 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(584), __webpack_require__(583)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Level, Statistics) {
-  var GameLevel = function (options) {
-    Level.call(this, options);
-
-    this.interactive = true;
-    this.statistics = new Statistics();
-    this.addChild(this.statistics);
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * Switch the FPS counter on/off.
-   * @param {boolean} visible - should the FPS tracker be visible.
-   */
-  GameLevel.prototype.setDisplayStats = function (visible = false) {
-    this.statistics.visible = visible;
-  };
-
-  /**
-   * The onStart callback.
-   */
-  GameLevel.prototype.onStart = function () {};
-
-  /**
-   * Update the game scene.
-   * @param {number} delta - the time passed since last tick.
-   */
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 592 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(584), __webpack_require__(583)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
-  var GameLevel = function (options) {
-    Level.call(this, options);
-
-    /**
-     * Add the FPS counter.
-     */
-    this.statistics = new Statistics();
-  };
-
-  extend(GameLevel, Level);
-
-  GameLevel.prototype.setDisplayStats = function (visible) {
-    this.statistics.visible = visible;
-    this.addChild(this.statistics);
-  };
-
-  GameLevel.prototype.fixedUpdate = function (delta) {
-    // Empty
-  };
-
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 593 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(584), __webpack_require__(583)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
-  /**
-   * GameLevel Constructor
-   *
-   * @constructor
-   */
-  let GameLevel = function () {
-    Level.call(this);
-
-    /**
-     * Add the FPS counter.
-     */
-    this.statistics = new Statistics();
-  };
-
-  extend(GameLevel, Level);
-
-  /**
-   * The onStart callback
-   */
-  GameLevel.prototype.onStart = function () {
-    let background = new PIXI.Graphics();
-    background.name = 'background';
-
-    background.lineStyle(2, 0xFF0000, 1);
-    background.beginFill(0xFFFFFF, 0);
-    background.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
-
-    this.addChild(background);
-    this.setDisplayStats(true);
-  };
-
-  /**
-   * Enable or disable the onscreen FPS counter.
-   *
-   * @param {boolean) visible - The FPS counter visibility flag true|false
-   */
-  GameLevel.prototype.setDisplayStats = function (visible) {
-    this.statistics.visible = visible;
-    this.addChild(this.statistics);
-  };
-
-  /**
-   * Update the GameLevel scene.
-   *
-   * @param delta
-   */
-  GameLevel.prototype.update = function (delta) {
-    this.statistics.update(delta);
-  };
-
-  return GameLevel;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 594 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582), __webpack_require__(333)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, Gameloop) {
@@ -76938,11 +76424,569 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
+/* 586 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * KeyboardInput
+ * @namespace Interaction
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+
+  /**
+   * Take control over Keyboard input by using this class.
+   * You construct the class with a keycode.
+   * See http://keycode.info/ for more information.
+   * @exports core/input/KeyboardInput
+   * @module KeyboardInput
+   * @example
+   * let char = 32 // spacebar
+   * const space = new KeyboardInput(char)
+   * space.press = function() {
+   *  console.log('spacebar pressed')
+   * }
+   * space.release = function() {
+   *     console.log('spacebar released')
+   * }
+   * @constructor
+   * @param {number} keyCode - The keycode to listen for
+   */
+  let KeyboardInput = function (key) {
+
+    let info = {};
+    info.key = key;
+    info.isDown = false;
+    info.isUp = true;
+    info.down = undefined;
+    info.up = undefined;
+
+    this.info = info;
+
+    window.addEventListener('keydown', this.downHandler.bind(this), false);
+
+    window.addEventListener('keyup', this.upHandler.bind(this), false);
+  };
+
+  /**
+   * Return the information object.
+   *
+   * @returns {object}
+   */
+  KeyboardInput.prototype.getInfo = function () {
+    return this.info;
+  };
+
+  /**
+   * Check to see if the key is down.
+   *
+   * @returns {boolean}
+   */
+  KeyboardInput.prototype.isDown = function () {
+    return this.info.isDown;
+  };
+
+  /**
+   * Check to see if the key is up.
+   *
+   * @returns {boolean}
+   */
+  KeyboardInput.prototype.isUp = function () {
+    return this.info.isUp;
+  };
+
+  /**
+   * The internal keyboard event handler for keydown.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.downHandler = function (event) {
+    if (event.key === this.info.key) {
+      this.info.isDown = true;
+      this.info.isUp = false;
+
+      if (this.info.down) {
+        this.info.down(event);
+      }
+    }
+    event.preventDefault();
+  };
+
+  /**
+   * The internal keyboard event handler for keyup.
+   * @access private
+   * @param {KeyboardEvent} event - The browser KeyboardEvent
+   */
+  KeyboardInput.prototype.upHandler = function (event) {
+    if (event.key === this.info.key) {
+      this.info.isDown = false;
+      this.info.isUp = true;
+
+      if (this.info.up) {
+        this.info.up(event);
+      }
+    }
+    event.preventDefault();
+  };
+
+  KeyboardInput.prototype.update = function (delta) {
+    // Unused but required by the InputManager
+  };
+
+  return KeyboardInput;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 587 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+const BUTTON_STATE = {
+  OPEN: 'open',
+  OPENING: 'opening'
+};
+/* harmony export (immutable) */ __webpack_exports__["BUTTON_STATE"] = BUTTON_STATE;
+
+
+const BUTTON_TYPE = {
+  BASE: 'base',
+  IMAGE: 'image'
+};
+/* harmony export (immutable) */ __webpack_exports__["BUTTON_TYPE"] = BUTTON_TYPE;
+
+
+/***/ }),
+/* 588 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+const DIALOG_TYPE = {
+  DEFAULT: 'default',
+  CLOSEABLE: 'closeable'
+};
+/* harmony export (immutable) */ __webpack_exports__["DIALOG_TYPE"] = DIALOG_TYPE;
+
+
+const DIALOG_STATE = {
+  OPEN: 'open',
+  OPENING: 'opening'
+};
+/* harmony export (immutable) */ __webpack_exports__["DIALOG_STATE"] = DIALOG_STATE;
+
+
+/***/ }),
+/* 589 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(599)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Matter) {
+
+  /**
+   * The Pad object constructor.
+   * @param {string} texture - the texture name.
+   * @constructor
+   */
+  let PhysicsSprite = function (texture) {
+    // this.PhysicsManager = new Matter.PhysicsManager()
+    this.PhysicsManager = Matter.PhysicsManager.get();
+    Matter.PhysicsSprite.call(this, texture);
+  };
+
+  extend(PhysicsSprite, Matter.PhysicsSprite);
+
+  return PhysicsSprite;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 590 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(584), __webpack_require__(586), __webpack_require__(583), __webpack_require__(597)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Level, KeyboardInput, Statistics, GameOver) {
+  var GameLevel = function (options) {
+    Level.call(this, options);
+
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
+
+    /**
+     * The score text on the screen.
+     * @type {PIXI.Text}
+     */
+    this.scoreText = null;
+
+    /**
+     * The lives text on the screen.
+     * @type {null}
+     */
+    this.livesText = null;
+
+    /**
+     * The physics engine the inside the wall is leaning into the level.
+     * @type {number}
+     * @default 10
+     */
+    this.wall_inset = 10;
+
+    /**
+     * If you want to debug the physics engine set this value
+     * to true.
+     * @type {boolean}
+     * @default false
+     */
+    this.showPhysics = true;
+
+    /**
+     *
+     */
+    const Matter = this.PluginManager.getPlugin('Matter');
+    this.PhysicsManager = Matter.PhysicsManager.get();
+    //
+    // this.ge.set('Matter')
+
+    if (this.showPhysics === false) this.PhysicsManager.run();
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * Reset the level to the default values.
+   */
+  GameLevel.prototype.reset = function () {
+    this.score = 0;
+    this.lives = 5;
+
+    this.setLives(this.lives);
+    this.setScore(this.score);
+  };
+
+  /**
+   * Switch the FPS counter on/off.
+   * @param {boolean} visible - should the FPS tracker be visible.
+   */
+  GameLevel.prototype.setDisplayStats = function (visible = false) {
+    this.statistics.visible = visible;
+  };
+
+  /**
+   * The onStart callback.
+   */
+  GameLevel.prototype.onStart = function () {
+
+    let background = new PIXI.Sprite(PIXI.Texture.WHITE);
+    background.width = this.app.screen.width;
+    background.height = this.app.screen.height;
+    background.alpha = 0;
+
+    let wallOptions = { frictionStatic: 0, frictionAir: 0, isStatic: true, friction: 0, restitution: 1 };
+
+    let ceiling = this.PhysicsManager.rectangle(this.app.screen.width / 2, 0, this.app.screen.width, this.wall_inset, wallOptions);
+    ceiling.label = 'ceiling';
+    this.PhysicsManager.add(ceiling);
+
+    let floor = this.PhysicsManager.rectangle(this.app.screen.width / 2, this.app.screen.height, this.app.screen.width, this.wall_inset, wallOptions);
+    floor.label = 'floor';
+    this.PhysicsManager.add(floor);
+
+    let leftwall = this.PhysicsManager.rectangle(0, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions);
+    leftwall.label = 'leftwall';
+    this.PhysicsManager.add(leftwall);
+
+    let rightwall = this.PhysicsManager.rectangle(this.app.screen.width, this.app.screen.height / 2, this.wall_inset, this.app.screen.height, wallOptions);
+    rightwall.label = 'rightwall';
+    this.PhysicsManager.add(rightwall);
+
+    let style = new PIXI.TextStyle({
+      fontFamily: 'Arial',
+      fontSize: 20,
+      fontWeight: 'bold',
+      fill: ['#ffffff', '#00ff99'], // gradient
+      stroke: '#4a1850',
+      strokeThickness: 5,
+      dropShadow: true,
+      dropShadowColor: '#000000',
+      dropShadowBlur: 4,
+      dropShadowAngle: Math.PI / 6,
+      dropShadowDistance: 6,
+      wordWrap: true,
+      wordWrapWidth: 440
+    });
+
+    this.scoreText = new PIXI.Text('SCORE: 0', style);
+    this.scoreText.x = this.app.screen.width - this.scoreText.width - 45;
+    this.scoreText.y = 10;
+
+    this.livesText = new PIXI.Text('LIVES: 3', style);
+    this.livesText.x = 45;
+    this.livesText.y = 10;
+
+    this.addChild(background);
+    this.addChild(this.scoreText);
+    this.addChild(this.livesText);
+
+    /**
+     * Create the GameOver screen
+     * @type {GameOver}
+     */
+    this.gameover = new GameOver();
+
+    this.gameover.on('gameover.respawn', () => {
+      this.gameover.hide();
+    });
+
+    this.gameover.on('gameover.opended', () => {
+      this.interactive = false;
+    });
+
+    this.gameover.on('gameover.closed', () => {
+      this.interactive = true;
+      this.reset();
+    });
+
+    this.addChild(this.gameover);
+    this.reset();
+  };
+
+  /**
+   * Show the gameover screen to the user.
+   */
+  GameLevel.prototype.showGameOver = function () {
+    PIXI.sound.play('game_over');
+    this.gameover.show();
+  };
+
+  /**
+   * Return the score for this round.
+   * @returns {number}
+   */
+  GameLevel.prototype.getScore = function () {
+    return this.score;
+  };
+
+  /**
+   * Return the remaining lives for this round.
+   * @returns {number}
+   */
+  GameLevel.prototype.getLives = function () {
+    return this.lives;
+  };
+
+  /**
+   * Update the score on the screen.
+   * @param {number} [score=0] - the score to display.
+   */
+  GameLevel.prototype.setScore = function (score = 0) {
+    this.score = score;
+    this.scoreText.text = 'SCORE: ' + this.score;
+  };
+
+  /**
+   * Update the number of lives on the screen.
+   * @param {number} [lives=0] - the number of lives to display.
+   */
+  GameLevel.prototype.setLives = function (lives = 0) {
+    this.lives = lives;
+    this.livesText.text = 'LIVES: ' + this.lives;
+  };
+
+  /**
+   * The update function for the physics.
+   * @param {number} delta - the time passed since last tick.
+   */
+  GameLevel.prototype.fixedUpdate = function (delta) {}
+  // Not implemented yet
+
+
+  /**
+   * Update the game scene.
+   * @param {number} delta - the time passed since last tick.
+   */
+  ;GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 591 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(183), __webpack_require__(584), __webpack_require__(586), __webpack_require__(583), __webpack_require__(597)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Matter, Level, KeyboardInput, Statistics, GameOver) {
+  var GameLevel = function (options) {
+    Level.call(this, options);
+
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * Switch the FPS counter on/off.
+   * @param {boolean} visible - should the FPS tracker be visible.
+   */
+  GameLevel.prototype.setDisplayStats = function (visible = false) {
+    this.statistics.visible = visible;
+  };
+
+  /**
+   * The onStart callback.
+   */
+  GameLevel.prototype.onStart = function () {};
+
+  /**
+   * Update the game scene.
+   * @param {number} delta - the time passed since last tick.
+   */
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 592 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(584), __webpack_require__(583)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Level, Statistics) {
+  var GameLevel = function (options) {
+    Level.call(this, options);
+
+    this.interactive = true;
+    this.statistics = new Statistics();
+    this.addChild(this.statistics);
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * Switch the FPS counter on/off.
+   * @param {boolean} visible - should the FPS tracker be visible.
+   */
+  GameLevel.prototype.setDisplayStats = function (visible = false) {
+    this.statistics.visible = visible;
+  };
+
+  /**
+   * The onStart callback.
+   */
+  GameLevel.prototype.onStart = function () {};
+
+  /**
+   * Update the game scene.
+   * @param {number} delta - the time passed since last tick.
+   */
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 593 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(584), __webpack_require__(583)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+  var GameLevel = function (options) {
+    Level.call(this, options);
+
+    /**
+     * Add the FPS counter.
+     */
+    this.statistics = new Statistics();
+  };
+
+  extend(GameLevel, Level);
+
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+    this.addChild(this.statistics);
+  };
+
+  GameLevel.prototype.fixedUpdate = function (delta) {
+    // Empty
+  };
+
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 594 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(584), __webpack_require__(583)], __WEBPACK_AMD_DEFINE_RESULT__ = function (Level, Statistics) {
+  /**
+   * GameLevel Constructor
+   *
+   * @constructor
+   */
+  let GameLevel = function () {
+    Level.call(this);
+
+    /**
+     * Add the FPS counter.
+     */
+    this.statistics = new Statistics();
+  };
+
+  extend(GameLevel, Level);
+
+  /**
+   * The onStart callback
+   */
+  GameLevel.prototype.onStart = function () {
+    let background = new PIXI.Graphics();
+    background.name = 'background';
+
+    background.lineStyle(2, 0xFF0000, 1);
+    background.beginFill(0xFFFFFF, 0);
+    background.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
+
+    this.addChild(background);
+    this.setDisplayStats(true);
+  };
+
+  /**
+   * Enable or disable the onscreen FPS counter.
+   *
+   * @param {boolean) visible - The FPS counter visibility flag true|false
+   */
+  GameLevel.prototype.setDisplayStats = function (visible) {
+    this.statistics.visible = visible;
+    this.addChild(this.statistics);
+  };
+
+  /**
+   * Update the GameLevel scene.
+   *
+   * @param delta
+   */
+  GameLevel.prototype.update = function (delta) {
+    this.statistics.update(delta);
+  };
+
+  return GameLevel;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
 /* 595 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(586).BUTTON_STATE;
-const Type = __webpack_require__(586).BUTTON_TYPE;
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const State = __webpack_require__(587).BUTTON_STATE;
+const Type = __webpack_require__(587).BUTTON_TYPE;
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
   let Button = function (options, ...items) {
@@ -77067,10 +77111,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Type", function() { return Type; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BaseButton", function() { return BaseButton; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
-const State = __webpack_require__(586).BUTTON_STATE;
-const Type = __webpack_require__(586).BUTTON_TYPE;
-const BaseButton = __webpack_require__(632);
-const ImageButton = __webpack_require__(633);
+const State = __webpack_require__(587).BUTTON_STATE;
+const Type = __webpack_require__(587).BUTTON_TYPE;
+const BaseButton = __webpack_require__(635);
+const ImageButton = __webpack_require__(636);
 const Button = __webpack_require__(595);
 
 
@@ -77079,7 +77123,7 @@ const Button = __webpack_require__(595);
 /* 597 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = __webpack_require__(610);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = __webpack_require__(611);
 const Buttons = __webpack_require__(596);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582), __webpack_require__(182)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, TweenJS) {
@@ -77244,10 +77288,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 599 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const pkg = __webpack_require__(622);
+const pkg = __webpack_require__(623);
 
-const PhysicsManager = __webpack_require__(623);
-const PhysicsSprite = __webpack_require__(624);
+const PhysicsManager = __webpack_require__(624);
+const PhysicsSprite = __webpack_require__(625);
 
 module.exports = {
   PhysicsManager: PhysicsManager,
@@ -77275,7 +77319,7 @@ module.exports = {
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 const Vector2d = __webpack_require__(230);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(589), __webpack_require__(613), __webpack_require__(614), __webpack_require__(612)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(590), __webpack_require__(614), __webpack_require__(615), __webpack_require__(613)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -77593,7 +77637,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * To keep the level file as small as possible i have added a view file that
  * handles the gamepad input. The file is located at screens/GamepadView.js
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(590), __webpack_require__(608), __webpack_require__(615)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, GamePadInput, GamepadView) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(591), __webpack_require__(608), __webpack_require__(616)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, GamePadInput, GamepadView) {
   let Level1 = function () {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -77695,7 +77739,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 602 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(591), __webpack_require__(618)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Circle) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(592), __webpack_require__(619)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Circle) {
 
   /**
    * Level1 constructor
@@ -77801,13 +77845,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 603 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(636);
-const Dialogs = __webpack_require__(610);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(639);
+const Dialogs = __webpack_require__(611);
 
 /**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(594), __webpack_require__(229), __webpack_require__(583), __webpack_require__(182)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(585), __webpack_require__(229), __webpack_require__(583), __webpack_require__(182), __webpack_require__(633)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS, Transition) {
 
   /**
    * @classdesc MainScreen
@@ -77908,21 +77952,21 @@ const Dialogs = __webpack_require__(610);
    * Breakout menu option callback
    */
   MainMenu.prototype.breakoutClicked = function () {
-    this.SceneManager.switchTo('Breakout/Level1');
+    this.SceneManager.switchToUsingTransaction('Breakout/Level1', Transition.named('ScrollFrom', { direction: 'bottom' }));
   };
 
   /**
    * PixelShooter menu option callback
    */
   MainMenu.prototype.pixelShooterClicked = function () {
-    this.SceneManager.switchTo('PixelShooter/Level1');
+    this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'right' }));
   };
 
   /**
    * RoundedRects menu option callback
    */
   MainMenu.prototype.roundedRectsClicked = function () {
-    this.SceneManager.switchTo('RoundedRects/Level1');
+    this.SceneManager.switchToUsingTransaction('RoundedRects/Level1', Transition.named('ScrollFrom', { direction: 'bottom' }));
   };
 
   /**
@@ -77983,7 +78027,7 @@ const Dialogs = __webpack_require__(610);
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
 const DIRECTIONS = __webpack_require__(598).DIRECTIONS;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(592), __webpack_require__(229), __webpack_require__(619)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(593), __webpack_require__(229), __webpack_require__(620)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -78115,7 +78159,7 @@ const DIRECTIONS = __webpack_require__(598).DIRECTIONS;
 /* 605 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(593), __webpack_require__(620), __webpack_require__(621)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(594), __webpack_require__(621), __webpack_require__(622)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
 
   /**
    * Level1 constructor
@@ -78292,11 +78336,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 606 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
-/**
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(594)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(585), __webpack_require__(633)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene, Transition) {
 
   /**
    * @classdesc SplashScene
@@ -78405,7 +78448,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
    * @private
    */
   SplashScene.prototype._preloadready = function (loader, resources) {
-    this.SceneManager.switchTo('MainMenu');
+    this.SceneManager.switchToUsingTransaction('MainMenu', Transition.named('ScrollFrom', { direction: 'top' }));
   };
 
   /**
@@ -78478,7 +78521,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 608 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(607), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(607), __webpack_require__(630)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
   /**
    * Take control over GamePad input by using this class.
    * You construct the class with a keycode.
@@ -78630,8 +78673,88 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /* 609 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(587).DIALOG_TYPE;
-const STATE = __webpack_require__(587).DIALOG_STATE;
+const Scene = __webpack_require__(585);
+
+class TransactionType extends Scene {
+
+  /**
+   * Constructor
+   *
+   * @param {Object} props - The options for the transitions.
+   */
+  constructor(props) {
+    super(props);
+    this._from = null;
+    this._to = null;
+    this.start();
+  }
+
+  /**
+   * Set the old scene.
+   *
+   * @param {Scene} from - The old scene.
+   * @returns {TransactionType}
+   */
+  setFrom(from) {
+    this._from = from;
+    return this;
+  }
+
+  /**
+   * Set the new scene.
+   *
+   * @param {Scene} to - The new scene.
+   * @returns {TransactionType}
+   */
+  setTo(to) {
+    this._to = to;
+    return this;
+  }
+
+  /**
+   * Return the old scene
+   *
+   * @returns {Scene}
+   */
+  getFrom() {
+    return this._from;
+  }
+
+  /**
+   * Return the new scene
+   *
+   * @returns {Scene}
+   */
+  getTo() {
+    return this._to;
+  }
+
+  /**
+   * Animate the transition.
+   *
+   * @returns {*|Promise<any>|Animation}
+   */
+  animate() {
+    return super.animate();
+  }
+
+  /**
+   * Notify parent that the animation is complete
+   * and the scenes are completely transitioned.
+   */
+  emitAnimationComplete() {
+    this.emit('animation_complete', this);
+  }
+}
+
+module.exports = TransactionType;
+
+/***/ }),
+/* 610 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(588).DIALOG_TYPE;
+const STATE = __webpack_require__(588).DIALOG_STATE;
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
   let BaseDialog = function (options) {
@@ -78761,7 +78884,7 @@ const STATE = __webpack_require__(587).DIALOG_STATE;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 610 */
+/* 611 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78769,15 +78892,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TYPE", function() { return TYPE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CloseableDialog", function() { return CloseableDialog; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
-const TYPE = __webpack_require__(587).DIALOG_TYPE;
-const STATE = __webpack_require__(587).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(634);
-const DefaultDialog = __webpack_require__(635);
+const TYPE = __webpack_require__(588).DIALOG_TYPE;
+const STATE = __webpack_require__(588).DIALOG_STATE;
+const CloseableDialog = __webpack_require__(637);
+const DefaultDialog = __webpack_require__(638);
 
 
 
 /***/ }),
-/* 611 */
+/* 612 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -78847,10 +78970,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 612 */
+/* 613 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(588)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(589)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
 
   /**
    * The ball constructor.
@@ -78918,12 +79041,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 613 */
+/* 614 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(230);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(588)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(589)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
 
   /**
    * Brick constructor.
@@ -79076,10 +79199,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 614 */
+/* 615 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(588)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(589)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
 
   /**
    * The Pad object constructor.
@@ -79120,12 +79243,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 615 */
+/* 616 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(582);
-const Button = __webpack_require__(616);
-const Progress = __webpack_require__(617);
+const Button = __webpack_require__(617);
+const Progress = __webpack_require__(618);
 
 class GamepadView extends GameObject {
   /**
@@ -79271,7 +79394,7 @@ class GamepadView extends GameObject {
 module.exports = GamepadView;
 
 /***/ }),
-/* 616 */
+/* 617 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(582);
@@ -79349,7 +79472,7 @@ class Button extends GameObject {
 module.exports = Button;
 
 /***/ }),
-/* 617 */
+/* 618 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(582);
@@ -79434,7 +79557,7 @@ class Progress extends GameObject {
 module.exports = Progress;
 
 /***/ }),
-/* 618 */
+/* 619 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(582);
@@ -79473,7 +79596,7 @@ class Circle extends GameObject {
 module.exports = Circle;
 
 /***/ }),
-/* 619 */
+/* 620 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(598).DIRECTIONS;
@@ -79562,7 +79685,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 620 */
+/* 621 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(582);
@@ -79625,7 +79748,7 @@ class RoundedRect extends GameObject {
 module.exports = RoundedRect;
 
 /***/ }),
-/* 621 */
+/* 622 */
 /***/ (function(module, exports) {
 
 class Text extends PIXI.Container {
@@ -79656,7 +79779,7 @@ class Text extends PIXI.Container {
 module.exports = Text;
 
 /***/ }),
-/* 622 */
+/* 623 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -79676,7 +79799,7 @@ function moduleExists(module) {
 }
 
 /***/ }),
-/* 623 */
+/* 624 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -79904,7 +80027,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 624 */
+/* 625 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
@@ -80123,7 +80246,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 625 */
+/* 626 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
@@ -80328,10 +80451,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 626 */
+/* 627 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(607), __webpack_require__(625)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, DebugDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(607), __webpack_require__(626)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, DebugDialog) {
 
   let DebugScenePlugin = function () {
     ScenePlugin.call(this);
@@ -80359,7 +80482,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 627 */
+/* 628 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter) {
@@ -80431,10 +80554,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 628 */
+/* 629 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(630)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(631)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
   let Button = function (button, index = 0, gamepad) {
     EventEmitter.call(this);
 
@@ -80523,10 +80646,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 629 */
+/* 630 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(628), __webpack_require__(627)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(629), __webpack_require__(628)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
   let GamePad = function (gamepad) {
     EventEmitter.call(this);
 
@@ -80658,7 +80781,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 630 */
+/* 631 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -80692,7 +80815,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 module.exports = GamepadEvent;
 
 /***/ }),
-/* 631 */
+/* 632 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -80718,7 +80841,54 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 632 */
+/* 633 */
+/***/ (function(module, exports, __webpack_require__) {
+
+class Transition {
+
+  /**
+   * Load the scrollFrom transaction.
+   *
+   * @returns {ScrollFrom}
+   * @constructor
+   */
+  get ScrollFrom() {
+    return __webpack_require__(646);
+  }
+
+  /**
+   * Load the CrossFade transaction.
+   *
+   * @returns {ScrollFrom}
+   * @constructor
+   */
+  get CrossFade() {
+    return __webpack_require__(647);
+  }
+
+  /**
+   * Factory create the transition.
+   *
+   * @param {string} type - The transition type.
+   * @param {object} options - The options for this transition.
+   */
+  named(type = 'ScrollFromTop', options = {}) {
+
+    if (!typeof this[type]) {
+      throw new Error('Transition::named: Unknown transaction type.');
+    }
+
+    let _class = this[type];
+
+    return new _class(options);
+  }
+}
+
+module.exports = new Transition();
+
+/***/ }),
+/* 634 */,
+/* 635 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(595);
@@ -80925,7 +81095,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 633 */
+/* 636 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(595);
@@ -81132,12 +81302,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 634 */
+/* 637 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(596);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(610)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
   let CloseableDialog = function (options) {
 
     this.options = {
@@ -81217,10 +81387,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 635 */
+/* 638 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(610)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
   let DefaultDialog = function (options) {
     BaseDialog.call(this, options);
   };
@@ -81236,7 +81406,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 636 */
+/* 639 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81244,13 +81414,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(637);
-const MenuItemText = __webpack_require__(639);
-const MenuItemImageButton = __webpack_require__(638);
+const Menu = __webpack_require__(640);
+const MenuItemText = __webpack_require__(642);
+const MenuItemImageButton = __webpack_require__(641);
 
 
 /***/ }),
-/* 637 */
+/* 640 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -81328,12 +81498,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 638 */
+/* 641 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(596);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(611)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(612)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemImageButton module
@@ -81416,10 +81586,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 639 */
+/* 642 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(611)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(612)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemText module
@@ -81502,7 +81672,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 640 */
+/* 643 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -81522,33 +81692,33 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 640;
+webpackContext.id = 643;
 
 /***/ }),
-/* 641 */
+/* 644 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./Breakout/GameLevel": 589,
-	"./Breakout/GameLevel.js": 589,
+	"./Breakout/GameLevel": 590,
+	"./Breakout/GameLevel.js": 590,
 	"./Breakout/Level1": 600,
 	"./Breakout/Level1.js": 600,
-	"./Gamepad/GameLevel": 590,
-	"./Gamepad/GameLevel.js": 590,
+	"./Gamepad/GameLevel": 591,
+	"./Gamepad/GameLevel.js": 591,
 	"./Gamepad/Level1": 601,
 	"./Gamepad/Level1.js": 601,
-	"./Lerp/GameLevel": 591,
-	"./Lerp/GameLevel.js": 591,
+	"./Lerp/GameLevel": 592,
+	"./Lerp/GameLevel.js": 592,
 	"./Lerp/Level1": 602,
 	"./Lerp/Level1.js": 602,
 	"./MainMenu": 603,
 	"./MainMenu.js": 603,
-	"./PixelShooter/GameLevel": 592,
-	"./PixelShooter/GameLevel.js": 592,
+	"./PixelShooter/GameLevel": 593,
+	"./PixelShooter/GameLevel.js": 593,
 	"./PixelShooter/Level1": 604,
 	"./PixelShooter/Level1.js": 604,
-	"./RoundedRects/GameLevel": 593,
-	"./RoundedRects/GameLevel.js": 593,
+	"./RoundedRects/GameLevel": 594,
+	"./RoundedRects/GameLevel.js": 594,
 	"./RoundedRects/Level1": 605,
 	"./RoundedRects/Level1.js": 605,
 	"./SplashScene": 606,
@@ -81568,7 +81738,267 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 641;
+webpackContext.id = 644;
+
+/***/ }),
+/* 645 */,
+/* 646 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const TransactionType = __webpack_require__(609);
+const TweenJS = __webpack_require__(182);
+const Scene = __webpack_require__(585);
+
+class ScrollFrom extends TransactionType {
+  constructor(options) {
+    super(options);
+
+    this.direction = (options.direction || 'top').toLowerCase();
+    this.duration = options.duration || 500;
+    this.ease = options.ease || TweenJS.Easing.Circular.In;
+  }
+
+  /**
+   * Animate the transition.
+   *
+   * @returns {Promise<unknown>}
+   */
+  animate() {
+
+    let from = this.getFrom();
+    let to = this.getTo();
+
+    if (!from instanceof Scene || !to instanceof Scene) {
+      throw new Error('ScrollFrom::animate: FROM or TO are not Scenes.');
+    }
+
+    this.app.stage.addChild(to);
+
+    switch (this.direction) {
+      case 'top':
+        this._animateTop(from, to);
+        break;
+      case 'bottom':
+        this._animateBottom(from, to);
+        break;
+      case 'left':
+        this._animateLeft(from, to);
+        break;
+      case 'right':
+        this._animateRight(from, to);
+        break;
+
+      default:
+        throw new Error('ScrollFrom::animate: Unknown animation direction.');
+    }
+  }
+
+  /**
+   * Animate from the top of the screen.
+   *
+   * @param {Scene} from - The from scene.
+   * @param {Scene} to - the to scene.
+   * @returns {*}
+   * @private
+   */
+  _animateTop(from, to) {
+    let start = { x: 0, y: -from.height, useTicks: false };
+    let end = { y: from.y };
+    return this._tween(start, end, () => {
+      to.y = start.y;
+      from.y = to.y + to.height;
+    });
+  }
+
+  /**
+   * Animate from the bottom of the screen.
+   *
+   * @param {Scene} from - The from scene.
+   * @param {Scene} to - the to scene.
+   * @returns {*}
+   * @private
+   */
+  _animateBottom(from, to) {
+    let start = { x: 0, y: from.height, useTicks: false };
+    let end = { y: -from.y };
+    return this._tween(start, end, () => {
+      to.y = start.y;
+      from.y = to.y - to.height;
+    });
+  }
+
+  /**
+   * Animate from the left of the screen.
+   *
+   * @param {Scene} from - The from scene.
+   * @param {Scene} to - the to scene.
+   * @returns {*}
+   * @private
+   */
+  _animateLeft(from, to) {
+    let start = { x: -from.width, y: from.y, useTicks: false };
+    let end = { x: -from.x };
+    return this._tween(start, end, () => {
+      to.x = start.x;
+      from.x = to.x + to.width;
+    });
+  }
+
+  /**
+   * Animate from the right of the screen.
+   *
+   * @param {Scene} from - The from scene.
+   * @param {Scene} to - the to scene.
+   * @returns {*}
+   * @private
+   */
+  _animateRight(from, to) {
+
+    let start = { x: from.width, y: from.y, useTicks: false };
+    let end = { x: from.x };
+    return this._tween(start, end, () => {
+      to.x = start.x;
+      from.x = to.x - to.width;
+    });
+  }
+
+  /**
+   * Tween the scenes to their now positions.
+   *
+   * @param {object} start - The start coordinate.
+   * @param {object} end - The end coordinate.
+   * @param {callback} update_callback - The function to update every step of the Tween.
+   * @returns {*}
+   * @private
+   */
+  _tween(start, end, update_callback) {
+
+    if (!update_callback instanceof Function) {
+      throw new Error('ScrollFrom::_tween: Unknown update callback');
+    }
+
+    return new TweenJS.Tween(start).to(end, this.duration).easing(this.ease).onUpdate(update_callback).onComplete(() => {
+      this.emitAnimationComplete();
+    }).start();
+  }
+
+  /**
+   * This update function is called every tick
+   *
+   * @param {number} delta - Tick delta
+   */
+  update(delta) {
+    TweenJS.update();
+  }
+}
+
+module.exports = ScrollFrom;
+
+/***/ }),
+/* 647 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const TransactionType = __webpack_require__(609);
+const Scene = __webpack_require__(585);
+
+class CrossFade extends TransactionType {
+  constructor(options) {
+    super(options);
+
+    /**
+     *
+     * @type {number}
+     */
+    this.delay = options.delay || 2;
+
+    /**
+     *
+     * @type {number}
+     */
+    this.time_passed = 0;
+
+    /**
+     * The fade type. For now only fade in.
+     *
+     * @type {string}
+     */
+    this.type = 'in';
+
+    /**
+     * Increment size per tick.
+     *
+     * @type {number}
+     */
+    this.stepSize = 0.05;
+
+    /**
+     * Indicator if the fade animation is going.
+     *
+     * @type {boolean}
+     */
+    this.isFading = false;
+  }
+
+  /**
+   * Animate the transition.
+   */
+  animate() {
+
+    let from = this.getFrom();
+    let to = this.getTo();
+
+    if (!from instanceof Scene || !to instanceof Scene) {
+      throw new Error('ScrollFrom::animate: FROM or TO are not Scenes.');
+    }
+
+    this.app.stage.addChild(to);
+    this.app.stage.swapChildren(from, to);
+
+    to.x = from.x;
+    to.y = from.y;
+
+    if (this.type === 'in') {
+      to.alpha = 0;
+    }
+
+    this.isFading = true;
+  }
+
+  /**
+   * This update function is called every tick
+   *
+   * @param {number} delta - Tick delta
+   */
+  update(delta) {
+
+    if (this.isFading) {
+      this.time_passed += delta;
+
+      if (this.time_passed > this.delay) {
+        this._from.alpha -= this.stepSize;
+        this._to.alpha += this.stepSize;
+
+        if (this.type === 'in') {
+          if (this._to.alpha >= 1) {
+            this._to.alpha = 1;
+            this.emitAnimationComplete();
+            this.isFading = false;
+          }
+        }
+
+        /**
+         * Reset the time that has passed
+         * since the last update.
+         *
+         * @type {number}
+         */
+        this.time_passed = 0;
+      }
+    }
+  }
+}
+
+module.exports = CrossFade;
 
 /***/ })
 ]);

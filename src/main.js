@@ -65,7 +65,7 @@ require([
   'core/managers/InputManager',
   'core/managers/ResizeManager',
   'core/managers/DebugManager',
-  'core/managers/PluginManager'
+  'core/managers/PluginManager',
 ], function (PIXI, GameEngine, Gameloop, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, DebugManager, PluginManager) {
   PIXI.utils.skipHello()
   sayHello()

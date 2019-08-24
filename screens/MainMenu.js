@@ -4,8 +4,8 @@ const Dialogs = require('gui/dialogs')
 /**
  * @namespace Screens
  */
-define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
-  function (pixi, Scene, GameEngine, Statistics, TweenJS) {
+define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs', 'core/transitions/Transition'],
+  function (pixi, Scene, GameEngine, Statistics, TweenJS, Transition) {
 
     /**
      * @classdesc MainScreen
@@ -110,21 +110,21 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs'],
      * Breakout menu option callback
      */
     MainMenu.prototype.breakoutClicked = function () {
-      this.SceneManager.switchTo('Breakout/Level1')
+      this.SceneManager.switchToUsingTransaction('Breakout/Level1', Transition.named('ScrollFrom', { direction: 'bottom'}))
     }
 
     /**
      * PixelShooter menu option callback
      */
     MainMenu.prototype.pixelShooterClicked = function () {
-      this.SceneManager.switchTo('PixelShooter/Level1')
+      this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'right'}))
     }
 
     /**
      * RoundedRects menu option callback
      */
     MainMenu.prototype.roundedRectsClicked = function () {
-      this.SceneManager.switchTo('RoundedRects/Level1')
+      this.SceneManager.switchToUsingTransaction('RoundedRects/Level1', Transition.named('ScrollFrom', { direction: 'bottom'}))
     }
 
     /**
