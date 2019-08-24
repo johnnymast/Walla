@@ -156,7 +156,6 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
         .animate()
 
     }
-
   }
 
   return SceneManager
