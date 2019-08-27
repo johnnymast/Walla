@@ -117,7 +117,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs', 'c
      * PixelShooter menu option callback
      */
     MainMenu.prototype.pixelShooterClicked = function () {
-      this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'right' }))
+      this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'left' }))
     }
 
     /**
@@ -131,7 +131,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs', 'c
      * Gamepad menu option callback
      */
     MainMenu.prototype.gamePadClicked = function () {
-      this.SceneManager.switchTo('Gamepad/Level1')
+      this.SceneManager.switchToUsingTransaction('Gamepad/Level1', Transition.named('ScrollFrom', { direction: 'right' }))
     }
 
     /**

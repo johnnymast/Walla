@@ -74990,7 +74990,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * InputManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581), __webpack_require__(585), __webpack_require__(607)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581), __webpack_require__(585), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, KeyboardInput, GamePadInput) {
   /**
    * @classdesc InputManager
    * @exports  core/managers/InputManager
@@ -75236,7 +75236,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
       throw new Error('loadPlugin: Empty plugin name.');
     }
 
-    let plugin = __webpack_require__(641)("./" + name + '/index');
+    let plugin = __webpack_require__(645)("./" + name + '/index');
 
     if (!alias) {
       alias = name;
@@ -75366,7 +75366,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    */
   SceneManager.prototype.add = function (scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(642)("./" + scene);
+      let _scene = __webpack_require__(646)("./" + scene);
       this.scenes[scene] = new _scene(options);
     }
     return this;
@@ -75491,7 +75491,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 374 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(630);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const LocalStorage = __webpack_require__(634);
 
 /**
  * StateManager
@@ -76566,7 +76566,7 @@ const DIALOG_STATE = {
 /* 588 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(599)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Matter) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(600)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Matter) {
 
   /**
    * The Pad object constructor.
@@ -77182,8 +77182,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(586).BUTTON_STATE;
 const Type = __webpack_require__(586).BUTTON_TYPE;
-const BaseButton = __webpack_require__(633);
-const ImageButton = __webpack_require__(634);
+const BaseButton = __webpack_require__(637);
+const ImageButton = __webpack_require__(638);
 const Button = __webpack_require__(595);
 
 
@@ -77192,7 +77192,7 @@ const Button = __webpack_require__(595);
 /* 597 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = __webpack_require__(610);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Dialogs = __webpack_require__(612);
 const Buttons = __webpack_require__(596);
 
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581), __webpack_require__(130)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject, TweenJS) {
@@ -77355,12 +77355,32 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
 /***/ }),
 /* 599 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["moduleExists"] = moduleExists;
+function moduleExists(module) {
+
+  return new Promise((resolve, reject) => {
+
+    try {
+      // import module
+      resolve();
+    } catch (e) {
+      reject();
+    }
+  });
+}
+
+/***/ }),
+/* 600 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const pkg = __webpack_require__(622);
+const pkg = __webpack_require__(599);
 
-const PhysicsManager = __webpack_require__(623);
-const PhysicsSprite = __webpack_require__(624);
+const PhysicsManager = __webpack_require__(628);
+const PhysicsSprite = __webpack_require__(629);
 
 module.exports = {
   PhysicsManager: PhysicsManager,
@@ -77382,13 +77402,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 600 */
+/* 601 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/SonarSystems/Cocos2d-JS-v3-Tutorial-57---Adding-A-Menu-Image-Item/blob/master/src/app.js
 const Vector2d = __webpack_require__(230);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(589), __webpack_require__(613), __webpack_require__(614), __webpack_require__(612)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(589), __webpack_require__(615), __webpack_require__(616), __webpack_require__(614)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Brick, Pad, Ball) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -77699,14 +77719,14 @@ const Vector2d = __webpack_require__(230);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 601 */
+/* 602 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * To keep the level file as small as possible i have added a view file that
  * handles the gamepad input. The file is located at screens/GamepadView.js
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(590), __webpack_require__(607), __webpack_require__(615)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, GamePadInput, GamepadView) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(590), __webpack_require__(609), __webpack_require__(617)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, GamePadInput, GamepadView) {
   let Level1 = function () {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -77805,10 +77825,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 602 */
+/* 603 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(591), __webpack_require__(618)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Circle) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(591), __webpack_require__(620)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameLevel, Circle) {
 
   /**
    * Level1 constructor
@@ -77911,16 +77931,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 603 */
+/* 604 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(637);
-const Dialogs = __webpack_require__(610);
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Menus = __webpack_require__(641);
+const Dialogs = __webpack_require__(612);
 
 /**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582), __webpack_require__(229), __webpack_require__(583), __webpack_require__(130), __webpack_require__(608)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS, Transition) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582), __webpack_require__(229), __webpack_require__(583), __webpack_require__(130), __webpack_require__(610)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, GameEngine, Statistics, TweenJS, Transition) {
 
   /**
    * @classdesc MainScreen
@@ -78028,7 +78048,7 @@ const Dialogs = __webpack_require__(610);
    * PixelShooter menu option callback
    */
   MainMenu.prototype.pixelShooterClicked = function () {
-    this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'right' }));
+    this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'left' }));
   };
 
   /**
@@ -78042,7 +78062,7 @@ const Dialogs = __webpack_require__(610);
    * Gamepad menu option callback
    */
   MainMenu.prototype.gamePadClicked = function () {
-    this.SceneManager.switchTo('Gamepad/Level1');
+    this.SceneManager.switchToUsingTransaction('Gamepad/Level1', Transition.named('ScrollFrom', { direction: 'right' }));
   };
 
   /**
@@ -78090,13 +78110,13 @@ const Dialogs = __webpack_require__(610);
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 604 */
+/* 605 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// https://github.com/riebel/pixi-tiledmap
 const DIRECTIONS = __webpack_require__(598).DIRECTIONS;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(592), __webpack_require__(229), __webpack_require__(619)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(592), __webpack_require__(229), __webpack_require__(621)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameLevel, GameEngine, Character) {
   let Level1 = function (options) {
     GameLevel.call(this, { backgroundColor: 0x1099bb });
 
@@ -78225,10 +78245,10 @@ const DIRECTIONS = __webpack_require__(598).DIRECTIONS;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 605 */
+/* 606 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(593), __webpack_require__(620), __webpack_require__(621)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(593), __webpack_require__(622), __webpack_require__(623)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameLevel, RoundedRect, Text) {
 
   /**
    * Level1 constructor
@@ -78402,13 +78422,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 606 */
+/* 607 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * @namespace Screens
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582), __webpack_require__(608)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene, Transition) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(582), __webpack_require__(610)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, Scene, Transition) {
 
   /**
    * @classdesc SplashScene
@@ -78534,10 +78554,108 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 607 */
+/* 608 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(625), __webpack_require__(628)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
+
+  let ScenePlugin = function (ke) {
+    GameObject.call(this);
+    this.setPreUpdateMode();
+    this.setPostStartMode();
+  };
+
+  extend(ScenePlugin, GameObject);
+
+  /**
+   * Set update before the main scene.
+   */
+  ScenePlugin.prototype.setPreUpdateMode = function () {
+    this.preupdate = true;
+    this.postupdate = false;
+  };
+
+  /**
+   * Set update before starting the main scene.
+   */
+  ScenePlugin.prototype.setPreStartMode = function () {
+    this.prestart = true;
+    this.poststart = false;
+  };
+
+  /**
+   * Set update after the main scene.
+   */
+  ScenePlugin.prototype.setPostUpdateMode = function () {
+    this.postupdate = true;
+    this.preupdate = false;
+  };
+
+  /**
+   * Set update after starting the main scene.
+   */
+  ScenePlugin.prototype.setPostStartMode = function () {
+    this.poststart = true;
+    this.prestart = false;
+  };
+
+  /**
+   * Ask if the plugin updates before (pre) or after (post) the
+   * main scene.
+   *
+   * @returns {boolean}
+   */
+  ScenePlugin.prototype.runsPreUpdate = function () {
+    return this.preupdate === true;
+  };
+
+  /**
+   * Ask if the plugin updates before (pre) or after (post) the
+   * main scene starting.
+   *
+   * @returns {boolean}
+   */
+  ScenePlugin.prototype.runsPreStart = function () {
+    return this.prestart === true;
+  };
+
+  /**
+   * Ask if the plugin updates before (pre) or after (post) the
+   * main scene.
+   *
+   * @returns {boolean}
+   */
+  ScenePlugin.prototype.runsPostUpdate = function () {
+    return this.postupdate === true;
+  };
+
+  /**
+   * Ask if the plugin updates before (pre) or after (post) the
+   * main scene starting.
+   *
+   * @returns {boolean}
+   */
+  ScenePlugin.prototype.runsPostStart = function () {
+    return this.poststart === true;
+  };
+
+  ScenePlugin.prototype.start = function () {
+    // Overwrite
+  };
+
+  ScenePlugin.prototype.update = function (delta) {
+    // Overwrite
+  };
+
+  return ScenePlugin;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 609 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(608), __webpack_require__(632)], __WEBPACK_AMD_DEFINE_RESULT__ = function (ScenePlugin, GamePad) {
   /**
    * Take control over GamePad input by using this class.
    * You construct the class with a keycode.
@@ -78686,7 +78804,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 608 */
+/* 610 */
 /***/ (function(module, exports, __webpack_require__) {
 
 class Transition {
@@ -78698,7 +78816,7 @@ class Transition {
    * @constructor
    */
   get ScrollFrom() {
-    return __webpack_require__(632);
+    return __webpack_require__(636);
   }
 
   /**
@@ -78708,7 +78826,7 @@ class Transition {
    * @constructor
    */
   get CrossFade() {
-    return __webpack_require__(631);
+    return __webpack_require__(635);
   }
 
   /**
@@ -78732,7 +78850,7 @@ class Transition {
 module.exports = new Transition();
 
 /***/ }),
-/* 609 */
+/* 611 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIALOG_TYPE = __webpack_require__(587).DIALOG_TYPE;
@@ -78866,7 +78984,7 @@ const STATE = __webpack_require__(587).DIALOG_STATE;
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 610 */
+/* 612 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78876,13 +78994,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(587).DIALOG_TYPE;
 const STATE = __webpack_require__(587).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(635);
-const DefaultDialog = __webpack_require__(636);
+const CloseableDialog = __webpack_require__(639);
+const DefaultDialog = __webpack_require__(640);
 
 
 
 /***/ }),
-/* 611 */
+/* 613 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -78952,7 +79070,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 612 */
+/* 614 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(588)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PhysicsSprite) {
@@ -79023,7 +79141,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 613 */
+/* 615 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d = __webpack_require__(230);
@@ -79181,7 +79299,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Vector2d =
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 614 */
+/* 616 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(588)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, PhysicsSprite) {
@@ -79225,12 +79343,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 615 */
+/* 617 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
-const Button = __webpack_require__(616);
-const Progress = __webpack_require__(617);
+const Button = __webpack_require__(618);
+const Progress = __webpack_require__(619);
 
 class GamepadView extends GameObject {
   /**
@@ -79376,7 +79494,7 @@ class GamepadView extends GameObject {
 module.exports = GamepadView;
 
 /***/ }),
-/* 616 */
+/* 618 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
@@ -79454,7 +79572,7 @@ class Button extends GameObject {
 module.exports = Button;
 
 /***/ }),
-/* 617 */
+/* 619 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
@@ -79539,7 +79657,7 @@ class Progress extends GameObject {
 module.exports = Progress;
 
 /***/ }),
-/* 618 */
+/* 620 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
@@ -79578,7 +79696,7 @@ class Circle extends GameObject {
 module.exports = Circle;
 
 /***/ }),
-/* 619 */
+/* 621 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS = __webpack_require__(598).DIRECTIONS;
@@ -79667,7 +79785,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const DIRECTIONS
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 620 */
+/* 622 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(581);
@@ -79730,7 +79848,7 @@ class RoundedRect extends GameObject {
 module.exports = RoundedRect;
 
 /***/ }),
-/* 621 */
+/* 623 */
 /***/ (function(module, exports) {
 
 class Text extends PIXI.Container {
@@ -79761,27 +79879,362 @@ class Text extends PIXI.Container {
 module.exports = Text;
 
 /***/ }),
-/* 622 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 624 */
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["moduleExists"] = moduleExists;
-function moduleExists(module) {
+const GameObject = __webpack_require__(581);
 
-  return new Promise((resolve, reject) => {
+class DebugDialog extends GameObject {
 
-    try {
-      // import module
-      resolve();
-    } catch (e) {
-      reject();
+  /**
+   * @classdesc DebugDialog
+   * @exports  plugins/debug/manager/DebugDialog
+   * @class
+   */
+  constructor() {
+    super();
+    this.init();
+  }
+
+  /**
+   * Return a static instance of the DebugDialog.
+   *
+   * @returns {DebugDialog}
+   */
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new DebugDialog();
     }
-  });
+    return this.instance;
+  }
+
+  /**
+   * Initialize the DebugDialog.
+   */
+  init() {
+    const graphics = new PIXI.Graphics();
+
+    graphics.beginFill(0x5b635e, 0.5);
+    graphics.drawRect(0, 0, this.app.screen.width, 30);
+    graphics.endFill();
+
+    let obj = {
+      ' ': 32,
+      'Enter': 18,
+      backspace: 8,
+      tab: 9,
+      enter: 13,
+      shiftleft: 16,
+      shiftright: 16,
+      ctrlleft: 17,
+      ctrlrigght: 17,
+      altleft: 18,
+      altright: 18,
+      pause: 19,
+      capslock: 20,
+      escape: 27,
+      pageup: 33,
+      pagedown: 34,
+      end: 35,
+      home: 36,
+      arrowleft: 37,
+      arrowup: 38,
+      arrowright: 39,
+      arrowdown: 40,
+      insert: 45,
+      delete: 46,
+      0: 48,
+      1: 49,
+      2: 50,
+      3: 51,
+      4: 52,
+      5: 53,
+      6: 54,
+      7: 55,
+      8: 56,
+      9: 57,
+      a: 65,
+      b: 66,
+      c: 67,
+      d: 68,
+      e: 69,
+      f: 70,
+      g: 71,
+      h: 72,
+      i: 73,
+      j: 74,
+      k: 75,
+      l: 76,
+      m: 77,
+      n: 78,
+      o: 79,
+      p: 80,
+      q: 81,
+      r: 82,
+      s: 83,
+      t: 84,
+      u: 85,
+      v: 86,
+      w: 87,
+      x: 88,
+      y: 89,
+      z: 90,
+      metaleft: 91,
+      metaright: 92,
+      select: 93,
+      numpad0: 96,
+      numpad1: 97,
+      numpad2: 98,
+      numpad3: 99,
+      numpad4: 100,
+      numpad5: 101,
+      numpad6: 102,
+      numpad7: 103,
+      numpad8: 104,
+      numpad9: 105,
+      numpadmultiply: 106,
+      numpadadd: 107,
+      numpadsubtract: 109,
+      numpaddecimal: 110,
+      numpaddivide: 111,
+      f1: 112,
+      f2: 113,
+      f3: 114,
+      f4: 115,
+      f5: 116,
+      f6: 117,
+      f7: 118,
+      f8: 119,
+      f9: 120,
+      f10: 121,
+      f11: 122,
+      f12: 123,
+      numlock: 144,
+      scrolllock: 145,
+      semicolon: 186,
+      equalsign: 187,
+      comma: 188,
+      minus: 189,
+      period: 190,
+      slash: 191,
+      backquote: 192,
+      bracketleft: 219,
+      backslash: 220,
+      braketright: 221,
+      quote: 222
+    };
+
+    Object.keys(obj).forEach(name => {
+      this.InputManager.mapInput([name]);
+    });
+
+    // this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this))
+    this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this));
+
+    let inputRow = new PIXI.Container();
+    let prompt = new PIXI.Text('>', { fill: 0xFFFFFF, fontSize: 25 });
+    this.promptText = new PIXI.Text('', { fill: 0xFFFFFF, fontSize: 25 });
+    // let
+    prompt.x = 5;
+    this.promptText.x = prompt.x + prompt.width + 10;
+
+    inputRow.addChild(prompt);
+    inputRow.addChild(this.promptText);
+
+    this.addChild(inputRow);
+    this.addChild(graphics);
+  }
+
+  /**
+   * React to the keyup event for when typing in the active
+   * Scene.
+   *
+   * @param event
+   */
+  onKeyUp(event) {
+    /**
+     * You can overwrite this function if you wish
+     * to receive keyboard keyUp events.
+     *
+     * Please note: These events will only be triggered
+     * by registered keys. See InputManager.mapInput
+     * for more information.
+     */
+    this._updateDialogPromptText(event.key);
+  }
+
+  /**
+   * Update the dialog after typing a character.
+   *
+   * @param char
+   * @private
+   */
+  _updateDialogPromptText(char) {
+    if (char === 'Enter') {
+      let command = this.promptText.text.toLowerCase().trim();
+      this.executeCommand(command);
+    } else {
+      this.promptText.text += char;
+    }
+  }
+
+  /**
+   * Execute a typed command.
+   *
+   * @param command
+   */
+  executeCommand(command) {
+    if (this.DebugManager.haveCommand(command)) {
+      console.log('have command');
+    } else {
+      console.log('command not found');
+    }
+  }
+}
+
+if (true) {
+  module.exports = DebugDialog;
 }
 
 /***/ }),
-/* 623 */
+/* 625 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const pkg = __webpack_require__(599);
+
+module.exports = {
+  DebugManager: __webpack_require__(626)
+
+  // pkg.moduleExists('pixi' /* take care of absolute paths */)
+  //   .then(() => {
+  //
+  //     const PhysicsManager = require('./PhysicsManager')
+  //
+  //     module.exports = {
+  //       PhysicsManager
+  //     };
+  //
+  //     console.log('did export')
+  //   })
+  //   .catch(() => { throw Error('Plugins: Module matter-js was not found'); });
+
+};
+
+/***/ }),
+/* 626 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const PIXI = __webpack_require__(2);
+const Plugin = __webpack_require__(627);
+
+class DebugManager extends PIXI.utils.EventEmitter {
+  constructor() {
+    super();
+    this.init();
+  }
+
+  /**
+   * Initialize the DebugManager
+   */
+  init() {
+
+    this.commands = [];
+    this.debugScene = new Plugin();
+  }
+
+  /**
+   * Add a new command.
+   *
+   * @param {string} command - The command name.
+   * @param {callback} callback - The callback to execute.
+   */
+  addCommand(command, callback) {
+    this.commands[command] = callback;
+  }
+
+  /**
+   * Check if a given command exists.
+   *
+   * @deprecated
+   * @param {string} command - The command to check on.
+   */
+  haveCommand(command) {
+    for (let name in Object.keys(this.commands)) {
+      console.log(name);
+    }
+  }
+
+  /**
+   * Add a new command to handle.
+   *
+   * @param {[]} commands - The list of commands.
+   */
+  addCommands(commands) {
+    if (!commands instanceof Array) {
+      throw new Error('addCommand: parameter commands is no Array');
+    }
+
+    if (commands.length > 0) {
+      commands.forEach((command, callback) => {
+        this.addCommand(command, callback);
+      });
+    }
+  }
+
+  /**
+   * Return a list of all commands.
+   *
+   * @returns {[]|Array}
+   */
+  getCommands() {
+    return this.commands;
+  }
+}
+
+if (true) {
+  module.exports = DebugManager;
+}
+
+/***/ }),
+/* 627 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const ScenePlugin = __webpack_require__(608);
+const DebugDialog = __webpack_require__(624);
+
+class Plugin extends ScenePlugin {
+  constructor() {
+    super();
+    this.setPostUpdateMode();
+    this.runsPostStart();
+    this.init();
+  }
+
+  /**
+   * Initialize the object
+   */
+  init() {
+    this.dialog = DebugDialog.getInstance();
+    this.SceneManager.registerPlugin('debug-dialog', this);
+  }
+
+  /**
+   * Start callback
+   */
+  start() {
+    if (this.dialog.parent) {
+      this.dialog.parent.removeChild(this.dialog);
+    }
+    this.app.stage.addChild(this.dialog);
+  }
+}
+
+if (true) {
+  module.exports = Plugin;
+}
+
+/***/ }),
+/* 628 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -80009,7 +80462,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 624 */
+/* 629 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, GameObject) {
@@ -80228,105 +80681,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 625 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameObject) {
-
-  let ScenePlugin = function (ke) {
-    GameObject.call(this);
-    this.setPreUpdateMode();
-    this.setPostStartMode();
-  };
-
-  extend(ScenePlugin, GameObject);
-
-  /**
-   * Set update before the main scene.
-   */
-  ScenePlugin.prototype.setPreUpdateMode = function () {
-    this.preupdate = true;
-    this.postupdate = false;
-  };
-
-  /**
-   * Set update before starting the main scene.
-   */
-  ScenePlugin.prototype.setPreStartMode = function () {
-    this.prestart = true;
-    this.poststart = false;
-  };
-
-  /**
-   * Set update after the main scene.
-   */
-  ScenePlugin.prototype.setPostUpdateMode = function () {
-    this.postupdate = true;
-    this.preupdate = false;
-  };
-
-  /**
-   * Set update after starting the main scene.
-   */
-  ScenePlugin.prototype.setPostStartMode = function () {
-    this.poststart = true;
-    this.prestart = false;
-  };
-
-  /**
-   * Ask if the plugin updates before (pre) or after (post) the
-   * main scene.
-   *
-   * @returns {boolean}
-   */
-  ScenePlugin.prototype.runsPreUpdate = function () {
-    return this.preupdate === true;
-  };
-
-  /**
-   * Ask if the plugin updates before (pre) or after (post) the
-   * main scene starting.
-   *
-   * @returns {boolean}
-   */
-  ScenePlugin.prototype.runsPreStart = function () {
-    return this.prestart === true;
-  };
-
-  /**
-   * Ask if the plugin updates before (pre) or after (post) the
-   * main scene.
-   *
-   * @returns {boolean}
-   */
-  ScenePlugin.prototype.runsPostUpdate = function () {
-    return this.postupdate === true;
-  };
-
-  /**
-   * Ask if the plugin updates before (pre) or after (post) the
-   * main scene starting.
-   *
-   * @returns {boolean}
-   */
-  ScenePlugin.prototype.runsPostStart = function () {
-    return this.poststart === true;
-  };
-
-  ScenePlugin.prototype.start = function () {
-    // Overwrite
-  };
-
-  ScenePlugin.prototype.update = function (delta) {
-    // Overwrite
-  };
-
-  return ScenePlugin;
-}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ }),
-/* 626 */
+/* 630 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter) {
@@ -80398,10 +80753,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 627 */
+/* 631 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(629)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(633)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
   let Button = function (button, index = 0, gamepad) {
     EventEmitter.call(this);
 
@@ -80490,10 +80845,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 628 */
+/* 632 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(627), __webpack_require__(626)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(631), __webpack_require__(630)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, Button, Axis) {
   let GamePad = function (gamepad) {
     EventEmitter.call(this);
 
@@ -80625,7 +80980,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 629 */
+/* 633 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
@@ -80659,7 +81014,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 module.exports = GamepadEvent;
 
 /***/ }),
-/* 630 */
+/* 634 */
 /***/ (function(module, exports) {
 
 class LocalStorage {
@@ -80685,7 +81040,7 @@ class LocalStorage {
 module.exports = LocalStorage;
 
 /***/ }),
-/* 631 */
+/* 635 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const TransactionType = __webpack_require__(594);
@@ -80791,7 +81146,7 @@ class CrossFade extends TransactionType {
 module.exports = CrossFade;
 
 /***/ }),
-/* 632 */
+/* 636 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const TransactionType = __webpack_require__(594);
@@ -80885,8 +81240,8 @@ class ScrollFrom extends TransactionType {
    * @private
    */
   _animateLeft(from, to) {
-    let start = { x: -from.width, y: 0, useTicks: false };
-    let end = { x: -from.x };
+    let start = { x: -from.width, y: from.y, useTicks: false };
+    let end = { x: from.x };
     return this._tween(start, end, () => {
       to.x = start.x;
       from.x = to.x + to.width;
@@ -80902,9 +81257,6 @@ class ScrollFrom extends TransactionType {
    * @private
    */
   _animateRight(from, to) {
-
-    // to.x = from.x + from.width
-    console.log('width', from.width);
     let start = { x: from.x, y: from.y, useTicks: false };
     let end = { x: -from.width };
 
@@ -80947,7 +81299,7 @@ class ScrollFrom extends TransactionType {
 module.exports = ScrollFrom;
 
 /***/ }),
-/* 633 */
+/* 637 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(595);
@@ -81154,7 +81506,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 634 */
+/* 638 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = __webpack_require__(595);
@@ -81361,12 +81713,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Button = _
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 635 */
+/* 639 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(596);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(611)], __WEBPACK_AMD_DEFINE_RESULT__ = function (PIXI, BaseDialog) {
   let CloseableDialog = function (options) {
 
     this.options = {
@@ -81446,10 +81798,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 636 */
+/* 640 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(609)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(611)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, BaseDialog) {
   let DefaultDialog = function (options) {
     BaseDialog.call(this, options);
   };
@@ -81465,7 +81817,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 637 */
+/* 641 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81473,13 +81825,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(638);
-const MenuItemText = __webpack_require__(640);
-const MenuItemImageButton = __webpack_require__(639);
+const Menu = __webpack_require__(642);
+const MenuItemText = __webpack_require__(644);
+const MenuItemImageButton = __webpack_require__(643);
 
 
 /***/ }),
-/* 638 */
+/* 642 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(581)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, GameObject) {
@@ -81557,12 +81909,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 639 */
+/* 643 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = __webpack_require__(596);
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(611)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(613)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemImageButton module
@@ -81645,10 +81997,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Buttons = 
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 640 */
+/* 644 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(611)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(613)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, MenuItem) {
 
   /**
    * @classdesc MenuItemText module
@@ -81731,12 +82083,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
-/* 641 */
+/* 645 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./debug/index": 646,
-	"./matterjs/index": 599
+	"./debug/index": 625,
+	"./matterjs/index": 600
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -81752,37 +82104,37 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 641;
+webpackContext.id = 645;
 
 /***/ }),
-/* 642 */
+/* 646 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"./Breakout/GameLevel": 589,
 	"./Breakout/GameLevel.js": 589,
-	"./Breakout/Level1": 600,
-	"./Breakout/Level1.js": 600,
+	"./Breakout/Level1": 601,
+	"./Breakout/Level1.js": 601,
 	"./Gamepad/GameLevel": 590,
 	"./Gamepad/GameLevel.js": 590,
-	"./Gamepad/Level1": 601,
-	"./Gamepad/Level1.js": 601,
+	"./Gamepad/Level1": 602,
+	"./Gamepad/Level1.js": 602,
 	"./Lerp/GameLevel": 591,
 	"./Lerp/GameLevel.js": 591,
-	"./Lerp/Level1": 602,
-	"./Lerp/Level1.js": 602,
-	"./MainMenu": 603,
-	"./MainMenu.js": 603,
+	"./Lerp/Level1": 603,
+	"./Lerp/Level1.js": 603,
+	"./MainMenu": 604,
+	"./MainMenu.js": 604,
 	"./PixelShooter/GameLevel": 592,
 	"./PixelShooter/GameLevel.js": 592,
-	"./PixelShooter/Level1": 604,
-	"./PixelShooter/Level1.js": 604,
+	"./PixelShooter/Level1": 605,
+	"./PixelShooter/Level1.js": 605,
 	"./RoundedRects/GameLevel": 593,
 	"./RoundedRects/GameLevel.js": 593,
-	"./RoundedRects/Level1": 605,
-	"./RoundedRects/Level1.js": 605,
-	"./SplashScene": 606,
-	"./SplashScene.js": 606
+	"./RoundedRects/Level1": 606,
+	"./RoundedRects/Level1.js": 606,
+	"./SplashScene": 607,
+	"./SplashScene.js": 607
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -81798,366 +82150,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 642;
-
-/***/ }),
-/* 643 */,
-/* 644 */,
-/* 645 */,
-/* 646 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const pkg = __webpack_require__(622);
-
-module.exports = {
-  DebugManager: __webpack_require__(649)
-
-  // pkg.moduleExists('pixi' /* take care of absolute paths */)
-  //   .then(() => {
-  //
-  //     const PhysicsManager = require('./PhysicsManager')
-  //
-  //     module.exports = {
-  //       PhysicsManager
-  //     };
-  //
-  //     console.log('did export')
-  //   })
-  //   .catch(() => { throw Error('Plugins: Module matter-js was not found'); });
-
-};
-
-/***/ }),
-/* 647 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const GameObject = __webpack_require__(581);
-
-class DebugDialog extends GameObject {
-
-  /**
-   * @classdesc DebugDialog
-   * @exports  plugins/debug/manager/DebugDialog
-   * @class
-   */
-  constructor() {
-    super();
-    this.init();
-  }
-
-  /**
-   * Return a static instance of the DebugDialog.
-   *
-   * @returns {DebugDialog}
-   */
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new DebugDialog();
-    }
-    return this.instance;
-  }
-
-  /**
-   * Initialize the DebugDialog.
-   */
-  init() {
-    const graphics = new PIXI.Graphics();
-
-    graphics.beginFill(0x5b635e, 0.5);
-    graphics.drawRect(0, 0, this.app.screen.width, 30);
-    graphics.endFill();
-
-    let obj = {
-      ' ': 32,
-      'Enter': 18,
-      backspace: 8,
-      tab: 9,
-      enter: 13,
-      shiftleft: 16,
-      shiftright: 16,
-      ctrlleft: 17,
-      ctrlrigght: 17,
-      altleft: 18,
-      altright: 18,
-      pause: 19,
-      capslock: 20,
-      escape: 27,
-      pageup: 33,
-      pagedown: 34,
-      end: 35,
-      home: 36,
-      arrowleft: 37,
-      arrowup: 38,
-      arrowright: 39,
-      arrowdown: 40,
-      insert: 45,
-      delete: 46,
-      0: 48,
-      1: 49,
-      2: 50,
-      3: 51,
-      4: 52,
-      5: 53,
-      6: 54,
-      7: 55,
-      8: 56,
-      9: 57,
-      a: 65,
-      b: 66,
-      c: 67,
-      d: 68,
-      e: 69,
-      f: 70,
-      g: 71,
-      h: 72,
-      i: 73,
-      j: 74,
-      k: 75,
-      l: 76,
-      m: 77,
-      n: 78,
-      o: 79,
-      p: 80,
-      q: 81,
-      r: 82,
-      s: 83,
-      t: 84,
-      u: 85,
-      v: 86,
-      w: 87,
-      x: 88,
-      y: 89,
-      z: 90,
-      metaleft: 91,
-      metaright: 92,
-      select: 93,
-      numpad0: 96,
-      numpad1: 97,
-      numpad2: 98,
-      numpad3: 99,
-      numpad4: 100,
-      numpad5: 101,
-      numpad6: 102,
-      numpad7: 103,
-      numpad8: 104,
-      numpad9: 105,
-      numpadmultiply: 106,
-      numpadadd: 107,
-      numpadsubtract: 109,
-      numpaddecimal: 110,
-      numpaddivide: 111,
-      f1: 112,
-      f2: 113,
-      f3: 114,
-      f4: 115,
-      f5: 116,
-      f6: 117,
-      f7: 118,
-      f8: 119,
-      f9: 120,
-      f10: 121,
-      f11: 122,
-      f12: 123,
-      numlock: 144,
-      scrolllock: 145,
-      semicolon: 186,
-      equalsign: 187,
-      comma: 188,
-      minus: 189,
-      period: 190,
-      slash: 191,
-      backquote: 192,
-      bracketleft: 219,
-      backslash: 220,
-      braketright: 221,
-      quote: 222
-    };
-
-    Object.keys(obj).forEach(name => {
-      this.InputManager.mapInput([name]);
-    });
-
-    // this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this))
-    this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this));
-
-    let inputRow = new PIXI.Container();
-    let prompt = new PIXI.Text('>', { fill: 0xFFFFFF, fontSize: 25 });
-    this.promptText = new PIXI.Text('', { fill: 0xFFFFFF, fontSize: 25 });
-    // let
-    prompt.x = 5;
-    this.promptText.x = prompt.x + prompt.width + 10;
-
-    inputRow.addChild(prompt);
-    inputRow.addChild(this.promptText);
-
-    this.addChild(inputRow);
-    this.addChild(graphics);
-  }
-
-  /**
-   * React to the keyup event for when typing in the active
-   * Scene.
-   *
-   * @param event
-   */
-  onKeyUp(event) {
-    /**
-     * You can overwrite this function if you wish
-     * to receive keyboard keyUp events.
-     *
-     * Please note: These events will only be triggered
-     * by registered keys. See InputManager.mapInput
-     * for more information.
-     */
-    this._updateDialogPromptText(event.key);
-  }
-
-  /**
-   * Update the dialog after typing a character.
-   *
-   * @param char
-   * @private
-   */
-  _updateDialogPromptText(char) {
-    if (char === 'Enter') {
-      let command = this.promptText.text.toLowerCase().trim();
-      this.executeCommand(command);
-    } else {
-      this.promptText.text += char;
-    }
-  }
-
-  /**
-   * Execute a typed command.
-   *
-   * @param command
-   */
-  executeCommand(command) {
-    if (this.DebugManager.haveCommand(command)) {
-      console.log('have command');
-    } else {
-      console.log('command not found');
-    }
-  }
-}
-
-if (true) {
-  module.exports = DebugDialog;
-}
-
-/***/ }),
-/* 648 */,
-/* 649 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const PIXI = __webpack_require__(2);
-const Plugin = __webpack_require__(650);
-
-class DebugManager extends PIXI.utils.EventEmitter {
-  constructor() {
-    super();
-    this.init();
-  }
-
-  /**
-   * Initialize the DebugManager
-   */
-  init() {
-
-    this.commands = [];
-    this.debugScene = new Plugin();
-  }
-
-  /**
-   * Add a new command.
-   *
-   * @param {string} command - The command name.
-   * @param {callback} callback - The callback to execute.
-   */
-  addCommand(command, callback) {
-    this.commands[command] = callback;
-  }
-
-  /**
-   * Check if a given command exists.
-   *
-   * @deprecated
-   * @param {string} command - The command to check on.
-   */
-  haveCommand(command) {
-    for (let name in Object.keys(this.commands)) {
-      console.log(name);
-    }
-  }
-
-  /**
-   * Add a new command to handle.
-   *
-   * @param {[]} commands - The list of commands.
-   */
-  addCommands(commands) {
-    if (!commands instanceof Array) {
-      throw new Error('addCommand: parameter commands is no Array');
-    }
-
-    if (commands.length > 0) {
-      commands.forEach((command, callback) => {
-        this.addCommand(command, callback);
-      });
-    }
-  }
-
-  /**
-   * Return a list of all commands.
-   *
-   * @returns {[]|Array}
-   */
-  getCommands() {
-    return this.commands;
-  }
-}
-
-if (true) {
-  module.exports = DebugManager;
-}
-
-/***/ }),
-/* 650 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const ScenePlugin = __webpack_require__(625);
-const DebugDialog = __webpack_require__(647);
-
-class Plugin extends ScenePlugin {
-  constructor() {
-    super();
-    this.setPostUpdateMode();
-    this.runsPostStart();
-    this.init();
-  }
-
-  /**
-   * Initialize the object
-   */
-  init() {
-    this.dialog = DebugDialog.getInstance();
-    this.SceneManager.registerPlugin('debug-dialog', this);
-  }
-
-  /**
-   * Start callback
-   */
-  start() {
-    if (this.dialog.parent) {
-      this.dialog.parent.removeChild(this.dialog);
-    }
-    this.app.stage.addChild(this.dialog);
-  }
-}
-
-if (true) {
-  module.exports = Plugin;
-}
+webpackContext.id = 646;
 
 /***/ })
 ]);
