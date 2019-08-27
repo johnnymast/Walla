@@ -58,8 +58,8 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
   /**
    * onStart callback
    */
-  Level1.prototype.onStart = function () {
-    GameLevel.prototype.onStart.call(this)
+  Level1.prototype.onInit = function () {
+    GameLevel.prototype.onInit.call(this)
 
     this.text = new Text('Click and drag')
     this.text.x = this.app.screen.width / 2 - this.text.width / 2

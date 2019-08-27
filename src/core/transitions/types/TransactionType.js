@@ -11,6 +11,7 @@ class TransactionType extends Scene {
     super(props)
     this._from = null
     this._to = null
+    this.init()
     this.start()
   }
 

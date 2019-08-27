@@ -54,6 +54,13 @@ define(['pixi', 'core/GameObject', 'core/Gameloop'], function (PIXI, GameObject,
      */
     this.paused = true
 
+    /**
+     *
+     * @type {boolean}
+     * @default false
+     */
+    this.started = false
+
     this.app.gameloop.add((delta) => {
       this._update(delta)
     })
@@ -181,6 +188,17 @@ define(['pixi', 'core/GameObject', 'core/Gameloop'], function (PIXI, GameObject,
   }
 
   /**
+   * Callback for the onInit event. You can overwrite this your self
+   * to receive the onInit call.
+   */
+  Scene.prototype.onInit = function () {
+    /**
+     * This function will be called when the scene is initialized. You can overwrite this in
+     * your Scene to act on this event.
+     */
+  }
+
+  /**
    * Callback for the onStart event. You can overwrite this your self
    * to receive the onStart call.
    */
@@ -214,11 +232,34 @@ define(['pixi', 'core/GameObject', 'core/Gameloop'], function (PIXI, GameObject,
   }
 
   /**
+   * Initialize the scene
+   */
+  Scene.prototype.init = function () {
+    this.onInit()
+    this.resume()
+  }
+
+  /**
    * Start the scene
    */
   Scene.prototype.start = function () {
-    this.paused = false
+    let plugins = this.SceneManager.getPlugins()
+
+    this.started = true
+
+    for (let key in plugins) {
+      if (plugins[key].runsPreStart()) {
+        plugins[key].start()
+      }
+    }
+
     this.onStart()
+
+    for (let key in plugins) {
+      if (plugins[key].runsPostStart()) {
+        plugins[key].start()
+      }
+    }
   }
 
   /**
@@ -251,6 +292,15 @@ define(['pixi', 'core/GameObject', 'core/Gameloop'], function (PIXI, GameObject,
    */
   Scene.prototype.isPaused = function () {
     return this.paused
+  }
+
+  /**
+   * Ask if the scene is started.
+   *
+   * @returns {boolean}
+   */
+  Scene.prototype.isStarted = function () {
+    return this.started
   }
 
   /**
@@ -363,15 +413,16 @@ define(['pixi', 'core/GameObject', 'core/Gameloop'], function (PIXI, GameObject,
       let plugins = this.SceneManager.getPlugins()
 
       for (let key in plugins) {
-        if (plugins[key].runsPre()) {
+        if (plugins[key].runsPreUpdate()) {
           plugins[key].update(delta)
         }
       }
 
-      this.update(delta)
+      if (this.isStarted())
+        this.update(delta)
 
       for (let key in plugins) {
-        if (plugins[key].runsPost()) {
+        if (plugins[key].runsPostUpdate()) {
           plugins[key].update(delta)
         }
       }

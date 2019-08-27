@@ -64,9 +64,8 @@ require([
   'core/managers/StateManager',
   'core/managers/InputManager',
   'core/managers/ResizeManager',
-  'core/managers/DebugManager',
   'core/managers/PluginManager',
-], function (PIXI, GameEngine, Gameloop, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, DebugManager, PluginManager) {
+], function (PIXI, GameEngine, Gameloop, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, PluginManager) {
   PIXI.utils.skipHello()
   sayHello()
 
@@ -100,12 +99,17 @@ require([
   ge.set('SceneManager', new SceneManager())
   ge.set('StateManager', new StateManager())
   ge.set('InputManager', new InputManager())
-  ge.set('DebugManager', new DebugManager())
   ge.set('PluginManager', new PluginManager(ge))
 
   if (PLUGIN_MATTERJS) {
     const Matter = ge.get('PluginManager').loadPlugin('matterjs', 'Matter')
     ge.set('Matter', Matter)
+  }
+
+  if (PLUGIN_DEBUG) {
+    const Debug = ge.get('PluginManager').loadPlugin('debug', 'Debug')
+    let DebugManager = new Debug.DebugManager
+    ge.set('DebugManager', DebugManager)
   }
 
   ge.get('SceneManager')

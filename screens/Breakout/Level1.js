@@ -25,8 +25,8 @@ define(['pixi', 'screens/Breakout/GameLevel', 'objects/Breakout/Brick', 'objects
     /**
      * The onStart callback will be called after all resources are loaded.
      */
-    Level1.prototype.onStart = function () {
-      GameLevel.prototype.onStart.call(this)
+    Level1.prototype.onInit = function () {
+      GameLevel.prototype.onInit.call(this)
 
       /**
        * Make the pad controllable with left and right arrows as well as

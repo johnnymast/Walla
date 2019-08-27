@@ -1,7 +1,5 @@
 const path = require('path')
-const webpack = require('webpack') // to access built-in plugins
-// var ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
-// var WebpackChunkHash = require("webpack-chunk-hash");
+const webpack = require('webpack')
 const PROD = (process.env.NODE_ENV == 'production')
 
 let plugins = []
@@ -23,7 +21,8 @@ if (PROD) {
 
 plugins.push(
   new webpack.DefinePlugin({
-    PLUGIN_MATTERJS: JSON.stringify(true)
+    PLUGIN_MATTERJS: JSON.stringify(true),
+    PLUGIN_DEBUG: JSON.stringify(true),
   })
 );
 
@@ -36,8 +35,6 @@ const config = {
   output: {
     path: path.resolve(__dirname, 'output'),
     publicPath: 'output/',
-    // filename: "[name].[chunkhash].js",
-    // chunkFilename: "[name].[chunkhash].js"
     filename: '[name].js'
   },
   plugins: plugins,

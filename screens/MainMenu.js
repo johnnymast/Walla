@@ -27,7 +27,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs', 'c
      * If your Scene does not have the preload function it will call this function
      * instantly.
      */
-    MainMenu.prototype.onStart = function () {
+    MainMenu.prototype.onInit = function () {
 
       /**
        * Setup the scrolling background tiles.
@@ -110,21 +110,21 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs', 'c
      * Breakout menu option callback
      */
     MainMenu.prototype.breakoutClicked = function () {
-      this.SceneManager.switchToUsingTransaction('Breakout/Level1', Transition.named('ScrollFrom', { direction: 'bottom'}))
+      this.SceneManager.switchToUsingTransaction('Breakout/Level1', Transition.named('ScrollFrom', { direction: 'bottom' }))
     }
 
     /**
      * PixelShooter menu option callback
      */
     MainMenu.prototype.pixelShooterClicked = function () {
-      this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'right'}))
+      this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'right' }))
     }
 
     /**
      * RoundedRects menu option callback
      */
     MainMenu.prototype.roundedRectsClicked = function () {
-      this.SceneManager.switchToUsingTransaction('RoundedRects/Level1', Transition.named('ScrollFrom', { direction: 'bottom'}))
+      this.SceneManager.switchToUsingTransaction('RoundedRects/Level1', Transition.named('ScrollFrom', { direction: 'bottom' }))
     }
 
     /**
@@ -172,6 +172,7 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs', 'c
       }
       TweenJS.update()
       this.statistics.update(delta)
+
     }
 
     return MainMenu

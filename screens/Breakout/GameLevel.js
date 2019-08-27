@@ -68,7 +68,7 @@ define(['pixi', 'core/Level', 'core/input/Keyboard/KeyboardInput', 'gui/Statisti
   /**
    * The onStart callback.
    */
-  GameLevel.prototype.onStart = function () {
+  GameLevel.prototype.onInit = function () {
 
     let background = new PIXI.Sprite(PIXI.Texture.WHITE)
     background.width = this.app.screen.width

@@ -14,7 +14,6 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
     this.plugins = []
     this.currentScene = null
     this.gameEngine = GameEngine.get()
-    this.debugManager = this.gameEngine.get('DebugManager')
     this.app = this.gameEngine.get('App')
 
     if (scene.length > 0) {
@@ -104,6 +103,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
       }
 
       this.currentScene = nextScene
+      nextScene.init()
       nextScene.start()
 
       this.app.stage.addChild(this.currentScene)
@@ -146,9 +146,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
         this.currentScene.start()
       })
 
-      // FIXME: Moet worden init of autostart de scene (haal van pauze af)
-
-      nextScene.start()
+      nextScene.init()
 
       transition
         .setFrom(this.currentScene)

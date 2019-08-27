@@ -2,7 +2,8 @@ define(['core/GameObject'], function (GameObject) {
 
   let ScenePlugin = function (ke) {
     GameObject.call(this)
-    this.setPreMode()
+    this.setPreUpdateMode()
+    this.setPostStartMode()
   }
 
   extend(ScenePlugin, GameObject)
@@ -10,17 +11,33 @@ define(['core/GameObject'], function (GameObject) {
   /**
    * Set update before the main scene.
    */
-  ScenePlugin.prototype.setPreMode = function () {
-    this.pre = true
-    this.post = false
+  ScenePlugin.prototype.setPreUpdateMode = function () {
+    this.preupdate = true
+    this.postupdate = false
+  }
+
+  /**
+   * Set update before starting the main scene.
+   */
+  ScenePlugin.prototype.setPreStartMode = function () {
+    this.prestart = true
+    this.poststart = false
   }
 
   /**
    * Set update after the main scene.
    */
-  ScenePlugin.prototype.setPostMode = function () {
-    this.post = true
-    this.pre = false
+  ScenePlugin.prototype.setPostUpdateMode = function () {
+    this.postupdate = true
+    this.preupdate = false
+  }
+
+  /**
+   * Set update after starting the main scene.
+   */
+  ScenePlugin.prototype.setPostStartMode = function () {
+    this.poststart = true
+    this.prestart = false
   }
 
   /**
@@ -29,8 +46,18 @@ define(['core/GameObject'], function (GameObject) {
    *
    * @returns {boolean}
    */
-  ScenePlugin.prototype.runsPre = function () {
-    return (this.pre === true)
+  ScenePlugin.prototype.runsPreUpdate = function () {
+    return (this.preupdate === true)
+  }
+
+  /**
+   * Ask if the plugin updates before (pre) or after (post) the
+   * main scene starting.
+   *
+   * @returns {boolean}
+   */
+  ScenePlugin.prototype.runsPreStart = function () {
+    return (this.prestart === true)
   }
 
   /**
@@ -39,8 +66,26 @@ define(['core/GameObject'], function (GameObject) {
    *
    * @returns {boolean}
    */
-  ScenePlugin.prototype.runsPost = function () {
-    return (this.post === true)
+  ScenePlugin.prototype.runsPostUpdate = function () {
+    return (this.postupdate === true)
+  }
+
+  /**
+   * Ask if the plugin updates before (pre) or after (post) the
+   * main scene starting.
+   *
+   * @returns {boolean}
+   */
+  ScenePlugin.prototype.runsPostStart = function () {
+    return (this.poststart === true)
+  }
+
+  ScenePlugin.prototype.start = function () {
+    // Overwrite
+  }
+
+  ScenePlugin.prototype.update = function (delta) {
+    // Overwrite
   }
 
   return ScenePlugin

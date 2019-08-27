@@ -21,8 +21,8 @@ define(['pixi', 'core/Level', 'gui/Statistics'], function (PIXI, Level, Statisti
   /**
    * The onStart callback.
    */
-  GameLevel.prototype.onStart = function () {
-
+  GameLevel.prototype.onInit = function () {
+    // Empty
   }
 
   /**

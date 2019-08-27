@@ -18,7 +18,7 @@ define(['core/Level', 'gui/Statistics'], function (Level, Statistics) {
   /**
    * The onStart callback
    */
-  GameLevel.prototype.onStart = function () {
+  GameLevel.prototype.onInit = function () {
     let background = new PIXI.Graphics()
     background.name = 'background'
 

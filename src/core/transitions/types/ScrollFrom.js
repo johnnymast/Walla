@@ -89,7 +89,7 @@ class ScrollFrom extends TransactionType {
    * @private
    */
   _animateLeft (from, to) {
-    let start = { x: -from.width, y: from.y, useTicks: false }
+    let start = { x: -from.width, y: 0, useTicks: false }
     let end = { x: -from.x }
     return this._tween(start, end, () => {
       to.x = start.x
@@ -107,11 +107,14 @@ class ScrollFrom extends TransactionType {
    */
   _animateRight (from, to) {
 
-    let start = { x: from.width, y: from.y, useTicks: false }
-    let end = { x: from.x }
+   // to.x = from.x + from.width
+    console.log('width', from.width)
+    let start = { x: from.x, y: from.y, useTicks: false }
+    let end = { x: -from.width }
+
     return this._tween(start, end, () => {
-      to.x = start.x
-      from.x = to.x - to.width
+      from.x = start.x
+      to.x = from.x + from.width
     })
   }
 

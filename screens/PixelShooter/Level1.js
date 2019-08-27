@@ -72,8 +72,8 @@ define(['screens/PixelShooter/GameLevel', 'core/GameEngine', 'objects/Pixelshoot
   /**
    * The onStart callback called from the Scene object.
    */
-  Level1.prototype.onStart = function () {
-    GameLevel.prototype.onStart.call(this)
+  Level1.prototype.onInit = function () {
+    GameLevel.prototype.onInit.call(this)
     this.addCursor('attack', '1crosshair')
 
     /**

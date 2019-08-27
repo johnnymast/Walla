@@ -1,14 +1,33 @@
-define(['core/GameObject'], function (GameObject) {
+const GameObject = require('core/GameObject')
 
-  let DebugDialog = function () {
-    GameObject.call(this)
+class DebugDialog extends GameObject {
+
+  /**
+   * @classdesc DebugDialog
+   * @exports  plugins/debug/manager/DebugDialog
+   * @class
+   */
+  constructor () {
+    super()
     this.init()
   }
 
-  extend(DebugDialog, GameObject)
+  /**
+   * Return a static instance of the DebugDialog.
+   *
+   * @returns {DebugDialog}
+   */
+  static getInstance () {
+    if (!this.instance) {
+      this.instance = new DebugDialog()
+    }
+    return this.instance
+  }
 
-  DebugDialog.prototype.init = function () {
-    console.log('DebugDialog init')
+  /**
+   * Initialize the DebugDialog.
+   */
+  init () {
     const graphics = new PIXI.Graphics()
 
     graphics.beginFill(0x5b635e, 0.5)
@@ -141,32 +160,14 @@ define(['core/GameObject'], function (GameObject) {
     this.addChild(inputRow)
     this.addChild(graphics)
   }
-  //
-  // /**
-  //  * Callback for the onKeyDown even. You can overwrite this your self
-  //  * to receive the onKeyDown call.
-  //  *
-  //  * @param {KeyboardEvent} event - the keyboard event
-  //  */
-  // DebugDialog.prototype.onKeyDown = function (event) {
-  //   /**
-  //    * You can overwrite this function if you wish
-  //    * to receive keyboard onKeyDown events.
-  //    *
-  //    * Please note: These events will only be triggered
-  //    * by registered keys. See InputManager.mapInput
-  //    * for more information.
-  //    */
-  //   console.log('keydown', event)
-  // }
 
   /**
-   * Callback for the onKeyUp even. You can overwrite this your self
-   * to receive the onKeyUp call.
+   * React to the keyup event for when typing in the active
+   * Scene.
    *
-   * @param {KeyboardEvent} event - the keyboard event
+   * @param event
    */
-  DebugDialog.prototype.onKeyUp = function (event) {
+  onKeyUp (event) {
     /**
      * You can overwrite this function if you wish
      * to receive keyboard keyUp events.
@@ -175,10 +176,16 @@ define(['core/GameObject'], function (GameObject) {
      * by registered keys. See InputManager.mapInput
      * for more information.
      */
-    this._updateDialogPromptText(event.key);
+    this._updateDialogPromptText(event.key)
   }
 
-  DebugDialog.prototype._updateDialogPromptText = function (char) {
+  /**
+   * Update the dialog after typing a character.
+   *
+   * @param char
+   * @private
+   */
+  _updateDialogPromptText (char) {
     if (char === 'Enter') {
       let command = this.promptText.text.toLowerCase().trim()
       this.executeCommand(command)
@@ -187,13 +194,20 @@ define(['core/GameObject'], function (GameObject) {
     }
   }
 
-  DebugDialog.prototype.executeCommand = function (command) {
+  /**
+   * Execute a typed command.
+   *
+   * @param command
+   */
+  executeCommand (command) {
     if (this.DebugManager.haveCommand(command)) {
       console.log('have command')
     } else {
-      console.log('command not found');
+      console.log('command not found')
     }
   }
+}
 
-  return DebugDialog
-})
+if (typeof module !== 'undefined') {
+  module.exports = DebugDialog
+}

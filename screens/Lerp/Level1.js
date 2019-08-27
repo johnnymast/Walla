@@ -38,7 +38,7 @@ define(['pixi', 'screens/Lerp/GameLevel', 'objects/Lerp/Circle'], function (PIXI
   /**
    * onStart callback
    */
-  Level1.prototype.onStart = function () {
+  Level1.prototype.onInit = function () {
     GameLevel.prototype.onStart.call(this)
 
     /**
