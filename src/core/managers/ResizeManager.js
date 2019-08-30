@@ -19,7 +19,7 @@ define(['pixi', 'core/GameEngine'], function (GameEngine) {
     console.log('resize', e)
     // this.resizeStage()
     // Get the p
-    const parent = app.view.parentNode;
+    const parent = this.application.view.parentNode;
 
     // Resize the renderer
     this.application.renderer.resize(parent.clientWidth, parent.clientHeight);

@@ -4674,7 +4674,6 @@ if (true) {
 
 /**
  * @module Helpers
- * @submodule Math
  */
 
 /**

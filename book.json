@@ -12,9 +12,6 @@
     "includePattern": ".+\\.js(doc)?$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
-  "plugins": [
-    "./node_modules/gitbook-plugin-theme-api"
-  ],
   "pluginsConfig": {
     "theme-api": {
       "theme": "dark",

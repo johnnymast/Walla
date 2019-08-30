@@ -62,18 +62,21 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs', 'c
       let item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked)
       let item4 = new Menus.MenuItemImageButton('Gamepad', this.gamePadClicked)
       let item5 = new Menus.MenuItemImageButton('Lerp', this.lerpClicked)
+      let item6 = new Menus.MenuItemImageButton('Camera', this.cameraClicked)
 
       item1.setPosition(menu.x, menu.y)
       item2.setPosition(menu.x, item1.y + item1.height + 5)
       item3.setPosition(menu.x, item2.y + item2.height + 5)
       item4.setPosition(menu.x, item3.y + item3.height + 5)
       item5.setPosition(menu.x, item4.y + item4.height + 5)
+      item6.setPosition(menu.x, item5.y + item5.height + 5)
 
       menu.addMenuItem(item1)
       menu.addMenuItem(item2)
       menu.addMenuItem(item3)
       menu.addMenuItem(item4)
       menu.addMenuItem(item5)
+      menu.addMenuItem(item6)
 
       if (this.isFullScreenAvailable() === true) {
         let fullscreen = new Menus.MenuItemImageButton('Toggle Fullscreen', this.fullscreenClicked.bind(this))
@@ -139,6 +142,12 @@ define(['pixi', 'core/Scene', 'core/GameEngine', 'gui/Statistics', 'tweenjs', 'c
      */
     MainMenu.prototype.lerpClicked = function () {
       this.SceneManager.switchTo('Lerp/Level1')
+    }
+    /**
+     * camera menu option callback
+     */
+    MainMenu.prototype.cameraClicked = function () {
+      this.SceneManager.switchTo('CameraScene')
     }
 
     /**

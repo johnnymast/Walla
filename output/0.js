@@ -73580,7 +73580,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     console.log('resize', e);
     // this.resizeStage()
     // Get the p
-    const parent = app.view.parentNode;
+    const parent = this.application.view.parentNode;
 
     // Resize the renderer
     this.application.renderer.resize(parent.clientWidth, parent.clientHeight);
@@ -74654,6 +74654,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   /**
    * Callback for the onMouseMove even. You can overwrite this your self
    * to receive the onMouseMove call.
+   *
+   * @param {Event} event - The mouse event
    */
   ;Level.prototype.onMouseMove = function (event) {}
   /**
@@ -74665,6 +74667,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   /**
    * Callback for the onPointerDown even. You can overwrite this your self
    * to receive the onPointerDown call.
+   *
+   * @param {Event} event - The mouse event
    */
   ;Level.prototype.onPointerDown = function (event) {}
   /**
@@ -74676,6 +74680,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   /**
    * Callback for the onPointerUp even. You can overwrite this your self
    * to receive the onPointerUp call.
+   *
+   * @param {Event} event - The mouse event
    */
   ;Level.prototype.onPointerUp = function (event) {}
   /**
@@ -76288,18 +76294,21 @@ const Dialogs = __webpack_require__(609);
     let item3 = new Menus.MenuItemImageButton('RoundedRects', this.roundedRectsClicked);
     let item4 = new Menus.MenuItemImageButton('Gamepad', this.gamePadClicked);
     let item5 = new Menus.MenuItemImageButton('Lerp', this.lerpClicked);
+    let item6 = new Menus.MenuItemImageButton('Camera', this.cameraClicked);
 
     item1.setPosition(menu.x, menu.y);
     item2.setPosition(menu.x, item1.y + item1.height + 5);
     item3.setPosition(menu.x, item2.y + item2.height + 5);
     item4.setPosition(menu.x, item3.y + item3.height + 5);
     item5.setPosition(menu.x, item4.y + item4.height + 5);
+    item6.setPosition(menu.x, item5.y + item5.height + 5);
 
     menu.addMenuItem(item1);
     menu.addMenuItem(item2);
     menu.addMenuItem(item3);
     menu.addMenuItem(item4);
     menu.addMenuItem(item5);
+    menu.addMenuItem(item6);
 
     if (this.isFullScreenAvailable() === true) {
       let fullscreen = new Menus.MenuItemImageButton('Toggle Fullscreen', this.fullscreenClicked.bind(this));
@@ -76361,6 +76370,12 @@ const Dialogs = __webpack_require__(609);
    */
   MainMenu.prototype.lerpClicked = function () {
     this.SceneManager.switchTo('Lerp/Level1');
+  };
+  /**
+   * camera menu option callback
+   */
+  MainMenu.prototype.cameraClicked = function () {
+    this.SceneManager.switchTo('CameraScene');
   };
 
   /**
@@ -76798,6 +76813,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     // Main
     { name: 'main_menu_music', src: 'assets/main/sounds/music/menu_music.wav' }, { name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png' }, { name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png' }, { name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png' }, { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' }, { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
+
+    // Camera
+    { name: 'camera_scene_background', src: 'assets/camera/background.jpg' },
 
     // // PixelShooter
     { name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx' }, { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json' }, {
@@ -82145,6 +82163,8 @@ var map = {
 	"./Breakout/GameLevel.js": 586,
 	"./Breakout/Level1": 598,
 	"./Breakout/Level1.js": 598,
+	"./CameraScene": 646,
+	"./CameraScene.js": 646,
 	"./Gamepad/GameLevel": 587,
 	"./Gamepad/GameLevel.js": 587,
 	"./Gamepad/Level1": 599,
@@ -82181,6 +82201,211 @@ webpackContext.keys = function webpackContextKeys() {
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
 webpackContext.id = 644;
+
+/***/ }),
+/* 645 */,
+/* 646 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;const Camera = __webpack_require__(650);
+const Rect = __webpack_require__(649);
+
+/**
+ * @namespace Screens
+ */
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(2), __webpack_require__(579), __webpack_require__(580)], __WEBPACK_AMD_DEFINE_RESULT__ = function (pixi, Scene, Statistics) {
+
+      /**
+       * @classdesc CameraScene
+       * @exports  screens/MainScreen
+       *
+       * @param {object} options - Options for PIXI.Container in GameObject
+       * @class
+       */
+      let CameraScene = function (options) {
+            Scene.call(this, options);
+            this.statistics = new Statistics();
+      };
+
+      extend(CameraScene, Scene);
+
+      /**
+       * This function is called by the SceneManager after preloading has finished.
+       * If your Scene does not have the preload function it will call this function
+       * instantly.
+       */
+      CameraScene.prototype.onInit = function () {
+
+            let landscapeTexture = PIXI.Texture.fromImage('camera_scene_background');
+            let background = new PIXI.Sprite(landscapeTexture);
+
+            background.anchor.x = 0;
+            background.anchor.y = 0;
+
+            background.position.x = 0;
+            background.position.y = 0;
+
+            let camera = new Camera(new Rect(20, 20, 20, 20));
+
+            this.addChild(background);
+            this.addChild(camera);
+
+            var maskG = new PIXI.Graphics();
+            //maskG.lineStyle(1,0xFF0000) <- TRY TO UNCOMMENT TO SEE DIFF
+            maskG.beginFill(0x555555);
+            maskG.drawRect(0, 0, 100, 100); //<- COMMENT THIS
+            //maskG.drawRect(300, 0, 100, 100)  <- AND TRY THIS TO SEE DIF IN Y POS
+            maskG.endFill();
+
+            this.mask = maskG;
+      };
+
+      /**
+       * Animate the background scrolling/
+       *
+       * @param {number} delta
+       */
+      CameraScene.prototype.update = function (delta) {
+            this.statistics.update(delta);
+      };
+
+      return CameraScene;
+}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 647 */,
+/* 648 */,
+/* 649 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Rect
+ * @namespace Geometry
+ */
+class Rect {
+
+  /**
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @param {number} [width=0] - width of the rect
+   * @param {number} [height=0] - height of the rect
+   */
+  constructor(x = 0, y = 0, width = 0, height = 0) {
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.x = x;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.y = y;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.width = width;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.height = height;
+  }
+
+  /**
+   * Clone the current Rect.
+   *
+   * @returns {Rect}
+   */
+  clone() {
+    return new Rect(this.x, this.y, this.width, this.height);
+  }
+
+  /**
+   * Copy the values of rect onto the current Rect.
+   *
+   * @param {Rect} rect - The rect to copy
+   */
+  copy(rect) {
+    this.set(rect.x, rect.y, rect.width, rect.height);
+  }
+
+  /**
+   * Compare the given Rect to this Rect.
+   *
+   * @param {Rect} rect - Compare this Rect to the passed Rect
+   * @returns {boolean}
+   */
+  equals(rect) {
+    return rect.x === this.x && rect.y === this.y && rect.width === this.width && rect.height === this.height;
+  }
+
+  /**
+   * Sets the rect to a new x and y position.
+   * If height is omitted, both width and height will be set to width.
+   *
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @param {number} [width=0] - width of the rect
+   * @param {number} [height=0] - height of the rect
+   */
+  set(x, y, width, height) {
+
+    this.x = x || 0;
+    this.y = y;
+
+    this.width = width;
+    this.height = height || (height !== 0 ? this.width : 0);
+  }
+}
+
+if (true) {
+  module.exports = Rect;
+}
+
+/***/ }),
+/* 650 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Rect = __webpack_require__(649);
+
+class Camera extends PIXI.Container {
+  constructor(frame) {
+    super({ backgroundColor: 0x1099bb });
+
+    if (!frame instanceof Rect) {
+      throw new Error('Argument error: Did not pass a Rect');
+    }
+
+    console.log(frame);
+    this._mask = new PIXI.Graphics();
+    this._mask.beginFill();
+    this._mask.drawRect(0, 0, frame.width, frame.height);
+    this._mask.endFill();
+
+    this.x = frame.x;
+    this.y = frame.y;
+
+    // this.mask = maskG
+
+
+    console.log('test', frame instanceof Rect);
+  }
+
+  zoom(level = 0) {}
+}
+
+module.exports = Camera;
 
 /***/ })
 ]);

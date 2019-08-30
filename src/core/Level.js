@@ -77,6 +77,8 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
   /**
    * Callback for the onMouseMove even. You can overwrite this your self
    * to receive the onMouseMove call.
+   *
+   * @param {Event} event - The mouse event
    */
   Level.prototype.onMouseMove = function (event) {
     /**
@@ -88,6 +90,8 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
   /**
    * Callback for the onPointerDown even. You can overwrite this your self
    * to receive the onPointerDown call.
+   *
+   * @param {Event} event - The mouse event
    */
   Level.prototype.onPointerDown = function (event) {
     /**
@@ -99,6 +103,8 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
   /**
    * Callback for the onPointerUp even. You can overwrite this your self
    * to receive the onPointerUp call.
+   *
+   * @param {Event} event - The mouse event
    */
   Level.prototype.onPointerUp = function (event) {
     /**

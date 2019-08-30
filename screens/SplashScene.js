@@ -92,6 +92,9 @@ define(['pixi', 'core/Scene', 'core/transitions/Transition'], function (PIXI, Sc
       { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' },
       { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
 
+      // Camera
+      { name: 'camera_scene_background', src: 'assets/camera/background.jpg' },
+
       // // PixelShooter
       { name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx' },
       { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json' },
