@@ -87,11 +87,12 @@ class GamepadView extends GameObject {
       this.addChild(button)
     }
 
+
     x = padding
     y += this.buttons[this.buttons.length - 1].height + (padding * 2)
 
     /**
-     * Place the progressbars for the axis on the screen
+     * Place the progressbar for the axis on the screen
      */
     for (let _axis of this.gamepad.getAxis()) {
 
@@ -133,6 +134,7 @@ class GamepadView extends GameObject {
    * @param {number} delta - The time passed since last update
    */
   update (delta) {
+
     for (let button of this.buttons) {
       button.update(delta)
     }

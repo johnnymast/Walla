@@ -3,6 +3,13 @@ define(['eventemitter'], function (EventEmitter) {
     EventEmitter.call(this)
 
     /**
+     * The identifier for this Axis.
+     *
+     * @type {string}
+     */
+    this.id = `Axis${index}`
+
+    /**
      * Reference to the axis number on the gamepad.
      *
      * @type {number}

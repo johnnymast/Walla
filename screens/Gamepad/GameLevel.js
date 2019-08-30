@@ -19,7 +19,7 @@ define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 
   }
 
   /**
-   * The onStart callback.
+   * The onInit callback.
    */
   GameLevel.prototype.onInit = function () {
 

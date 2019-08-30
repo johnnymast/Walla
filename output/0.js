@@ -75015,10 +75015,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     this.buttons = {};
     this.map = [];
 
-    for (let i = 0; i < 100; i++) {
-      this.addButton(`Button{i}`, i);
-    }
-
     /**
      *
      * @type {GamePadInput}
@@ -75065,7 +75061,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     }
 
     let index = 0;
-    let parent = this;
 
     for (let name of input) {
 
@@ -75075,8 +75070,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
         for (let gamepad of this.gamepads) {
           if (gamepad.buttons[info.index] !== 'undefined') {
 
-            gamepad.buttons[info.index].on('GamePad.button.pressed', function (event) {
-              parent.emit('InputManager.GamepadButtonPressed', event);
+            gamepad.buttons[info.index].on('GamePad.button.pressed', event => {
+              this.emit('InputManager.GamepadButtonPressed', event);
             });
 
             input[index] = gamepad.buttons[info.index];
@@ -75085,7 +75080,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
         }
       } else {
 
-        console.log('make: ', name);
         let key = new KeyboardInput(name);
 
         key.info.down = function (event) {
@@ -75109,7 +75103,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
       let name = actions[i];
 
       if (typeof this.map[name] === 'undefined') {
-        this.map[name] = new Array();
+        this.map[name] = [];
       }
 
       for (let j = 0; j < input.length; j++) {
@@ -75185,6 +75179,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
   InputManager.prototype.gamepadConnected = function (gamepad) {
     this.gamepads[gamepad.index] = gamepad;
 
+    this.emit('gamepad_connected', gamepad);
+
     for (let button of gamepad.buttons) {
       this.addButton('Button' + button.index, button.index);
     }
@@ -75196,6 +75192,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    * @param {Gamepad} gamepad - The disconnected gamepad
    */
   InputManager.prototype.gamepadDisconnected = function (gamepad) {
+
+    this.emit('gamepad_disconnected', gamepad);
+
     if (typeof this.gamepads[gamepad.index] !== 'undefined') {
       delete this.gamepads[gamepad.index];
     }
@@ -76819,7 +76818,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   };
 
   /**
-   * The onStart callback.
+   * The onInit callback.
    */
   GameLevel.prototype.onInit = function () {};
 
@@ -77732,9 +77731,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 
     this.setDisplayStats(true);
 
-    this.gamepadController = new GamePadInput();
-    this.gamepadController.on('gamepad_connected', this.connected.bind(this));
-    this.gamepadController.on('gamepad_disconnected', this.disconnected.bind(this));
+    this.InputManager.on('gamepad_connected', this.connected.bind(this));
+    this.InputManager.on('gamepad_disconnected', this.disconnected.bind(this));
     this.gamepad = null;
     this.view = null;
   };
@@ -77761,8 +77759,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     this.message = new PIXI.Text('Please connect your gamepad', style);
     this.message.x = this.app.screen.width / 2 - this.message.width / 2;
     this.message.y = this.app.screen.height / 2 - this.message.height / 2;
-
     this.addChild(this.message);
+
+    if (this.InputManager.haveGamePads()) {
+      this.connected(this.InputManager.getGamePad(0));
+    }
   };
 
   /**
@@ -77781,7 +77782,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
    * @param {Gamepad} gamepad - The connected gamepad
    */
   Level1.prototype.connected = function (gamepad) {
-    console.log('Connected: ', gamepad);
     this.gamepad = gamepad;
     this.vibrate();
 
@@ -77816,6 +77816,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
     GameLevel.prototype.update.call(this, delta);
 
     if (this.view) {
+      console.log('updating view');
       this.view.update();
     }
   };
@@ -78665,7 +78666,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @module GamePadInput
    * @example
    *
-   * Note: Internet explorer does not support this set of api's nor do mobile browsers :(
+   * Note: Internet explorer does not support this set of API's nor do mobile browsers :(
    *
    * // FIXME: TODO
    * @constructor
@@ -78794,6 +78795,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
       if (gamepad) {
         if (typeof this.gamepads[gamepad.index] !== 'undefined') {
           this.gamepads[gamepad.index].update(delta);
+        } else {
+          //  console.log('else', gamepad.index, this.gamepads)
         }
       }
     }
@@ -79439,7 +79442,7 @@ class GamepadView extends GameObject {
     y += this.buttons[this.buttons.length - 1].height + padding * 2;
 
     /**
-     * Place the progressbars for the axis on the screen
+     * Place the progressbar for the axis on the screen
      */
     for (let _axis of this.gamepad.getAxis()) {
 
@@ -79481,6 +79484,7 @@ class GamepadView extends GameObject {
    * @param {number} delta - The time passed since last update
    */
   update(delta) {
+
     for (let button of this.buttons) {
       button.update(delta);
     }
@@ -80689,6 +80693,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     EventEmitter.call(this);
 
     /**
+     * The identifier for this Axis.
+     *
+     * @type {string}
+     */
+    this.id = `Axis${index}`;
+
+    /**
      * Reference to the axis number on the gamepad.
      *
      * @type {number}
@@ -80757,7 +80768,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(42), __webpack_require__(633)], __WEBPACK_AMD_DEFINE_RESULT__ = function (EventEmitter, GamepadEvent) {
-  let Button = function (button, index = 0, gamepad) {
+  let Button = function (button, index = 0, controler) {
     EventEmitter.call(this);
 
     /**
@@ -80769,11 +80780,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     this.button = button;
 
     /**
-     * Reference to the Gamepad it self.
+     * The identifier for this button.
+     *
+     * @type {string}
+     */
+    this.id = `Button${index}`;
+
+    /**
+     * Reference to the button number on the gamepad.
+     *
+     * @type {number}
+     */
+    this.index = index;
+
+    /**
+     * Reference to the controlling Gamepad.
      *
      * @type {Gamepad}
      */
-    this.gamepad = gamepad;
+    this.controler = controler;
 
     /**
      * If supported this number will represent how far the button
@@ -80802,7 +80827,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @returns {Gamepad}
    */
   Button.prototype.getGamePad = function () {
-    return this.gamepad;
+    return this.controler.gamepad;
   };
 
   /**
@@ -80820,20 +80845,28 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
    * @returns {number}
    */
   Button.prototype.getValue = function () {
-    return this.value;
+    return this.button.value;
   };
 
   Button.prototype.isDown = function () {
-    return this.value > 0;
+    return this.getValue() > 0;
+  };
+
+  /**
+   * Poll the Gamepad for the latest information.
+   * @private
+   */
+  Button.prototype._poll = function () {
+    this.button = this.getGamePad().buttons[this.index];
   };
 
   /**
    * Update the button object.
-   *
-   * @param {number} delta - Time passed since last update
    */
-  Button.prototype.update = function (delta) {
-    if (this.button.pressed) {
+  Button.prototype.update = function () {
+    this._poll();
+
+    if (this.button.pressed || this.button.touched) {
       this.emit('GamePad.button.pressed', new GamepadEvent(this.getGamePad(), this));
     }
 
@@ -80902,7 +80935,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 
     let index = 0;
     for (let button of gamepad.buttons) {
-      let btn = new Button(button, index, gamepad);
+      let btn = new Button(button, index, this);
       this.buttons.push(btn);
       index++;
     }
@@ -80960,11 +80993,20 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
   };
 
   /**
+   * Poll the Gamepad for the latest information.
+   * @private
+   */
+  GamePad.prototype._poll = function () {
+    this.gamepad = navigator.getGamepads()[this.index];
+  };
+
+  /**
    * Update the GamePad object.
    *
    * @param {number} delta - Time passed since last update
    */
   GamePad.prototype.update = function (delta) {
+    this._poll();
 
     for (let button of this.buttons) {
       button.update(delta);

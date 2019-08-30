@@ -22,7 +22,7 @@ if (PROD) {
 plugins.push(
   new webpack.DefinePlugin({
     PLUGIN_MATTERJS: JSON.stringify(true),
-    PLUGIN_DEBUG: JSON.stringify(true),
+    PLUGIN_DEBUG: JSON.stringify(false),
   })
 );
 

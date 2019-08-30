@@ -53,7 +53,7 @@ define(['eventemitter', 'input/GamePad/Button', 'input/GamePad/Axis'],
 
       let index = 0
       for (let button of gamepad.buttons) {
-        let btn = new Button(button, index, gamepad)
+        let btn = new Button(button, index, this)
         this.buttons.push(btn)
         index++
       }
@@ -111,11 +111,20 @@ define(['eventemitter', 'input/GamePad/Button', 'input/GamePad/Axis'],
     }
 
     /**
+     * Poll the Gamepad for the latest information.
+     * @private
+     */
+    GamePad.prototype._poll = function () {
+      this.gamepad = navigator.getGamepads()[this.index]
+    }
+
+    /**
      * Update the GamePad object.
      *
      * @param {number} delta - Time passed since last update
      */
     GamePad.prototype.update = function (delta) {
+      this._poll()
 
       for (let button of this.buttons) {
         button.update(delta)

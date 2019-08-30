@@ -28,10 +28,6 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
       this.buttons = {}
       this.map = []
 
-      for (let i = 0; i < 100; i++) {
-        this.addButton(`Button{i}`, i)
-      }
-
       /**
        *
        * @type {GamePadInput}
@@ -44,7 +40,7 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
     extend(InputManager, GameObject)
 
     InputManager.prototype.addButton = function (name = '', index = 0) {
-      this.buttons[name] = {name: name, index: index}
+      this.buttons[name] = { name: name, index: index }
     }
 
     /**
@@ -78,7 +74,6 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
       }
 
       let index = 0
-      let parent = this
 
       for (let name of input) {
 
@@ -88,8 +83,8 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
           for (let gamepad of this.gamepads) {
             if (gamepad.buttons[info.index] !== 'undefined') {
 
-              gamepad.buttons[info.index].on('GamePad.button.pressed', function (event) {
-                parent.emit('InputManager.GamepadButtonPressed', event)
+              gamepad.buttons[info.index].on('GamePad.button.pressed', (event) => {
+                this.emit('InputManager.GamepadButtonPressed', event)
               })
 
               input[index] = gamepad.buttons[info.index]
@@ -98,7 +93,6 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
           }
         } else {
 
-          console.log('make: ', name)
           let key = new KeyboardInput(name)
 
           key.info.down = function (event) {
@@ -122,7 +116,7 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
         let name = actions[i]
 
         if (typeof this.map[name] === 'undefined') {
-          this.map[name] = new Array()
+          this.map[name] = []
         }
 
         for (let j = 0; j < input.length; j++) {
@@ -185,7 +179,7 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
       return this.gamepadController.isConnected()
     }
 
-    InputManager.prototype.getGamePad = function(index) {
+    InputManager.prototype.getGamePad = function (index) {
       return this.gamepadController.getGamepad(index)
     }
     /**
@@ -195,6 +189,8 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
      */
     InputManager.prototype.gamepadConnected = function (gamepad) {
       this.gamepads[gamepad.index] = gamepad
+
+      this.emit('gamepad_connected', gamepad)
 
       for (let button of gamepad.buttons) {
         this.addButton('Button' + button.index, button.index)
@@ -207,6 +203,9 @@ define(['pixi', 'core/GameObject', 'input/Keyboard/KeyboardInput', 'input/GamePa
      * @param {Gamepad} gamepad - The disconnected gamepad
      */
     InputManager.prototype.gamepadDisconnected = function (gamepad) {
+
+      this.emit('gamepad_disconnected', gamepad)
+
       if (typeof this.gamepads[gamepad.index] !== 'undefined') {
         delete this.gamepads[gamepad.index]
       }

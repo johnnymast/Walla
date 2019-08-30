@@ -8,7 +8,7 @@ define(['core/ScenePlugin', 'input/GamePad/GamePad'], function (ScenePlugin, Gam
    * @module GamePadInput
    * @example
    *
-   * Note: Internet explorer does not support this set of api's nor do mobile browsers :(
+   * Note: Internet explorer does not support this set of API's nor do mobile browsers :(
    *
    * // FIXME: TODO
    * @constructor
@@ -137,6 +137,8 @@ define(['core/ScenePlugin', 'input/GamePad/GamePad'], function (ScenePlugin, Gam
       if (gamepad) {
         if (typeof this.gamepads[gamepad.index] !== 'undefined') {
           this.gamepads[gamepad.index].update(delta)
+        } else {
+        //  console.log('else', gamepad.index, this.gamepads)
         }
       }
     }

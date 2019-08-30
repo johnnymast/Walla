@@ -18,7 +18,6 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
     this.InputManager.on('InputManager.GamepadButtonPressed', this.onGamepadButtonDown.bind(this))
     this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this))
     this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this))
-
   }
 
   extend(Level, Scene)

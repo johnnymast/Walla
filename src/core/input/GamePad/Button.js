@@ -1,5 +1,5 @@
 define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, GamepadEvent) {
-  let Button = function (button, index = 0, gamepad) {
+  let Button = function (button, index = 0, controler) {
     EventEmitter.call(this)
 
     /**
@@ -11,11 +11,25 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
     this.button = button
 
     /**
-     * Reference to the Gamepad it self.
+     * The identifier for this button.
+     *
+     * @type {string}
+     */
+    this.id = `Button${index}`
+
+    /**
+     * Reference to the button number on the gamepad.
+     *
+     * @type {number}
+     */
+    this.index = index
+
+    /**
+     * Reference to the controlling Gamepad.
      *
      * @type {Gamepad}
      */
-    this.gamepad = gamepad
+    this.controler = controler
 
     /**
      * If supported this number will represent how far the button
@@ -44,7 +58,7 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
    * @returns {Gamepad}
    */
   Button.prototype.getGamePad = function () {
-    return this.gamepad
+    return this.controler.gamepad
   }
 
   /**
@@ -62,21 +76,28 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
    * @returns {number}
    */
   Button.prototype.getValue = function () {
-    return this.value
+    return this.button.value
   }
 
+  Button.prototype.isDown = function () {
+    return (this.getValue() > 0)
+  }
 
-  Button.prototype.isDown = function() {
-    return (this.value > 0)
+  /**
+   * Poll the Gamepad for the latest information.
+   * @private
+   */
+  Button.prototype._poll = function () {
+    this.button = this.getGamePad().buttons[this.index]
   }
 
   /**
    * Update the button object.
-   *
-   * @param {number} delta - Time passed since last update
    */
-  Button.prototype.update = function (delta) {
-    if (this.button.pressed) {
+  Button.prototype.update = function () {
+    this._poll();
+
+    if (this.button.pressed || this.button.touched) {
       this.emit('GamePad.button.pressed', new GamepadEvent(this.getGamePad(), this))
     }
 

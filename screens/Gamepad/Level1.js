@@ -5,13 +5,12 @@
 define(['pixi', 'screens/Gamepad/GameLevel', 'input/GamePadInput', 'objects/GamePad/GamepadView'],
   function (PIXI, GameLevel, GamePadInput, GamepadView) {
     let Level1 = function () {
-      GameLevel.call(this, {backgroundColor: 0x1099bb})
+      GameLevel.call(this, { backgroundColor: 0x1099bb })
 
       this.setDisplayStats(true)
 
-      this.gamepadController = new GamePadInput()
-      this.gamepadController.on('gamepad_connected', this.connected.bind(this))
-      this.gamepadController.on('gamepad_disconnected', this.disconnected.bind(this))
+      this.InputManager.on('gamepad_connected', this.connected.bind(this))
+      this.InputManager.on('gamepad_disconnected', this.disconnected.bind(this))
       this.gamepad = null
       this.view = null
     }
@@ -38,8 +37,11 @@ define(['pixi', 'screens/Gamepad/GameLevel', 'input/GamePadInput', 'objects/Game
       this.message = new PIXI.Text('Please connect your gamepad', style)
       this.message.x = this.app.screen.width / 2 - this.message.width / 2
       this.message.y = this.app.screen.height / 2 - this.message.height / 2
-
       this.addChild(this.message)
+
+      if (this.InputManager.haveGamePads()) {
+        this.connected(this.InputManager.getGamePad(0))
+      }
     }
 
     /**
@@ -47,7 +49,7 @@ define(['pixi', 'screens/Gamepad/GameLevel', 'input/GamePadInput', 'objects/Game
      */
     Level1.prototype.vibrate = function () {
       if (this.gamepad && this.gamepad.supportsVibration() === true) {
-        let weakEffect = {duration: 300, weakMagnitude: 1.0}
+        let weakEffect = { duration: 300, weakMagnitude: 1.0 }
         this.gamepad.vibrate(weakEffect)
       }
     }
@@ -58,7 +60,6 @@ define(['pixi', 'screens/Gamepad/GameLevel', 'input/GamePadInput', 'objects/Game
      * @param {Gamepad} gamepad - The connected gamepad
      */
     Level1.prototype.connected = function (gamepad) {
-      console.log('Connected: ', gamepad)
       this.gamepad = gamepad
       this.vibrate()
 
@@ -93,6 +94,7 @@ define(['pixi', 'screens/Gamepad/GameLevel', 'input/GamePadInput', 'objects/Game
       GameLevel.prototype.update.call(this, delta)
 
       if (this.view) {
+        console.log('updating view')
         this.view.update()
       }
     }

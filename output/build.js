@@ -5516,7 +5516,7 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
     ge.set('Matter', Matter);
   }
 
-  if (true) {
+  if (false) {
     const Debug = ge.get('PluginManager').loadPlugin('debug', 'Debug');
     let DebugManager = new Debug.DebugManager();
     ge.set('DebugManager', DebugManager);
