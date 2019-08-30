@@ -5449,7 +5449,7 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   PIXI.utils.skipHello();
   sayHello();
 
-  let width = 800;
+  let width = 1080;
   let height = 600;
 
   let ge = GameEngine.get();

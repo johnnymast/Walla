@@ -73578,7 +73578,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 
   ResizeManager.prototype.onResize = function (e) {
     console.log('resize', e);
-    this.resizeStage();
+    // this.resizeStage()
+    // Get the p
+    const parent = app.view.parentNode;
+
+    // Resize the renderer
+    this.application.renderer.resize(parent.clientWidth, parent.clientHeight);
   };
 
   ResizeManager.prototype.resizeStage = function () {

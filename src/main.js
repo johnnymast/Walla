@@ -45,7 +45,7 @@ require([
   PIXI.utils.skipHello()
   sayHello()
 
-  let width = 800
+  let width = 1080
   let height = 600
 
   let ge = GameEngine.get()
