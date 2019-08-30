@@ -412,6 +412,7 @@ define(['pixi', 'core/GameObject', 'core/Gameloop'], function (PIXI, GameObject,
     if (!this.isPaused()) {
       let plugins = this.SceneManager.getPlugins()
 
+
       for (let key in plugins) {
         if (plugins[key].runsPreUpdate()) {
           plugins[key].update(delta)

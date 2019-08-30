@@ -137,8 +137,6 @@ define(['core/ScenePlugin', 'input/GamePad/GamePad'], function (ScenePlugin, Gam
       if (gamepad) {
         if (typeof this.gamepads[gamepad.index] !== 'undefined') {
           this.gamepads[gamepad.index].update(delta)
-        } else {
-        //  console.log('else', gamepad.index, this.gamepads)
         }
       }
     }

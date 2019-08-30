@@ -47,7 +47,6 @@ window.extend2 = function () {
   }
 
   return extended
-
 }
 
 /**

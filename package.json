@@ -20,13 +20,17 @@
   "devDependencies": {
     "babel-loader": "^7.1.4",
     "babili-webpack-plugin": "0.0.11",
+    "canvas": "^2.6.0",
+    "canvas-prebuilt": "^2.0.0-alpha.14",
     "chunk-manifest-webpack-plugin": "^1.1.0",
     "eslint": "^4.19.1",
     "eslint-plugin-requirejs": "^4.0.0",
     "image-webpack-loader": "^3.3.1",
+    "jest-canvas-mock": "^2.1.1",
     "jsdoc": "^3.6.3",
     "live-server": "^1.2.1",
-    "uglifyjs-webpack-plugin": "^0.4.3",
+    "rimraf": "^2.6.3",
+    "standard": "^11.0.1",
     "webpack": "^2.7.0",
     "webpack-chunk-hash": "^0.4.0"
   },
@@ -35,8 +39,8 @@
     "babel-polyfill": "^6.26.0",
     "cross-env": "^5.1.4",
     "fs": "0.0.1-security",
-    "gitbook-plugin-theme-api": "^1.1.2",
-    "jest": "^22.4.3",
+    "uglifyjs-webpack-plugin": "^0.4.3",
+    "jest": "^24.9.0",
     "matter-js": "^0.14.1",
     "npm": "^5.8.0",
     "pixi-filters": "^2.7.1",
@@ -44,10 +48,7 @@
     "pixi-sound": "^2.1.4",
     "pixi-tiledmap": "^1.10.1",
     "pixi.js": "^4.8.8",
-    "require.js": "^1.0.0",
-    "rimraf": "^2.6.3",
-    "standard": "^11.0.1",
-    "underscore": "^1.8.3"
+    "require.js": "^1.0.0"
   },
   "eslintConfig": {
     "plugins": [
@@ -62,11 +63,16 @@
     }
   },
   "jest": {
+    "setupFiles": ["jest-canvas-mock"],
     "testURL": "http://localhost",
     "verbose": true,
     "testMatch": [
       "<rootDir>/tests/**/*.js?(x)",
       "**/?(*.)(spec|test).js?(x)"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^canvas": "<rootDir>/node_modules/canvas",
+      "^pixi$": "<rootDir>/node_modules/pixi.js"
+    }
   }
 }

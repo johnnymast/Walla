@@ -94,7 +94,6 @@ define(['pixi', 'screens/Gamepad/GameLevel', 'input/GamePadInput', 'objects/Game
       GameLevel.prototype.update.call(this, delta)
 
       if (this.view) {
-        console.log('updating view')
         this.view.update()
       }
     }

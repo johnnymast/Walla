@@ -1,38 +1,14 @@
 import 'core/helpers'
-import 'core/prototypes'
 import 'core/geometry'
 import 'babel-polyfill'
 import 'core/Transform'
 import 'core/math'
-
-// const Vector2d = require('core/math/vector2d')
-// const Vector3d = require('core/math/vector3d')
 
 const EngineInfo = {
   name: 'Stage Engine',
   version: 1.0,
   url: 'https://github.com/johnnymast/Walla'
 }
-
-// window.onerror = function (msg, url, lineNo, columnNo, error) {
-//   var string = msg.toLowerCase();
-//   var substring = "script error";
-//   if (string.indexOf(substring) > -1){
-//     alert('Script Error: See Browser Console for Detail');
-//   } else {
-//     var message = [
-//       'Message: ' + msg,
-//       'URL: ' + url,
-//       'Line: ' + lineNo,
-//       'Column: ' + columnNo,
-//       'Error object: ' + JSON.stringify(error)
-//     ].join(' - ');
-//
-//     alert(message);
-//   }
-//
-//   return false;
-// };
 
 let sayHello = function () {
   if (window.navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {

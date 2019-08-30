@@ -29,7 +29,7 @@ plugins.push(
 const config = {
   entry: {
     build: path.resolve(__dirname, './src/main.js'),
-    vendor: ['underscore', 'pixi', 'pixi-sound', 'pixi-tiledmap', 'tweenjs', 'pixi-filters', 'require', 'matter-js']
+    vendor: ['pixi', 'pixi-sound', 'pixi-tiledmap', 'tweenjs', 'pixi-filters', 'require', 'matter-js']
 
   },
   output: {
@@ -75,7 +75,6 @@ const config = {
       'pixi-sound': path.resolve(__dirname, './node_modules/pixi-sound'),
       'pixi-tiledmap': path.resolve(__dirname, './node_modules/pixi-tiledmap'),
       'pixi-filters': path.resolve(__dirname, './node_modules/pixi-filters'),
-      'underscore': path.resolve(__dirname, './node_modules/underscore/underscore.js'),
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
       'tweenjs': path.resolve(__dirname, './node_modules/@tweenjs/tween.js'),
       'core': path.resolve(__dirname, 'src/core'),
@@ -87,7 +86,8 @@ const config = {
     },
     modules: [
       path.join(__dirname, 'src'),
-      'node_modules'
+      path.join(__dirname, 'node_modules')
+      // 'node_modules'
     ]
 
   },
