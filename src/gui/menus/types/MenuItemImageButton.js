@@ -1,17 +1,10 @@
 const Buttons = require('gui/buttons')
+const MenuItem = require('gui/menus/MenuItem')
+const PIXI = require('pixi')
 
-define(['pixi', 'gui/menus/MenuItem'], function (pixi, MenuItem) {
-
-  /**
-   * @classdesc MenuItemImageButton module
-   * @exports  gui/menu/MenuItemButton
-   * @class
-   * @param {string} text - Text for the menu item
-   * @param {mixed} [options] - Options to pass to GameObject
-   * @param {callback} callback - Callback for when the item has been clicked
-   */
-  let MenuItemImageButton = function (text, callback, options) {
-    MenuItem.call(this, callback, options)
+class MenuItemImageButton extends MenuItem {
+  constructor (text, callback, options) {
+    super(callback, options)
 
     this._options = {
       background_texture: 'panel_woodWear.png',
@@ -20,7 +13,7 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi, MenuItem) {
 
     this.options = extend2(true, this._options, options)
 
-    let style = new pixi.TextStyle({
+    let style = new PIXI.TextStyle({
       fontFamily: 'Arial',
       fontSize: 10,
       fill: ['#ffffff'],
@@ -51,13 +44,11 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi, MenuItem) {
     this.addChild(this.button)
   }
 
-  extend(MenuItemImageButton, MenuItem)
-
   /**
    * Set the text for the menu item.
    * @param {string} text - Text for the menu item.
    */
-  MenuItemImageButton.prototype.setText = function (text) {
+  setText (text) {
     this.button.setText(text)
   }
 
@@ -70,13 +61,13 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi, MenuItem) {
    * @override
    * @param {event} event - The event object
    */
-  MenuItemImageButton.prototype.onPointerOut = function (event) {
+  onPointerOut (event) {
     /**
      * You can overwrite this function if you wish
      * to handle if the mouse is leaving the menu option.
      */
     this.button._onPointerOut()
   }
+}
 
-  return MenuItemImageButton
-})
+module.exports = MenuItemImageButton

@@ -1,12 +1,11 @@
-define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedRect', 'objects/RoundedRects/Text'], function (pixi, GameLevel, RoundedRect, Text) {
+const GameLevel = require('screens/RoundedRects/GameLevel')
+const RoundedRect = require('objects/RoundedRects/RoundedRect')
+const Text = require('objects/RoundedRects/Text')
+const PIXI = require('pixi')
 
-  /**
-   * Level1 constructor
-   *
-   * @constructor
-   */
-  let Level1 = function () {
-    GameLevel.call(this)
+class Level1 extends GameLevel {
+  constructor () {
+    super()
 
     /**
      *
@@ -53,13 +52,11 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
     this.interactive = true
   }
 
-  extend(Level1, GameLevel)
-
   /**
    * onStart callback
    */
-  Level1.prototype.onInit = function () {
-    GameLevel.prototype.onInit.call(this)
+  onInit () {
+    super.onInit()
 
     this.text = new Text('Click and drag')
     this.text.x = this.app.screen.width / 2 - this.text.width / 2
@@ -71,8 +68,8 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
       fontFamily: 'Arial',
       fontSize: 18,
       fill: ['#ffffff'],
-    });
-    this.rect_count = new pixi.Text('Rects: ' + this.rectangles.length, style)
+    })
+    this.rect_count = new PIXI.Text('Rects: ' + this.rectangles.length, style)
     this.rect_count.x = this.statistics.x
     this.rect_count.y = this.statistics.y - this.statistics.height //- 5
 
@@ -84,7 +81,7 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
    *
    * @param {PIXI.interaction.InteractionEvent} event - The event for mousemove
    */
-  Level1.prototype.onMouseMove = function (event) {
+  onMouseMove (event) {
     if (this.mouse_down) {
       let pos = event.data.global
 
@@ -100,7 +97,7 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
    * Handle the pointerdowm event
    * @param {PIXI.interaction.InteractionEvent} event - The event for pointerdown
    */
-  Level1.prototype.onPointerDown = function (event) {
+  onPointerDown (event) {
     this.mouse_down = true
   }
 
@@ -108,7 +105,7 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
    * Handle the pointerup event
    * @param {PIXI.interaction.InteractionEvent} event - The event for pointerup
    */
-  Level1.prototype.onPointerUp = function (event) {
+  onPointerUp (event) {
     this.mouse_down = false
   }
 
@@ -117,7 +114,7 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
    *
    * @param {number} delta - the time passed since last tick.
    */
-  Level1.prototype.update = function (delta) {
+  update (delta) {
     GameLevel.prototype.update.call(this, delta)
 
     this.time_passed += delta
@@ -169,6 +166,6 @@ define(['pixi', 'screens/RoundedRects/GameLevel', 'objects/RoundedRects/RoundedR
       this.rect_count.text = 'Rects: ' + this.rectangles.length
     }
   }
+}
 
-  return Level1
-})
+module.exports = Level1

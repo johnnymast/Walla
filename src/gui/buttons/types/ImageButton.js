@@ -1,7 +1,9 @@
 const Button = require('../BaseButton')
+const PIXI = require('pixi')
 
-define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject) {
-  let ImageButton = function (options) {
+class ImageButton extends Button {
+  constructor (options) {
+    super(options)
 
     this.textStyle = new PIXI.TextStyle({
       fontFamily: 'Arial',
@@ -54,24 +56,22 @@ define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject)
     this.options = extend2(true, this.options, options)
     this.options.state.default.text = options.text
 
-    Button.call(this, this.options)
-
     this.states = {
       default: null,
       hover: null,
       clicked: null,
     }
+
+    this.create(this.options)
     this.init()
   }
-
-  extend(ImageButton, Button)
 
   /**
    * Set thew text for the button.
    *
    * @param {string} text - the text for the button
    */
-  ImageButton.prototype.setText = function (text) {
+  setText (text) {
     this.options.text = text
     this.textLabel.text = this.options.text
 
@@ -82,7 +82,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject)
   /**
    * Initialize the ImageButton objects.
    */
-  ImageButton.prototype.init = function () {
+  init () {
 
     let options = this.options
     let state_default = new PIXI.Sprite(PIXI.Texture.fromImage(options.state.default.texture))
@@ -123,7 +123,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject)
    *
    * @param {event} event - the event object
    */
-  ImageButton.prototype._onPointerOut = function (event) {
+  _onPointerOut (event) {
     this.states.default.visible = true
     this.states.hover.visible = false
     this.states.clicked.visible = false
@@ -143,7 +143,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject)
    *
    * @param {event} event - the event object
    */
-  ImageButton.prototype._onPointerOver = function (event) {
+  _onPointerOver (event) {
     this.states.default.visible = false
     this.states.hover.visible = true
     this.states.clicked.visible = false
@@ -163,7 +163,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject)
    *
    * @param {event} event - The event object
    */
-  ImageButton.prototype._onPointerUp = function (event) {
+  _onPointerUp (event) {
     this.states.default.visible = true
     this.states.hover.visible = false
     this.states.clicked.visible = false
@@ -183,7 +183,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject)
    *
    * @param {event} event - the event object
    */
-  ImageButton.prototype._onPointerDown = function (event) {
+  _onPointerDown (event) {
     this.states.default.visible = false
     this.states.hover.visible = false
     this.states.clicked.visible = true
@@ -196,6 +196,6 @@ define(['pixi', 'underscore', 'core/GameObject'], function (PIXI, _, GameObject)
       this.onClick()
     }
   }
+}
 
-  return ImageButton
-})
+module.exports = ImageButton

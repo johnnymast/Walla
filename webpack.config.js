@@ -7,7 +7,7 @@ let plugins = []
 if (PROD) {
   plugins.push(
     new webpack.optimize.UglifyJsPlugin({
-      compress: {warnings: false}
+      compress: { warnings: false }
     })
   )
 } else {
@@ -22,14 +22,15 @@ if (PROD) {
 plugins.push(
   new webpack.DefinePlugin({
     PLUGIN_MATTERJS: JSON.stringify(true),
+    PLUGIN_TILEDMAP: JSON.stringify(true),
     PLUGIN_DEBUG: JSON.stringify(false),
   })
-);
+)
 
 const config = {
   entry: {
     build: path.resolve(__dirname, './src/main.js'),
-    vendor: ['pixi', 'pixi-sound', 'pixi-tiledmap', 'tweenjs', 'pixi-filters', 'require', 'matter-js']
+    vendor: ['pixi', 'pixi-sound', 'tweenjs', 'require', 'matter-js']
 
   },
   output: {
@@ -73,8 +74,6 @@ const config = {
       'eventemitter': path.resolve(__dirname, './node_modules/eventemitter3/index.js'),
       'pixi': path.resolve(__dirname, './node_modules/pixi.js'),
       'pixi-sound': path.resolve(__dirname, './node_modules/pixi-sound'),
-      'pixi-tiledmap': path.resolve(__dirname, './node_modules/pixi-tiledmap'),
-      'pixi-filters': path.resolve(__dirname, './node_modules/pixi-filters'),
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
       'tweenjs': path.resolve(__dirname, './node_modules/@tweenjs/tween.js'),
       'core': path.resolve(__dirname, 'src/core'),

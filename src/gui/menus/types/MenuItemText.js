@@ -1,17 +1,12 @@
-define(['pixi', 'gui/menus/MenuItem'], function (pixi,  MenuItem) {
+const Buttons = require('gui/buttons')
+const MenuItem = require('gui/menus/MenuItem')
+const PIXI = require('pixi')
 
-  /**
-   * @classdesc MenuItemText module
-   * @exports  gui/menu/MenuItemText
-   * @class
-   * @param {string} text - Text for the menu item
-   * @param {mixed} [options] - Options to pass to GameObject
-   * @param {callback} callback - Callback for when the item has been clicked
-   */
-  var MenuItemText = function (text,  callback, options) {
-    MenuItem.call(this, callback, options)
+class MenuItemText extends MenuItem {
+  constructor (text, callback, options) {
+    super(callback, options)
 
-    var style = new pixi.TextStyle({
+    let style = new PIXI.TextStyle({
       fontFamily: 'Arial',
       fontSize: 36,
       fontStyle: 'italic',
@@ -28,17 +23,15 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi,  MenuItem) {
       wordWrapWidth: 440
     })
 
-    this.richText = new pixi.Text(text, style)
-    this.addChild(this.richText);
+    this.richText = new PIXI.Text(text, style)
+    this.addChild(this.richText)
   }
-
-  extend(MenuItemText, MenuItem)
 
   /**
    * Set the text for the menu item.
    * @param {string} text - Text for the menu item.
    */
-  MenuItemText.prototype.setText = function (text) {
+  setText (text) {
     this.richText.setText(text)
   }
 
@@ -51,7 +44,7 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi,  MenuItem) {
    * @override
    * @param {event} event - The event object
    */
-  MenuItemText.prototype.onPointerOut = function(event) {
+  onPointerOut (event) {
     /**
      * You can overwrite this function if you wish
      * to handle if the mouse is leaving the menu option.
@@ -68,13 +61,13 @@ define(['pixi', 'gui/menus/MenuItem'], function (pixi,  MenuItem) {
    * @override
    * @param {event} event - The event object
    */
-  MenuItemText.prototype.onPointerOver = function(event) {
+  onPointerOver (event) {
     /**
      * You can overwrite this function if you wish
      * to handle if mouse is hovering the menu item.
      */
     this.richText.style.fontSize = this.richText.style.fontSize + 2
   }
+}
 
-  return MenuItemText
-});
+module.exports = MenuItemText

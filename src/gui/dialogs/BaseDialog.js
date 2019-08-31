@@ -1,13 +1,18 @@
 const DIALOG_TYPE = require('./const').DIALOG_TYPE
 const STATE = require('./const').DIALOG_STATE
 
-define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
-  let BaseDialog = function (options) {
-    GameObject.call(this, options)
+const GameObject = require('core/GameObject')
+const PIXI = require('pixi')
+
+class BaseDialog extends GameObject {
+  constructor () {
+    super()
 
     this.STATE_OPEN = 'open'
     this.STATE_CLOSED = 'closed'
+  }
 
+  create(options) {
     this._options = options
 
     if (typeof this._options.x === 'undefined') {
@@ -61,21 +66,17 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
     )
 
     this.addChild(this.content)
-
-    // this.init()
   }
 
-  extend(BaseDialog, GameObject)
-
-  BaseDialog.prototype._closing = function () {
+  _closing () {
     this.onClose()
   }
 
-  BaseDialog.prototype.onOpen = function () {
+  onOpen () {
     // overwrite
   }
 
-  BaseDialog.prototype.onClose = function () {
+  onClose () {
     console.log('BaseDialog.onClose')
     // overwrite
   }
@@ -85,7 +86,7 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    *
    * @returns {boolean} true if the Dialog is open
    */
-  BaseDialog.prototype.isOpen = function () {
+  isOpen () {
     return (this.state === STATE.OPEN)
   }
 
@@ -94,25 +95,15 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    *
    * @returns {boolean} true if the Dialog is closed
    */
-  BaseDialog.prototype.isClosed = function () {
+  isClosed () {
     return (this.state === STATE.CLOSED)
-  }
-
-  /**
-   *
-   * @param {GameObject} content
-   */
-  BaseDialog.prototype.addContent = function (content) {
-    if (content && this.instance) {
-      this.instance.addContent(content)
-    }
   }
 
   /**
    *
    * @return {*}
    */
-  BaseDialog.prototype.getContent = function () {
+  getContent () {
     if (this.instance) {
       return this.instance.content
     }
@@ -123,11 +114,11 @@ define(['pixi', 'core/GameObject'], function (PIXI, GameObject) {
    *
    * @param {GameObject} content
    */
-  BaseDialog.prototype.addContent = function (content) {
+  addContent (content) {
     if (content) {
       this.content.addChild(content)
     }
   }
+}
 
-  return BaseDialog
-})
+module.exports = BaseDialog

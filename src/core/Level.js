@@ -1,12 +1,9 @@
-define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, KeyboardInput) {
+const KeyboardInput = require('core/input/Keyboard/KeyboardInput')
+const Scene = require('core/Scene')
 
-  /**
-   * @classdesc Level
-   * @exports  core/Level
-   * @class
-   */
-  let Level = function (options) {
-    Scene.call(this, options)
+class Level extends Scene {
+  constructor (options) {
+    super(options)
 
     /**
      * Start listening for events.
@@ -20,16 +17,13 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
     this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this))
   }
 
-  extend(Level, Scene)
-
-
   /**
    * Callback for the onButtonDown even. You can overwrite this your self
    * to receive the onButtonDown call.
    *
    * @param {GamepadEvent} event - the gamepad event
    */
-  Level.prototype.onGamepadButtonDown = function (event) {
+  onGamepadButtonDown (event) {
     /**
      * You can overwrite this function if you wish
      * to receive gamepad onButtonDown events.
@@ -46,7 +40,7 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
    *
    * @param {KeyboardEvent} event - the keyboard event
    */
-  Level.prototype.onKeyDown = function (event) {
+  onKeyDown (event) {
     /**
      * You can overwrite this function if you wish
      * to receive keyboard onKeyDown events.
@@ -63,7 +57,7 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
    *
    * @param {KeyboardEvent} event - the keyboard event
    */
-  Level.prototype.onKeyUp = function (event) {
+  onKeyUp (event) {
     /**
      * You can overwrite this function if you wish
      * to receive keyboard keyUp events.
@@ -80,7 +74,7 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
    *
    * @param {Event} event - The mouse event
    */
-  Level.prototype.onMouseMove = function (event) {
+  onMouseMove (event) {
     /**
      * You can overwrite this function if you wish
      * to receive mouse move events.
@@ -93,7 +87,7 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
    *
    * @param {Event} event - The mouse event
    */
-  Level.prototype.onPointerDown = function (event) {
+  onPointerDown (event) {
     /**
      * You can overwrite this function if you wish
      * to receive pointer down events.
@@ -106,7 +100,7 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
    *
    * @param {Event} event - The mouse event
    */
-  Level.prototype.onPointerUp = function (event) {
+  onPointerUp (event) {
     /**
      * You can overwrite this function if you wish
      * to receive pointer up events.
@@ -117,12 +111,12 @@ define(['core/Scene', 'core/input/Keyboard/KeyboardInput'], function (Scene, Key
    * Callback for the onStart even. You can overwrite this your self
    * to receive the onStart call.
    */
-  Level.prototype.onStart = function () {
+  onStart () {
     /**
      * You can overwrite this function if you wish
      * to receive onStart up events.
      */
   }
+}
 
-  return Level
-})
+module.exports = Level

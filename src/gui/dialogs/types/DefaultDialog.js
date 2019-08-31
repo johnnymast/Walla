@@ -1,13 +1,16 @@
-define(['pixi', 'gui/dialogs/BaseDialog'], function (pixi, BaseDialog) {
-  let DefaultDialog = function (options) {
-    BaseDialog.call(this, options)
+const BaseDialog = require('gui/dialogs/BaseDialog')
+
+class DefaultDialog extends BaseDialog {
+  constructor (options) {
+    super(options)
+
+    this.create(options)
+    this.init()
   }
 
-  extend(DefaultDialog, BaseDialog)
-
-  DefaultDialog.prototype.init = function () {
+  init () {
     // empty
   }
+}
 
-  return DefaultDialog
-})
+module.exports = DefaultDialog

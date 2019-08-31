@@ -1,4 +1,6 @@
-define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
+const GameObject = require('core/GameObject')
+
+class MenuItem extends GameObject {
   /**
    * @classdesc Abstract class representing a menu item.
    * @exports gui/menu/MenuItem
@@ -6,11 +8,11 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    * @param {callback} callback - Callback for when the item has been clicked
    * @param {mixed} [options] - Options to pass to GameObject
    */
-  let MenuItem = function (callback, options) {
-    GameObject.call(this, options)
+  constructor (callback, options) {
+    super(options)
 
     this.buttonMode = true
-    this.interactive = true 
+    this.interactive = true
     this.callback = callback
 
     this.on('pointerdown', this.onPointerDown.bind(this))
@@ -18,14 +20,12 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.on('pointerover', this.onPointerOver.bind(this))
   }
 
-  extend(MenuItem, GameObject)
-
   /**
    * Set the x and y properties of this menu item.
    * @param {number} x - Set the x position
    * @param {number} y - Set the y position
    */
-  MenuItem.prototype.setPosition = function (x, y) {
+  setPosition (x, y) {
     this.x = x
     this.y = y
   }
@@ -36,7 +36,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {event} event - The event object
    */
-  MenuItem.prototype.onPointerDown = function (event) {
+  onPointerDown (event) {
     this.callback()
   }
 
@@ -47,18 +47,19 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {event} event - The event object
    */
-  MenuItem.prototype.onPointerOut = function (event) {
+  onPointerOut (event) {
     // Function body
   }
+
   /**
    * You can overwrite this function if you wish
    * to handle if the menu item is hovered.
    *
    * @param {event} event - The event object
    */
-  MenuItem.prototype.onPointerOver = function (event) {
+  onPointerOver (event) {
     // Function body
   }
+}
 
-  return MenuItem
-})
+module.exports = MenuItem

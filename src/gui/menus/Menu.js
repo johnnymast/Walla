@@ -1,6 +1,8 @@
-define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
-  var Menu = function (options, ...items) {
-    GameObject.call(this, options)
+const GameObject = require('core/GameObject')
+
+class Menu extends GameObject {
+  constructor (options) {
+    super(options)
 
     this.options = {
       items: {
@@ -13,20 +15,18 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.items = []
   }
 
-  extend(Menu, GameObject)
-
   /**
    * Add a menu item to the menu.
    *
    * @param {MenuItem} item - the item to add
    */
-  Menu.prototype.addMenuItem = function (item) {
+  addMenuItem (item) {
     this.items.push(item)
     this.addChild(item)
     this.arangeItems()
   }
 
-  Menu.prototype.getMenuItems = function () {
+  getMenuItems () {
     return this.items
   }
 
@@ -35,7 +35,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @deprecated maybe not sure yet
    */
-  Menu.prototype.arangeItems = function () {
+  arangeItems () {
     // TODO: Add code here
   }
 
@@ -45,7 +45,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    * @param {number} index - add the item at this index
    * @return {PIXI.DisplayObject|*}
    */
-  Menu.prototype.addMenuItemAt = function (item, index) {
+  addMenuItemAt (item, index) {
     if (index < 0 || index > this.items.length) {
       throw new Error(`${item}addChildAt: The index ${index} supplied is out of bounds ${this.items.length}`)
     }
@@ -62,11 +62,12 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {number} delta - the time difference since last tick in the game
    */
-  Menu.prototype.update = function (delta) {
+  update (delta) {
     for (item of this.items) {
       this.item.update(delta)
     }
   }
 
-  return Menu
-})
+}
+
+module.exports = Menu

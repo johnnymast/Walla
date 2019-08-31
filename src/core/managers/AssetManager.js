@@ -1,5 +1,4 @@
 require('pixi-sound')
-require('pixi-tiledmap')
 
 /**
  * AssetManager

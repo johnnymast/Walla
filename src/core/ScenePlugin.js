@@ -1,17 +1,17 @@
-define(['core/GameObject'], function (GameObject) {
+const GameObject = require('core/GameObject')
 
-  let ScenePlugin = function (ke) {
-    GameObject.call(this)
+class ScenePlugin extends GameObject {
+  constructor () {
+    super()
+
     this.setPreUpdateMode()
     this.setPostStartMode()
   }
 
-  extend(ScenePlugin, GameObject)
-
   /**
    * Set update before the main scene.
    */
-  ScenePlugin.prototype.setPreUpdateMode = function () {
+  setPreUpdateMode () {
     this.preupdate = true
     this.postupdate = false
   }
@@ -19,7 +19,7 @@ define(['core/GameObject'], function (GameObject) {
   /**
    * Set update before starting the main scene.
    */
-  ScenePlugin.prototype.setPreStartMode = function () {
+  setPreStartMode () {
     this.prestart = true
     this.poststart = false
   }
@@ -27,7 +27,7 @@ define(['core/GameObject'], function (GameObject) {
   /**
    * Set update after the main scene.
    */
-  ScenePlugin.prototype.setPostUpdateMode = function () {
+  setPostUpdateMode () {
     this.postupdate = true
     this.preupdate = false
   }
@@ -35,7 +35,7 @@ define(['core/GameObject'], function (GameObject) {
   /**
    * Set update after starting the main scene.
    */
-  ScenePlugin.prototype.setPostStartMode = function () {
+  setPostStartMode () {
     this.poststart = true
     this.prestart = false
   }
@@ -46,7 +46,7 @@ define(['core/GameObject'], function (GameObject) {
    *
    * @returns {boolean}
    */
-  ScenePlugin.prototype.runsPreUpdate = function () {
+  runsPreUpdate () {
     return (this.preupdate === true)
   }
 
@@ -56,7 +56,7 @@ define(['core/GameObject'], function (GameObject) {
    *
    * @returns {boolean}
    */
-  ScenePlugin.prototype.runsPreStart = function () {
+  runsPreStart () {
     return (this.prestart === true)
   }
 
@@ -66,7 +66,7 @@ define(['core/GameObject'], function (GameObject) {
    *
    * @returns {boolean}
    */
-  ScenePlugin.prototype.runsPostUpdate = function () {
+  runsPostUpdate () {
     return (this.postupdate === true)
   }
 
@@ -76,17 +76,27 @@ define(['core/GameObject'], function (GameObject) {
    *
    * @returns {boolean}
    */
-  ScenePlugin.prototype.runsPostStart = function () {
+  runsPostStart () {
     return (this.poststart === true)
   }
 
-  ScenePlugin.prototype.start = function () {
+  /**
+   * Placeholder overwrite for the start
+   * function of a plugin.
+   */
+  start () {
     // Overwrite
   }
 
-  ScenePlugin.prototype.update = function (delta) {
+  /**
+   * Placeholder overwrite for the update
+   * function of a plugin.
+   *
+   * @param {number} delta - Number of ticks since last update
+   */
+  update (delta) {
     // Overwrite
   }
+}
 
-  return ScenePlugin
-})
+module.exports = ScenePlugin

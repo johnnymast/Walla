@@ -30,21 +30,18 @@
     "rimraf": "^2.6.3",
     "standard": "^11.0.1",
     "webpack": "^2.7.0",
-    "webpack-chunk-hash": "^0.4.0"
+    "webpack-chunk-hash": "^0.4.0",
+    "uglifyjs-webpack-plugin": "^0.4.3"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^17.4.0",
     "babel-polyfill": "^6.26.0",
     "cross-env": "^5.1.4",
     "fs": "0.0.1-security",
-    "uglifyjs-webpack-plugin": "^0.4.3",
     "jest": "^24.9.0",
     "matter-js": "^0.14.1",
-    "npm": "^5.8.0",
-    "pixi-filters": "^2.7.1",
-    "pixi-simple-gesture": "^0.2.2",
+    "pako": "^1.0.10",
     "pixi-sound": "^2.1.4",
-    "pixi-tiledmap": "^1.10.1",
     "pixi.js": "^4.8.8",
     "require.js": "^1.0.0"
   },

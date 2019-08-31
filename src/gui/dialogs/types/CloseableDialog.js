@@ -1,9 +1,12 @@
 const Buttons = require('gui/buttons')
+const BaseDialog = require('gui/dialogs/BaseDialog')
+const PIXI = require('pixi')
 
-define(['pixi', 'gui/dialogs/BaseDialog'], function (PIXI, BaseDialog) {
-  let CloseableDialog = function (options) {
+class CloseableDialog extends BaseDialog {
+  constructor (options) {
+    super(options)
 
-    this.options = {
+    this.options =  {
       x: 0,
       y: 0,
       width: 300,
@@ -13,16 +16,15 @@ define(['pixi', 'gui/dialogs/BaseDialog'], function (PIXI, BaseDialog) {
     }
 
     this.options = extend2(true, this.options, options)
-    BaseDialog.call(this, this.options)
+
+    this.create(this.options)
     this.init()
   }
-
-  extend(CloseableDialog, BaseDialog)
 
   /**
    * Initialize the CloseableDialog. This function is internally called via BaseDialog.
    */
-  CloseableDialog.prototype.init = function () {
+  init () {
     this.setupBackground()
     this.setupButtons()
   }
@@ -30,7 +32,7 @@ define(['pixi', 'gui/dialogs/BaseDialog'], function (PIXI, BaseDialog) {
   /**
    * Create the background
    */
-  CloseableDialog.prototype.setupBackground = function () {
+  setupBackground () {
     this.bgMesh = new PIXI.mesh.NineSlicePlane(PIXI.Texture.fromImage(this.options.background_texture))
     this.bgMesh.width = this.options.width
     this.bgMesh.height = this.options.height
@@ -43,13 +45,13 @@ define(['pixi', 'gui/dialogs/BaseDialog'], function (PIXI, BaseDialog) {
   /**
    * Setup the buttons for this dialog
    */
-  CloseableDialog.prototype.setupButtons = function () {
+  setupButtons () {
     let close_button = new Buttons.ImageButton({
       text: '',
       width: 24,
       height: 24,
-      x: this.background.width - 24/2,
-      y: 0 - 24/2,
+      x: this.background.width - 24 / 2,
+      y: 0 - 24 / 2,
       state: {
         default: {
           texture: 'button_woodClose.png'
@@ -61,7 +63,7 @@ define(['pixi', 'gui/dialogs/BaseDialog'], function (PIXI, BaseDialog) {
           texture: 'button_woodCircle.png'
         }
       }
-    });
+    })
 
     close_button.name = 'close'
 
@@ -71,9 +73,9 @@ define(['pixi', 'gui/dialogs/BaseDialog'], function (PIXI, BaseDialog) {
 
     close_button.activate()
 
-    this.close_button =close_button
+    this.close_button = close_button
     this.addChild(this.close_button)
   }
+}
 
-  return CloseableDialog
-})
+module.exports = CloseableDialog

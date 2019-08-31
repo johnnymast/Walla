@@ -1,13 +1,11 @@
 const State = require('./const').BUTTON_STATE
 const Type = require('./const').BUTTON_TYPE
 
-define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
-  let Button = function (options, ...items) {
-    GameObject.call(this, options)
+const GameObject = require('core/GameObject')
 
-    this._options = options
-    this.x = this._options.x
-    this.y = this._options.y
+class Button extends GameObject {
+  constructor (options, ...items) {
+    super(options)
 
     this.on('pointerdown', this._onPointerDown.bind(this))
     this.on('pointerup', this._onPointerUp.bind(this))
@@ -15,14 +13,18 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
     this.on('pointerover', this._onPointerOver.bind(this))
   }
 
-  extend(Button, GameObject)
+  create (options) {
+    this._options = options
+    this.x = this._options.x
+    this.y = this._options.y
+  }
 
   /**
    * In your level you can overwrite this function
    * to get a callback from the button if it is being
    * restored to the default state.
    */
-  Button.prototype.onRestore = function () {
+  onRestore () {
     // Overwrite this
   }
 
@@ -31,7 +33,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    * to get a callback from the button if it is being
    * clicked.
    */
-  Button.prototype.onClick = function () {
+  onClick () {
     // Overwrite this
   }
 
@@ -40,7 +42,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    * to get a button from the checkbox if it is being
    * hovered.
    */
-  Button.prototype.onHover = function () {
+  onHover () {
     // Overwrite this
   }
 
@@ -49,14 +51,14 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @returns {boolean}
    */
-  Button.prototype.isActive = function () {
+  isActive () {
     return (this.interactive === true && this.buttonMode === true)
   }
 
   /**
    * Activate the button
    */
-  Button.prototype.activate = function () {
+  activate () {
     this.interactive = true
     this.buttonMode = true
   }
@@ -64,7 +66,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
   /**
    * Deactivate the button
    */
-  Button.prototype.deactivate = function () {
+  deactivate () {
     this.interactive = false
     this.buttonMode = true
   }
@@ -75,7 +77,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {event} event - The event object
    */
-  Button.prototype._onPointerUp = function (event) {
+  _onPointerUp (event) {
     // Function body
   }
 
@@ -85,7 +87,7 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {event} event - The event object
    */
-  Button.prototype._onPointerDown = function (event) {
+  _onPointerDown (event) {
     // Function body
   }
 
@@ -96,18 +98,19 @@ define(['pixi', 'core/GameObject'], function (pixi, GameObject) {
    *
    * @param {event} event - The event object
    */
-  Button.prototype._onPointerOut = function (event) {
+  _onPointerOut (event) {
     // Function body
   }
+
   /**
    * You can overwrite this function if you wish
    * to handle if the button is hovered.
    *
    * @param {event} event - The event object
    */
-  Button.prototype._onPointerOver = function (event) {
+  _onPointerOver (event) {
     // Function body
   }
+}
 
-  return Button
-})
+module.exports = Button

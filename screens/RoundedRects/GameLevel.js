@@ -1,24 +1,20 @@
-define(['core/Level', 'gui/Statistics'], function (Level, Statistics) {
-  /**
-   * GameLevel Constructor
-   *
-   * @constructor
-   */
-  let GameLevel = function () {
-    Level.call(this)
+const Level = require('core/level')
+const Statistics = require('gui/Statistics')
 
+class GameLevel extends Level {
+  constructor () {
+    super()
+    
     /**
      * Add the FPS counter.
      */
     this.statistics = new Statistics()
   }
 
-  extend(GameLevel, Level)
-
   /**
    * The onStart callback
    */
-  GameLevel.prototype.onInit = function () {
+  onInit () {
     let background = new PIXI.Graphics()
     background.name = 'background'
 
@@ -31,7 +27,7 @@ define(['core/Level', 'gui/Statistics'], function (Level, Statistics) {
       this.app.screen.height,
     )
 
-    this.addChild(background);
+    this.addChild(background)
     this.setDisplayStats(true)
   }
 
@@ -40,7 +36,7 @@ define(['core/Level', 'gui/Statistics'], function (Level, Statistics) {
    *
    * @param {boolean) visible - The FPS counter visibility flag true|false
    */
-  GameLevel.prototype.setDisplayStats = function (visible) {
+  setDisplayStats (visible) {
     this.statistics.visible = visible
     this.addChild(this.statistics)
   }
@@ -50,9 +46,9 @@ define(['core/Level', 'gui/Statistics'], function (Level, Statistics) {
    *
    * @param delta
    */
-  GameLevel.prototype.update = function (delta) {
+  update (delta) {
     this.statistics.update(delta)
   }
+}
 
-  return GameLevel
-})
+module.exports = GameLevel

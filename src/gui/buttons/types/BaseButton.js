@@ -1,9 +1,11 @@
 const Button = require('../BaseButton')
+const GameObject = require('core/GameObject')
 
-define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject) {
-  let BaseButton = function (options) {
+class BaseButton extends Button {
+  constructor (options) {
+    super(options)
 
-    this.textStyle = new pixi.TextStyle({
+    this.textStyle = new PIXI.TextStyle({
       fontFamily: 'Arial',
       fontSize: 16,
       fill: ['#000000'], // gradient
@@ -62,9 +64,11 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     this.init()
   }
 
-  extend(BaseButton, Button)
+  create(options) {
 
-  BaseButton.prototype.init = function () {
+  }
+
+  init () {
 
     let options = this.options
     let state_default = new PIXI.Graphics()
@@ -90,7 +94,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
       state_clicked.endFill()
     }
 
-    this.textLabel = new pixi.Text(this.options.text, options.state.default.textstyle)
+    this.textLabel = new PIXI.Text(this.options.text, options.state.default.textstyle)
 
     state_default.visible = true
     state_clicked.visible = false
@@ -103,18 +107,18 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     this.addChild(this.states.default)
     this.addChild(this.states.hover)
     this.addChild(this.states.clicked)
-    this.addChild(this.textLabel);
+    this.addChild(this.textLabel)
 
-    this.textLabel.x = this.width /2 - this.textLabel.width /2
-    this.textLabel.y = this.height /2 - this.textLabel.height /2
+    this.textLabel.x = this.width / 2 - this.textLabel.width / 2
+    this.textLabel.y = this.height / 2 - this.textLabel.height / 2
   }
 
-  BaseButton.prototype.setText = function (text) {
+  setText (text) {
     this.options.text = text
     this.textLabel.text = this.options.text
 
-    this.textLabel.x = this.width /2 - this.textLabel.width /2
-    this.textLabel.y = this.height /2 - this.textLabel.height /2
+    this.textLabel.x = this.width / 2 - this.textLabel.width / 2
+    this.textLabel.y = this.height / 2 - this.textLabel.height / 2
   }
 
   /**
@@ -123,7 +127,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
    *
    * @param {event} event - The event object
    */
-  Button.prototype._onPointerOut = function (event) {
+  _onPointerOut (event) {
     this.states.default.visible = true
     this.states.hover.visible = false
     this.states.clicked.visible = false
@@ -143,7 +147,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
    *
    * @param {event} event - The event object
    */
-  Button.prototype._onPointerOver = function (event) {
+  _onPointerOver (event) {
     this.states.default.visible = false
     this.states.hover.visible = true
     this.states.clicked.visible = false
@@ -157,14 +161,13 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     }
   }
 
-
   /**
    * You can overwrite this function if you wish
    * to handle if the button click is released.
    *
    * @param {event} event - The event object
    */
-  BaseButton.prototype._onPointerUp = function (event) {
+  _onPointerUp (event) {
     this.states.default.visible = true
     this.states.hover.visible = false
     this.states.clicked.visible = false
@@ -184,7 +187,7 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
    *
    * @param {event} event - The event object
    */
-  BaseButton.prototype._onPointerDown = function (event) {
+  _onPointerDown (event) {
     this.states.default.visible = false
     this.states.hover.visible = false
     this.states.clicked.visible = true
@@ -198,5 +201,6 @@ define(['pixi', 'underscore', 'core/GameObject'], function (pixi, _, GameObject)
     }
   }
 
-  return BaseButton
-})
+}
+
+module.exports = BaseButton

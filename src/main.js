@@ -31,39 +31,38 @@ let sayHello = function () {
   }
 }
 
-require([
-  'pixi',
-  'core/GameEngine',
-  'core/Gameloop',
-  'core/managers/SceneManager',
-  'core/managers/AssetManager',
-  'core/managers/StateManager',
-  'core/managers/InputManager',
-  'core/managers/ResizeManager',
-  'core/managers/PluginManager',
-], function (PIXI, GameEngine, Gameloop, SceneManager, AssetManager, StateManager, InputManager, ResizeManager, PluginManager) {
+const Gameloop = require('core/gameloop')
+const GameEngine = require('core/GameEngine')
+const SceneManager = require('core/managers/SceneManager')
+const AssetManager = require('core/managers/AssetManager')
+const StateManager = require('core/managers/StateManager')
+const InputManager = require('core/managers/InputManager')
+const ResizeManager = require('core/managers/ResizeManager')
+const PluginManager = require('core/managers/PluginManager')
+import Pixi from 'pixi.js' //= require('pixi')
+
+
+let init = function() {
   PIXI.utils.skipHello()
   sayHello()
 
-  let width = 1080
-  let height = 600
+  var canvas = document.querySelector('#backCanvas')
+  var resolution = window.devicePixelRatio
 
   let ge = GameEngine.get()
-  let app = new PIXI.Application(width, height, {
-    backgroundColor: 0x0,
-    autoResize: true,
-    resolution: window.devicePixelRatio
+
+  let app = new PIXI.Application(canvas.width, canvas.height, {
+    width: canvas.width,
+    height: canvas.height,
+    view: canvas,
+    resolution: resolution,
+    antialias: 1,
+    autoresize: true
   })
 
   let resizeManager = new ResizeManager(app, {
     autoFullScreen: true
-
   })
-  document.body.appendChild(app.view)
-
-  app.renderer.resize(width, height)
-  app.renderer.antialias = true
-  app.renderer.forceFXAA = true
 
   app.gameloop = new Gameloop()
   app.gameloop.maxFPS = 60
@@ -88,7 +87,14 @@ require([
     ge.set('DebugManager', DebugManager)
   }
 
+  if (PLUGIN_TILEDMAP) {
+    const TiledMap = ge.get('PluginManager').loadPlugin('tiledmap', 'TiledMap')
+  }
+
   ge.get('SceneManager')
     .add('SplashScene')
     .switchTo('SplashScene')
-})
+}
+
+
+document.addEventListener('DOMContentLoaded', init, false);
