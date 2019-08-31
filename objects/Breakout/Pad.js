@@ -1,20 +1,11 @@
-define(['pixi', './PhysicsSprite'], function (pixi, PhysicsSprite) {
+const PhysicsSprite = require('./PhysicsSprite')
 
-  /**
-   * The Pad object constructor.
-   * @param {string} texture - the texture name.
-   * @constructor
-   */
-  let Pad = function (texture) {
-    PhysicsSprite.call(this, texture)
-  }
-
-  extend(Pad, PhysicsSprite)
+class Pad extends PhysicsSprite {
 
   /**
    * Setup the physics object. This is part of the PhysicsSprite.
    */
-  Pad.prototype.setupBody = function () {
+  setupBody () {
     let options = {
       isStatic: true
     }
@@ -27,13 +18,12 @@ define(['pixi', './PhysicsSprite'], function (pixi, PhysicsSprite) {
    * Update the Pad object.
    * @param {number} delta - the number of ticks since last update.
    */
-  Pad.prototype.update = function (delta) {
+  update (delta) {
     let pos = this.body.position
     this.sprite.angle = this.body.angle
     this.sprite.x = pos.x
     this.sprite.y = pos.y
   }
 
-  return Pad
-})
-  
+}
+module.exports = Pad

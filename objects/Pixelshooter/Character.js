@@ -1,7 +1,9 @@
 const DIRECTIONS = require('objects/Pixelshooter/Options').DIRECTIONS
-define(['core/GameObject'], function (GameObject) {
-  let Character = function (playerId = 1) {
-    GameObject.call(this, null)
+const GameObject = require('core/GameObject')
+
+class Character extends GameObject {
+  constructor (playerId = 1) {
+    super()
 
     /**
      * Character number
@@ -15,14 +17,12 @@ define(['core/GameObject'], function (GameObject) {
     this.setDirection(this.direction)
   }
 
-  extend(Character, GameObject)
-
   /**
    *
    * @param direction
    * @returns {boolean}
    */
-  Character.prototype.setDirection = function (direction) {
+  setDirection (direction) {
     if (this.animations[direction]) {
       if (typeof this.animation !== 'undefined') {
         this.removeChild(this.animation)
@@ -43,7 +43,7 @@ define(['core/GameObject'], function (GameObject) {
   /**
    *
    */
-  Character.prototype.setupAnimations = function () {
+  setupAnimations () {
 
     for (let name in this.animations) {
       let info = this.animations[name]
@@ -62,8 +62,8 @@ define(['core/GameObject'], function (GameObject) {
         }
 
         let subTexture = new PIXI.Texture(sourceTexture.baseTexture,
-          new PIXI.Rectangle(x, y, size.w -spacer, size.h),
-          new PIXI.Rectangle(0, 0, size.w -spacer, size.h)
+          new PIXI.Rectangle(x, y, size.w - spacer, size.h),
+          new PIXI.Rectangle(0, 0, size.w - spacer, size.h)
         )
 
         frames.push(subTexture)
@@ -80,9 +80,9 @@ define(['core/GameObject'], function (GameObject) {
     }
   }
 
-  GameObject.prototype.update = function (delta) {
-
+  update (delta) {
+    // overwrite
   }
+}
 
-  return Character
-})
+module.exports = Character

@@ -1,16 +1,12 @@
 const Dialogs = require('gui/dialogs')
 const Buttons = require('gui/buttons')
+const GameObject = require('core/GameObject')
+const TweenJS = require('tweenjs')
+const PIXI = require('pixi')
 
-define(['pixi', 'core/GameObject', 'tweenjs'], function (PIXI, GameObject, TweenJS) {
-
-  /**
-   * GameOver screen constructor.
-   *
-   * @param {* } options
-   * @constructor
-   */
-  let GameOver = function (options) {
-    GameObject.call(this, options)
+class GameOver extends GameObject {
+  constructor (options) {
+    super(options)
 
     let width = 400
     let height = 200
@@ -98,15 +94,13 @@ define(['pixi', 'core/GameObject', 'tweenjs'], function (PIXI, GameObject, Tween
     this.addChild(this.dialog)
   }
 
-  extend(GameOver, GameObject)
-
   /**
    * Tween in the GameOver screen.
    */
-  GameOver.prototype.show = function () {
-    let coords = {x: this.init_x, y: this.init_y, useTicks: false}
+  show () {
+    let coords = { x: this.init_x, y: this.init_y, useTicks: false }
     this.tween = new TweenJS.Tween(coords)
-      .to({y: this.app.screen.height / 2 - this.height / 2}, 500)
+      .to({ y: this.app.screen.height / 2 - this.height / 2 }, 500)
       .easing(TweenJS.Easing.Circular.In)
       .onUpdate(() => {
         this.dialog.x = coords.x
@@ -121,10 +115,10 @@ define(['pixi', 'core/GameObject', 'tweenjs'], function (PIXI, GameObject, Tween
   /**
    * Tween away the GameOver screen.
    */
-  GameOver.prototype.hide = function () {
-    let coords = {x: this.dialog.x, y: this.dialog.y, useTicks: false}
+  hide () {
+    let coords = { x: this.dialog.x, y: this.dialog.y, useTicks: false }
     this.tween = new TweenJS.Tween(coords)
-      .to({y: this.init_y}, 500)
+      .to({ y: this.init_y }, 500)
       .easing(TweenJS.Easing.Circular.In)
       .onUpdate(() => {
         this.dialog.x = coords.x
@@ -141,8 +135,9 @@ define(['pixi', 'core/GameObject', 'tweenjs'], function (PIXI, GameObject, Tween
    *
    * @param {number} delta - the time difference since last tick.
    */
-  GameOver.prototype.update = function(delta) {
+  update (delta) {
     TweenJS.update()
   }
-  return GameOver
-})
+}
+
+module.exports = GameOver

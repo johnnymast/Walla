@@ -1,6 +1,9 @@
-define([ 'core/Level', 'gui/Statistics'], function (Level, Statistics) {
-  var GameLevel = function (options) {
-    Level.call(this, options)
+const Level = require('core/Level')
+const Statistics = require('gui/Statistics')
+
+class GameLevel extends Level {
+  constructor (props) {
+    super(props)
 
     /**
      * Add the FPS counter.
@@ -8,20 +11,19 @@ define([ 'core/Level', 'gui/Statistics'], function (Level, Statistics) {
     this.statistics = new Statistics()
   }
 
-  extend(GameLevel, Level)
-
-  GameLevel.prototype.setDisplayStats = function (visible) {
+  setDisplayStats (visible) {
     this.statistics.visible = visible
     this.addChild(this.statistics)
   }
 
-  GameLevel.prototype.fixedUpdate = function(delta) {
+  fixedUpdate (delta) {
     // Empty
   }
 
-  GameLevel.prototype.update = function(delta) {
+  update (delta) {
     this.statistics.update(delta)
   }
 
-  return GameLevel
-})
+}
+
+module.exports = GameLevel

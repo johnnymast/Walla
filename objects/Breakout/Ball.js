@@ -1,21 +1,11 @@
-define(['./PhysicsSprite'], function (PhysicsSprite) {
+const PhysicsSprite = require('./PhysicsSprite')
 
-  /**
-   * The ball constructor.
-   *
-   * @param {string} texture - the texture name.
-   * @constructor
-   */
-  let Ball = function (texture) {
-    PhysicsSprite.call(this, texture)
-  }
-
-  extend(Ball, PhysicsSprite)
+class Ball extends PhysicsSprite {
 
   /**
    * Setup the physics body. This is part of the PhysicsSprite.
    */
-  Ball.prototype.setupBody = function () {
+  setupBody () {
     let options = {
       isSleeping: true,
       mass: 1,
@@ -36,14 +26,14 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
    * Fire the ball of the paddle.
    * @param {number} [force=10] - Fire the ball with this force.
    */
-  Ball.prototype.fire = function (force = 10) {
+  fire (force = 10) {
     this.PhysicsManager.setVelocity(this.body, { x: force, y: force })
   }
 
   /**
    * Reset the ball velocity.
    */
-  Ball.prototype.reset = function () {
+  reset () {
     this.PhysicsManager.setVelocity(this.body, { x: 0, y: 0 })
   }
 
@@ -52,7 +42,7 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
    *
    * @param {number} delta - the time difference since last tick.
    */
-  Ball.prototype.update = function (delta) {
+  update (delta) {
     let pos = this.body.position
     let angle = this.body.angle
 
@@ -60,6 +50,6 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
     this.sprite.x = pos.x
     this.sprite.y = pos.y
   }
+}
 
-  return Ball
-})
+module.exports = Ball

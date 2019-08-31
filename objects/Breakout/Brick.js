@@ -1,16 +1,10 @@
 const Vector2d = require('core/math/vector2d')
+const PhysicsSprite = require('./PhysicsSprite')
 
-define(['./PhysicsSprite'], function (PhysicsSprite) {
-
-  /**
-   * Brick constructor.
-   *
-   * @param {string} type - the type of brick red/green/blue
-   * @param {PIXI.Texture} texture - the texture for this brick
-   * @constructor
-   */
-  let Brick = function (type, texture) {
-    PhysicsSprite.call(this, texture)
+class Brick extends PhysicsSprite {
+  constructor (type, texture) {
+    super(texture)
+    
     this.type = type
     this.health = 1
     this.status = 'visible'
@@ -24,20 +18,10 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
     this.resetFlicker()
   }
 
-  extend(Brick, PhysicsSprite)
-
-  /**
-   * Return the points gained from this brick.
-   * @returns {number}
-   */
-  Brick.prototype.getPointValue = function () {
-    return this.point_value
-  }
-
   /**+
    * Reset the flicker animation.
    */
-  Brick.prototype.resetFlicker = function () {
+  resetFlicker () {
     this.flicker_speed = 4
     this.flicker_delay = 1.5
     this.flicker_delta = 0
@@ -52,7 +36,7 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
    *
    * @param {Body} withObject
    */
-  Brick.prototype.onCollisionWith = function (withObject) {
+  onCollisionWith (withObject) {
     if (this.health === 0) {
       this.PhysicsManager.remove(this.body)
       this.sprite.visible = false
@@ -64,7 +48,7 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
    * Create the Brick object with physics properties.
    * This function is internally called by the PhysicsSprite class.
    */
-  Brick.prototype.setupBody = function () {
+  setupBody () {
     let options = {
       isStatic: true,
       restitution: 1.5
@@ -74,14 +58,14 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
     this.PhysicsManager.add(this.body)
   }
 
-  Brick.prototype.showHit = function () {
+  showHit () {
     this.status = 'hit'
   }
 
   /**
    * Remove 1 from the bricks health.
    */
-  Brick.prototype.decareaseHealth = function () {
+  decareaseHealth () {
     this.health--
   }
 
@@ -89,7 +73,7 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
    * Return the number of health points for this brick.
    * @returns {number}
    */
-  Brick.prototype.getHealth = function () {
+  getHealth () {
     return this.health
   }
 
@@ -97,14 +81,14 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
    * Ask if the brick is destroyed or not.
    * @returns {boolean}
    */
-  Brick.prototype.isDestroyed = function () {
+  isDestroyed () {
     return (this.status === 'destroyed')
   }
 
   /**
    * Destroy the brick.
    */
-  Brick.prototype.destroy = function () {
+  destroy () {
     this.sprite.alpha = 0
     this.sprite.destroy()
 
@@ -115,7 +99,7 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
    * Update the physics of the brick.
    * @param {number} delta - The delta since last tick
    */
-  Brick.prototype.update = function (delta) {
+  update (delta) {
 
     let pos = this.body.position
     let angle = this.body.angle
@@ -148,6 +132,6 @@ define(['./PhysicsSprite'], function (PhysicsSprite) {
       }
     }
   }
+}
 
-  return Brick
-})
+module.exports = Brick

@@ -54,7 +54,7 @@ class BaseButton extends Button {
     this.options = extend2(true, this.options, options)
     this.options.state.default.text = options.text
 
-    Button.call(this, this.options)
+    // Button.call(this, this.options)
 
     this.states = {
       default: null,
