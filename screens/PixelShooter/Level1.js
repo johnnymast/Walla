@@ -8,15 +8,20 @@ class Level1 extends GameLevel {
   constructor (options) {
     super({ backgroundColor: 0x1099bb })
 
-    // this.interactive = true
-    // this.map = new PIXI.extras.TiledMap('pixelshooter_map')
-    // this.character = new Character(1)
-    // this.character.anchor = 0.5
+    this.ge = GameEngine.get();
+    let Tiled = this.ge.get('Tiled')
+    this.map = PIXI.loader.resources['pixelshooter_map']
+    console.log('Tiled.TiledMap', Tiled.default)
+    return
+    this.interactive = true
+
+    this.character = new Character(1)
+    this.character.anchor = 0.5
     //
-    // this.InputManager.mapInput([this.InputManager.keys.ArrowUp, 'w'], ['up'])
-    // this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left'])
-    // this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right'])
-    // this.InputManager.mapInput([this.InputManager.keys.ArrowDown, 's'], ['down'])
+    this.InputManager.mapInput([this.InputManager.keys.ArrowUp, 'w'], ['up'])
+    this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left'])
+    this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right'])
+    this.InputManager.mapInput([this.InputManager.keys.ArrowDown, 's'], ['down'])
   }
 
   // /**

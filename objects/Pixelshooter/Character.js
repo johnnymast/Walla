@@ -30,7 +30,6 @@ class Character extends GameObject {
 
       this.animation = this.animations[direction]['animation']
       this.animation.animationSpeed = this.animationspeed
-      // this.animation.position = this.position
       this.animation.play()
 
       this.direction = direction

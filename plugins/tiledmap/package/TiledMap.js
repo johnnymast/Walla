@@ -1,7 +1,9 @@
-import TileLayer from './TileLayer'
+const TileLayer = require('./TileLayer')
+const GameObject = require('core/GameObject')
 
-export class TiledMap {
+export class TiledMap extends GameObject{
   constructor (data = null, path = '') {
+    super()
 
     if (!data instanceof Object || !path.length)
       throw new Error('Error initializing TiledMap instance.')
@@ -40,6 +42,8 @@ export class TiledMap {
    * Parse the tiled map.
    */
   parse () {
+
+   console.log(this._data)
 
     this._data.layers.forEach((layerData) => {
 

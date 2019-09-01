@@ -88,11 +88,14 @@ let init = function() {
   }
 
   if (PLUGIN_TILEDMAP) {
-    const TiledMap = ge.get('PluginManager').loadPlugin('tiledmap', 'TiledMap')
+    const Tiled = ge.get('PluginManager').loadPlugin('tiledmap', 'TiledMap')
+    ge.set('Tiled', Tiled)
   }
 
   ge.get('SceneManager')
     .add('SplashScene')
+    .add('MainMenu')
+    // .switchTo('PixelShooter/Level1')
     .switchTo('SplashScene')
 }
 
