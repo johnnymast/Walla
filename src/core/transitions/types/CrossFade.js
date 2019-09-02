@@ -2,6 +2,12 @@ const TransactionType = require('./TransactionType')
 const Scene = require('core/Scene')
 
 class CrossFade extends TransactionType {
+
+  /**
+   * @classdesc CrossFade
+   * @exports  core/transitions/types/CrossFade
+   * @class
+   */
   constructor (options) {
     super(options)
 

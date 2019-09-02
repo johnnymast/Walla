@@ -22,6 +22,12 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
     }
   }
 
+  /**
+   * Return all scene plugins as an array.
+   *
+   * @returns {Array}
+   * @private
+   */
   SceneManager.prototype._listScenePlugins = function () {
     return this.getPlugins()
   }
@@ -152,7 +158,6 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
         .setFrom(this.currentScene)
         .setTo(nextScene)
         .animate()
-
     }
   }
 

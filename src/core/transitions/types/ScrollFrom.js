@@ -3,6 +3,12 @@ const TweenJS = require('tweenjs')
 const Scene = require('core/Scene')
 
 class ScrollFrom extends TransactionType {
+
+  /**
+   * @classdesc ScrollFrom
+   * @exports  core/transitions/types/ScrollFrom
+   * @class
+   */
   constructor (options) {
     super(options)
 

@@ -4,6 +4,7 @@ import 'babel-polyfill'
 import 'core/Transform'
 import 'core/math'
 
+
 const EngineInfo = {
   name: 'Stage Engine',
   version: 1.0,
@@ -85,11 +86,6 @@ let init = function() {
     const Debug = ge.get('PluginManager').loadPlugin('debug', 'Debug')
     let DebugManager = new Debug.DebugManager
     ge.set('DebugManager', DebugManager)
-  }
-
-  if (PLUGIN_TILEDMAP) {
-    const Tiled = ge.get('PluginManager').loadPlugin('tiledmap', 'TiledMap')
-    ge.set('Tiled', Tiled)
   }
 
   ge.get('SceneManager')

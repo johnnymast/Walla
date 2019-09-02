@@ -22,7 +22,6 @@ if (PROD) {
 plugins.push(
   new webpack.DefinePlugin({
     PLUGIN_MATTERJS: JSON.stringify(true),
-    PLUGIN_TILEDMAP: JSON.stringify(true),
     PLUGIN_DEBUG: JSON.stringify(false),
   })
 )
@@ -30,7 +29,7 @@ plugins.push(
 const config = {
   entry: {
     build: path.resolve(__dirname, './src/main.js'),
-    vendor: ['pixi', 'pixi-sound', 'tweenjs', 'require', 'matter-js']
+    vendor: ['pixi', 'pixi-sound', 'tweenjs', 'require', 'pixi-tiledmap', 'matter-js']
 
   },
   output: {
@@ -74,6 +73,7 @@ const config = {
       'eventemitter': path.resolve(__dirname, './node_modules/eventemitter3/index.js'),
       'pixi': path.resolve(__dirname, './node_modules/pixi.js'),
       'pixi-sound': path.resolve(__dirname, './node_modules/pixi-sound'),
+      'pixi-tiledmap': path.resolve(__dirname, './node_modules/pixi-tiledmap'),
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
       'tweenjs': path.resolve(__dirname, './node_modules/@tweenjs/tween.js'),
       'core': path.resolve(__dirname, 'src/core'),

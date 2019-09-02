@@ -1,7 +1,7 @@
 const PIXI = require('pixi')
 const Scene = require('core/Scene')
 const Transition = require('core/transitions/Transition')
-
+require('pixi-tiledmap')
 class SplashScene extends Scene {
   /**
    * @classdesc SplashScene

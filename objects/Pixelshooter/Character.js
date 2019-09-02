@@ -1,4 +1,4 @@
-const DIRECTIONS = require('objects/Pixelshooter/Options').DIRECTIONS
+const DIRECTIONS = require('objects/Pixelshooter/Options')
 const GameObject = require('core/GameObject')
 
 class Character extends GameObject {
