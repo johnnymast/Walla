@@ -578,7 +578,7 @@ Object.defineProperty(exports, 'CanvasSpriteRenderer', {
   }
 });
 
-var _CanvasTinter = __webpack_require__(52);
+var _CanvasTinter = __webpack_require__(53);
 
 Object.defineProperty(exports, 'CanvasTinter', {
   enumerable: true,
@@ -758,7 +758,7 @@ Object.defineProperty(exports, 'WebGLManager', {
   }
 });
 
-var _ObjectRenderer = __webpack_require__(50);
+var _ObjectRenderer = __webpack_require__(51);
 
 Object.defineProperty(exports, 'ObjectRenderer', {
   enumerable: true,
@@ -767,7 +767,7 @@ Object.defineProperty(exports, 'ObjectRenderer', {
   }
 });
 
-var _RenderTarget = __webpack_require__(51);
+var _RenderTarget = __webpack_require__(52);
 
 Object.defineProperty(exports, 'RenderTarget', {
   enumerable: true,
@@ -837,7 +837,7 @@ var _CanvasRenderer = __webpack_require__(37);
 
 var _CanvasRenderer2 = _interopRequireDefault(_CanvasRenderer);
 
-var _WebGLRenderer = __webpack_require__(49);
+var _WebGLRenderer = __webpack_require__(50);
 
 var _WebGLRenderer2 = _interopRequireDefault(_WebGLRenderer);
 
@@ -2176,7 +2176,7 @@ var substr = 'ab'.substr(-1) === 'b'
 /***/ (function(module, exports, __webpack_require__) {
 
 const PIXI = __webpack_require__(10);
-const GameEngine = __webpack_require__(89);
+const GameEngine = __webpack_require__(84);
 
 class GameObject extends PIXI.Container {
   /**
@@ -6097,6 +6097,423 @@ module.exports = function (it, S) {
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
+const GameObject = __webpack_require__(17);
+const Gameloop = __webpack_require__(389);
+const PIXI = __webpack_require__(10);
+
+class Scene extends GameObject {
+  /**
+   * @classdesc Scene
+   * @exports  core/Scene
+   * @class
+   */
+  constructor(options) {
+    super(options);
+
+    this.childClass = Object.getPrototypeOf(this).constructor.name;
+
+    if (typeof this.update === 'undefined') {
+      console.warn('Please add the update method to ' + this.childClass);
+    }
+
+    this.cursor_sprite = new PIXI.Sprite();
+    this.cursor_sprite.interactive = false;
+    this.cursor_sprite.buttonMode = false;
+    this.cursor_sprite.cursor = 'none';
+    this.cursor_sprite.anchor.set(0.5);
+
+    this.on('pointerover', function () {
+      this.cursor_sprite.visible = true;
+    }.bind(this));
+
+    this.on('pointerout', function () {
+      this.cursor_sprite.visible = false;
+    }.bind(this));
+
+    this.on('pointermove', function (event) {
+      this.cursor_sprite.position = event.data.global;
+    }.bind(this));
+
+    /**
+     *
+     * @type {{}}
+     */
+    // this.resources = {}
+
+    this.fullscreen = {
+      available: false,
+      cancel: '',
+      keyboard: false,
+      request: '',
+      check: ''
+    };
+
+    this._detectFullScreenSupport();
+
+    /**
+     *
+     * @type {boolean}
+     * @default false
+     */
+    this.paused = true;
+
+    /**
+     *
+     * @type {boolean}
+     * @default false
+     */
+    this.started = false;
+
+    this.app.gameloop.add(delta => {
+      this._update(delta);
+    });
+
+    this.app.gameloop.add(delta => {
+      this._fixedupdate(delta);
+    });
+
+    // this.physicsTicker = new PIXI.ticker.Ticker()
+    // this.physicsTicker.speed = PIXI.ticker.shared.speed + 0.5
+    // this.physicsTicker.autoStart = true
+    // this.physicsTicker.add((delta) => {
+    //   this._fixedupdate(delta)
+    // })
+  }
+
+  /**
+   * You can call this function to see if fullscreen is available
+   * on this device.
+   *
+   * @returns {boolean}
+   */
+  isFullScreenAvailable() {
+    return this.fullscreen.available;
+  }
+
+  /**
+   * Check to see if the device is in fullscreen mode.
+   *
+   * @returns {boolean}
+   */
+  isFullScreen() {
+    if (this.isFullScreenAvailable() === true) {
+      if (typeof document[this.fullscreen.check] !== 'undefined') {
+        return document[this.fullscreen.check];
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Toggle fullscreen mode.
+   *
+   * @returns {*}
+   */
+  enterFullScreen() {
+    if (this.isFullScreenAvailable() === true) {
+      if (typeof this.app.view[this.fullscreen.request] !== 'undefined') {
+        this.app.view[this.fullscreen.request]();
+      }
+    }
+  }
+
+  /**
+   * Exit from fullscreen if device is in fullscreen mode.
+   *
+   * @returns {*}
+   */
+  exitFullScreen() {
+    if (this.isFullScreenAvailable() === true && this.isFullScreen() === true) {
+      if (typeof document[this.fullscreen.cancel] !== 'undefined') {
+        document[this.fullscreen.cancel]();
+      }
+    }
+  }
+
+  /**
+   * Hide the cursor on the current Scene.
+   */
+  hideCursor() {
+    this.cursor = 'none';
+  }
+
+  /**
+   * Define a new cursor.
+   *
+   * @param {string} name
+   * @param {string} texture_name
+   */
+  addCursor(name = '', texture_name = '') {
+    this.InteractionManager.cursorStyles[name] = () => {
+      this.cursor_sprite.texture = PIXI.Texture.fromFrame(texture_name);
+    };
+  }
+
+  /**
+   * Set a cursor.
+   *
+   * @param {string} name - The name of the cursor
+   */
+  setCursor(name = '') {
+
+    if (this.cursor_sprite.parent) {
+      this.removeChild(this.cursor_sprite);
+    }
+
+    this.hideCursor();
+
+    this.addChild(this.cursor_sprite);
+    this.cursor = name;
+  }
+
+  /**
+   * If you wish to preload assets in your scene you can
+   * overwrite this function.
+   */
+  preload() {}
+  /**
+   * This function will be called during switching of Scenes.
+   * You can implement this method to act on this event.
+   */
+
+
+  /**
+   * Callback for the onPause event. You can overwrite this your self
+   * to receive the onPause call.
+   */
+  onPause() {}
+  /**
+   * This function will be called when the Scene is paused.You can overwrite this in
+   * your Scene to act on this event.
+   */
+
+
+  /**
+   * Callback for the onInit event. You can overwrite this your self
+   * to receive the onInit call.
+   */
+  onInit() {}
+  /**
+   * This function will be called when the scene is initialized. You can overwrite this in
+   * your Scene to act on this event.
+   */
+
+
+  /**
+   * Callback for the onStart event. You can overwrite this your self
+   * to receive the onStart call.
+   */
+  onStart() {}
+  /**
+   * This function will be called when the scene is started. You can overwrite this in
+   * your Scene to act on this event.
+   */
+
+
+  /**
+   * Callback for the onResume event. You can overwrite this your self
+   * to receive the onResume call.
+   */
+  onResume() {}
+  /**
+   * This function will be called when the scene is unpauzed. You can overwrite this in
+   * your Scene to act on this event.
+   */
+
+
+  /**
+   * Callback for the onSwitchedAway event. You can overwrite this your self
+   * to receive the onResume call.
+   */
+  onSwitchedAway() {}
+  /**
+   * This function will be called when the scene is been switched away from. You can overwrite this in
+   * your Scene to act on this event.
+   */
+
+
+  /**
+   * Initialize the scene
+   */
+  init() {
+    this.onInit();
+    this.resume();
+  }
+
+  /**
+   * Start the scene
+   */
+  start() {
+    let plugins = this.SceneManager.getPlugins();
+
+    this.started = true;
+
+    for (let key in plugins) {
+      if (plugins[key].runsPreStart()) {
+        plugins[key].start();
+      }
+    }
+
+    this.onStart();
+
+    for (let key in plugins) {
+      if (plugins[key].runsPostStart()) {
+        plugins[key].start();
+      }
+    }
+  }
+
+  /**
+   * The scene has been switched off.
+   */
+  switchedAway() {
+    this.onSwitchedAway();
+  }
+
+  /**
+   * Pause the scene
+   */
+  pause() {
+    this.paused = true;
+    this.onPause();
+  }
+
+  /**
+   * Resume a paused scene.
+   */
+  resume() {
+    this.paused = false;
+    this.onResume();
+  }
+
+  /**
+   * Ask if the scene is paused.
+   *
+   * @returns {boolean}
+   */
+  isPaused() {
+    return this.paused;
+  }
+
+  /**
+   * Ask if the scene is started.
+   *
+   * @returns {boolean}
+   */
+  isStarted() {
+    return this.started;
+  }
+
+  /**
+   * Check if whe have fullscreen support available.
+   * To be honest i have to give credit this function is taken
+   * from phaser sourcecode.
+   *
+   * Source:
+   * https://github.com/photonstorm/phaser/blob/747f09af86f11accd922210bd5b35c236bda5741/src/device/Fullscreen.js
+   *
+   *
+   * @author       Richard Davey <rich@photonstorm.com>
+   * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+   * @private
+   */
+  _detectFullScreenSupport() {
+    let fs = ['requestFullscreen', 'requestFullScreen', 'webkitRequestFullscreen', 'webkitRequestFullScreen', 'msRequestFullscreen', 'msRequestFullScreen', 'mozRequestFullScreen', 'mozRequestFullscreen'];
+
+    let element = document.createElement('div');
+
+    for (let i = 0; i < fs.length; i++) {
+      if (element[fs[i]]) {
+        this.fullscreen.available = true;
+        this.fullscreen.request = fs[i];
+        break;
+      }
+    }
+
+    let cfs = ['cancelFullScreen', 'exitFullscreen', 'webkitCancelFullScreen', 'webkitExitFullscreen', 'msCancelFullScreen', 'msExitFullscreen', 'mozCancelFullScreen', 'mozExitFullscreen'];
+
+    if (this.fullscreen.available) {
+      for (let i = 0; i < cfs.length; i++) {
+        if (typeof document[cfs[i]] == 'function') {
+          this.fullscreen.cancel = cfs[i];
+          break;
+        }
+      }
+    }
+
+    let cff = ['fullscreen', 'webkitIsFullScreen', 'mozFullScreen'];
+
+    for (let i = 0; i < cff.length; i++) {
+      if (typeof document[cff[i]] == 'boolean') {
+        this.fullscreen.check = cff[i];
+        break;
+      }
+    }
+
+    //  Keyboard Input?
+    if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT']) {
+      this.fullscreen.keyboard = true;
+    }
+  }
+
+  /**
+   * The update function for physics. You can overwrite this function
+   * in your own level to update physics for your your game.
+   *
+   * @param {number} delta - the delta since the last tick
+   */
+  fixedUpdate(delta) {}
+  // Overwrite this function
+
+
+  /**
+   * Internal fixedupdate function. This is called per tick.
+   * This function is specially for updating physics in the game engine
+   * it runs 2x faster then the update function.
+   *
+   * @param {number} delta - the delta since the last tick
+   * @private
+   */
+  _fixedupdate(delta) {
+    if (!this.isPaused()) {
+      this.fixedUpdate(delta);
+    }
+  }
+
+  /**
+   * Internal update function. This is called per tick.
+   *
+   * @param {number} delta - the delta since the last tick
+   * @private
+   */
+  _update(delta) {
+
+    if (!this.isPaused()) {
+      let plugins = this.SceneManager.getPlugins();
+
+      for (let key in plugins) {
+        if (plugins[key].runsPreUpdate()) {
+          plugins[key].update(delta);
+        }
+      }
+
+      if (this.isStarted()) this.update(delta);
+
+      for (let key in plugins) {
+        if (plugins[key].runsPostUpdate()) {
+          plugins[key].update(delta);
+        }
+      }
+    }
+  }
+}
+
+module.exports = Scene;
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var Map = __webpack_require__(355);
 var $export = __webpack_require__(0);
 var shared = __webpack_require__(159)('metadata');
@@ -6151,7 +6568,7 @@ module.exports = {
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6188,7 +6605,7 @@ if (__webpack_require__(13)) {
   var createArrayIncludes = __webpack_require__(148);
   var speciesConstructor = __webpack_require__(160);
   var ArrayIterators = __webpack_require__(201);
-  var Iterators = __webpack_require__(84);
+  var Iterators = __webpack_require__(85);
   var $iterDetect = __webpack_require__(154);
   var setSpecies = __webpack_require__(66);
   var arrayFill = __webpack_require__(176);
@@ -6638,7 +7055,7 @@ if (__webpack_require__(13)) {
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6917,7 +7334,7 @@ function buildNativeLine(graphicsData, webGLData) {
 //# sourceMappingURL=buildLine.js.map
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6941,11 +7358,11 @@ var _FilterManager = __webpack_require__(232);
 
 var _FilterManager2 = _interopRequireDefault(_FilterManager);
 
-var _RenderTarget = __webpack_require__(51);
+var _RenderTarget = __webpack_require__(52);
 
 var _RenderTarget2 = _interopRequireDefault(_RenderTarget);
 
-var _ObjectRenderer = __webpack_require__(50);
+var _ObjectRenderer = __webpack_require__(51);
 
 var _ObjectRenderer2 = _interopRequireDefault(_ObjectRenderer);
 
@@ -7761,7 +8178,7 @@ _utils.pluginTarget.mixin(WebGLRenderer);
 //# sourceMappingURL=WebGLRenderer.js.map
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7844,7 +8261,7 @@ exports.default = ObjectRenderer;
 //# sourceMappingURL=ObjectRenderer.js.map
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8187,7 +8604,7 @@ exports.default = RenderTarget;
 //# sourceMappingURL=RenderTarget.js.map
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8441,423 +8858,6 @@ CanvasTinter.tintMethod = CanvasTinter.canUseMultiply ? CanvasTinter.tintWithMul
 
 exports.default = CanvasTinter;
 //# sourceMappingURL=CanvasTinter.js.map
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const GameObject = __webpack_require__(17);
-const Gameloop = __webpack_require__(389);
-const PIXI = __webpack_require__(10);
-
-class Scene extends GameObject {
-  /**
-   * @classdesc Scene
-   * @exports  core/Scene
-   * @class
-   */
-  constructor(options) {
-    super(options);
-
-    this.childClass = Object.getPrototypeOf(this).constructor.name;
-
-    if (typeof this.update === 'undefined') {
-      console.warn('Please add the update method to ' + this.childClass);
-    }
-
-    this.cursor_sprite = new PIXI.Sprite();
-    this.cursor_sprite.interactive = false;
-    this.cursor_sprite.buttonMode = false;
-    this.cursor_sprite.cursor = 'none';
-    this.cursor_sprite.anchor.set(0.5);
-
-    this.on('pointerover', function () {
-      this.cursor_sprite.visible = true;
-    }.bind(this));
-
-    this.on('pointerout', function () {
-      this.cursor_sprite.visible = false;
-    }.bind(this));
-
-    this.on('pointermove', function (event) {
-      this.cursor_sprite.position = event.data.global;
-    }.bind(this));
-
-    /**
-     *
-     * @type {{}}
-     */
-    // this.resources = {}
-
-    this.fullscreen = {
-      available: false,
-      cancel: '',
-      keyboard: false,
-      request: '',
-      check: ''
-    };
-
-    this._detectFullScreenSupport();
-
-    /**
-     *
-     * @type {boolean}
-     * @default false
-     */
-    this.paused = true;
-
-    /**
-     *
-     * @type {boolean}
-     * @default false
-     */
-    this.started = false;
-
-    this.app.gameloop.add(delta => {
-      this._update(delta);
-    });
-
-    this.app.gameloop.add(delta => {
-      this._fixedupdate(delta);
-    });
-
-    // this.physicsTicker = new PIXI.ticker.Ticker()
-    // this.physicsTicker.speed = PIXI.ticker.shared.speed + 0.5
-    // this.physicsTicker.autoStart = true
-    // this.physicsTicker.add((delta) => {
-    //   this._fixedupdate(delta)
-    // })
-  }
-
-  /**
-   * You can call this function to see if fullscreen is available
-   * on this device.
-   *
-   * @returns {boolean}
-   */
-  isFullScreenAvailable() {
-    return this.fullscreen.available;
-  }
-
-  /**
-   * Check to see if the device is in fullscreen mode.
-   *
-   * @returns {boolean}
-   */
-  isFullScreen() {
-    if (this.isFullScreenAvailable() === true) {
-      if (typeof document[this.fullscreen.check] !== 'undefined') {
-        return document[this.fullscreen.check];
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Toggle fullscreen mode.
-   *
-   * @returns {*}
-   */
-  enterFullScreen() {
-    if (this.isFullScreenAvailable() === true) {
-      if (typeof this.app.view[this.fullscreen.request] !== 'undefined') {
-        this.app.view[this.fullscreen.request]();
-      }
-    }
-  }
-
-  /**
-   * Exit from fullscreen if device is in fullscreen mode.
-   *
-   * @returns {*}
-   */
-  exitFullScreen() {
-    if (this.isFullScreenAvailable() === true && this.isFullScreen() === true) {
-      if (typeof document[this.fullscreen.cancel] !== 'undefined') {
-        document[this.fullscreen.cancel]();
-      }
-    }
-  }
-
-  /**
-   * Hide the cursor on the current Scene.
-   */
-  hideCursor() {
-    this.cursor = 'none';
-  }
-
-  /**
-   * Define a new cursor.
-   *
-   * @param {string} name
-   * @param {string} texture_name
-   */
-  addCursor(name = '', texture_name = '') {
-    this.InteractionManager.cursorStyles[name] = () => {
-      this.cursor_sprite.texture = PIXI.Texture.fromFrame(texture_name);
-    };
-  }
-
-  /**
-   * Set a cursor.
-   *
-   * @param {string} name - The name of the cursor
-   */
-  setCursor(name = '') {
-
-    if (this.cursor_sprite.parent) {
-      this.removeChild(this.cursor_sprite);
-    }
-
-    this.hideCursor();
-
-    this.addChild(this.cursor_sprite);
-    this.cursor = name;
-  }
-
-  /**
-   * If you wish to preload assets in your scene you can
-   * overwrite this function.
-   */
-  preload() {}
-  /**
-   * This function will be called during switching of Scenes.
-   * You can implement this method to act on this event.
-   */
-
-
-  /**
-   * Callback for the onPause event. You can overwrite this your self
-   * to receive the onPause call.
-   */
-  onPause() {}
-  /**
-   * This function will be called when the Scene is paused.You can overwrite this in
-   * your Scene to act on this event.
-   */
-
-
-  /**
-   * Callback for the onInit event. You can overwrite this your self
-   * to receive the onInit call.
-   */
-  onInit() {}
-  /**
-   * This function will be called when the scene is initialized. You can overwrite this in
-   * your Scene to act on this event.
-   */
-
-
-  /**
-   * Callback for the onStart event. You can overwrite this your self
-   * to receive the onStart call.
-   */
-  onStart() {}
-  /**
-   * This function will be called when the scene is started. You can overwrite this in
-   * your Scene to act on this event.
-   */
-
-
-  /**
-   * Callback for the onResume event. You can overwrite this your self
-   * to receive the onResume call.
-   */
-  onResume() {}
-  /**
-   * This function will be called when the scene is unpauzed. You can overwrite this in
-   * your Scene to act on this event.
-   */
-
-
-  /**
-   * Callback for the onSwitchedAway event. You can overwrite this your self
-   * to receive the onResume call.
-   */
-  onSwitchedAway() {}
-  /**
-   * This function will be called when the scene is been switched away from. You can overwrite this in
-   * your Scene to act on this event.
-   */
-
-
-  /**
-   * Initialize the scene
-   */
-  init() {
-    this.onInit();
-    this.resume();
-  }
-
-  /**
-   * Start the scene
-   */
-  start() {
-    let plugins = this.SceneManager.getPlugins();
-
-    this.started = true;
-
-    for (let key in plugins) {
-      if (plugins[key].runsPreStart()) {
-        plugins[key].start();
-      }
-    }
-
-    this.onStart();
-
-    for (let key in plugins) {
-      if (plugins[key].runsPostStart()) {
-        plugins[key].start();
-      }
-    }
-  }
-
-  /**
-   * The scene has been switched off.
-   */
-  switchedAway() {
-    this.onSwitchedAway();
-  }
-
-  /**
-   * Pause the scene
-   */
-  pause() {
-    this.paused = true;
-    this.onPause();
-  }
-
-  /**
-   * Resume a paused scene.
-   */
-  resume() {
-    this.paused = false;
-    this.onResume();
-  }
-
-  /**
-   * Ask if the scene is paused.
-   *
-   * @returns {boolean}
-   */
-  isPaused() {
-    return this.paused;
-  }
-
-  /**
-   * Ask if the scene is started.
-   *
-   * @returns {boolean}
-   */
-  isStarted() {
-    return this.started;
-  }
-
-  /**
-   * Check if whe have fullscreen support available.
-   * To be honest i have to give credit this function is taken
-   * from phaser sourcecode.
-   *
-   * Source:
-   * https://github.com/photonstorm/phaser/blob/747f09af86f11accd922210bd5b35c236bda5741/src/device/Fullscreen.js
-   *
-   *
-   * @author       Richard Davey <rich@photonstorm.com>
-   * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-   * @private
-   */
-  _detectFullScreenSupport() {
-    let fs = ['requestFullscreen', 'requestFullScreen', 'webkitRequestFullscreen', 'webkitRequestFullScreen', 'msRequestFullscreen', 'msRequestFullScreen', 'mozRequestFullScreen', 'mozRequestFullscreen'];
-
-    let element = document.createElement('div');
-
-    for (let i = 0; i < fs.length; i++) {
-      if (element[fs[i]]) {
-        this.fullscreen.available = true;
-        this.fullscreen.request = fs[i];
-        break;
-      }
-    }
-
-    let cfs = ['cancelFullScreen', 'exitFullscreen', 'webkitCancelFullScreen', 'webkitExitFullscreen', 'msCancelFullScreen', 'msExitFullscreen', 'mozCancelFullScreen', 'mozExitFullscreen'];
-
-    if (this.fullscreen.available) {
-      for (let i = 0; i < cfs.length; i++) {
-        if (typeof document[cfs[i]] == 'function') {
-          this.fullscreen.cancel = cfs[i];
-          break;
-        }
-      }
-    }
-
-    let cff = ['fullscreen', 'webkitIsFullScreen', 'mozFullScreen'];
-
-    for (let i = 0; i < cff.length; i++) {
-      if (typeof document[cff[i]] == 'boolean') {
-        this.fullscreen.check = cff[i];
-        break;
-      }
-    }
-
-    //  Keyboard Input?
-    if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT']) {
-      this.fullscreen.keyboard = true;
-    }
-  }
-
-  /**
-   * The update function for physics. You can overwrite this function
-   * in your own level to update physics for your your game.
-   *
-   * @param {number} delta - the delta since the last tick
-   */
-  fixedUpdate(delta) {}
-  // Overwrite this function
-
-
-  /**
-   * Internal fixedupdate function. This is called per tick.
-   * This function is specially for updating physics in the game engine
-   * it runs 2x faster then the update function.
-   *
-   * @param {number} delta - the delta since the last tick
-   * @private
-   */
-  _fixedupdate(delta) {
-    if (!this.isPaused()) {
-      this.fixedUpdate(delta);
-    }
-  }
-
-  /**
-   * Internal update function. This is called per tick.
-   *
-   * @param {number} delta - the delta since the last tick
-   * @private
-   */
-  _update(delta) {
-
-    if (!this.isPaused()) {
-      let plugins = this.SceneManager.getPlugins();
-
-      for (let key in plugins) {
-        if (plugins[key].runsPreUpdate()) {
-          plugins[key].update(delta);
-        }
-      }
-
-      if (this.isStarted()) this.update(delta);
-
-      for (let key in plugins) {
-        if (plugins[key].runsPostUpdate()) {
-          plugins[key].update(delta);
-        }
-      }
-    }
-  }
-}
-
-module.exports = Scene;
 
 /***/ }),
 /* 54 */
@@ -14332,13 +14332,58 @@ if (true) {
 
 /***/ }),
 /* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const PIXI = __webpack_require__(10);
+
+class GameEngine extends PIXI.utils.EventEmitter {
+
+  /**
+   * Return a singleton instance of the GameEngine
+   *
+   * @returns {GameEngine}
+   */
+  static get() {
+    if (!this.current) {
+      this.current = new GameEngine();
+    }
+    return this.current;
+  }
+
+  /**
+   * Cache a given object object under given key.
+   *
+   * @param {string} key - The key to cache the object as
+   * @param {string} value - The object to add to the cache
+   */
+  set(key, value) {
+    GameEngine.current.emit('set' + key, value);
+
+    this[key] = value;
+  }
+
+  /**
+   * Return a signleton version of the GameEngine
+   * object.
+   *
+   * @returns {GameEngine}
+   */
+  get(key) {
+    return this[key];
+  }
+}
+
+module.exports = GameEngine;
+
+/***/ }),
+/* 85 */
 /***/ (function(module, exports) {
 
 module.exports = {};
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var def = __webpack_require__(14).f;
@@ -14351,7 +14396,7 @@ module.exports = function (it, tag, stat) {
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(0);
@@ -14387,7 +14432,7 @@ module.exports = exporter;
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(9);
@@ -14398,7 +14443,7 @@ module.exports = function (it, TYPE) {
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -15338,51 +15383,6 @@ TWEEN.Interpolation = {
 })(this);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(82)))
-
-/***/ }),
-/* 89 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const PIXI = __webpack_require__(10);
-
-class GameEngine extends PIXI.utils.EventEmitter {
-
-  /**
-   * Return a singleton instance of the GameEngine
-   *
-   * @returns {GameEngine}
-   */
-  static get() {
-    if (!this.current) {
-      this.current = new GameEngine();
-    }
-    return this.current;
-  }
-
-  /**
-   * Cache a given object object under given key.
-   *
-   * @param {string} key - The key to cache the object as
-   * @param {string} value - The object to add to the cache
-   */
-  set(key, value) {
-    GameEngine.current.emit('set' + key, value);
-
-    this[key] = value;
-  }
-
-  /**
-   * Return a signleton version of the GameEngine
-   * object.
-   *
-   * @returns {GameEngine}
-   */
-  get(key) {
-    return this[key];
-  }
-}
-
-module.exports = GameEngine;
 
 /***/ }),
 /* 90 */
@@ -16810,7 +16810,7 @@ var _CanvasRenderer = __webpack_require__(37);
 
 var _CanvasRenderer2 = _interopRequireDefault(_CanvasRenderer);
 
-var _WebGLRenderer = __webpack_require__(49);
+var _WebGLRenderer = __webpack_require__(50);
 
 var _WebGLRenderer2 = _interopRequireDefault(_WebGLRenderer);
 
@@ -24990,7 +24990,7 @@ var anInstance = __webpack_require__(59);
 var isObject = __webpack_require__(9);
 var fails = __webpack_require__(8);
 var $iterDetect = __webpack_require__(154);
-var setToStringTag = __webpack_require__(85);
+var setToStringTag = __webpack_require__(86);
 var inheritIfRequired = __webpack_require__(183);
 
 module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
@@ -54546,7 +54546,7 @@ module.exports = GameLevel;
 /***/ (function(module, exports, __webpack_require__) {
 
 const KeyboardInput = __webpack_require__(173);
-const Scene = __webpack_require__(53);
+const Scene = __webpack_require__(46);
 
 class Level extends Scene {
   constructor(options) {
@@ -54785,7 +54785,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
 /* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Scene = __webpack_require__(53);
+const Scene = __webpack_require__(46);
 
 class TransactionType extends Scene {
 
@@ -55101,7 +55101,7 @@ module.exports = function (that, target, C) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // check on default Array iterator
-var Iterators = __webpack_require__(84);
+var Iterators = __webpack_require__(85);
 var ITERATOR = __webpack_require__(11)('iterator');
 var ArrayProto = Array.prototype;
 
@@ -55118,7 +55118,7 @@ module.exports = function (it) {
 
 var create = __webpack_require__(61);
 var descriptor = __webpack_require__(64);
-var setToStringTag = __webpack_require__(85);
+var setToStringTag = __webpack_require__(86);
 var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
@@ -55140,9 +55140,9 @@ var LIBRARY = __webpack_require__(55);
 var $export = __webpack_require__(0);
 var redefine = __webpack_require__(24);
 var hide = __webpack_require__(23);
-var Iterators = __webpack_require__(84);
+var Iterators = __webpack_require__(85);
 var $iterCreate = __webpack_require__(185);
-var setToStringTag = __webpack_require__(85);
+var setToStringTag = __webpack_require__(86);
 var getPrototypeOf = __webpack_require__(29);
 var ITERATOR = __webpack_require__(11)('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
@@ -55549,7 +55549,7 @@ var toIndex = __webpack_require__(353);
 var gOPN = __webpack_require__(62).f;
 var dP = __webpack_require__(14).f;
 var arrayFill = __webpack_require__(176);
-var setToStringTag = __webpack_require__(85);
+var setToStringTag = __webpack_require__(86);
 var ARRAY_BUFFER = 'ArrayBuffer';
 var DATA_VIEW = 'DataView';
 var PROTOTYPE = 'prototype';
@@ -55833,7 +55833,7 @@ module.exports = function (name) {
 
 var classof = __webpack_require__(90);
 var ITERATOR = __webpack_require__(11)('iterator');
-var Iterators = __webpack_require__(84);
+var Iterators = __webpack_require__(85);
 module.exports = __webpack_require__(32).getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR]
     || it['@@iterator']
@@ -55849,7 +55849,7 @@ module.exports = __webpack_require__(32).getIteratorMethod = function (it) {
 
 var addToUnscopables = __webpack_require__(54);
 var step = __webpack_require__(338);
-var Iterators = __webpack_require__(84);
+var Iterators = __webpack_require__(85);
 var toIObject = __webpack_require__(30);
 
 // 22.1.3.4 Array.prototype.entries()
@@ -59096,11 +59096,11 @@ var _utils = __webpack_require__(3);
 
 var _const = __webpack_require__(1);
 
-var _ObjectRenderer2 = __webpack_require__(50);
+var _ObjectRenderer2 = __webpack_require__(51);
 
 var _ObjectRenderer3 = _interopRequireDefault(_ObjectRenderer2);
 
-var _WebGLRenderer = __webpack_require__(49);
+var _WebGLRenderer = __webpack_require__(50);
 
 var _WebGLRenderer2 = _interopRequireDefault(_WebGLRenderer);
 
@@ -59561,7 +59561,7 @@ exports.default = PrimitiveShader;
 exports.__esModule = true;
 exports.default = buildCircle;
 
-var _buildLine = __webpack_require__(48);
+var _buildLine = __webpack_require__(49);
 
 var _buildLine2 = _interopRequireDefault(_buildLine);
 
@@ -59661,7 +59661,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
 exports.__esModule = true;
 exports.default = buildPoly;
 
-var _buildLine = __webpack_require__(48);
+var _buildLine = __webpack_require__(49);
 
 var _buildLine2 = _interopRequireDefault(_buildLine);
 
@@ -59752,7 +59752,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
 exports.__esModule = true;
 exports.default = buildRectangle;
 
-var _buildLine = __webpack_require__(48);
+var _buildLine = __webpack_require__(49);
 
 var _buildLine2 = _interopRequireDefault(_buildLine);
 
@@ -59837,7 +59837,7 @@ var _earcut = __webpack_require__(69);
 
 var _earcut2 = _interopRequireDefault(_earcut);
 
-var _buildLine = __webpack_require__(48);
+var _buildLine = __webpack_require__(49);
 
 var _buildLine2 = _interopRequireDefault(_buildLine);
 
@@ -60924,7 +60924,7 @@ var _pixiGlCore = __webpack_require__(12);
 
 var _const = __webpack_require__(1);
 
-var _RenderTarget = __webpack_require__(51);
+var _RenderTarget = __webpack_require__(52);
 
 var _RenderTarget2 = _interopRequireDefault(_RenderTarget);
 
@@ -61612,7 +61612,7 @@ var _WebGLManager2 = __webpack_require__(38);
 
 var _WebGLManager3 = _interopRequireDefault(_WebGLManager2);
 
-var _RenderTarget = __webpack_require__(51);
+var _RenderTarget = __webpack_require__(52);
 
 var _RenderTarget2 = _interopRequireDefault(_RenderTarget);
 
@@ -62841,7 +62841,7 @@ var _const = __webpack_require__(1);
 
 var _math = __webpack_require__(6);
 
-var _CanvasTinter = __webpack_require__(52);
+var _CanvasTinter = __webpack_require__(53);
 
 var _CanvasTinter2 = _interopRequireDefault(_CanvasTinter);
 
@@ -63049,11 +63049,11 @@ exports.default = Buffer;
 
 exports.__esModule = true;
 
-var _ObjectRenderer2 = __webpack_require__(50);
+var _ObjectRenderer2 = __webpack_require__(51);
 
 var _ObjectRenderer3 = _interopRequireDefault(_ObjectRenderer2);
 
-var _WebGLRenderer = __webpack_require__(49);
+var _WebGLRenderer = __webpack_require__(50);
 
 var _WebGLRenderer2 = _interopRequireDefault(_WebGLRenderer);
 
@@ -68361,7 +68361,7 @@ var _core = __webpack_require__(2);
 
 var core = _interopRequireWildcard(_core);
 
-var _CanvasTinter = __webpack_require__(52);
+var _CanvasTinter = __webpack_require__(53);
 
 var _CanvasTinter2 = _interopRequireDefault(_CanvasTinter);
 
@@ -72829,7 +72829,7 @@ var _Plane2 = __webpack_require__(139);
 
 var _Plane3 = _interopRequireDefault(_Plane2);
 
-var _CanvasTinter = __webpack_require__(52);
+var _CanvasTinter = __webpack_require__(53);
 
 var _CanvasTinter2 = _interopRequireDefault(_CanvasTinter);
 
@@ -78818,7 +78818,7 @@ module.exports = Level1;
 const Statistics = __webpack_require__(57);
 const Camera = __webpack_require__(390);
 const Rect = __webpack_require__(318);
-const Scene = __webpack_require__(53);
+const Scene = __webpack_require__(46);
 const PIXI = __webpack_require__(10);
 
 class CameraScene extends Scene {
@@ -79194,10 +79194,10 @@ const Menus = __webpack_require__(409);
 const Dialogs = __webpack_require__(323);
 
 const PIXI = __webpack_require__(10);
-const Scene = __webpack_require__(53);
-const GameEngine = __webpack_require__(89);
+const Scene = __webpack_require__(46);
+const GameEngine = __webpack_require__(84);
 const Statistics = __webpack_require__(57);
-const TweenJS = __webpack_require__(88);
+const TweenJS = __webpack_require__(89);
 const Transition = __webpack_require__(321);
 
 class MainMenu extends Scene {
@@ -79562,7 +79562,7 @@ module.exports = MainMenu;
 // https://github.com/riebel/pixi-tiledmap
 const DIRECTIONS = __webpack_require__(305);
 const GameLevel = __webpack_require__(170);
-const GameEngine = __webpack_require__(89);
+const GameEngine = __webpack_require__(84);
 const Character = __webpack_require__(381);
 
 class Level1 extends GameLevel {
@@ -79868,9 +79868,10 @@ module.exports = Level1;
 /***/ (function(module, exports, __webpack_require__) {
 
 const PIXI = __webpack_require__(10);
-const Scene = __webpack_require__(53);
+const Scene = __webpack_require__(46);
 const Transition = __webpack_require__(321);
 __webpack_require__(165);
+
 class SplashScene extends Scene {
   /**
    * @classdesc SplashScene
@@ -79882,12 +79883,20 @@ class SplashScene extends Scene {
   constructor(options) {
     super(options);
 
+    this.loaderBackground = new PIXI.Graphics();
     this.loaderHolder = new PIXI.Graphics();
     this.loaderFill = new PIXI.Graphics();
 
+    this.loaderWidth = 200;
+    this.loaderHeight = 30;
+    this.loaderPadding = 10;
+    this.loaderOffsetDown = 150;
+    this.loaderRadius = 10;
+
     this.percentageStyle = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 18
+      fontSize: 8,
+      fill: '#ffffff'
     });
   }
 
@@ -79898,7 +79907,8 @@ class SplashScene extends Scene {
    */
   onStart() {
 
-    let background = new PIXI.Sprite(PIXI.Texture.BLACK);
+    let backgroundTexture = PIXI.Texture.fromImage('/assets/splashscreen/background.jpg');
+    let background = new PIXI.Sprite(backgroundTexture);
     background.width = this.app.screen.width;
     background.height = this.app.screen.height;
     background.alpha = 1;
@@ -79907,27 +79917,36 @@ class SplashScene extends Scene {
 
     let logoTexture = PIXI.Texture.fromImage('/assets/main/images/engine.png');
     logoTexture.on('update', () => {
-      this.logo = new PIXI.Sprite(logoTexture);
-      this.logo.anchor.set(0.5);
-      this.logo.x = this.app.screen.width / 2;
-      this.logo.y = this.app.screen.height / 2;
 
-      this.loaderHolder.lineStyle(2, 0x000000, 1);
-      this.loaderHolder.beginFill(0xffffff, 1);
-      this.loaderHolder.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.logo.width * 2, 10);
+      // this.loaderBackground.lineStyle(2, 0x4a4841, 0.5)
+      // this.loaderBackground.lineStyle(2, 0x4a4841, 0.5)
+      this.loaderBackground.beginFill(0x000000, 0.3);
+      this.loaderBackground.drawRoundedRect(this.app.screen.width / 2 - this.loaderWidth / 2, this.app.screen.width / 2 - this.loaderHeight / 2 + this.loaderOffsetDown, this.loaderWidth, this.loaderHeight, this.loaderRadius);
 
-      this.loaderFill.lineStyle(2, 0xff6e02, 1);
-      this.loaderFill.beginFill(0xff6e02, 1);
-      this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, 0, 10);
+      this.loaderBackground.blendMode = PIXI.BLEND_MODES.OVERLAY;
+
+      this.loaderHolder.lineStyle(2, 0x4a4841, 0.5);
+      this.loaderHolder.beginFill(0x000000, 0.3);
+      this.loaderHolder.drawRoundedRect(this.app.screen.width / 2 - this.loaderWidth / 2 + this.loaderPadding / 2, this.app.screen.width / 2 - this.loaderHeight / 2 + this.loaderOffsetDown + this.loaderPadding / 2, this.loaderWidth - this.loaderPadding, this.loaderHeight - this.loaderPadding, this.loaderRadius / 2);
+
+      // this.loaderFill.lineStyle(2, 0x000000, 0)
+      // this.loaderFill.beginFill(0x457a14, 1)
+      // this.loaderFill.drawRoundedRect(
+      //   ((this.app.screen.width / 2) - this.loaderWidth / 2) + this.loaderPadding / 2 ,
+      //   (((this.app.screen.width / 2) - this.loaderHeight / 2) + this.loaderOffsetDown) + (this.loaderPadding / 2),
+      //   0,
+      //   this.loaderHeight - this.loaderPadding,
+      //   this.loaderRadius / 2)
 
       this.precentageText = new PIXI.Text('0%', this.percentageStyle);
-      this.precentageText.y = this.logo.y + this.logo.height / 2 + 15;
-      this.precentageText.x = this.app.screen.width / 2 - this.logo.width + this.logo.width * 2 + 10;
+      this.precentageText.x = this.app.screen.width / 2 - this.precentageText.width / 2;
+      this.precentageText.y = this.app.screen.width / 2 - this.loaderHeight / 2 + this.loaderOffsetDown + this.loaderHeight / 2 - this.precentageText.height / 2;
 
+      this.addChild(this.loaderBackground);
       this.addChild(this.loaderHolder);
       this.addChild(this.loaderFill);
       this.addChild(this.precentageText);
-      this.addChild(this.logo);
+      //   this.addChild(this.logo)
       this.preload();
     });
   }
@@ -79969,7 +79988,10 @@ class SplashScene extends Scene {
    * @private
    */
   _preloadProgress(loader, resource) {
-    this.loaderFill.drawRect(this.app.screen.width / 2 - this.logo.width, this.logo.y + this.logo.height / 2 + 20, this.loaderHolder.width / (100 / loader.progress), 10);
+    this.loaderFill.lineStyle(1, 0x3a4a33, 0.5);
+    this.loaderFill.beginFill(0x457a14, 1);
+    this.loaderFill.drawRoundedRect(this.app.screen.width / 2 - this.loaderWidth / 2 + this.loaderPadding / 2, this.app.screen.width / 2 - this.loaderHeight / 2 + this.loaderOffsetDown + this.loaderPadding / 2, this.loaderHolder.width / (100 / loader.progress), this.loaderHeight - this.loaderPadding, this.loaderRadius / 2);
+
     this.precentageText.text = Math.round(loader.progress) + '%';
   }
 
@@ -80505,7 +80527,7 @@ module.exports = GamePadInput;
 /***/ (function(module, exports, __webpack_require__) {
 
 const KeyboardInput = __webpack_require__(173);
-const Scene = __webpack_require__(53);
+const Scene = __webpack_require__(46);
 
 class Level extends Scene {
   constructor(options) {
@@ -81023,7 +81045,7 @@ var step = __webpack_require__(338);
 var setSpecies = __webpack_require__(66);
 var DESCRIPTORS = __webpack_require__(13);
 var fastKey = __webpack_require__(56).fastKey;
-var validate = __webpack_require__(87);
+var validate = __webpack_require__(88);
 var SIZE = DESCRIPTORS ? '_s' : 'size';
 
 var getEntry = function (that, key) {
@@ -81186,7 +81208,7 @@ var anInstance = __webpack_require__(59);
 var forOf = __webpack_require__(60);
 var createArrayMethod = __webpack_require__(41);
 var $has = __webpack_require__(27);
-var validate = __webpack_require__(87);
+var validate = __webpack_require__(88);
 var arrayFind = createArrayMethod(5);
 var arrayFindIndex = createArrayMethod(6);
 var id = 0;
@@ -81594,7 +81616,7 @@ module.exports = Reflect && Reflect.ownKeys || function ownKeys(it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var $parseFloat = __webpack_require__(7).parseFloat;
-var $trim = __webpack_require__(86).trim;
+var $trim = __webpack_require__(87).trim;
 
 module.exports = 1 / $parseFloat(__webpack_require__(196) + '-0') !== -Infinity ? function parseFloat(str) {
   var string = $trim(String(str), 3);
@@ -81608,7 +81630,7 @@ module.exports = 1 / $parseFloat(__webpack_require__(196) + '-0') !== -Infinity 
 /***/ (function(module, exports, __webpack_require__) {
 
 var $parseInt = __webpack_require__(7).parseInt;
-var $trim = __webpack_require__(86).trim;
+var $trim = __webpack_require__(87).trim;
 var ws = __webpack_require__(196);
 var hex = /^[-+]?0[xX]/;
 
@@ -81701,7 +81723,7 @@ exports.f = __webpack_require__(11);
 "use strict";
 
 var strong = __webpack_require__(330);
-var validate = __webpack_require__(87);
+var validate = __webpack_require__(88);
 var MAP = 'Map';
 
 // 23.1 Map Objects
@@ -81738,7 +81760,7 @@ if (__webpack_require__(13) && /./g.flags != 'g') __webpack_require__(14).f(RegE
 "use strict";
 
 var strong = __webpack_require__(330);
-var validate = __webpack_require__(87);
+var validate = __webpack_require__(88);
 var SET = 'Set';
 
 // 23.2 Set Objects
@@ -81765,7 +81787,7 @@ var assign = __webpack_require__(342);
 var weak = __webpack_require__(332);
 var isObject = __webpack_require__(9);
 var fails = __webpack_require__(8);
-var validate = __webpack_require__(87);
+var validate = __webpack_require__(88);
 var WEAK_MAP = 'WeakMap';
 var getWeak = meta.getWeak;
 var isExtensible = Object.isExtensible;
@@ -81822,8 +81844,8 @@ if (fails(function () { return new $WeakMap().set((Object.freeze || Object)(tmp)
 /* 359 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const GameEngine = __webpack_require__(89);
-const Scene = __webpack_require__(53);
+const GameEngine = __webpack_require__(84);
+const Scene = __webpack_require__(46);
 
 class Game extends GameEngine {
   constructor(config = {}) {
@@ -81874,14 +81896,14 @@ class Game extends GameEngine {
   init() {
 
     let canvas = this.config.canvas;
-    let resolution = window.devicePixelRatio;
+    let resolution = 2; // window.devicePixelRatio
 
     let app = new PIXI.Application(canvas.width, canvas.height, {
       width: this.config.width || canvas.width,
       height: this.config.height || canvas.height,
       view: canvas,
       resolution: resolution,
-      antialias: 1,
+      antialias: true,
       autoresize: true
     });
 
@@ -82663,7 +82685,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * SceneManager
  * @namespace Core Managers
  */
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(89), __webpack_require__(174)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameEngine, TransactionType) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(84), __webpack_require__(174)], __WEBPACK_AMD_DEFINE_RESULT__ = function (GameEngine, TransactionType) {
 
   /**
    * @classdesc SceneManager
@@ -83140,7 +83162,7 @@ module.exports = Brick;
 const Dialogs = __webpack_require__(323);
 const Buttons = __webpack_require__(146);
 const GameObject = __webpack_require__(17);
-const TweenJS = __webpack_require__(88);
+const TweenJS = __webpack_require__(89);
 const PIXI = __webpack_require__(10);
 
 class GameOver extends GameObject {
@@ -86194,7 +86216,7 @@ module.exports = LocalStorage;
 /***/ (function(module, exports, __webpack_require__) {
 
 const TransactionType = __webpack_require__(174);
-const Scene = __webpack_require__(53);
+const Scene = __webpack_require__(46);
 
 class CrossFade extends TransactionType {
 
@@ -86306,8 +86328,8 @@ module.exports = CrossFade;
 /***/ (function(module, exports, __webpack_require__) {
 
 const TransactionType = __webpack_require__(174);
-const TweenJS = __webpack_require__(88);
-const Scene = __webpack_require__(53);
+const TweenJS = __webpack_require__(89);
+const Scene = __webpack_require__(46);
 
 class ScrollFrom extends TransactionType {
 
@@ -87254,7 +87276,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 const Prophecy = {
   Gameloop: __webpack_require__(361),
-  GameEngine: __webpack_require__(89),
+  GameEngine: __webpack_require__(84),
   SceneManager: __webpack_require__(368),
   AssetManager: __webpack_require__(364),
   StateManager: __webpack_require__(369),
@@ -88230,7 +88252,7 @@ var fails = __webpack_require__(8);
 var gOPN = __webpack_require__(62).f;
 var gOPD = __webpack_require__(28).f;
 var dP = __webpack_require__(14).f;
-var $trim = __webpack_require__(86).trim;
+var $trim = __webpack_require__(87).trim;
 var NUMBER = 'Number';
 var $Number = global[NUMBER];
 var Base = $Number;
@@ -89004,7 +89026,7 @@ if (!USE_NATIVE) {
 }
 
 $export($export.G + $export.W + $export.F * !USE_NATIVE, { Promise: $Promise });
-__webpack_require__(85)($Promise, PROMISE);
+__webpack_require__(86)($Promise, PROMISE);
 __webpack_require__(66)(PROMISE);
 Wrapper = __webpack_require__(32)[PROMISE];
 
@@ -89979,7 +90001,7 @@ __webpack_require__(25)('sup', function (createHTML) {
 "use strict";
 
 // 21.1.3.25 String.prototype.trim()
-__webpack_require__(86)('trim', function ($trim) {
+__webpack_require__(87)('trim', function ($trim) {
   return function trim() {
     return $trim(this, 3);
   };
@@ -90001,7 +90023,7 @@ var redefine = __webpack_require__(24);
 var META = __webpack_require__(56).KEY;
 var $fails = __webpack_require__(8);
 var shared = __webpack_require__(159);
-var setToStringTag = __webpack_require__(85);
+var setToStringTag = __webpack_require__(86);
 var uid = __webpack_require__(68);
 var wks = __webpack_require__(11);
 var wksExt = __webpack_require__(354);
@@ -90294,7 +90316,7 @@ $export($export.G + $export.W + $export.F * !__webpack_require__(161).ABV, {
 /* 544 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Float32', 4, function (init) {
+__webpack_require__(48)('Float32', 4, function (init) {
   return function Float32Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90305,7 +90327,7 @@ __webpack_require__(47)('Float32', 4, function (init) {
 /* 545 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Float64', 8, function (init) {
+__webpack_require__(48)('Float64', 8, function (init) {
   return function Float64Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90316,7 +90338,7 @@ __webpack_require__(47)('Float64', 8, function (init) {
 /* 546 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Int16', 2, function (init) {
+__webpack_require__(48)('Int16', 2, function (init) {
   return function Int16Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90327,7 +90349,7 @@ __webpack_require__(47)('Int16', 2, function (init) {
 /* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Int32', 4, function (init) {
+__webpack_require__(48)('Int32', 4, function (init) {
   return function Int32Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90338,7 +90360,7 @@ __webpack_require__(47)('Int32', 4, function (init) {
 /* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Int8', 1, function (init) {
+__webpack_require__(48)('Int8', 1, function (init) {
   return function Int8Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90349,7 +90371,7 @@ __webpack_require__(47)('Int8', 1, function (init) {
 /* 549 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Uint16', 2, function (init) {
+__webpack_require__(48)('Uint16', 2, function (init) {
   return function Uint16Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90360,7 +90382,7 @@ __webpack_require__(47)('Uint16', 2, function (init) {
 /* 550 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Uint32', 4, function (init) {
+__webpack_require__(48)('Uint32', 4, function (init) {
   return function Uint32Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90371,7 +90393,7 @@ __webpack_require__(47)('Uint32', 4, function (init) {
 /* 551 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Uint8', 1, function (init) {
+__webpack_require__(48)('Uint8', 1, function (init) {
   return function Uint8Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90382,7 +90404,7 @@ __webpack_require__(47)('Uint8', 1, function (init) {
 /* 552 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(47)('Uint8', 1, function (init) {
+__webpack_require__(48)('Uint8', 1, function (init) {
   return function Uint8ClampedArray(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
@@ -90396,7 +90418,7 @@ __webpack_require__(47)('Uint8', 1, function (init) {
 "use strict";
 
 var weak = __webpack_require__(332);
-var validate = __webpack_require__(87);
+var validate = __webpack_require__(88);
 var WEAK_SET = 'WeakSet';
 
 // 23.4 WeakSet Objects
@@ -91138,7 +91160,7 @@ $export($export.S, 'Promise', { 'try': function (callbackfn) {
 /* 585 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var metadata = __webpack_require__(46);
+var metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var toMetaKey = metadata.key;
 var ordinaryDefineOwnMetadata = metadata.set;
@@ -91152,7 +91174,7 @@ metadata.exp({ defineMetadata: function defineMetadata(metadataKey, metadataValu
 /* 586 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var metadata = __webpack_require__(46);
+var metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var toMetaKey = metadata.key;
 var getOrCreateMetadataMap = metadata.map;
@@ -91175,7 +91197,7 @@ metadata.exp({ deleteMetadata: function deleteMetadata(metadataKey, target /* , 
 
 var Set = __webpack_require__(357);
 var from = __webpack_require__(327);
-var metadata = __webpack_require__(46);
+var metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var getPrototypeOf = __webpack_require__(29);
 var ordinaryOwnMetadataKeys = metadata.keys;
@@ -91198,7 +91220,7 @@ metadata.exp({ getMetadataKeys: function getMetadataKeys(target /* , targetKey *
 /* 588 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var metadata = __webpack_require__(46);
+var metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var getPrototypeOf = __webpack_require__(29);
 var ordinaryHasOwnMetadata = metadata.has;
@@ -91221,7 +91243,7 @@ metadata.exp({ getMetadata: function getMetadata(metadataKey, target /* , target
 /* 589 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var metadata = __webpack_require__(46);
+var metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var ordinaryOwnMetadataKeys = metadata.keys;
 var toMetaKey = metadata.key;
@@ -91235,7 +91257,7 @@ metadata.exp({ getOwnMetadataKeys: function getOwnMetadataKeys(target /* , targe
 /* 590 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var metadata = __webpack_require__(46);
+var metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var ordinaryGetOwnMetadata = metadata.get;
 var toMetaKey = metadata.key;
@@ -91250,7 +91272,7 @@ metadata.exp({ getOwnMetadata: function getOwnMetadata(metadataKey, target /* , 
 /* 591 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var metadata = __webpack_require__(46);
+var metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var getPrototypeOf = __webpack_require__(29);
 var ordinaryHasOwnMetadata = metadata.has;
@@ -91272,7 +91294,7 @@ metadata.exp({ hasMetadata: function hasMetadata(metadataKey, target /* , target
 /* 592 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var metadata = __webpack_require__(46);
+var metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var ordinaryHasOwnMetadata = metadata.has;
 var toMetaKey = metadata.key;
@@ -91287,7 +91309,7 @@ metadata.exp({ hasOwnMetadata: function hasOwnMetadata(metadataKey, target /* , 
 /* 593 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $metadata = __webpack_require__(46);
+var $metadata = __webpack_require__(47);
 var anObject = __webpack_require__(5);
 var aFunction = __webpack_require__(21);
 var toMetaKey = $metadata.key;
@@ -91429,7 +91451,7 @@ $export($export.P + $export.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(userAge
 "use strict";
 
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
-__webpack_require__(86)('trimLeft', function ($trim) {
+__webpack_require__(87)('trimLeft', function ($trim) {
   return function trimLeft() {
     return $trim(this, 1);
   };
@@ -91443,7 +91465,7 @@ __webpack_require__(86)('trimLeft', function ($trim) {
 "use strict";
 
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
-__webpack_require__(86)('trimRight', function ($trim) {
+__webpack_require__(87)('trimRight', function ($trim) {
   return function trimRight() {
     return $trim(this, 2);
   };
@@ -91515,7 +91537,7 @@ var getKeys = __webpack_require__(63);
 var redefine = __webpack_require__(24);
 var global = __webpack_require__(7);
 var hide = __webpack_require__(23);
-var Iterators = __webpack_require__(84);
+var Iterators = __webpack_require__(85);
 var wks = __webpack_require__(11);
 var ITERATOR = wks('iterator');
 var TO_STRING_TAG = wks('toStringTag');

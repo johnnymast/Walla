@@ -2,6 +2,7 @@ const PIXI = require('pixi')
 const Scene = require('core/Scene')
 const Transition = require('core/transitions/Transition')
 require('pixi-tiledmap')
+
 class SplashScene extends Scene {
   /**
    * @classdesc SplashScene
@@ -13,12 +14,20 @@ class SplashScene extends Scene {
   constructor (options) {
     super(options)
 
+    this.loaderBackground = new PIXI.Graphics()
     this.loaderHolder = new PIXI.Graphics()
     this.loaderFill = new PIXI.Graphics()
 
+    this.loaderWidth = 200
+    this.loaderHeight = 30
+    this.loaderPadding = 10
+    this.loaderOffsetDown = 150
+    this.loaderRadius = 10
+
     this.percentageStyle = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 18
+      fontSize: 8,
+      fill: '#ffffff'
     })
   }
 
@@ -29,7 +38,8 @@ class SplashScene extends Scene {
    */
   onStart () {
 
-    let background = new PIXI.Sprite(PIXI.Texture.BLACK)
+    let backgroundTexture = PIXI.Texture.fromImage('/assets/splashscreen/background.jpg')
+    let background = new PIXI.Sprite(backgroundTexture)
     background.width = this.app.screen.width
     background.height = this.app.screen.height
     background.alpha = 1
@@ -38,27 +48,45 @@ class SplashScene extends Scene {
 
     let logoTexture = PIXI.Texture.fromImage('/assets/main/images/engine.png')
     logoTexture.on('update', () => {
-      this.logo = new PIXI.Sprite(logoTexture)
-      this.logo.anchor.set(0.5)
-      this.logo.x = this.app.screen.width / 2
-      this.logo.y = this.app.screen.height / 2
 
-      this.loaderHolder.lineStyle(2, 0x000000, 1)
-      this.loaderHolder.beginFill(0xffffff, 1)
-      this.loaderHolder.drawRect((this.app.screen.width / 2) - this.logo.width, (this.logo.y + this.logo.height / 2) + 20, this.logo.width * 2, 10)
 
-      this.loaderFill.lineStyle(2, 0xff6e02, 1)
-      this.loaderFill.beginFill(0xff6e02, 1)
-      this.loaderFill.drawRect((this.app.screen.width / 2) - this.logo.width, (this.logo.y + this.logo.height / 2) + 20, 0, 10)
+
+      // this.loaderBackground.lineStyle(2, 0x4a4841, 0.5)
+      // this.loaderBackground.lineStyle(2, 0x4a4841, 0.5)
+      this.loaderBackground.beginFill(0x000000, 0.3)
+      this.loaderBackground.drawRoundedRect((this.app.screen.width / 2) - this.loaderWidth / 2,
+        ((this.app.screen.width / 2) - this.loaderHeight / 2) + this.loaderOffsetDown,
+        this.loaderWidth, this.loaderHeight, this.loaderRadius)
+
+      this.loaderBackground.blendMode = PIXI.BLEND_MODES.OVERLAY
+
+      this.loaderHolder.lineStyle(2, 0x4a4841, 0.5)
+      this.loaderHolder.beginFill(0x000000, 0.3)
+      this.loaderHolder.drawRoundedRect(
+        ((this.app.screen.width / 2) - this.loaderWidth / 2) + this.loaderPadding / 2,
+        (((this.app.screen.width / 2) - this.loaderHeight / 2) + this.loaderOffsetDown) + (this.loaderPadding / 2),
+        this.loaderWidth - this.loaderPadding,
+        this.loaderHeight - this.loaderPadding,
+        this.loaderRadius / 2)
+
+      // this.loaderFill.lineStyle(2, 0x000000, 0)
+      // this.loaderFill.beginFill(0x457a14, 1)
+      // this.loaderFill.drawRoundedRect(
+      //   ((this.app.screen.width / 2) - this.loaderWidth / 2) + this.loaderPadding / 2 ,
+      //   (((this.app.screen.width / 2) - this.loaderHeight / 2) + this.loaderOffsetDown) + (this.loaderPadding / 2),
+      //   0,
+      //   this.loaderHeight - this.loaderPadding,
+      //   this.loaderRadius / 2)
 
       this.precentageText = new PIXI.Text('0%', this.percentageStyle)
-      this.precentageText.y = (this.logo.y + this.logo.height / 2) + 15
-      this.precentageText.x = (((this.app.screen.width / 2) - this.logo.width) + this.logo.width * 2) + 10
+      this.precentageText.x = this.app.screen.width / 2 - this.precentageText.width / 2
+      this.precentageText.y = (((this.app.screen.width / 2) - this.loaderHeight / 2) + this.loaderOffsetDown) + (this.loaderHeight / 2) - this.precentageText.height / 2
 
+      this.addChild(this.loaderBackground)
       this.addChild(this.loaderHolder)
       this.addChild(this.loaderFill)
       this.addChild(this.precentageText)
-      this.addChild(this.logo)
+      //   this.addChild(this.logo)
       this.preload()
     })
   }
@@ -114,7 +142,15 @@ class SplashScene extends Scene {
    * @private
    */
   _preloadProgress (loader, resource) {
-    this.loaderFill.drawRect((this.app.screen.width / 2) - this.logo.width, (this.logo.y + this.logo.height / 2) + 20, this.loaderHolder.width / (100 / loader.progress), 10)
+    this.loaderFill.lineStyle(1, 0x3a4a33, 0.5)
+    this.loaderFill.beginFill(0x457a14, 1)
+    this.loaderFill.drawRoundedRect(
+      ((this.app.screen.width / 2) - this.loaderWidth / 2) + this.loaderPadding / 2 ,
+      (((this.app.screen.width / 2) - this.loaderHeight / 2) + this.loaderOffsetDown) + (this.loaderPadding / 2),
+      this.loaderHolder.width / (100 / loader.progress),
+      this.loaderHeight - this.loaderPadding,
+      this.loaderRadius / 2)
+
     this.precentageText.text = Math.round(loader.progress) + '%'
   }
 
@@ -125,7 +161,7 @@ class SplashScene extends Scene {
    * @private
    */
   _preloadready (loader, resources) {
-    this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'top' }))
+      this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'top' }))
   }
 
   /**

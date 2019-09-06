@@ -530,7 +530,7 @@ Object.defineProperty(exports, 'CanvasSpriteRenderer', {
   }
 });
 
-var _CanvasTinter = __webpack_require__(52);
+var _CanvasTinter = __webpack_require__(53);
 
 Object.defineProperty(exports, 'CanvasTinter', {
   enumerable: true,
@@ -710,7 +710,7 @@ Object.defineProperty(exports, 'WebGLManager', {
   }
 });
 
-var _ObjectRenderer = __webpack_require__(50);
+var _ObjectRenderer = __webpack_require__(51);
 
 Object.defineProperty(exports, 'ObjectRenderer', {
   enumerable: true,
@@ -719,7 +719,7 @@ Object.defineProperty(exports, 'ObjectRenderer', {
   }
 });
 
-var _RenderTarget = __webpack_require__(51);
+var _RenderTarget = __webpack_require__(52);
 
 Object.defineProperty(exports, 'RenderTarget', {
   enumerable: true,
@@ -789,7 +789,7 @@ var _CanvasRenderer = __webpack_require__(37);
 
 var _CanvasRenderer2 = _interopRequireDefault(_CanvasRenderer);
 
-var _WebGLRenderer = __webpack_require__(49);
+var _WebGLRenderer = __webpack_require__(50);
 
 var _WebGLRenderer2 = _interopRequireDefault(_WebGLRenderer);
 
@@ -5576,7 +5576,8 @@ module.exports.default = Loader;
 /* 45 */,
 /* 46 */,
 /* 47 */,
-/* 48 */
+/* 48 */,
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5855,7 +5856,7 @@ function buildNativeLine(graphicsData, webGLData) {
 //# sourceMappingURL=buildLine.js.map
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5879,11 +5880,11 @@ var _FilterManager = __webpack_require__(232);
 
 var _FilterManager2 = _interopRequireDefault(_FilterManager);
 
-var _RenderTarget = __webpack_require__(51);
+var _RenderTarget = __webpack_require__(52);
 
 var _RenderTarget2 = _interopRequireDefault(_RenderTarget);
 
-var _ObjectRenderer = __webpack_require__(50);
+var _ObjectRenderer = __webpack_require__(51);
 
 var _ObjectRenderer2 = _interopRequireDefault(_ObjectRenderer);
 
@@ -6699,7 +6700,7 @@ _utils.pluginTarget.mixin(WebGLRenderer);
 //# sourceMappingURL=WebGLRenderer.js.map
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6782,7 +6783,7 @@ exports.default = ObjectRenderer;
 //# sourceMappingURL=ObjectRenderer.js.map
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7125,7 +7126,7 @@ exports.default = RenderTarget;
 //# sourceMappingURL=RenderTarget.js.map
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7381,7 +7382,6 @@ exports.default = CanvasTinter;
 //# sourceMappingURL=CanvasTinter.js.map
 
 /***/ }),
-/* 53 */,
 /* 54 */,
 /* 55 */,
 /* 56 */,
@@ -12522,7 +12522,8 @@ if (true) {
 /* 85 */,
 /* 86 */,
 /* 87 */,
-/* 88 */
+/* 88 */,
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -13464,7 +13465,6 @@ TWEEN.Interpolation = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(82)))
 
 /***/ }),
-/* 89 */,
 /* 90 */,
 /* 91 */,
 /* 92 */,
@@ -14845,7 +14845,7 @@ var _CanvasRenderer = __webpack_require__(37);
 
 var _CanvasRenderer2 = _interopRequireDefault(_CanvasRenderer);
 
-var _WebGLRenderer = __webpack_require__(49);
+var _WebGLRenderer = __webpack_require__(50);
 
 var _WebGLRenderer2 = _interopRequireDefault(_WebGLRenderer);
 
@@ -54420,11 +54420,11 @@ var _utils = __webpack_require__(3);
 
 var _const = __webpack_require__(1);
 
-var _ObjectRenderer2 = __webpack_require__(50);
+var _ObjectRenderer2 = __webpack_require__(51);
 
 var _ObjectRenderer3 = _interopRequireDefault(_ObjectRenderer2);
 
-var _WebGLRenderer = __webpack_require__(49);
+var _WebGLRenderer = __webpack_require__(50);
 
 var _WebGLRenderer2 = _interopRequireDefault(_WebGLRenderer);
 
@@ -54885,7 +54885,7 @@ exports.default = PrimitiveShader;
 exports.__esModule = true;
 exports.default = buildCircle;
 
-var _buildLine = __webpack_require__(48);
+var _buildLine = __webpack_require__(49);
 
 var _buildLine2 = _interopRequireDefault(_buildLine);
 
@@ -54985,7 +54985,7 @@ function buildCircle(graphicsData, webGLData, webGLDataNativeLines) {
 exports.__esModule = true;
 exports.default = buildPoly;
 
-var _buildLine = __webpack_require__(48);
+var _buildLine = __webpack_require__(49);
 
 var _buildLine2 = _interopRequireDefault(_buildLine);
 
@@ -55076,7 +55076,7 @@ function buildPoly(graphicsData, webGLData, webGLDataNativeLines) {
 exports.__esModule = true;
 exports.default = buildRectangle;
 
-var _buildLine = __webpack_require__(48);
+var _buildLine = __webpack_require__(49);
 
 var _buildLine2 = _interopRequireDefault(_buildLine);
 
@@ -55161,7 +55161,7 @@ var _earcut = __webpack_require__(69);
 
 var _earcut2 = _interopRequireDefault(_earcut);
 
-var _buildLine = __webpack_require__(48);
+var _buildLine = __webpack_require__(49);
 
 var _buildLine2 = _interopRequireDefault(_buildLine);
 
@@ -56248,7 +56248,7 @@ var _pixiGlCore = __webpack_require__(12);
 
 var _const = __webpack_require__(1);
 
-var _RenderTarget = __webpack_require__(51);
+var _RenderTarget = __webpack_require__(52);
 
 var _RenderTarget2 = _interopRequireDefault(_RenderTarget);
 
@@ -56936,7 +56936,7 @@ var _WebGLManager2 = __webpack_require__(38);
 
 var _WebGLManager3 = _interopRequireDefault(_WebGLManager2);
 
-var _RenderTarget = __webpack_require__(51);
+var _RenderTarget = __webpack_require__(52);
 
 var _RenderTarget2 = _interopRequireDefault(_RenderTarget);
 
@@ -58165,7 +58165,7 @@ var _const = __webpack_require__(1);
 
 var _math = __webpack_require__(6);
 
-var _CanvasTinter = __webpack_require__(52);
+var _CanvasTinter = __webpack_require__(53);
 
 var _CanvasTinter2 = _interopRequireDefault(_CanvasTinter);
 
@@ -58373,11 +58373,11 @@ exports.default = Buffer;
 
 exports.__esModule = true;
 
-var _ObjectRenderer2 = __webpack_require__(50);
+var _ObjectRenderer2 = __webpack_require__(51);
 
 var _ObjectRenderer3 = _interopRequireDefault(_ObjectRenderer2);
 
-var _WebGLRenderer = __webpack_require__(49);
+var _WebGLRenderer = __webpack_require__(50);
 
 var _WebGLRenderer2 = _interopRequireDefault(_WebGLRenderer);
 
@@ -63685,7 +63685,7 @@ var _core = __webpack_require__(2);
 
 var core = _interopRequireWildcard(_core);
 
-var _CanvasTinter = __webpack_require__(52);
+var _CanvasTinter = __webpack_require__(53);
 
 var _CanvasTinter2 = _interopRequireDefault(_CanvasTinter);
 
@@ -68153,7 +68153,7 @@ var _Plane2 = __webpack_require__(139);
 
 var _Plane3 = _interopRequireDefault(_Plane2);
 
-var _CanvasTinter = __webpack_require__(52);
+var _CanvasTinter = __webpack_require__(53);
 
 var _CanvasTinter2 = _interopRequireDefault(_CanvasTinter);
 
@@ -73346,7 +73346,7 @@ if (false) {
 
 __webpack_require__(10);
 __webpack_require__(164);
-__webpack_require__(88);
+__webpack_require__(89);
 __webpack_require__(372);
 __webpack_require__(165);
 module.exports = __webpack_require__(163);
