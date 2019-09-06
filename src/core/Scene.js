@@ -39,7 +39,7 @@ class Scene extends GameObject {
      *
      * @type {{}}
      */
-    this.resources = {}
+    // this.resources = {}
 
     this.fullscreen = {
       available: false,

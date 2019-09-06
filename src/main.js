@@ -88,11 +88,13 @@ let init = function() {
     ge.set('DebugManager', DebugManager)
   }
 
-  ge.get('SceneManager')
+
+  this.get('SceneManager')
     .add('SplashScene')
     .add('MainMenu')
-    // .switchTo('PixelShooter/Level1')
     .switchTo('SplashScene')
+
+
 }
 
 

@@ -71,35 +71,35 @@ class SplashScene extends Scene {
     this.ge.get('AssetManager').loadManifest([
 
       // Core
-      { name: 'core_ui', type: 'spritesheet', src: 'assets/core/ui/core_ui.json' },
+      { name: 'core_ui', type: 'spritesheet', src: '/assets/core/ui/core_ui.json' },
 
       // Breakout
-      { name: 'level1_music', src: 'assets/breakout/sounds/music/level1.mp3' },
-      { name: 'level2_music', src: 'assets/breakout/sounds/music/level2.mp3' },
-      { name: 'level3_music', src: 'assets/breakout/sounds/music/level3.mp3' },
-      { name: 'game_over', src: 'assets/breakout/sounds/game_over.mp3' },
-      { name: 'concrete_break', src: 'assets/breakout/sounds/concrete_break.mp3' },
-      { name: 'mission_completed', src: 'assets/breakout/sounds/mission_completed.mp3' },
-      { name: 'spritesheet-0', type: 'spritesheet', src: 'assets/breakout/spritesheets/spritesheet-1.json' },
+      { name: 'level1_music', src: '/assets/breakout/sounds/music/level1.mp3' },
+      { name: 'level2_music', src: '/assets/breakout/sounds/music/level2.mp3' },
+      { name: 'level3_music', src: '/assets/breakout/sounds/music/level3.mp3' },
+      { name: 'game_over', src: '/assets/breakout/sounds/game_over.mp3' },
+      { name: 'concrete_break', src: '/assets/breakout/sounds/concrete_break.mp3' },
+      { name: 'mission_completed', src: '/assets/breakout/sounds/mission_completed.mp3' },
+      { name: 'spritesheet-0', type: 'spritesheet', src: '/assets/breakout/spritesheets/spritesheet-1.json' },
 
       // Main
-      { name: 'main_menu_music', src: 'assets/main/sounds/music/menu_music.wav' },
-      { name: 'main_bg_01', src: 'assets/main/images/background/layer_01.png' },
-      { name: 'main_bg_02', src: 'assets/main/images/background/layer_02.png' },
-      { name: 'main_bg_03', src: 'assets/main/images/background/layer_03.png' },
-      { name: 'main_bg_04', src: 'assets/main/images/background/layer_04.png' },
-      { name: 'main_bg_05', src: 'assets/main/images/background/layer_05.png' },
+      { name: 'main_menu_music', src: '/assets/main/sounds/music/menu_music.wav' },
+      { name: 'main_bg_01', src: '/assets/main/images/background/layer_01.png' },
+      { name: 'main_bg_02', src: '/assets/main/images/background/layer_02.png' },
+      { name: 'main_bg_03', src: '/assets/main/images/background/layer_03.png' },
+      { name: 'main_bg_04', src: '/assets/main/images/background/layer_04.png' },
+      { name: 'main_bg_05', src: '/assets/main/images/background/layer_05.png' },
 
       // Camera
-      { name: 'camera_scene_background', src: 'assets/camera/background.jpg' },
+      { name: 'camera_scene_background', src: '/assets/camera/background.jpg' },
 
       // // PixelShooter
-      { name: 'pixelshooter_map', src: 'assets/Pixelshooter/map/map.tmx' },
-      { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: 'assets/Pixelshooter/spritesheets/game-0.json' },
+      { name: 'pixelshooter_map', src: '/assets/Pixelshooter/map/map.tmx' },
+      { name: 'pixelshooter_game_sprites', type: 'spritesheet', src: '/assets/Pixelshooter/spritesheets/game-0.json' },
       {
         name: 'pixelshooter_character_animations',
         type: 'json',
-        src: 'assets/Pixelshooter/data/character_animations.json'
+        src: '/assets/Pixelshooter/data/character_animations.json'
       },
     ])
 

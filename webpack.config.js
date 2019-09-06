@@ -28,7 +28,7 @@ plugins.push(
 
 const config = {
   entry: {
-    build: path.resolve(__dirname, './src/main.js'),
+    build: path.resolve(__dirname, './src/prophecy.js'),
     vendor: ['pixi', 'pixi-sound', 'tweenjs', 'require', 'pixi-tiledmap', 'matter-js']
 
   },
