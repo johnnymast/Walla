@@ -1,8 +1,4 @@
-/**
- * KeyboardInput
- * @namespace Interaction
- */
-define([], function () {
+class KeyboardInput {
 
   /**
    * Take control over Keyboard input by using this class.
@@ -22,7 +18,7 @@ define([], function () {
    * @constructor
    * @param {number} keyCode - The keycode to listen for
    */
-  let KeyboardInput = function (key) {
+  constructor (key) {
 
     let info = {}
     info.key = key
@@ -47,7 +43,7 @@ define([], function () {
    *
    * @returns {object}
    */
-  KeyboardInput.prototype.getInfo = function () {
+  getInfo () {
     return this.info
   }
 
@@ -56,7 +52,7 @@ define([], function () {
    *
    * @returns {boolean}
    */
-  KeyboardInput.prototype.isDown = function () {
+  isDown () {
     return this.info.isDown
   }
 
@@ -65,7 +61,7 @@ define([], function () {
    *
    * @returns {boolean}
    */
-  KeyboardInput.prototype.isUp = function () {
+  isUp () {
     return this.info.isUp
   }
 
@@ -74,7 +70,7 @@ define([], function () {
    * @access private
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
-  KeyboardInput.prototype.downHandler = function (event) {
+  downHandler (event) {
     if (event.key === this.info.key) {
       this.info.isDown = true
       this.info.isUp = false
@@ -91,7 +87,7 @@ define([], function () {
    * @access private
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
-  KeyboardInput.prototype.upHandler = function (event) {
+  upHandler (event) {
     if (event.key === this.info.key) {
       this.info.isDown = false
       this.info.isUp = true
@@ -103,9 +99,9 @@ define([], function () {
     event.preventDefault()
   }
 
-  KeyboardInput.prototype.update = function (delta) {
+  update (delta) {
     // Unused but required by the InputManager
   }
+}
 
-  return KeyboardInput
-})
+module.exports = KeyboardInput

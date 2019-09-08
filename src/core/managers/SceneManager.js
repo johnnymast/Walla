@@ -1,15 +1,8 @@
-/**
- * SceneManager
- * @namespace Core Managers
- */
-define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (GameEngine, TransactionType) {
-
-  /**
-   * @classdesc SceneManager
-   * @exports  core/managers/SceneManager
-   * @class
-   */
-  let SceneManager = function (scene = '') {
+const Scene = require('core/Scene')
+const GameEngine = require('core/GameEngine')
+const TransactionType = require('core/transitions/types/TransactionType')
+class SceneManager {
+  constructor (scene = '') {
     this.scenes = []
     this.plugins = []
     this.currentScene = null
@@ -28,7 +21,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
    * @returns {Array}
    * @private
    */
-  SceneManager.prototype._listScenePlugins = function () {
+  _listScenePlugins () {
     return this.getPlugins()
   }
 
@@ -39,11 +32,22 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
    * @param {string} options - Options given to GameObject down the line
    * @returns {SceneManager}
    */
-  SceneManager.prototype.add = function (scene, options) {
+  add (scene, options) {
     if (!this.scenes[scene]) {
       let _scene = require('screens/' + scene)
       this.scenes[scene] = new _scene(options)
     }
+    return this
+  }
+
+  /**
+   * Add a new Scene to the stack.
+   *
+   * @param {string} name - The name of the scene
+   * @param {Scene} scene - The actual scene object
+   */
+  addSceneInstance (name, scene) {
+    this.scenes[name] = scene
     return this
   }
 
@@ -53,7 +57,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
    * @param {string} scene - The name of the screen to get
    * @returns {*}
    */
-  SceneManager.prototype.getScene = function (scene) {
+  getScene (scene) {
     return this.scenes[scene]
   }
 
@@ -62,7 +66,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
    *
    * @returns {Array}
    */
-  SceneManager.prototype.getPlugins = function () {
+  getPlugins () {
     return this.plugins
   }
 
@@ -72,7 +76,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
    * @param {string} key - The key to identify the plugin.
    * @param {object} instance - The plugin instance.
    */
-  SceneManager.prototype.registerPlugin = function (key = '', instance = null) {
+  registerPlugin (key = '', instance = null) {
     this.plugins[key] = instance
   }
 
@@ -81,7 +85,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
    *
    * @param {string} key - The key to identify the plugin.
    */
-  SceneManager.prototype.removePlugin = function (key = '') {
+  removePlugin (key = '') {
     if (typeof this.plugins[key] !== 'undefined') {
       delete this.plugins[key]
     }
@@ -92,7 +96,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
    *
    * @param {string|Scene} scene - The scene to switch to
    */
-  SceneManager.prototype.switchTo = function (scene) {
+  switchTo (scene) {
 
     if (!this.getScene(scene)) {
       if (typeof scene === 'string') {
@@ -124,7 +128,7 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
    * @param {string} scene - The name of the scene
    * @param {Transition} transition - The transition to execute.
    */
-  SceneManager.prototype.switchToUsingTransaction = function (scene, transition) {
+  switchToUsingTransaction (scene, transition) {
     let nextScene = null
 
     if (typeof this.scenes[scene] !== 'undefined') {
@@ -161,5 +165,6 @@ define(['core/GameEngine', 'core/transitions/types/TransactionType'], function (
     }
   }
 
-  return SceneManager
-})
+}
+
+module.exports = SceneManager

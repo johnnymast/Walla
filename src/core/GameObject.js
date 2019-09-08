@@ -53,6 +53,9 @@ class GameObject extends PIXI.Container {
     /**
      * @type {PIXI.interaction.InteractionManager}
      */
+    /**
+     * @deprecated
+     */
     this.InteractionManager = this.app.renderer.plugins.interaction
   }
 }

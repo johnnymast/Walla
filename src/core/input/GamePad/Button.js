@@ -1,6 +1,9 @@
-define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, GamepadEvent) {
-  let Button = function (button, index = 0, controler) {
-    EventEmitter.call(this)
+const GamepadEvent = require('input/Gamepad/GamepadEvent')
+const PIXI = require('pixi')
+
+class Button extends PIXI.utils.EventEmitter {
+  constructor (button, index = 0, controller) {
+    super()
 
     /**
      * Reference to the GamePadButton on the
@@ -29,7 +32,7 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
      *
      * @type {Gamepad}
      */
-    this.controler = controler
+    this.controller = controller
 
     /**
      * If supported this number will represent how far the button
@@ -50,15 +53,13 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
     this.index = index
   }
 
-  extend(Button, EventEmitter)
-
   /**
    * Return the gamepad the button is on.
    *
    * @returns {Gamepad}
    */
-  Button.prototype.getGamePad = function () {
-    return this.controler.gamepad
+  getGamePad () {
+    return this.controller.gamepad
   }
 
   /**
@@ -66,7 +67,7 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
    *
    * @returns {number}
    */
-  Button.prototype.getIndex = function () {
+  getIndex () {
     return this.index
   }
 
@@ -75,11 +76,16 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
    *
    * @returns {number}
    */
-  Button.prototype.getValue = function () {
+  getValue () {
     return this.button.value
   }
 
-  Button.prototype.isDown = function () {
+  /**
+   * Check to see if the button is down.
+   *
+   * @returns {boolean}
+   */
+  isDown () {
     return (this.getValue() > 0)
   }
 
@@ -87,15 +93,15 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
    * Poll the Gamepad for the latest information.
    * @private
    */
-  Button.prototype._poll = function () {
+  _poll () {
     this.button = this.getGamePad().buttons[this.index]
   }
 
   /**
    * Update the button object.
    */
-  Button.prototype.update = function () {
-    this._poll();
+  update () {
+    this._poll()
 
     if (this.button.pressed || this.button.touched) {
       this.emit('GamePad.button.pressed', new GamepadEvent(this.getGamePad(), this))
@@ -103,6 +109,6 @@ define(['eventemitter', 'input/Gamepad/GamepadEvent'], function (EventEmitter, G
 
     this.value = this.button.value
   }
+}
 
-  return Button
-})
+module.exports = Button

@@ -1,29 +1,26 @@
-define([], function () {
-    let GamepadEvent = function (gamepad, button) {
-      this.gamepad = gamepad
-      this.button = button
-    }
-
-    /**
-     * Return the parent GamePad.
-     *
-     * @returns {*|Gamepad}
-     */
-    GamepadEvent.prototype.getGamepad = function () {
-      return this.gamepad
-    }
-
-    /**
-     * Return the pressed button.
-     *
-     * @returns {*}
-     */
-    GamepadEvent.prototype.getButton = function () {
-      return this.button
-    }
-
-    return GamepadEvent
+class GamepadEvent {
+  constructor (gamepad, button) {
+    this.gamepad = gamepad
+    this.button = button
   }
-)
+
+  /**
+   * Return the parent GamePad.
+   *
+   * @returns {*|Gamepad}
+   */
+  getGamepad () {
+    return this.gamepad
+  }
+
+  /**
+   * Return the pressed button.
+   *
+   * @returns {*}
+   */
+  getButton () {
+    return this.button
+  }
+}
 
 module.exports = GamepadEvent

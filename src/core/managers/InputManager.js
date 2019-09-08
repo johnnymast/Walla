@@ -7,8 +7,6 @@ class InputManager extends GameObject {
   constructor (options) {
     super(options)
 
-    // GameObject.call(this, options)
-
     this.keys = {
       ArrowUp: 'ArrowUp',
       ArrowDown: 'ArrowDown',
@@ -74,6 +72,7 @@ class InputManager extends GameObject {
     }
 
     let index = 0
+    let parent = this
 
     for (let name of input) {
 

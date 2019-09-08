@@ -13,13 +13,6 @@ class Game extends GameEngine {
       this.sayhello = config.sayhello
     }
 
-    if (typeof config.scene === 'string') {
-      this.scene = config.scene
-    } else if (typeof config.scene == 'object') {
-      this.scene = new Scene(config)
-      // this.scene.preload = config.preload
-    }
-
     this.EngineInfo = {
       name: 'ProphecyJS',
       version: 0.10,
@@ -31,7 +24,25 @@ class Game extends GameEngine {
 
     this.hello()
     this.init()
+
+    if (typeof config.scene === 'string') {
+
+      this.scene = config.scene
+    } else if (config.scene instanceof Object) {
+      this.scene = new Scene(config)
+
+      if (typeof config.scene.preload !== 'undefined')
+        this.scene.preload = config.scene.preload.bind(this.scene)
+
+      if (typeof config.scene.create !== 'undefined')
+        this.scene.onStart = config.scene.create.bind(this.scene)
+
+      if (typeof config.scene.update !== 'undefined')
+        this.scene.update = config.scene.update.bind(this.scene)
+    }
+
     this.initPlugins()
+    this.start()
   }
 
   hello () {
@@ -61,7 +72,7 @@ class Game extends GameEngine {
   init () {
 
     let canvas = this.config.canvas
-    let resolution =2 // window.devicePixelRatio
+    let resolution = 2 // window.devicePixelRatio
 
     let app = new PIXI.Application(canvas.width, canvas.height, {
       width: this.config.width || canvas.width,
@@ -69,7 +80,8 @@ class Game extends GameEngine {
       view: canvas,
       resolution: resolution,
       antialias: true,
-      autoresize: true
+      autoresize: true,
+      transparent: true
     })
 
     let resizeManager = new Prophecy.ResizeManager(app, {
@@ -88,24 +100,29 @@ class Game extends GameEngine {
     this.ge.set('InputManager', new Prophecy.InputManager())
     this.ge.set('PluginManager', new Prophecy.PluginManager(this.ge))
 
-    this.ge.get('SceneManager')
-      .add(this.scene)
-      // .add('MainMenu')
-      .switchTo(this.scene)
+  }
+
+  start () {
+    if (this.scene instanceof Scene) {
+      this.ge.get('SceneManager')
+        .addSceneInstance('_global_', this.scene)
+        .switchTo('_global_')
+    } else {
+      this.ge.get('SceneManager')
+        .add(this.scene)
+        .switchTo(this.scene)
+    }
   }
 
   initPlugins () {
     if (PLUGIN_MATTERJS) {
       const Matter = this.ge.get('PluginManager').loadPlugin('matterjs', 'Matter')
       Prophecy.Plugins.Matter = Matter
-      this.ge.set('Matter', Matter)
     }
 
     if (PLUGIN_DEBUG) {
       const Debug = this.ge.get('PluginManager').loadPlugin('debug', 'Debug')
-      let DebugManager = new Debug.DebugManager
-      Prophecy.Plugins.DebugManager = DebugManager
-      this.ge.set('DebugManager', DebugManager)
+      Prophecy.Plugins.DebugManager = new Debug.DebugManager
     }
   }
 }

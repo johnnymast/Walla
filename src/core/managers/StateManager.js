@@ -4,13 +4,14 @@ const LocalStorage = require('core/storage/localStorage')
  * StateManager
  * @namespace Core Managers
  */
-define([], function () {
+class StateManager {
+
   /**
-   * @classdesc StateManager
-   * @exports  core/managers/StateManager
+   * @classdesc Save the state of a game.
+   * @exports  core/managers/AssetManager
    * @class
    */
-  let StateManager = function () {
+  constructor () {
     this.adapter = new LocalStorage()
     if (typeof this.adapter.set !== 'function') {
       throw new Error('StateManager: Adapter is not supporting the set method.')
@@ -31,7 +32,7 @@ define([], function () {
    * @param {string} key - State key
    * @returns {*}
    */
-  StateManager.prototype.get = function (key) {
+  get (key) {
     return this.adapter.get(key)
   }
 
@@ -40,7 +41,7 @@ define([], function () {
    * @param {string} key - State key
    * @param {string} val = The value for this state
    */
-  StateManager.prototype.set = function (key, val) {
+  set (key, val) {
     return this.adapter.set(key, val)
   }
 
@@ -49,9 +50,9 @@ define([], function () {
    *
    * @param {string} key - Delete the value of this key
    */
-  StateManager.prototype.unset = function (key) {
+  unset (key) {
     return this.adapter.unset(key)
   }
+}
 
-  return StateManager
-})
+module.exports = StateManager

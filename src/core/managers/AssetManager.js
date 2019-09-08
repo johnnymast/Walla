@@ -1,23 +1,18 @@
 require('pixi-sound')
 
-/**
- * AssetManager
- * @namespace Core Managers
- */
-define(['pixi'], function (PIXI) {
+class AssetManager extends PIXI.utils.EventEmitter {
 
   /**
    * @classdesc AssetManager
    * @exports  core/managers/AssetManager
    * @class
    */
-  let AssetManager = function () {
+  constructor () {
+    super()
     PIXI.utils.EventEmitter.call(this)
     PIXI.loader.once('complete', this._preloadready, this)
     PIXI.loader.on('progress', this._preloadProgress, this)
   }
-
-  extend(AssetManager, PIXI.utils.EventEmitter)
 
   /**
    * This function allows you to preload a set of assets at once.
@@ -32,7 +27,7 @@ define(['pixi'], function (PIXI) {
    * @param {array} manifest - An array with assets to load
    * @returns {AssetManager}
    */
-  AssetManager.prototype.loadManifest = function (manifest) {
+  loadManifest (manifest) {
     for (let asset of manifest) {
       PIXI.loader.add(asset.name, asset.src)
     }
@@ -48,7 +43,7 @@ define(['pixi'], function (PIXI) {
    * @param {Resource} resource - The resource progressing in downloading.
    * @private
    */
-  AssetManager.prototype._preloadProgress = function (loader, resource) {
+  _preloadProgress (loader, resource) {
     this.emit('progress', loader, resource)
   }
 
@@ -60,9 +55,9 @@ define(['pixi'], function (PIXI) {
    * @param {array} resources - The loaded resources
    * @private
    */
-  AssetManager.prototype._preloadready = function (loader, resources) {
+  _preloadready (loader, resources) {
     this.emit('complete', loader, resources)
   }
+}
 
-  return AssetManager
-})
+module.exports = AssetManager

@@ -1,6 +1,9 @@
-define(['eventemitter'], function (EventEmitter) {
-  let Axis = function (axis, index = 0) {
-    EventEmitter.call(this)
+const PIXI = require('pixi')
+
+class Axis extends PIXI.utils.EventEmitter {
+
+  constructor (axis, index = 0) {
+    super()
 
     /**
      * The identifier for this Axis.
@@ -40,14 +43,12 @@ define(['eventemitter'], function (EventEmitter) {
     this.threshold = 0.1
   }
 
-  extend(Axis, EventEmitter)
-
   /**
    * Return the Axis index number.
    *
    * @returns {number}
    */
-  Axis.prototype.getIndex = function () {
+  getIndex () {
     return this.index
   }
 
@@ -56,7 +57,7 @@ define(['eventemitter'], function (EventEmitter) {
    *
    * @return {number} The axis value, adjusted for the movement threshold.
    */
-  Axis.prototype.getValue = function () {
+  getValue () {
     return (Math.abs(this.value) < this.threshold) ? 0 : this.value
   }
 
@@ -65,9 +66,9 @@ define(['eventemitter'], function (EventEmitter) {
    *
    * @param {number} value - The axis movement value.
    */
-  Axis.prototype.update = function (value) {
+  update (value) {
     this.value = value
   }
+}
 
-  return Axis
-})
+module.exports = Axis

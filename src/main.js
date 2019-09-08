@@ -4,7 +4,6 @@ import 'babel-polyfill'
 import 'core/Transform'
 import 'core/math'
 
-
 const EngineInfo = {
   name: 'Stage Engine',
   version: 1.0,
@@ -42,12 +41,11 @@ const ResizeManager = require('core/managers/ResizeManager')
 const PluginManager = require('core/managers/PluginManager')
 import Pixi from 'pixi.js' //= require('pixi')
 
-
-let init = function() {
+let init = function () {
   PIXI.utils.skipHello()
   sayHello()
 
-  var canvas = document.querySelector('#backCanvas')
+  var canvas = document.getElementById('game')
   var resolution = window.devicePixelRatio
 
   let ge = GameEngine.get()
@@ -88,14 +86,11 @@ let init = function() {
     ge.set('DebugManager', DebugManager)
   }
 
-
-  this.get('SceneManager')
+  ge.get('SceneManager')
     .add('SplashScene')
-    .add('MainMenu')
     .switchTo('SplashScene')
-
-
 }
 
-
-document.addEventListener('DOMContentLoaded', init, false);
+window.onload = function () {
+  init()
+}

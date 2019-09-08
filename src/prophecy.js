@@ -4,7 +4,6 @@ import 'babel-polyfill'
 import 'core/Transform'
 import 'core/math'
 
-
 const Prophecy = {
   Gameloop: require('core/gameloop'),
   GameEngine: require('core/GameEngine'),
@@ -15,7 +14,7 @@ const Prophecy = {
   ResizeManager: require('core/managers/ResizeManager'),
   PluginManager: require('core/managers/PluginManager'),
   Plugins: {},
-  Game:  require('core/Game'),
+  Game: require('core/Game'),
   Pixi: require('pixi')
 }
 

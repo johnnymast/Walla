@@ -1,15 +1,5 @@
-/**
- * PluginManager
- * @namespace Core Managers
- */
-define([], function () {
-  /**
-   * @classdesc PluginManager
-   * @exports  core/managers/PluginManager
-   * @class
-   */
-  let PluginManager = function (GameEngine) {
-    this.GameEngine = GameEngine
+class PluginManager {
+  constructor () {
     this.plugins = []
   }
 
@@ -20,7 +10,7 @@ define([], function () {
    * @param {string} alias - register the plugin under this alias.
    * @returns {object}
    */
-  PluginManager.prototype.loadPlugin = function (name = '', alias = '') {
+  loadPlugin (name = '', alias = '') {
     if (!name.length) {
       throw new Error('loadPlugin: Empty plugin name.')
     }
@@ -42,17 +32,17 @@ define([], function () {
    * @param {string} alias - Alias of the plugin
    * @returns {object}
    */
-  PluginManager.prototype.getPlugin = function (alias) {
+  getPlugin (alias) {
     if (!alias.length) {
       throw new Error('getPlugin: Empty plugin alias.')
     }
-    
+
     if (!this.plugins[alias]) {
       throw new Error('getPlugin: Plugin not found.')
     }
 
     return this.plugins[alias]
   }
+}
 
-  return PluginManager
-})
+module.exports = PluginManager

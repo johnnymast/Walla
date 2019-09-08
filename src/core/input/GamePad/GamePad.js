@@ -1,139 +1,145 @@
-define(['eventemitter', 'input/GamePad/Button', 'input/GamePad/Axis'],
-  function (EventEmitter, Button, Axis) {
-    let GamePad = function (gamepad) {
-      EventEmitter.call(this)
+const Button = require('input/Gamepad/Button')
+const Axis = require('input/Gamepad/Axis')
+const PIXI = require('pixi')
 
-      this.gamepad = gamepad
+class GamePad extends PIXI.utils.EventEmitter {
+  constructor (gamepad) {
+    super()
 
-      /**
-       * The buttons available on this controller.
-       *
-       * @type {Array}
-       */
-      this.buttons = []
-
-      /**
-       * The axes present on this controller.
-       *
-       * @type {Array}
-       */
-      this.axes = []
-
-      /**
-       * The unique (string) identifier of this gamepad.
-       *
-       * @type {string}
-       */
-      this.id = gamepad.id
-
-      /**
-       * The native index number of this controller connected for
-       * example gamepad 1 or gamepad 2.
-       *
-       * @type {number}
-       */
-      this.index = gamepad.index
-
-      /**
-       * This object will be available on modern browsers if the GamePad
-       * supports a vibrating feature. Not all browsers implement this yet but
-       * the mainline browsers do.
-       *
-       * @type {GamepadHapticActuator}
-       */
-      this.vibration = gamepad.vibrationActuator || null
-
-      /**
-       * This has no meaning yet according to the specs (RFC) this
-       * value will always be 'standard'
-       *
-       * @type {GamepadMappingType}
-       */
-      this.mapping = gamepad.mapping
-
-      let index = 0
-      for (let button of gamepad.buttons) {
-        let btn = new Button(button, index, this)
-        this.buttons.push(btn)
-        index++
-      }
-
-      index = 0
-      for (let axle of gamepad.axes) {
-        let axl = new Axis(axle, index)
-        this.axes.push(axl)
-        index++
-      }
-    }
-
-    extend(GamePad, EventEmitter)
+    this.gamepad = gamepad
 
     /**
-     * Return the GamePad buttons.
+     * The buttons available on this controller.
      *
-     * @returns {Array}
+     * @type {Array}
      */
-    GamePad.prototype.getButtons = function () {
-      return this.buttons
-    }
+    this.buttons = []
 
     /**
-     * Return the GamePad Axis.
+     * The axes present on this controller.
      *
-     * @returns {Array}
+     * @type {Array}
      */
-    GamePad.prototype.getAxis = function () {
-      return this.axes
-    }
+    this.axes = []
 
     /**
-     * Query the gamepad if it supports vibration or not.
+     * The unique (string) identifier of this gamepad.
      *
-     * @returns {boolean}
+     * @type {string}
      */
-    GamePad.prototype.supportsVibration = function () {
-      return (this.vibration !== null)
-    }
-
-    GamePad.prototype.getMapping = function () {
-      return this.mapping
-    }
+    this.id = gamepad.id
 
     /**
-     * Vibrate the gamepad with a given effect.
+     * The native index number of this controller connected for
+     * example gamepad 1 or gamepad 2.
      *
-     * @param {object} effect - The vibration effect object.
+     * @type {number}
      */
-    GamePad.prototype.vibrate = function (effect = null) {
-      if (this.supportsVibration() === true && effect) {
-        this.vibration.playEffect('dual-rumble', effect)
-      }
-    }
+    this.index = gamepad.index
 
     /**
-     * Poll the Gamepad for the latest information.
-     * @private
-     */
-    GamePad.prototype._poll = function () {
-      this.gamepad = navigator.getGamepads()[this.index]
-    }
-
-    /**
-     * Update the GamePad object.
+     * This object will be available on modern browsers if the GamePad
+     * supports a vibrating feature. Not all browsers implement this yet but
+     * the mainline browsers do.
      *
-     * @param {number} delta - Time passed since last update
+     * @type {GamepadHapticActuator}
      */
-    GamePad.prototype.update = function (delta) {
-      this._poll()
+    this.vibration = gamepad.vibrationActuator || null
 
-      for (let button of this.buttons) {
-        button.update(delta)
-      }
+    /**
+     * This has no meaning yet according to the specs (RFC) this
+     * value will always be 'standard'
+     *
+     * @type {GamepadMappingType}
+     */
+    this.mapping = gamepad.mapping
 
-      for (let axle of this.axes) {
-        axle.update(this.gamepad.axes[axle.getIndex()])
-      }
+    let index = 0
+    for (let button of gamepad.buttons) {
+      let btn = new Button(button, index, this)
+      this.buttons.push(btn)
+      index++
     }
 
-    return GamePad
-  })
+    index = 0
+    for (let axle of gamepad.axes) {
+      let axl = new Axis(axle, index)
+      this.axes.push(axl)
+      index++
+    }
+  }
+
+  /**
+   * Return the GamePad buttons.
+   *
+   * @returns {Array}
+   */
+  getButtons () {
+    return this.buttons
+  }
+
+  /**
+   * Return the GamePad Axis.
+   *
+   * @returns {Array}
+   */
+  getAxis () {
+    return this.axes
+  }
+
+  /**
+   * Query the gamepad if it supports vibration or not.
+   *
+   * @returns {boolean}
+   */
+  supportsVibration () {
+    return (this.vibration !== null)
+  }
+
+  /**
+   * Return the mapped buttons.
+   *
+   * @returns {GamepadMappingType}
+   */
+  getMapping () {
+    return this.mapping
+  }
+
+  /**
+   * Vibrate the gamepad with a given effect.
+   *
+   * @param {object} effect - The vibration effect object.
+   */
+  vibrate (effect = null) {
+    if (this.supportsVibration() === true && effect) {
+      this.vibration.playEffect('dual-rumble', effect)
+    }
+  }
+
+  /**
+   * Poll the Gamepad for the latest information.
+   * @private
+   */
+  _poll () {
+    this.gamepad = navigator.getGamepads()[this.index]
+  }
+
+  /**
+   * Update the GamePad object.
+   *
+   * @param {number} delta - Time passed since last update
+   */
+  update (delta) {
+    this._poll()
+
+    for (let button of this.buttons) {
+      button.update(delta)
+    }
+
+    for (let axle of this.axes) {
+      axle.update(this.gamepad.axes[axle.getIndex()])
+    }
+  }
+}
+
+module.exports = GamePad

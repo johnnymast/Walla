@@ -1,5 +1,4 @@
 const GameObject = require('core/GameObject')
-const Gameloop = require('core/Gameloop')
 const PIXI = require('pixi')
 
 class Scene extends GameObject {

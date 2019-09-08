@@ -161,7 +161,7 @@ class SplashScene extends Scene {
    * @private
    */
   _preloadready (loader, resources) {
-      this.SceneManager.switchToUsingTransaction('PixelShooter/Level1', Transition.named('ScrollFrom', { direction: 'top' }))
+      this.SceneManager.switchToUsingTransaction('MainMenu', Transition.named('ScrollFrom', { direction: 'top' }))
   }
 
   /**

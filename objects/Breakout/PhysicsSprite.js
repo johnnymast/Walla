@@ -1,4 +1,4 @@
-const Matter = require('plugins/matterjs')
+const Matter = require('../../src/plugins/matterjs')
 
 class PhysicsSprite extends Matter.PhysicsSprite {
   constructor (texture) {

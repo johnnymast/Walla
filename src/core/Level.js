@@ -1,4 +1,3 @@
-const KeyboardInput = require('core/input/Keyboard/KeyboardInput')
 const Scene = require('core/Scene')
 
 class Level extends Scene {

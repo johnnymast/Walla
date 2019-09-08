@@ -22,14 +22,14 @@ if (PROD) {
 plugins.push(
   new webpack.DefinePlugin({
     PLUGIN_MATTERJS: JSON.stringify(true),
-    PLUGIN_DEBUG: JSON.stringify(false),
+    PLUGIN_DEBUG: JSON.stringify(true),
   })
 )
 
 const config = {
   entry: {
     build: path.resolve(__dirname, './src/prophecy.js'),
-    vendor: ['pixi', 'pixi-sound', 'tweenjs', 'require', 'pixi-tiledmap', 'matter-js']
+    vendor: ['pixi', 'pixi-sound', 'tweenjs', 'pixi-tiledmap', 'matter-js']
 
   },
   output: {
@@ -69,7 +69,6 @@ const config = {
   },
   resolve: {
     alias: {
-      'require': path.resolve(__dirname, './node_modules/require.js'),
       'eventemitter': path.resolve(__dirname, './node_modules/eventemitter3/index.js'),
       'pixi': path.resolve(__dirname, './node_modules/pixi.js'),
       'pixi-sound': path.resolve(__dirname, './node_modules/pixi-sound'),
@@ -77,7 +76,7 @@ const config = {
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
       'tweenjs': path.resolve(__dirname, './node_modules/@tweenjs/tween.js'),
       'core': path.resolve(__dirname, 'src/core'),
-      'plugins': path.resolve(__dirname, 'plugins'),
+      'plugins': path.resolve(__dirname, 'src/plugins'),
       'gui': path.resolve(__dirname, 'src/gui'),
       'input': path.resolve(__dirname, 'src/core/input'),
       'screens': path.resolve(__dirname, 'screens'),
@@ -86,7 +85,6 @@ const config = {
     modules: [
       path.join(__dirname, 'src'),
       path.join(__dirname, 'node_modules')
-      // 'node_modules'
     ]
 
   },

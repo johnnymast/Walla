@@ -144,7 +144,6 @@ class DebugDialog extends GameObject {
       this.InputManager.mapInput([name])
     })
 
-    // this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this))
     this.InputManager.on('InputManager.keyUp', this.onKeyUp.bind(this))
 
     let inputRow = new PIXI.Container()
