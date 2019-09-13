@@ -12,9 +12,7 @@ class Scene extends GameObject {
 
     this.childClass = Object.getPrototypeOf(this).constructor.name
 
-    if (typeof this.update === 'undefined') {
-      console.warn('Please add the update method to ' + this.childClass)
-    }
+
 
     this.cursor_sprite = new PIXI.Sprite()
     this.cursor_sprite.interactive = false
@@ -34,11 +32,6 @@ class Scene extends GameObject {
       this.cursor_sprite.position = event.data.global
     }.bind(this))
 
-    /**
-     *
-     * @type {{}}
-     */
-    // this.resources = {}
 
     this.fullscreen = {
       available: false,
@@ -78,6 +71,17 @@ class Scene extends GameObject {
     // this.physicsTicker.add((delta) => {
     //   this._fixedupdate(delta)
     // })
+  }
+
+  /**
+   * Check to see if the scene implements the update function.
+   *
+   * @returns {boolean}
+   */
+  validateScene() {
+    if (typeof this.update === 'undefined') {
+      console.warn('Please add the update method to ' + this.childClass)
+    }
   }
 
   /**

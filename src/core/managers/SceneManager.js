@@ -35,6 +35,8 @@ class SceneManager {
   add (scene, options) {
     if (!this.scenes[scene]) {
       let _scene = require('screens/' + scene)
+      _scene.validateScene();
+
       this.scenes[scene] = new _scene(options)
     }
     return this
@@ -48,6 +50,8 @@ class SceneManager {
    */
   addSceneInstance (name, scene) {
     this.scenes[name] = scene
+    scene.validateScene();
+
     return this
   }
 

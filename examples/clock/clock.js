@@ -21,36 +21,56 @@ let create = function () {
   // Draw the clock face
   this.clockfase = new PIXI.Graphics()
   this.clockfase.lineStyle(2, 0x5a5d63, 1)
-  this.clockfase.beginFill(0xFFFFFF, 1)
+  this.clockfase.beginFill(0xccd9d0, 1)
   this.clockfase.drawCircle(this.ge.get('App').renderer.screen.width / 2, this.ge.get('App').renderer.screen.height / 2, clockRadius)
   this.clockfase.endFill()
 
   // Draw the inner shadow of the face border
   this.clockfaseInnerShadow = new PIXI.Graphics()
-  this.clockfaseInnerShadow.lineStyle(2, 0x75787d, 1)
-  this.clockfaseInnerShadow.drawCircle(this.ge.get('App').renderer.screen.width / 2, this.ge.get('App').renderer.screen.height / 2, clockRadius - 1)
+  this.clockfaseInnerShadow.lineStyle(1, 0x5a5d63, 1) // 0x75787d
+  this.clockfaseInnerShadow.beginFill(0xFFFFFF, 1)
+  this.clockfaseInnerShadow.drawCircle(this.ge.get('App').renderer.screen.width / 2, this.ge.get('App').renderer.screen.height / 2, clockRadius - 10)
   this.clockfaseInnerShadow.endFill()
 
-  for (let num = 1; num < 13; num++) {
-    let number = new PIXI.Text(num)
-    let angle = number * Math.PI / 6
-    number.rotation = angle
+  // A full circle == Pi * 2 radians == 360 degrees
+  // https://github.com/Taiters/pixi-clock/blob/master/app/clock.js
 
+  let g = new PIXI.Graphics()
+  let centerX = this.ge.get('App').renderer.screen.width / 2
+  let centerY = this.ge.get('App').renderer.screen.height / 2
 
-    this.addChild(number)
-    ang = num * Math.PI / 6;
-    number.rotation = angle
-    // ctx.rotate(ang);
-    // ctx.translate(0, -radius*0.85);
-    // ctx.rotate(-ang);
-    // ctx.fillText(num.toString(), 0, 0);
-    // ctx.rotate(ang);
-    // ctx.translate(0, radius*0.85);
-    // ctx.rotate(-ang);
+  let radius = clockRadius - 15
+
+  /**
+   * Draw the hours and minute indicators.
+   */
+  for (let i = 0; i < 60; i++) {
+    let angle = ((i / 60) * 360 + 180) * Math.PI / 180
+    let d = 35
+    let l = radius / d
+
+    if (i % 5 === 0) {
+      g.lineStyle(2, 0x000000, 1)
+      g.moveTo(centerX + (l * (d - 3) * Math.cos(angle)), centerY + (l * (d - 3) * Math.sin(angle)))
+    } else {
+      g.lineStyle(1, 0x000000, 0.75)
+      g.moveTo(centerX + (l * (d - 2) * Math.cos(angle)), centerY + (l * (d - 2) * Math.sin(angle)))
+    }
+
+    g.lineTo(centerX + (l * (d - 1) * Math.cos(angle)), centerY + (l * (d - 1) * Math.sin(angle)))
   }
+
+  let mickeyTexture = PIXI.Texture.fromImage('mickey.png')
+  let mickeyMouse = new PIXI.Sprite(mickeyTexture)
+  mickeyMouse.x = centerX - mickeyMouse.width /2
+  mickeyMouse.y = centerY - mickeyMouse.height /2
+  mickeyMouse.scale.set(0.25)
+  mickeyMouse.anchor.set(0.5)
 
   this.addChild(this.clockfase)
   this.addChild(this.clockfaseInnerShadow)
+  this.addChild(mickeyMouse)
+  this.addChild(g)
 }
 
 let update = function (delta) {
