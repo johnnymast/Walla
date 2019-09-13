@@ -74,6 +74,13 @@ class Game extends GameEngine {
     let canvas = this.config.canvas
     let resolution = 2 // window.devicePixelRatio
 
+    if (!canvas) {
+      canvas = document.createElement('canvas')
+      canvas.style.width = (this.config.width || 800) + 'px'
+      canvas.style.height = (this.config.height || 600) + 'px'
+      document.body.appendChild(canvas)
+    }
+
     let app = new PIXI.Application(canvas.width, canvas.height, {
       width: this.config.width || canvas.width,
       height: this.config.height || canvas.height,

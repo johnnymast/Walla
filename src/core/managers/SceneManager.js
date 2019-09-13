@@ -1,6 +1,7 @@
 const Scene = require('core/Scene')
 const GameEngine = require('core/GameEngine')
 const TransactionType = require('core/transitions/types/TransactionType')
+
 class SceneManager {
   constructor (scene = '') {
     this.scenes = []
@@ -35,7 +36,7 @@ class SceneManager {
   add (scene, options) {
     if (!this.scenes[scene]) {
       let _scene = require('screens/' + scene)
-      _scene.validateScene();
+      _scene.validateScene()
 
       this.scenes[scene] = new _scene(options)
     }
@@ -50,7 +51,7 @@ class SceneManager {
    */
   addSceneInstance (name, scene) {
     this.scenes[name] = scene
-    scene.validateScene();
+    scene.validateScene()
 
     return this
   }
@@ -63,6 +64,15 @@ class SceneManager {
    */
   getScene (scene) {
     return this.scenes[scene]
+  }
+
+  /**
+   * Return the current active scene.
+   *
+   * @returns {Scene|null}
+   */
+  getCurrentScene () {
+    return this.currentScene
   }
 
   /**

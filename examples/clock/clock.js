@@ -1,9 +1,8 @@
 let init = function () {
   let config = {
-    width: 800,
-    height: 600,
+    width: window.innerWidth,
+    height: window.innerHeight,
     backgroundColor: 0x1099bb,
-    canvas: document.querySelector('#game'),
     transparent: true,
     scene: {
       create: create,
@@ -11,35 +10,52 @@ let init = function () {
     }
   }
 
-  let game = new Prophecy.Game(config)
+  new Prophecy.Game(config)
 }
 
 let create = function () {
 
-  let clockRadius = 200
-
-  // Draw the clock face
-  this.clockfase = new PIXI.Graphics()
-  this.clockfase.lineStyle(2, 0x5a5d63, 1)
-  this.clockfase.beginFill(0xccd9d0, 1)
-  this.clockfase.drawCircle(this.ge.get('App').renderer.screen.width / 2, this.ge.get('App').renderer.screen.height / 2, clockRadius)
-  this.clockfase.endFill()
-
-  // Draw the inner shadow of the face border
-  this.clockfaseInnerShadow = new PIXI.Graphics()
-  this.clockfaseInnerShadow.lineStyle(1, 0x5a5d63, 1) // 0x75787d
-  this.clockfaseInnerShadow.beginFill(0xFFFFFF, 1)
-  this.clockfaseInnerShadow.drawCircle(this.ge.get('App').renderer.screen.width / 2, this.ge.get('App').renderer.screen.height / 2, clockRadius - 10)
-  this.clockfaseInnerShadow.endFill()
-
-  // A full circle == Pi * 2 radians == 360 degrees
   // https://github.com/Taiters/pixi-clock/blob/master/app/clock.js
 
-  let g = new PIXI.Graphics()
-  let centerX = this.ge.get('App').renderer.screen.width / 2
-  let centerY = this.ge.get('App').renderer.screen.height / 2
+  this.hands = new PIXI.Graphics()
 
-  let radius = clockRadius - 15
+  this.clockRadius = 200
+  this.knobRadius = 10
+  this.wallWidth = 20
+
+  this.centerX = this.ge.get('App').renderer.screen.width / 2
+  this.centerY = this.ge.get('App').renderer.screen.height / 2
+
+  let backplate = new PIXI.Graphics()
+  backplate.lineStyle(2, 0x5a5d63, 1)
+  backplate.beginFill(0xccd9d0, 1)
+  backplate.drawCircle(this.centerX, this.centerY, this.clockRadius)
+  backplate.endFill()
+
+  // Draw the inner shadow of the face border
+  let clockface = new PIXI.Graphics()
+  clockface.lineStyle(1, 0x5a5d63, 1) // 0x75787d
+  clockface.beginFill(0xFFFFFF, 1)
+  clockface.drawCircle(this.centerX, this.centerY, this.clockRadius - this.wallWidth)
+  clockface.endFill()
+
+  let knob = new PIXI.Graphics()
+  knob.lineStyle(1, 0x000000, 1) // 0x75787d
+  knob.beginFill(0xFF0000, 1)
+  knob.drawCircle(this.centerX, this.centerY, this.knobRadius)
+  knob.anchor = 0.5
+  knob.endFill()
+
+  let mickeyTexture = PIXI.Texture.fromImage('mickey.png')
+  let mickeyMouse = new PIXI.Sprite(mickeyTexture)
+  mickeyMouse.x = this.centerX - mickeyMouse.width / 2
+  mickeyMouse.y = this.centerY - mickeyMouse.height / 2
+  mickeyMouse.scale.set(0.25)
+  mickeyMouse.anchor.set(0.5)
+  mickeyMouse.alpha = 0.8
+
+  let radius = this.clockRadius - this.wallWidth
+  let markings = new PIXI.Graphics()
 
   /**
    * Draw the hours and minute indicators.
@@ -50,31 +66,61 @@ let create = function () {
     let l = radius / d
 
     if (i % 5 === 0) {
-      g.lineStyle(2, 0x000000, 1)
-      g.moveTo(centerX + (l * (d - 3) * Math.cos(angle)), centerY + (l * (d - 3) * Math.sin(angle)))
+      markings.lineStyle(2, 0x000000, 1)
+      markings.moveTo(this.centerX + (l * (d - 3) * Math.cos(angle)), this.centerY + (l * (d - 3) * Math.sin(angle)))
     } else {
-      g.lineStyle(1, 0x000000, 0.75)
-      g.moveTo(centerX + (l * (d - 2) * Math.cos(angle)), centerY + (l * (d - 2) * Math.sin(angle)))
+      markings.lineStyle(1, 0x000000, 0.75)
+      markings.moveTo(this.centerX + (l * (d - 2) * Math.cos(angle)), this.centerY + (l * (d - 2) * Math.sin(angle)))
     }
 
-    g.lineTo(centerX + (l * (d - 1) * Math.cos(angle)), centerY + (l * (d - 1) * Math.sin(angle)))
+    markings.lineTo(this.centerX + (l * (d - 1) * Math.cos(angle)), this.centerY + (l * (d - 1) * Math.sin(angle)))
   }
 
-  let mickeyTexture = PIXI.Texture.fromImage('mickey.png')
-  let mickeyMouse = new PIXI.Sprite(mickeyTexture)
-  mickeyMouse.x = centerX - mickeyMouse.width /2
-  mickeyMouse.y = centerY - mickeyMouse.height /2
-  mickeyMouse.scale.set(0.25)
-  mickeyMouse.anchor.set(0.5)
+  drawClock = drawClock.bind(this)
+  drawHand = drawHand.bind(this)
 
-  this.addChild(this.clockfase)
-  this.addChild(this.clockfaseInnerShadow)
+  this.addChild(backplate)
+  this.addChild(clockface)
+  this.addChild(markings)
   this.addChild(mickeyMouse)
-  this.addChild(g)
+  this.addChild(this.hands)
+  this.addChild(knob)
 }
 
-let update = function (delta) {
+function getHandAngle (time, maximum) {
+  return ((time / maximum) * 360 - 90) * Math.PI / 180
+}
 
+function drawHand (g, centerX, centerY, offset, angle, width, length, color) {
+  this.hands.lineStyle(width, color, 1)
+  this.hands.moveTo(centerX + offset * Math.cos(angle), centerY + offset * Math.sin(angle))
+  this.hands.lineTo(centerX + length * Math.cos(angle), centerY + length * Math.sin(angle))
+}
+
+function drawClock (hours, minutes, seconds) {
+
+  let length = this.clockRadius - this.wallWidth - 10
+
+  let hourAngle = getHandAngle(hours + (minutes + (seconds / 60)) / 60, 12)
+
+  let minuteAngle = getHandAngle(minutes + seconds / 60, 60)
+
+  let secondAngle = getHandAngle(seconds, 60)
+
+  drawHand(this.hands, this.centerX, this.centerY, 0, hourAngle, 8, length, 0x000000)
+  drawHand(this.hands, this.centerX, this.centerY, 0, minuteAngle, 4, length, 0x000000)
+  drawHand(this.hands, this.centerX, this.centerY, 0, secondAngle, 2, length, 0xff0000)
+}
+
+let update = function () {
+  let time = new Date()
+  let hours = time.getHours()
+  let minutes = time.getMinutes()
+  let seconds = time.getSeconds()
+
+  this.hands.clear()
+
+  drawClock(hours, minutes, seconds)
 }
 
 document.addEventListener('DOMContentLoaded', init, false)
