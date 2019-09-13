@@ -219,7 +219,7 @@ describe('Math - Prophecy.Math.Vector2d Element-wise', function () {
     let distance = v1.distanceTo(v2)
     expect(distance).toBe(9.848857801796104)
   })
-
+  
   it('dot() should calculate the dot product of 2 Prophecy.Math.Vector2d\'s', () => {
     let v1 = new Prophecy.Math.Vector2d(2, 3)
     let v2 = new Prophecy.Math.Vector2d(4, 12)

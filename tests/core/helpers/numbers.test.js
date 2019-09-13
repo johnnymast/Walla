@@ -1,4 +1,4 @@
-require('../../../src/core/helpers')
+require('prophecyjs')
 
 describe('Number Helpers - rand', function () {
   it('rand() should return a number in a given range', () => {

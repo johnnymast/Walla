@@ -78404,8 +78404,10 @@ if (true) {
 /* 362 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(383);
-__webpack_require__(384);
+const Point = __webpack_require__(383);
+const Rect = __webpack_require__(384);
+
+module.exports = { Point, Rect };
 
 /***/ }),
 /* 363 */
@@ -83290,7 +83292,7 @@ module.exports = PhysicsSprite;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(363);
-__webpack_require__(362);
+
 // import 'babel-polyfill'
 __webpack_require__(360);
 __webpack_require__(166);
@@ -83298,6 +83300,7 @@ __webpack_require__(166);
 const Prophecy = {
   Gameloop: __webpack_require__(617),
   GameEngine: __webpack_require__(84),
+  Geometry: __webpack_require__(362),
   Transform: __webpack_require__(360),
   SceneManager: __webpack_require__(368),
   AssetManager: __webpack_require__(364),

@@ -1,15 +1,17 @@
-const Point = require('../../../src/core/geometry/point')
+const Prophecy = require('prophecyjs')
 
-describe('Geometry - Point', function () {
+// const Prophecy.Geometry.Point = require('../../../src/core/geometry/Prophecy.Geometry.Point')
+
+describe('Geometry - Prophecy.Geometry.Point', function () {
 
   it('Constructing values parameters should set the values.', () => {
-    let p = new Point(10, 20)
+    let p = new Prophecy.Geometry.Point(10, 20)
     expect(p.x).toEqual(10)
     expect(p.y).toEqual(20)
   })
 
-  it('clone() should return a new cloned version of an existing Point.', () => {
-    let p = new Point(10, 20)
+  it('clone() should return a new cloned version of an existing Prophecy.Geometry.Point.', () => {
+    let p = new Prophecy.Geometry.Point(10, 20)
     let theclone = p.clone()
     expect(theclone).toEqual({
       x: 10,
@@ -18,7 +20,7 @@ describe('Geometry - Point', function () {
   })
 
   it('set() without y should make y equal to passed x.', () => {
-    let p = new Point()
+    let p = new Prophecy.Geometry.Point()
     p.set(300)
     expect(p.x).toEqual(300)
     expect(p.y).toEqual(300)
@@ -26,23 +28,23 @@ describe('Geometry - Point', function () {
   })
 })
 
-describe('Geometry - Point Element-wise', function () {
+describe('Geometry - Prophecy.Geometry.Point Element-wise', function () {
 
-  it('equals() should return true if 2 points are equal.', () => {
-    let p1 = new Point(20, 20)
-    let p2 = new Point(20, 20)
+  it('equals() should return true if 2 Prophecy.Geometry.Points are equal.', () => {
+    let p1 = new Prophecy.Geometry.Point(20, 20)
+    let p2 = new Prophecy.Geometry.Point(20, 20)
     expect(p1.equals(p2)).toBeTruthy()
   })
 
-  it('equals() should not return false if 2 points are not equal.', () => {
-    let p1 = new Point(20, 20)
-    let p2 = new Point(20, 40)
+  it('equals() should not return false if 2 Prophecy.Geometry.Points are not equal.', () => {
+    let p1 = new Prophecy.Geometry.Point(20, 20)
+    let p2 = new Prophecy.Geometry.Point(20, 40)
     expect(p1.equals(p2)).toBeFalsy()
   })
 
-  it('copy() should copy the values from one point to an other.', () => {
-    let p1 = new Point(20, 20)
-    let p2 = new Point(20, 40)
+  it('copy() should copy the values from one Prophecy.Geometry.Point to an other.', () => {
+    let p1 = new Prophecy.Geometry.Point(20, 20)
+    let p2 = new Prophecy.Geometry.Point(20, 40)
 
     p2.copy(p1)
     expect(p2).toEqual({
@@ -50,5 +52,4 @@ describe('Geometry - Point Element-wise', function () {
       y: 20,
     })
   })
-
 })

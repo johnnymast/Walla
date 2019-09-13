@@ -1,5 +1,5 @@
 require ('core/helpers')
-require ('core/geometry')
+
 // import 'babel-polyfill'
 require ('core/Transform')
 require ('core/math')
@@ -7,6 +7,7 @@ require ('core/math')
 const Prophecy = {
   Gameloop: require('core/Gameloop'),
   GameEngine: require('core/GameEngine'),
+  Geometry :require ('core/geometry'),
   Transform: require('core/Transform'),
   SceneManager: require('core/managers/SceneManager'),
   AssetManager: require('core/managers/AssetManager'),

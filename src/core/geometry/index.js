@@ -1,2 +1,4 @@
-require ('./point')
-require ('./rect')
+const Point = require ('./point')
+const Rect = require ('./rect')
+
+module.exports = { Point, Rect }

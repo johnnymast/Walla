@@ -1,4 +1,4 @@
-require('../../../src/core/helpers')
+require('prophecyjs')
 
 describe('Object Helpers - extend', function () {
   it('extend() sould work', () => {
@@ -24,7 +24,7 @@ describe('Object Helpers - extend', function () {
 })
 
 describe('Object Helpers - extend2', function () {
-  it('extend2() sould work', () => {
+  it('extend2() should work', () => {
     let v1 = {
       a: 'first',
       b: 'second'
@@ -61,7 +61,7 @@ describe('Object Helpers - extend2', function () {
 })
 
 describe('Object Helpers - merge', function () {
-  it('merge() sould work', () => {
+  it('merge() should work', () => {
     let v1 = {
       a: 'first',
       b: 'second'

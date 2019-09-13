@@ -1,4 +1,4 @@
-require('../../../src/core/helpers')
+require('prophecyjs')
 
 describe('Math Helpers - constrain', function () {
   it('constrain() should return 0 if no arguments was passed', () => {
