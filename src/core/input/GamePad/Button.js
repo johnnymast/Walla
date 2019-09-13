@@ -1,4 +1,4 @@
-const GamepadEvent = require('input/Gamepad/GamepadEvent')
+const GamepadEvent = require('core/input/Gamepad/GamepadEvent')
 const PIXI = require('pixi')
 
 class Button extends PIXI.utils.EventEmitter {

@@ -64,13 +64,16 @@
     ],
     "testURL": "http://localhost",
     "verbose": true,
+    "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx", "node"],
     "testMatch": [
       "<rootDir>/tests/**/*.js?(x)",
       "**/?(*.)(spec|test).js?(x)"
     ],
     "moduleNameMapper": {
       "^canvas": "<rootDir>/node_modules/canvas",
-      "^pixi$": "<rootDir>/node_modules/pixi.js"
+      "^pixi$": "<rootDir>/node_modules/pixi.js",
+      "^prophecyjs$": "<rootDir>/src/prophecy.js",
+      "^core/(.*)": "<rootDir>/src/core/$1"
     }
   }
 }

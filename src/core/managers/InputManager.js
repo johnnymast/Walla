@@ -1,6 +1,6 @@
 const GameObject = require('core/GameObject')
-const KeyboardInput = require('input/Keyboard/KeyboardInput')
-const GamePadInput = require('input/GamePadInput')
+const KeyboardInput = require('core/input/Keyboard/KeyboardInput')
+const GamePadInput = require('core/input/GamePadInput')
 const PIXI = require('pixi')
 
 class InputManager extends GameObject {

@@ -1,5 +1,5 @@
 const ScenePlugin = require('core/ScenePlugin')
-const GamePad = require('input/GamePad/GamePad')
+const GamePad = require('core/input/GamePad/GamePad')
 
 
 class GamePadInput extends ScenePlugin {

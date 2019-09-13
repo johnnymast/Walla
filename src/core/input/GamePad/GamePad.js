@@ -1,5 +1,5 @@
-const Button = require('input/Gamepad/Button')
-const Axis = require('input/Gamepad/Axis')
+const Button = require('core/input/Gamepad/Button')
+const Axis = require('core/input/Gamepad/Axis')
 const PIXI = require('pixi')
 
 class GamePad extends PIXI.utils.EventEmitter {
