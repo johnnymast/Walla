@@ -1,4 +1,4 @@
-const LocalStorage = require('core/storage/localStorage')
+const LocalStorage = require('core/storage/LocalStorage')
 
 /**
  * StateManager
