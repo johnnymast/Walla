@@ -5,7 +5,7 @@ require ('core/Transform')
 require ('core/math')
 
 const Prophecy = {
-  Gameloop: require('core/gameloop.js'),
+  Gameloop: require('core/Gameloop'),
   GameEngine: require('core/GameEngine'),
   Transform: require('core/Transform'),
   SceneManager: require('core/managers/SceneManager'),
