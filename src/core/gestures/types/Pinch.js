@@ -1,3 +1,9 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Transform = require('core/Transform')
 const Vector2d = require('core/math/vector2d')
 
@@ -78,7 +84,7 @@ Pinch.prototype = {
           distance: distance,
           backup: {
             position: new PIXI.Point(this._object.x, this._object.y),
-            scale: {x: this._object.scale.x, y: this._object.scale.y},
+            scale: { x: this._object.scale.x, y: this._object.scale.y },
           }
         }
 
@@ -171,7 +177,6 @@ Pinch.prototype = {
     }
   }
 }
-
 
 if (typeof module !== 'undefined') {
   module.exports = Pinch

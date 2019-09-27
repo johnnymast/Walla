@@ -1,5 +1,16 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const GameObject = require('core/GameObject')
 
+/**
+ * ScenePlugin.
+ * @extends GameObject
+ * @class Prophecy.ScenePlugin
+ */
 class ScenePlugin extends GameObject {
   constructor () {
     super()
@@ -92,7 +103,7 @@ class ScenePlugin extends GameObject {
    * Placeholder overwrite for the update
    * function of a plugin.
    *
-   * @param {number} delta - Number of ticks since last update
+   * @param {number} delta - The time difference since last update.
    */
   update (delta) {
     // Overwrite

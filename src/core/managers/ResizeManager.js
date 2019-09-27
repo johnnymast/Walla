@@ -1,13 +1,19 @@
 /**
- * ResizeManager
- * @namespace Core Managers
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * ResizeManager class
+ * @class ResizeManager
  */
 class ResizeManager {
 
   /**
-   * @classdesc Automatically resize the game.
-   * @exports  core/managers/ResizeManager
-   * @class
+   * ResizeManager constructor.
+   * @param {PIXI.Application} application - The PIXI application.
+   * @constructor
    */
   constructor (application) {
     this.application = application
@@ -28,7 +34,6 @@ class ResizeManager {
 
   /**
    * Callback for the resize event.
-   *
    * @param {event} e - The passed event.
    */
   onResize (e) {

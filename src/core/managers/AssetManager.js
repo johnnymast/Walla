@@ -9,7 +9,6 @@ class AssetManager extends PIXI.utils.EventEmitter {
    */
   constructor () {
     super()
-    PIXI.utils.EventEmitter.call(this)
     PIXI.loader.once('complete', this._preloadready, this)
     PIXI.loader.on('progress', this._preloadProgress, this)
   }

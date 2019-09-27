@@ -1,14 +1,23 @@
 /**
- * Rect
- * @namespace Geometry
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Rect class
+ * @class PIXI.Geometry.Rect
  */
 class Rect {
 
   /**
+   * Rect constructor.
+   *
    * @param {number} [x=0] - position of the point on the x axis
    * @param {number} [y=0] - position of the point on the y axis
    * @param {number} [width=0] - width of the rect
    * @param {number} [height=0] - height of the rect
+   * @constructor
    */
   constructor (x = 0, y = 0, width = 0, height = 0) {
 

@@ -1,5 +1,18 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Gameloop class.
+ * @class Prophecy.Gameloop
+ */
 class Gameloop {
 
+  /**
+   * Constructor for the Gameloop.
+   */
   constructor () {
 
     /**

@@ -19,6 +19,9 @@ if (PROD) {
   )
 }
 
+/**
+ * Prophecy plugins.
+ */
 plugins.push(
   new webpack.DefinePlugin({
     PLUGIN_MATTERJS: JSON.stringify(true),
@@ -75,7 +78,7 @@ const config = {
       'pixi-tiledmap': path.resolve(__dirname, './node_modules/pixi-tiledmap'),
       'matter-js': path.resolve(__dirname, './node_modules/matter-js'),
       'tweenjs': path.resolve(__dirname, './node_modules/@tweenjs/tween.js'),
-      'prophecyjs' : path.resolve(__dirname, './src/prophecy.js'),
+      'prophecyjs': path.resolve(__dirname, './src/prophecy.js'),
       'core': path.resolve(__dirname, 'src/core'),
       'plugins': path.resolve(__dirname, 'src/plugins'),
       'gui': path.resolve(__dirname, 'src/gui'),

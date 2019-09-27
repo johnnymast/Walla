@@ -1,8 +1,24 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const PIXI = require('pixi')
 
+/**
+ * Axis class for Gamepad.
+ * @extends PIXI.utils.EventEmitter
+ * @class Axis
+ */
 class Axis extends PIXI.utils.EventEmitter {
 
-  constructor (axis, index = 0) {
+  /**
+   * Constructor for the Axis class.
+   * @param {number} index - The index number for this axis.
+   * @constructor
+   */
+  constructor (index = 0) {
     super()
 
     /**

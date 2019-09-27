@@ -86,7 +86,7 @@ class Level1 extends GameLevel {
       let pos = event.data.global
 
       let rect = new RoundedRect()
-      rect.position.set(pos.x, pos.y)
+      LocalStorage.set(pos.x, pos.y)
 
       this.rectangles.push(rect)
       this.addChild(rect)
@@ -149,7 +149,7 @@ class Level1 extends GameLevel {
           new_scale = 0
 
         this.text.visible = (new_scale > 0)
-        this.text.scale.set(new_scale)
+        LocalStorage.set(new_scale)
 
       } else {
 
@@ -159,7 +159,7 @@ class Level1 extends GameLevel {
             new_scale = 1
 
           this.text.visible = (new_scale > 0)
-          this.text.scale.set(new_scale)
+          LocalStorage.set(new_scale)
         }
       }
 

@@ -1,3 +1,13 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Scaling x/y coordinates.
+ * @class Prophecy.Transform
+ */
 class Transform {
 
   /**
@@ -9,8 +19,23 @@ class Transform {
    * @param {Number} y - The y coordinate.
    */
   constructor (k = 1, x = 0, y = 0) {
+
+    /**
+     * The Scale factor.
+     * @type {Number}
+     */
     this.k = k
+
+    /**
+     * The x coordinate.
+     * @type {Number}
+     */
     this.x = x
+
+    /**
+     * The y coordinate.
+     * @type {Number}
+     */
     this.y = y
   }
 

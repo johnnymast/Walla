@@ -1,19 +1,44 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const TransactionType = require('./TransactionType')
 const TweenJS = require('tweenjs')
 const Scene = require('core/Scene')
 
+/**
+ * ScrollFrom transitions.
+ * @extends TransactionType
+ */
 class ScrollFrom extends TransactionType {
 
   /**
-   * @classdesc ScrollFrom
-   * @exports  core/transitions/types/ScrollFrom
-   * @class
+   * ScrollFrom constructor.
+   * @param {object} options - The options for this transition.
    */
   constructor (options) {
     super(options)
 
+    /**
+     * The direction to scroll in.
+     * @type {string}
+     * @default 'top'
+     */
     this.direction = (options.direction || 'top').toLowerCase()
+
+    /**
+     * Scroll duration.
+     * @type {number}
+     * @default 500
+     */
     this.duration = options.duration || 500
+
+    /**
+     * TweenJS easing type.
+     * @type {*}
+     */
     this.ease = options.ease || TweenJS.Easing.Circular.In
   }
 
@@ -148,7 +173,7 @@ class ScrollFrom extends TransactionType {
   /**
    * This update function is called every tick
    *
-   * @param {number} delta - Tick delta
+   * @param {number} delta - Time difference since last update.
    */
   update (delta) {
     TweenJS.update()

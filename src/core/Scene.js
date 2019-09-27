@@ -1,18 +1,28 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const GameObject = require('core/GameObject')
 const PIXI = require('pixi')
 
+/**
+ * Scene class.
+ * @extends GameObject
+ * @class Prophecy.Scene
+ */
 class Scene extends GameObject {
+
   /**
-   * @classdesc Scene
-   * @exports  core/Scene
-   * @class
+   * Scene constructor.
+   * @param {object} options - Options to be passed to GameObject.
+   * @constructor
    */
   constructor (options) {
     super(options)
 
     this.childClass = Object.getPrototypeOf(this).constructor.name
-
-
 
     this.cursor_sprite = new PIXI.Sprite()
     this.cursor_sprite.interactive = false
@@ -31,7 +41,6 @@ class Scene extends GameObject {
     this.on('pointermove', function (event) {
       this.cursor_sprite.position = event.data.global
     }.bind(this))
-
 
     this.fullscreen = {
       available: false,
@@ -78,7 +87,7 @@ class Scene extends GameObject {
    *
    * @returns {boolean}
    */
-  validateScene() {
+  validateScene () {
     if (typeof this.update === 'undefined') {
       console.warn('Please add the update method to ' + this.childClass)
     }
@@ -90,7 +99,7 @@ class Scene extends GameObject {
    *
    * @returns {boolean}
    */
-  isFullScreenAvailable() {
+  isFullScreenAvailable () {
     return this.fullscreen.available
   }
 
@@ -99,7 +108,7 @@ class Scene extends GameObject {
    *
    * @returns {boolean}
    */
-  isFullScreen() {
+  isFullScreen () {
     if (this.isFullScreenAvailable() === true) {
       if (typeof document[this.fullscreen.check] !== 'undefined') {
         return document[this.fullscreen.check]
@@ -113,7 +122,7 @@ class Scene extends GameObject {
    *
    * @returns {*}
    */
-  enterFullScreen() {
+  enterFullScreen () {
     if (this.isFullScreenAvailable() === true) {
       if (typeof this.app.view[this.fullscreen.request] !== 'undefined') {
         this.app.view[this.fullscreen.request]()
@@ -126,7 +135,7 @@ class Scene extends GameObject {
    *
    * @returns {*}
    */
-  exitFullScreen() {
+  exitFullScreen () {
     if (this.isFullScreenAvailable() === true && this.isFullScreen() === true) {
       if (typeof document[this.fullscreen.cancel] !== 'undefined') {
         document[this.fullscreen.cancel]()
@@ -137,7 +146,7 @@ class Scene extends GameObject {
   /**
    * Hide the cursor on the current Scene.
    */
-  hideCursor() {
+  hideCursor () {
     this.cursor = 'none'
   }
 
@@ -147,7 +156,7 @@ class Scene extends GameObject {
    * @param {string} name
    * @param {string} texture_name
    */
-  addCursor(name = '', texture_name = '') {
+  addCursor (name = '', texture_name = '') {
     this.InteractionManager.cursorStyles[name] = () => {
       this.cursor_sprite.texture = PIXI.Texture.fromFrame(texture_name)
     }
@@ -158,7 +167,7 @@ class Scene extends GameObject {
    *
    * @param {string} name - The name of the cursor
    */
-  setCursor(name = '') {
+  setCursor (name = '') {
 
     if (this.cursor_sprite.parent) {
       this.removeChild(this.cursor_sprite)
@@ -170,22 +179,22 @@ class Scene extends GameObject {
     this.cursor = name
   }
 
-  /**
-   * If you wish to preload assets in your scene you can
-   * overwrite this function.
-   */
-  preload() {
-    /**
-     * This function will be called during switching of Scenes.
-     * You can implement this method to act on this event.
-     */
-  }
+  // /**
+  //  * If you wish to preload assets in your scene you can
+  //  * overwrite this function.
+  //  */
+  // preload () {
+  //   /**
+  //    * This function will be called during switching of Scenes.
+  //    * You can implement this method to act on this event.
+  //    */
+  // }
 
   /**
    * Callback for the onPause event. You can overwrite this your self
    * to receive the onPause call.
    */
-  onPause() {
+  onPause () {
     /**
      * This function will be called when the Scene is paused.You can overwrite this in
      * your Scene to act on this event.
@@ -196,7 +205,7 @@ class Scene extends GameObject {
    * Callback for the onInit event. You can overwrite this your self
    * to receive the onInit call.
    */
-  onInit() {
+  onInit () {
     /**
      * This function will be called when the scene is initialized. You can overwrite this in
      * your Scene to act on this event.
@@ -207,7 +216,7 @@ class Scene extends GameObject {
    * Callback for the onStart event. You can overwrite this your self
    * to receive the onStart call.
    */
-  onStart() {
+  onStart () {
     /**
      * This function will be called when the scene is started. You can overwrite this in
      * your Scene to act on this event.
@@ -218,7 +227,7 @@ class Scene extends GameObject {
    * Callback for the onResume event. You can overwrite this your self
    * to receive the onResume call.
    */
-  onResume() {
+  onResume () {
     /**
      * This function will be called when the scene is unpauzed. You can overwrite this in
      * your Scene to act on this event.
@@ -229,7 +238,7 @@ class Scene extends GameObject {
    * Callback for the onSwitchedAway event. You can overwrite this your self
    * to receive the onResume call.
    */
-  onSwitchedAway() {
+  onSwitchedAway () {
     /**
      * This function will be called when the scene is been switched away from. You can overwrite this in
      * your Scene to act on this event.
@@ -239,7 +248,7 @@ class Scene extends GameObject {
   /**
    * Initialize the scene
    */
-  init() {
+  init () {
     this.onInit()
     this.resume()
   }
@@ -247,7 +256,7 @@ class Scene extends GameObject {
   /**
    * Start the scene
    */
-  start() {
+  start () {
     let plugins = this.SceneManager.getPlugins()
 
     this.started = true
@@ -270,14 +279,14 @@ class Scene extends GameObject {
   /**
    * The scene has been switched off.
    */
-  switchedAway() {
+  switchedAway () {
     this.onSwitchedAway()
   }
 
   /**
    * Pause the scene
    */
-  pause() {
+  pause () {
     this.paused = true
     this.onPause()
   }
@@ -285,7 +294,7 @@ class Scene extends GameObject {
   /**
    * Resume a paused scene.
    */
-  resume() {
+  resume () {
     this.paused = false
     this.onResume()
   }
@@ -295,7 +304,7 @@ class Scene extends GameObject {
    *
    * @returns {boolean}
    */
-  isPaused() {
+  isPaused () {
     return this.paused
   }
 
@@ -304,7 +313,7 @@ class Scene extends GameObject {
    *
    * @returns {boolean}
    */
-  isStarted() {
+  isStarted () {
     return this.started
   }
 
@@ -321,7 +330,7 @@ class Scene extends GameObject {
    * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
    * @private
    */
-  _detectFullScreenSupport() {
+  _detectFullScreenSupport () {
     let fs = [
       'requestFullscreen',
       'requestFullScreen',
@@ -388,7 +397,7 @@ class Scene extends GameObject {
    *
    * @param {number} delta - the delta since the last tick
    */
-  fixedUpdate(delta) {
+  fixedUpdate (delta) {
     // Overwrite this function
   }
 
@@ -400,7 +409,7 @@ class Scene extends GameObject {
    * @param {number} delta - the delta since the last tick
    * @private
    */
-  _fixedupdate(delta) {
+  _fixedupdate (delta) {
     if (!this.isPaused()) {
       this.fixedUpdate(delta)
     }
@@ -412,11 +421,10 @@ class Scene extends GameObject {
    * @param {number} delta - the delta since the last tick
    * @private
    */
-  _update(delta) {
+  _update (delta) {
 
     if (!this.isPaused()) {
       let plugins = this.SceneManager.getPlugins()
-
 
       for (let key in plugins) {
         if (plugins[key].runsPreUpdate()) {

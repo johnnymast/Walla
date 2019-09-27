@@ -1,8 +1,25 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Button = require('core/input/Gamepad/Button')
 const Axis = require('core/input/Gamepad/Axis')
 const PIXI = require('pixi')
 
+/**
+ * GamePad class
+ * @extends PIXI.utils.EventEmitter
+ * @class GamePad
+ */
 class GamePad extends PIXI.utils.EventEmitter {
+
+  /**
+   * GamePad constructor.
+   * @param {Gamepad} gamepad - The HTML5 Gamepad object.
+   * @constructor
+   */
   constructor (gamepad) {
     super()
 
@@ -63,7 +80,7 @@ class GamePad extends PIXI.utils.EventEmitter {
 
     index = 0
     for (let axle of gamepad.axes) {
-      let axl = new Axis(axle, index)
+      let axl = new Axis(index)
       this.axes.push(axl)
       index++
     }

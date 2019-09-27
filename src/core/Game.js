@@ -1,9 +1,24 @@
-const GameEngine = require('./GameEngine')
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Scene = require('./Scene')
 
-class Game extends GameEngine {
+/**
+ * Game class.
+ * @class Prophecy.Game
+ */
+class Game {
+
+  /**
+   *
+   * TODO: Update documentation.
+   * @todo update documentation/
+   * @param {object} config - The configuration for the game.
+   */
   constructor (config = {}) {
-    super()
 
     this.config = config
     this.sayhello = true
@@ -32,17 +47,17 @@ class Game extends GameEngine {
       this.scene = new Scene(config)
 
       if (typeof config.scene.preload !== 'undefined')
-        this.scene.preload = config.scene.preload.bind(this.scene)
+        this.scene.preload = config.scene.preload
 
       if (typeof config.scene.create !== 'undefined')
-        this.scene.onStart = config.scene.create.bind(this.scene)
+        this.scene.onStart = config.scene.create
 
       if (typeof config.scene.update !== 'undefined')
-        this.scene.update = config.scene.update.bind(this.scene)
+        this.scene.update = config.scene.update
     }
 
-    this.initPlugins()
-    this.start()
+    this.setupPlugins()
+    // this.start()
   }
 
   hello () {
@@ -91,22 +106,24 @@ class Game extends GameEngine {
       transparent: true
     })
 
-    let resizeManager = new Prophecy.ResizeManager(app, {
-      autoFullScreen: true
-    })
-
     app.gameloop = new Prophecy.Gameloop()
     app.gameloop.maxFPS = 60
     app.gameloop.start()
 
     this.ge.set('App', app)
-    this.ge.set('ResizeManager', resizeManager)
-    this.ge.set('AssetManager', new Prophecy.AssetManager())
+    this.ge.set('Game', this)
+    // this.ge.set('AssetManager', new Prophecy.AssetManager())
     this.ge.set('SceneManager', new Prophecy.SceneManager())
-    this.ge.set('StateManager', new Prophecy.StateManager())
+    // this.ge.set('StateManager', new Prophecy.StateManager())
     this.ge.set('InputManager', new Prophecy.InputManager())
-    this.ge.set('PluginManager', new Prophecy.PluginManager(this.ge))
+    // this.ge.set('PluginManager', new Prophecy.PluginManager(this.ge))
 
+    // FIXME: replace with prophecyjs/Loader
+    this.loader = new Prophecy.AssetManager()
+    this.resize = new Prophecy.ResizeManager(app, { autoFullScreen: true })
+    this.assets = new Prophecy.AssetManager()
+    this.plugins = new Prophecy.PluginManager(this.ge)
+    this.state = new Prophecy.StateManager()
   }
 
   start () {
@@ -121,14 +138,18 @@ class Game extends GameEngine {
     }
   }
 
-  initPlugins () {
+  /**
+   * Load the system Prophecy. These plugins are
+   * defined in the webpack config file(s).
+   */
+  setupPlugins () {
     if (PLUGIN_MATTERJS) {
-      const Matter = this.ge.get('PluginManager').loadPlugin('matterjs', 'Matter')
+      const Matter = this.plugins.loadPlugin('matterjs', 'Matter')
       Prophecy.Plugins.Matter = Matter
     }
 
     if (PLUGIN_DEBUG) {
-      const Debug = this.ge.get('PluginManager').loadPlugin('debug', 'Debug')
+      const Debug = this.plugins.loadPlugin('debug', 'Debug')
       Prophecy.Plugins.DebugManager = new Debug.DebugManager
     }
   }

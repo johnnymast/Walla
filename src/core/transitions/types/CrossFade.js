@@ -1,12 +1,21 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const TransactionType = require('./TransactionType')
 const Scene = require('core/Scene')
 
+/**
+ * CrossFade transitions.
+ * @extends TransactionType
+ */
 class CrossFade extends TransactionType {
 
   /**
-   * @classdesc CrossFade
-   * @exports  core/transitions/types/CrossFade
-   * @class
+   *
+   * @param {object} options - The options for this transition.
    */
   constructor (options) {
     super(options)
@@ -14,12 +23,14 @@ class CrossFade extends TransactionType {
     /**
      *
      * @type {number}
+     * @default 2
      */
     this.delay = options.delay || 2
 
     /**
      *
      * @type {number}
+     * @default 0
      */
     this.time_passed = 0
 
@@ -27,6 +38,7 @@ class CrossFade extends TransactionType {
      * The fade type. For now only fade in.
      *
      * @type {string}
+     * @default in
      */
     this.type = 'in'
 
@@ -34,6 +46,7 @@ class CrossFade extends TransactionType {
      * Increment size per tick.
      *
      * @type {number}
+     * @default 0.05
      */
     this.stepSize = 0.05
 
@@ -41,6 +54,7 @@ class CrossFade extends TransactionType {
      * Indicator if the fade animation is going.
      *
      * @type {boolean}
+     * @default false
      */
     this.isFading = false
   }

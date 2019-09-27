@@ -1,5 +1,15 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
 const PIXI = require('pixi')
 
+/**
+ * GameEngine class.
+ * @extends PIXI.utils.EventEmitter
+ * @class Prophecy.GameEngine
+ */
 class GameEngine extends PIXI.utils.EventEmitter {
 
   /**
@@ -27,7 +37,7 @@ class GameEngine extends PIXI.utils.EventEmitter {
   }
 
   /**
-   * Return a signleton version of the GameEngine
+   * Return a singleton version of the GameEngine
    * object.
    *
    * @returns {GameEngine}

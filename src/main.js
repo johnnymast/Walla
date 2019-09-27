@@ -67,26 +67,26 @@ let init = function () {
   app.gameloop.maxFPS = 60
   app.gameloop.start()
 
-  ge.set('App', app)
-  ge.set('ResizeManager', resizeManager)
-  ge.set('AssetManager', new AssetManager())
-  ge.set('SceneManager', new SceneManager())
-  ge.set('StateManager', new StateManager())
-  ge.set('InputManager', new InputManager())
-  ge.set('PluginManager', new PluginManager(ge))
+  LocalStorage.set('App', app)
+  LocalStorage.set('ResizeManager', resizeManager)
+  LocalStorage.set('AssetManager', new AssetManager())
+  LocalStorage.set('SceneManager', new SceneManager())
+  LocalStorage.set('StateManager', new StateManager())
+  LocalStorage.set('InputManager', new InputManager())
+  LocalStorage.set('PluginManager', new PluginManager(ge))
 
   if (PLUGIN_MATTERJS) {
-    const Matter = ge.get('PluginManager').loadPlugin('matterjs', 'Matter')
-    ge.set('Matter', Matter)
+    const Matter = LocalStorage.get('PluginManager').loadPlugin('matterjs', 'Matter')
+    LocalStorage.set('Matter', Matter)
   }
 
   if (PLUGIN_DEBUG) {
-    const Debug = ge.get('PluginManager').loadPlugin('debug', 'Debug')
+    const Debug = LocalStorage.get('PluginManager').loadPlugin('debug', 'Debug')
     let DebugManager = new Debug.DebugManager
-    ge.set('DebugManager', DebugManager)
+    LocalStorage.set('DebugManager', DebugManager)
   }
 
-  ge.get('SceneManager')
+  LocalStorage.get('SceneManager')
     .add('SplashScene')
     .switchTo('SplashScene')
 }

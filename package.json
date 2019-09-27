@@ -50,6 +50,12 @@
     "plugins": [
       "requirejs"
     ],
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "env": {
+      "es6": true
+    },
     "rules": {
       "requirejs/no-invalid-define": 2,
       "requirejs/no-multiple-define": 2,
@@ -64,7 +70,14 @@
     ],
     "testURL": "http://localhost",
     "verbose": true,
-    "moduleFileExtensions": ["js", "json", "jsx", "ts", "tsx", "node"],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "jsx",
+      "ts",
+      "tsx",
+      "node"
+    ],
     "testMatch": [
       "<rootDir>/tests/**/*.js?(x)",
       "**/?(*.)(spec|test).js?(x)"

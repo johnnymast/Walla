@@ -1,5 +1,7 @@
 /**
- * @namespace Math
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
 
 /**
@@ -7,16 +9,16 @@
  * of the fact that the rows and columns start of by 0 and
  * not at 1.
  *
- * @class
+ * @class Prophecy.Math.Matrix
  */
 class Matrix {
 
   /* Instantiate a new Matrix Object.
    *
-   * @constructor
    * @param {number} rows - the number of rows in the matrix
    * @param {number} cols - the number of columns in the matrix
    * @param {number} [fill=0] - the initial fill for the matrix
+   * @constructor
    */
   constructor (rows = 0, cols = 0, fill = 0) {
     this.rows = rows
@@ -46,7 +48,7 @@ class Matrix {
    * @see {@Matrix valueOf}
    * @returns {array}
    */
-  toObject() {
+  toObject () {
     return this.valueOf()
   }
 

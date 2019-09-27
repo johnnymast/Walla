@@ -1,20 +1,24 @@
-require ('core/helpers')
+require('core/helpers')
 
 // import 'babel-polyfill'
-require ('core/Transform')
-require ('core/math')
+require('core/Transform')
+require('core/math')
 
 const Prophecy = {
   Gameloop: require('core/Gameloop'),
   GameEngine: require('core/GameEngine'),
-  Geometry :require ('core/geometry'),
+  Geometry: require('core/geometry'),
   Transform: require('core/Transform'),
+  Transition: require('core/transitions/Transition'),
   SceneManager: require('core/managers/SceneManager'),
   AssetManager: require('core/managers/AssetManager'),
   StateManager: require('core/managers/StateManager'),
   InputManager: require('core/managers/InputManager'),
   ResizeManager: require('core/managers/ResizeManager'),
   PluginManager: require('core/managers/PluginManager'),
+  ScenePlugin: require('core/ScenePlugin'),
+  Storage: require('core/storage'),
+  Camera: require('core/camera/Camera'),
   Plugins: {},
   Math: require('core/math'),
   Game: require('core/Game'),

@@ -1,4 +1,10 @@
 /**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
  * Gestures
  * @namespace Gestures
  */
@@ -32,7 +38,6 @@ Gestures.prototype = {
     return this
   }
 }
-
 
 if (typeof module !== 'undefined') {
   module.exports = Gestures

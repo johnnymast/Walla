@@ -1,7 +1,26 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const GamepadEvent = require('core/input/Gamepad/GamepadEvent')
 const PIXI = require('pixi')
 
+/**
+ * Button class for Gamepad.
+ * @extends PIXI.utils.EventEmitter
+ * @class Button
+ */
 class Button extends PIXI.utils.EventEmitter {
+
+  /**
+   * Button constructor.
+   * @param {GamepadButton} button - The Button object for this GamePad.
+   * @param {number} index - The index of this GamePad
+   * @param {GamePad} controller - The GamePad this button is connected to.
+   * @constructor
+   */
   constructor (button, index = 0, controller) {
     super()
 

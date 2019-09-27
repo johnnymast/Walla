@@ -1,5 +1,15 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Scene = require('core/Scene')
 
+/**
+ * TransactionType transitions.
+ * @extends Scene
+ */
 class TransactionType extends Scene {
 
   /**
@@ -9,8 +19,23 @@ class TransactionType extends Scene {
    */
   constructor (props) {
     super(props)
+
+    /**
+     * The scene to transition from.
+     * @type {Scene}
+     * @default null
+     * @private
+     */
     this._from = null
+
+    /**
+     * The scene to transition to.
+     * @type {Scene}
+     * @default null
+     * @private
+     */
     this._to = null
+
     this.init()
     this.start()
   }

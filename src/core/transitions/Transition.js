@@ -1,3 +1,13 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Transition.
+ * @class Prophecy.Transition
+ */
 class Transition {
 
   /**
@@ -6,7 +16,7 @@ class Transition {
    * @returns {ScrollFrom}
    * @constructor
    */
-  get ScrollFrom () {
+  static get ScrollFrom () {
     return require('core/transitions/types/ScrollFrom')
   }
 
@@ -16,7 +26,7 @@ class Transition {
    * @returns {ScrollFrom}
    * @constructor
    */
-  get CrossFade () {
+  static get CrossFade () {
     return require('core/transitions/types/CrossFade')
   }
 

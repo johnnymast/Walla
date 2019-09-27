@@ -82,7 +82,7 @@ class Level1 extends GameLevel {
      */
     this.addChild(this.map)
 
-    this.character.position.set(200, 200)
+    LocalStorage.set(200, 200)
     this.character.setDirection(DIRECTIONS.RIGHT)
 
     /**

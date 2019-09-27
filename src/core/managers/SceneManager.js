@@ -1,19 +1,30 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Scene = require('core/Scene')
 const GameEngine = require('core/GameEngine')
 const TransactionType = require('core/transitions/types/TransactionType')
 
+/**
+ * SceneManager class.
+ * @class Prophecy.SceneManager
+ */
 class SceneManager {
-  constructor (scene = '') {
+
+  /**
+   * SceneManager constructor.
+   * @constructor
+   */
+  constructor () {
     this.scenes = []
     this.plugins = []
     this.currentScene = null
-    this.gameEngine = GameEngine.get()
-    this.app = this.gameEngine.get('App')
-
-    if (scene.length > 0) {
-      this.add(scene)
-      this.switchTo(scene)
-    }
+    this.ge = GameEngine.get()
+    this.app = this.ge.get('App')
+    this.game = this.ge.get('Game')
   }
 
   /**
@@ -127,8 +138,20 @@ class SceneManager {
       }
 
       this.currentScene = nextScene
-      nextScene.init()
-      nextScene.start()
+
+      if (typeof nextScene.preload === 'function') {
+
+        this.game.loader.once('complete', () => {
+          nextScene.init()
+          nextScene.start()
+        })
+
+        nextScene.preload()
+
+      } else {
+        nextScene.init()
+        nextScene.start()
+      }
 
       this.app.stage.addChild(this.currentScene)
     }
@@ -141,6 +164,7 @@ class SceneManager {
    *
    * @param {string} scene - The name of the scene
    * @param {Transition} transition - The transition to execute.
+   * @todo support preload
    */
   switchToUsingTransaction (scene, transition) {
     let nextScene = null
@@ -158,6 +182,8 @@ class SceneManager {
     if (!transition instanceof TransactionType) {
       throw new Error('switchToUsingTransaction: Unknown transition')
     }
+
+    // TODO: Add preload
 
     if (nextScene) {
 

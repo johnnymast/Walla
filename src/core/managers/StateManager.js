@@ -33,7 +33,7 @@ class StateManager {
    * @returns {*}
    */
   get (key) {
-    return this.adapter.get(key)
+    return LocalStorage.get(key)
   }
 
   /**
@@ -42,7 +42,7 @@ class StateManager {
    * @param {string} val = The value for this state
    */
   set (key, val) {
-    return this.adapter.set(key, val)
+    return LocalStorage.set(key, val)
   }
 
   /**
@@ -51,7 +51,7 @@ class StateManager {
    * @param {string} key - Delete the value of this key
    */
   unset (key) {
-    return this.adapter.unset(key)
+    return LocalStorage.unset(key)
   }
 }
 

@@ -1,6 +1,22 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Scene = require('core/Scene')
 
-class Level extends Scene {
+/**
+ * Level class.
+ * @extends Prophecy.Scene
+ * @class Prophecy.Level
+ */
+class Level extends Prophecy.Scene {
+
+  /**
+   *
+   * @param {object} options - Options to be passed to Prophecy.Scene
+   */
   constructor (options) {
     super(options)
 
@@ -10,6 +26,7 @@ class Level extends Scene {
     this.on('mousemove', this.onMouseMove)
     this.on('pointerdown', this.onPointerDown)
     this.on('pointerup', this.onPointerUp)
+
 
     this.InputManager.on('InputManager.GamepadButtonPressed', this.onGamepadButtonDown.bind(this))
     this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this))

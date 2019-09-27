@@ -1,5 +1,7 @@
 /**
- * @namespace Math
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
 
 // info https://www.intmath.com/vectors/4-adding-vectors-2-dimensions.php
@@ -7,7 +9,7 @@
 /**
  * Class for Vector3d math calculations.
  *
- * @class
+ * @class Prophecy.Math.Vector3d
  */
 class Vector3d {
 
@@ -15,6 +17,7 @@ class Vector3d {
    * @param {number} [x=0] - the x value
    * @param {number} [y=0] - the y value
    * @param {number} [z=0] - the z value
+   * @constructor
    */
   constructor (x = 0, y = 0, z = 0) {
     this.x = x

@@ -1,11 +1,21 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const PIXI = require('pixi')
 const GameEngine = require('core/GameEngine')
 
+/**
+ * GameObject class.
+ * @extends PIXI.Container
+ * @class Prophecy.GameObject
+ */
 class GameObject extends PIXI.Container {
   /**
-   * @classdesc GameObject
-   * @exports  core/GameObject
-   * @class
+   * GameObject constructor.
+   * @param {object} options - The options for the PIXI.Container.
    */
   constructor (options) {
     super(options)
@@ -52,8 +62,6 @@ class GameObject extends PIXI.Container {
 
     /**
      * @type {PIXI.interaction.InteractionManager}
-     */
-    /**
      * @deprecated
      */
     this.InteractionManager = this.app.renderer.plugins.interaction

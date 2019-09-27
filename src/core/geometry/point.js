@@ -1,12 +1,21 @@
 /**
- * Point
- * @namespace Geometry
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Point class
+ * @class PIXI.Geometry.Point
  */
 class Point {
 
   /**
+   * Point constructor.
+   *
    * @param {number} [x=0] - position of the point on the x axis
    * @param {number} [y=0] - position of the point on the y axis
+   * @constructor
    */
   constructor (x = 0, y = 0) {
 

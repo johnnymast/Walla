@@ -96,7 +96,7 @@ class SplashScene extends Scene {
    * your game assets.
    */
   preload () {
-    this.ge.get('AssetManager').loadManifest([
+    LocalStorage.get('AssetManager').loadManifest([
 
       // Core
       { name: 'core_ui', type: 'spritesheet', src: '/assets/core/ui/core_ui.json' },
