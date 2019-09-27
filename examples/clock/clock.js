@@ -1,19 +1,24 @@
-let init = function () {
-  let config = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    backgroundColor: 0x1099bb,
-    transparent: true,
-    scene: {
-      create: create,
-      update: update
-    }
-  }
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
 
-  new Prophecy.Game(config)
+let config = {
+  width: window.innerWidth,
+  height: window.innerHeight,
+  backgroundColor: 0x1099bb,
+  transparent: true,
+  scene: {
+    create: create,
+    update: update
+  }
 }
 
-let create = function () {
+let game = new Prophecy.Game(config)
+game.start()
+
+function create () {
 
   // https://github.com/Taiters/pixi-clock/blob/master/app/clock.js
 
@@ -112,7 +117,7 @@ function drawClock (hours, minutes, seconds) {
   drawHand(this.hands, this.centerX, this.centerY, 0, secondAngle, 2, length, 0xff0000)
 }
 
-let update = function () {
+function update () {
   let time = new Date()
   let hours = time.getHours()
   let minutes = time.getMinutes()
@@ -122,5 +127,3 @@ let update = function () {
 
   drawClock(hours, minutes, seconds)
 }
-
-document.addEventListener('DOMContentLoaded', init, false)

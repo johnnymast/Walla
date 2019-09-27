@@ -4,6 +4,11 @@
  * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
 
+/**
+ * Camera class
+ * @extends PIXI.Container
+ * @class Prophecy.Camera
+ */
 class Camera extends PIXI.Container {
   constructor (frame) {
     super({ backgroundColor: 0x1099bb })
@@ -46,12 +51,8 @@ class Camera extends PIXI.Container {
     this.target = null
   }
 
-  zoom (level = 0) {
-
-  }
-
-  update() {
-   // console.log('delta update')
+  update () {
+    // console.log('delta update')
   }
 }
 
