@@ -39,12 +39,13 @@ function preload () {
  * Setup the scene
  */
 function create () {
-  let tilingSprite = new PIXI.extras.TilingSprite(PIXI.Texture.fromFrame('debug_bg_grid'), this.app.screen.width, this.app.screen.height)
+  let tilingSprite = game.add.tilingSprite(PIXI.Texture.fromFrame('debug_bg_grid'), this.app.screen.width, this.app.screen.height)
   let camera = new Prophecy.Camera(new Prophecy.Geometry.Rect(20, 20, 20, 20))
-  let dude = new PIXI.Sprite(PIXI.Texture.fromFrame('phaser_dude'))
+  let dude = game.add.sprite(PIXI.Texture.fromFrame('phaser_dude'))
 
-  dude.x = this.app.screen.width / 2
-  dude.y = this.app.screen.height / 2
+  dude.x = game.world.size.halfwidth - dude.width / 2
+  dude.y = game.world.size.halfheight - dude.height / 2
+
   dude.anchor.set(0.5)
 
   camera.follow(dude, camera.FOLLOW_LOCKON)
@@ -55,33 +56,29 @@ function create () {
   this.addChild(tilingSprite)
   this.addChild(dude)
   this.addChild(camera)
-  this.interactive = true
 
-  this.onKeyDown = (event) => {
-    let speed = 30
-    let amt = 0.5
-    if (this.InputManager.isDown('up')) {
-      this.dude.y = lerp(this.dude.y, this.dude.y - speed, amt)
-    } else if (this.InputManager.isDown('down')) {
-      this.dude.y = lerp(this.dude.y, this.dude.y + speed, amt)
-    }
-
-    if (this.InputManager.isDown('left')) {
-      this.dude.x = lerp(this.dude.x, this.dude.x - speed, amt)
-    } else if (this.InputManager.isDown('right')) {
-      this.dude.x = lerp(this.dude.x, this.dude.x + speed, amt)
-    }
-  }
-
-  this.InputManager.on('InputManager.keyDown', this.onKeyDown.bind(this))
-
-  this.InputManager.mapInput([this.InputManager.keys.ArrowLeft, 'a'], ['left'])
-  this.InputManager.mapInput([this.InputManager.keys.ArrowRight, 'd'], ['right'])
-  this.InputManager.mapInput([this.InputManager.keys.ArrowUp, 'w'], ['up'])
-  this.InputManager.mapInput([this.InputManager.keys.ArrowDown, 's'], ['down'])
+  game.input.enableKeyboardInput()
+  game.input.mapInput([game.input.keys.ArrowLeft, 'a'], ['left'])
+  game.input.mapInput([game.input.keys.ArrowRight, 'd'], ['right'])
+  game.input.mapInput([game.input.keys.ArrowUp, 'w'], ['up'])
+  game.input.mapInput([game.input.keys.ArrowDown, 's'], ['down'])
 }
 
 function update (delta) {
   this.camera.update(delta)
-  // console.log('update')
+
+  let speed = 30
+  let amt = 0.5
+
+  if (game.input.isDown('up')) {
+    this.dude.y = lerp(this.dude.y, this.dude.y - speed, amt)
+  } else if (game.input.isDown('down')) {
+    this.dude.y = lerp(this.dude.y, this.dude.y + speed, amt)
+  }
+
+  if (game.input.isDown('left')) {
+    this.dude.x = lerp(this.dude.x, this.dude.x - speed, amt)
+  } else if (game.input.isDown('right')) {
+    this.dude.x = lerp(this.dude.x, this.dude.x + speed, amt)
+  }
 }

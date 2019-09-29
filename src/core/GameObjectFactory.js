@@ -16,15 +16,15 @@ class GameObjectFactory {
 
   /**
    * Create a new Sprite.
-   * @param {string|PIXI.Texture} texture - Texture name or object.
+   * @param {string|PIXI.Texture} texture - PIXI texture object.
    * @param {number} [x=0] - The x position of this sprite.
    * @param {number} [y=0] - The y position of this object.
-   * @returns {PIXI.ObservablePoint}
+   * @returns {PIXI.Sprite}
    */
-  sprite (texture = '', x = 0, y = 0) {
+  sprite (texture = null, x = 0, y = 0) {
 
-    if (typeof texture == 'string') {
-      texture = new PIXI.Texture.fromImage(texture)
+    if (!texture instanceof PIXI.Texture) {
+      throw new Error('GameObjectFactory:sprite invalid texture.')
     }
 
     let sprite = new PIXI.Sprite(texture)
@@ -32,6 +32,17 @@ class GameObjectFactory {
     sprite.y = y
 
     return sprite
+  }
+
+  /**
+   * Create a new TilingSprite.
+   * @param {string|PIXI.Texture} texture - PIXI texture object..
+   * @param {number} [width=0] - The x position of this sprite.
+   * @param {number} [height=0] - The y position of this object.
+   * @returns {PIXI.extras.TilingSprite}
+   */
+  tilingSprite (texture = null, width = 0, height = 0) {
+    return new PIXI.extras.TilingSprite(texture, width, height)
   }
 }
 

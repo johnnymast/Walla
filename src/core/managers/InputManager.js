@@ -1,7 +1,8 @@
 const GameObject = require('core/GameObject')
 const KeyboardInput = require('core/input/Keyboard/KeyboardInput')
 const GamePadInput = require('core/input/GamePadInput')
-const PIXI = require('pixi')
+
+// const PIXI = require('pixi')
 
 class InputManager extends GameObject {
   constructor (options) {
@@ -33,7 +34,22 @@ class InputManager extends GameObject {
   }
 
   /**
-   *
+   * Enable keyboard input on the current scene.
+   */
+  enableKeyboardInput () {
+    let scene = this.SceneManager.getCurrentScene()
+    scene.interactive = true
+  }
+
+  /**
+   * Enable gamepad input on the current scene.
+   */
+  enableGamePadInput () {
+    throw new Error('Not implemented yet.')
+  }
+
+  /**
+   * Register a GamePad button.
    * @param {string} name -  The name of the button.
    * @param {number} [index=0] - The index of the button on the Gamepad.
    */
@@ -43,7 +59,6 @@ class InputManager extends GameObject {
 
   /**
    * Return the registered buttons.
-   *
    * @returns {[]}
    */
   getButtons () {
@@ -52,7 +67,6 @@ class InputManager extends GameObject {
 
   /**
    * Return the registered keys.
-   *
    * @returns {[]}
    */
   getKeys () {
@@ -61,7 +75,6 @@ class InputManager extends GameObject {
 
   /**
    * Add a key binding to action names.
-   *
    * @param {array|KeyboardInput|string} input - a key string or an KeyboardInput instance
    * @param {array} actions - an array with strings identifying the actions this key(s) is|are used for
    */
@@ -75,7 +88,6 @@ class InputManager extends GameObject {
     let parent = this
 
     for (let name of input) {
-
       if (Object.keys(this.buttons).indexOf(name) !== -1) {
         let info = this.buttons[name]
 
@@ -92,17 +104,17 @@ class InputManager extends GameObject {
         }
       } else {
 
-        let key = new KeyboardInput(name)
+        let keyboardInput = new KeyboardInput(name)
 
-        key.info.down = function (event) {
+        keyboardInput.key.down = function (event) {
           parent.emit('InputManager.keyDown', event)
         }
 
-        key.info.up = function (event) {
+        keyboardInput.key.up = function (event) {
           parent.emit('InputManager.keyUp', event)
         }
 
-        input[index] = key
+        input[index] = keyboardInput
         index++
       }
     }
@@ -126,14 +138,13 @@ class InputManager extends GameObject {
 
   /**
    * Check to see if the mapping with the given name is down.
-   *
    * @param {string} name - the mapping name
    * @return {boolean}
    */
   isDown (name) {
 
     if (typeof this.map[name] === 'undefined') {
-      throw new Error('InputManager: name is not defined in mapping')
+      throw new Error('InputManager: ' + name + ' is not defined in mapping')
     }
 
     for (let i = 0; i < this.map[name].length; i++) {
@@ -149,8 +160,30 @@ class InputManager extends GameObject {
   }
 
   /**
+   * Only anticipate on a key to be down once.
+   * @param {string} name - the mapping name
+   * @returns {boolean}
+   */
+  onceDown (name) {
+    if (typeof this.map[name] === 'undefined') {
+      throw new Error('InputManager: ' + name + ' is not defined in mapping')
+    }
+
+    for (let i = 0; i < this.map[name].length; i++) {
+      if (!(this.map[name][i] instanceof KeyboardInput)) {
+        //    continue
+      }
+
+      if (this.map[name][i].isDown() === true) {
+        this.map[name][i].reset()
+        return true
+      }
+    }
+    return false
+  }
+
+  /**
    * Check to see if the mapping with the given name is up.
-   *
    * @param {string} name - the mapping name
    * @return {boolean}
    */
@@ -171,7 +204,6 @@ class InputManager extends GameObject {
 
   /**
    * Check to see if there are any gamepads connected.
-   *
    * @returns {boolean|*}
    */
   haveGamePads () {
@@ -181,7 +213,6 @@ class InputManager extends GameObject {
   /**
    * Return the gamepad at index. Returns
    * false if the gamepad is not found.
-   *
    * @param {number} index - The index of the requested gamepad.
    * @returns {boolean|gamepad}
    */
@@ -191,7 +222,6 @@ class InputManager extends GameObject {
 
   /**
    * Gamepad connected handler
-   *
    * @param {Gamepad} gamepad - The connected gamepad
    */
   gamepadConnected (gamepad) {
@@ -206,7 +236,6 @@ class InputManager extends GameObject {
 
   /**
    * Gamepad disconnected handler.
-   *
    * @param {Gamepad} gamepad - The disconnected gamepad
    */
   gamepadDisconnected (gamepad) {

@@ -28,16 +28,16 @@ class KeyboardInput {
    * @constructor
    * @param {number} keyCode - The keycode to listen for
    */
-  constructor (key) {
+  constructor (keyCode) {
 
-    let info = {}
-    info.key = key
-    info.isDown = false
-    info.isUp = true
-    info.down = undefined
-    info.up = undefined
+    let key = {}
+    key.keyCode = keyCode
+    key.isDown = false
+    key.isUp = true
+    key.down = undefined
+    key.up = undefined
 
-    this.info = info
+    this.key = key
 
     window.addEventListener(
       'keydown', this.downHandler.bind(this), false
@@ -48,13 +48,18 @@ class KeyboardInput {
     )
   }
 
+  reset () {
+    this.key.isDown = false
+    this.key.isUp = true
+  }
+
   /**
-   * Return the information object.
+   * Return the key object.
    *
    * @returns {object}
    */
-  getInfo () {
-    return this.info
+  getKey () {
+    return this.key
   }
 
   /**
@@ -63,7 +68,7 @@ class KeyboardInput {
    * @returns {boolean}
    */
   isDown () {
-    return this.info.isDown
+    return this.key.isDown
   }
 
   /**
@@ -72,7 +77,7 @@ class KeyboardInput {
    * @returns {boolean}
    */
   isUp () {
-    return this.info.isUp
+    return this.key.isUp
   }
 
   /**
@@ -81,12 +86,12 @@ class KeyboardInput {
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   downHandler (event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = true
-      this.info.isUp = false
+    if (event.key === this.key.keyCode) {
+      this.key.isDown = true
+      this.key.isUp = false
 
-      if (this.info.down) {
-        this.info.down(event)
+      if (this.key.down) {
+        this.key.down(event)
       }
     }
     event.preventDefault()
@@ -98,12 +103,12 @@ class KeyboardInput {
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   upHandler (event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = false
-      this.info.isUp = true
+    if (event.key === this.key.keyCode) {
+      this.key.isDown = false
+      this.key.isUp = true
 
-      if (this.info.up) {
-        this.info.up(event)
+      if (this.key.up) {
+        this.key.up(event)
       }
     }
     event.preventDefault()

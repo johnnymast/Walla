@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "output/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 288);
+/******/ 	return __webpack_require__(__webpack_require__.s = 291);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2027,7 +2027,7 @@ var substr = 'ab'.substr(-1) === 'b'
  */
 
 const PIXI = __webpack_require__(5);
-const GameEngine = __webpack_require__(43);
+const GameEngine = __webpack_require__(42);
 
 /**
  * GameObject class.
@@ -13067,6 +13067,61 @@ if (true) {
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+const PIXI = __webpack_require__(5);
+
+/**
+ * GameEngine class.
+ * @extends PIXI.utils.EventEmitter
+ * @class Prophecy.GameEngine
+ */
+class GameEngine extends PIXI.utils.EventEmitter {
+
+  /**
+   * Return a singleton instance of the GameEngine
+   *
+   * @returns {GameEngine}
+   */
+  static get() {
+    if (!this.current) {
+      this.current = new GameEngine();
+    }
+    return this.current;
+  }
+
+  /**
+   * Cache a given object object under given key.
+   *
+   * @param {string} key - The key to cache the object as
+   * @param {string} value - The object to add to the cache
+   */
+  set(key, value) {
+    GameEngine.current.emit('set' + key, value);
+
+    this[key] = value;
+  }
+
+  /**
+   * Return a singleton version of the GameEngine
+   * object.
+   *
+   * @returns {GameEngine}
+   */
+  get(key) {
+    return this[key];
+  }
+}
+
+module.exports = GameEngine;
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* WEBPACK VAR INJECTION */(function(process) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * Tween.js - Licensed under the MIT license
  * https://github.com/tweenjs/tween.js
@@ -14004,61 +14059,6 @@ TWEEN.Interpolation = {
 })(this);
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40)))
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Johnny Mast <mastjohnny@gmail.com>
- * @copyright    2019 Prophecy.
- * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
- */
-const PIXI = __webpack_require__(5);
-
-/**
- * GameEngine class.
- * @extends PIXI.utils.EventEmitter
- * @class Prophecy.GameEngine
- */
-class GameEngine extends PIXI.utils.EventEmitter {
-
-  /**
-   * Return a singleton instance of the GameEngine
-   *
-   * @returns {GameEngine}
-   */
-  static get() {
-    if (!this.current) {
-      this.current = new GameEngine();
-    }
-    return this.current;
-  }
-
-  /**
-   * Cache a given object object under given key.
-   *
-   * @param {string} key - The key to cache the object as
-   * @param {string} value - The object to add to the cache
-   */
-  set(key, value) {
-    GameEngine.current.emit('set' + key, value);
-
-    this[key] = value;
-  }
-
-  /**
-   * Return a singleton version of the GameEngine
-   * object.
-   *
-   * @returns {GameEngine}
-   */
-  get(key) {
-    return this[key];
-  }
-}
-
-module.exports = GameEngine;
 
 /***/ }),
 /* 44 */
@@ -23550,8 +23550,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ImageButton", function() { return ImageButton; });
 const State = __webpack_require__(96).BUTTON_STATE;
 const Type = __webpack_require__(96).BUTTON_TYPE;
-const BaseButton = __webpack_require__(275);
-const ImageButton = __webpack_require__(276);
+const BaseButton = __webpack_require__(278);
+const ImageButton = __webpack_require__(279);
 const Button = __webpack_require__(114);
 
 
@@ -23717,7 +23717,7 @@ class Transition {
    * @constructor
    */
   static get ScrollFrom() {
-    return __webpack_require__(274);
+    return __webpack_require__(277);
   }
 
   /**
@@ -23727,7 +23727,7 @@ class Transition {
    * @constructor
    */
   static get CrossFade() {
-    return __webpack_require__(273);
+    return __webpack_require__(276);
   }
 
   /**
@@ -52401,9 +52401,9 @@ if (true) {
  * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
 
-const Matrix = __webpack_require__(271);
+const Matrix = __webpack_require__(274);
 const Vector2d = __webpack_require__(95);
-const Vector3d = __webpack_require__(272);
+const Vector3d = __webpack_require__(275);
 
 module.exports = { Matrix, Vector2d, Vector3d };
 
@@ -52879,44 +52879,6 @@ class GameLevel extends Level {
 }
 
 module.exports = GameLevel;
-//
-// define(['pixi', 'matter-js', 'core/Level', 'core/input/Keyboard/KeyboardInput', 'gui/Statistics'], function (pixi, Matter, Level, KeyboardInput, Statistics) {
-//   var GameLevel = function (options) {
-//     Level.call(this, options)
-//
-//
-//     this.statistics = new Statistics()
-//     this.addChild(this.statistics)
-//   }
-//
-//   extend(GameLevel, Level)
-//
-//
-//   /**
-//    * Switch the FPS counter on/off.
-//    * @param {boolean} visible - should the FPS tracker be visible.
-//    */
-//   GameLevel.prototype.setDisplayStats = function (visible = false) {
-//     this.statistics.visible = visible
-//   }
-//
-//   /**
-//    * The onInit callback.
-//    */
-//   GameLevel.prototype.onInit = function () {
-//
-//   }
-//
-//   /**
-//    * Update the game scene.
-//    * @param {number} delta - the time passed since last tick.
-//    */
-//   GameLevel.prototype.update = function (delta) {
-//     this.statistics.update(delta)
-//   }
-//
-//   return GameLevel
-// })
 
 /***/ }),
 /* 109 */
@@ -75860,8 +75822,8 @@ module.exports = Level1;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Statistics = __webpack_require__(25);
-const Camera = __webpack_require__(259);
-const Rect = __webpack_require__(260);
+const Camera = __webpack_require__(261);
+const Rect = __webpack_require__(262);
 const Scene = __webpack_require__(19);
 const PIXI = __webpack_require__(5);
 
@@ -76234,14 +76196,14 @@ module.exports = Level1;
 /* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Menus = __webpack_require__(279);
+const Menus = __webpack_require__(282);
 const Dialogs = __webpack_require__(231);
 
 const PIXI = __webpack_require__(5);
 const Scene = __webpack_require__(19);
-const GameEngine = __webpack_require__(43);
+const GameEngine = __webpack_require__(42);
 const Statistics = __webpack_require__(25);
-const TweenJS = __webpack_require__(42);
+const TweenJS = __webpack_require__(43);
 const Transition = __webpack_require__(100);
 
 class MainMenu extends Scene {
@@ -76606,7 +76568,7 @@ module.exports = MainMenu;
 // https://github.com/riebel/pixi-tiledmap
 const DIRECTIONS = __webpack_require__(218);
 const GameLevel = __webpack_require__(110);
-const GameEngine = __webpack_require__(43);
+const GameEngine = __webpack_require__(42);
 const Character = __webpack_require__(256);
 
 class Level1 extends GameLevel {
@@ -77072,7 +77034,7 @@ module.exports = SplashScene;
  */
 
 const ScenePlugin = __webpack_require__(99);
-const GamePad = __webpack_require__(268);
+const GamePad = __webpack_require__(271);
 
 /**
  * GamePadInput class.
@@ -77558,8 +77520,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DefaultDialog", function() { return DefaultDialog; });
 const TYPE = __webpack_require__(98).DIALOG_TYPE;
 const STATE = __webpack_require__(98).DIALOG_STATE;
-const CloseableDialog = __webpack_require__(277);
-const DefaultDialog = __webpack_require__(278);
+const CloseableDialog = __webpack_require__(280);
+const DefaultDialog = __webpack_require__(281);
 
 
 
@@ -78103,7 +78065,7 @@ module.exports = PhysicsManager;
 const pkg = __webpack_require__(233);
 
 const PhysicsManager = __webpack_require__(234);
-const PhysicsSprite = __webpack_require__(287);
+const PhysicsSprite = __webpack_require__(290);
 
 module.exports = {
   PhysicsManager: PhysicsManager,
@@ -78135,8 +78097,8 @@ module.exports = {
  */
 
 const Scene = __webpack_require__(19);
-const World = __webpack_require__(295);
-const GameObjectFactory = __webpack_require__(293);
+const World = __webpack_require__(260);
+const GameObjectFactory = __webpack_require__(259);
 
 /**
  * Game class.
@@ -78235,6 +78197,7 @@ class Game {
     // this.ge.set('AssetManager', new Prophecy.AssetManager())
     this.ge.set('SceneManager', new Prophecy.SceneManager());
     // this.ge.set('StateManager', new Prophecy.StateManager())
+    // @deprecated
     this.ge.set('InputManager', new Prophecy.InputManager());
     // this.ge.set('PluginManager', new Prophecy.PluginManager(this.ge))
 
@@ -78245,6 +78208,7 @@ class Game {
     this.plugins = new Prophecy.PluginManager(this.ge);
     this.state = new Prophecy.StateManager();
     this.world = new World({ size: new Prophecy.Geometry.Size(width, height) });
+    this.input = new Prophecy.InputManager();
 
     this.add = new GameObjectFactory();
   }
@@ -78558,9 +78522,9 @@ module.exports = Camera;
  * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
 
-const Point = __webpack_require__(261);
-const Rect = __webpack_require__(262);
-const Size = __webpack_require__(294);
+const Point = __webpack_require__(263);
+const Rect = __webpack_require__(264);
+const Size = __webpack_require__(265);
 
 module.exports = { Point, Rect, Size };
 
@@ -78577,17 +78541,17 @@ module.exports = { Point, Rect, Size };
 /**
  * Include Objects helpers
  */
-__webpack_require__(265);
+__webpack_require__(268);
 
 /**
  * Include number helpers
  */
-__webpack_require__(264);
+__webpack_require__(267);
 
 /**
  * Include math helpers
  */
-__webpack_require__(263);
+__webpack_require__(266);
 
 /***/ }),
 /* 241 */
@@ -78661,9 +78625,10 @@ module.exports = AssetManager;
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(8);
-const KeyboardInput = __webpack_require__(270);
+const KeyboardInput = __webpack_require__(273);
 const GamePadInput = __webpack_require__(227);
-const PIXI = __webpack_require__(5);
+
+// const PIXI = require('pixi')
 
 class InputManager extends GameObject {
   constructor(options) {
@@ -78695,7 +78660,22 @@ class InputManager extends GameObject {
   }
 
   /**
-   *
+   * Enable keyboard input on the current scene.
+   */
+  enableKeyboardInput() {
+    let scene = this.SceneManager.getCurrentScene();
+    scene.interactive = true;
+  }
+
+  /**
+   * Enable gamepad input on the current scene.
+   */
+  enableGamePadInput() {
+    throw new Error('Not implemented yet.');
+  }
+
+  /**
+   * Register a GamePad button.
    * @param {string} name -  The name of the button.
    * @param {number} [index=0] - The index of the button on the Gamepad.
    */
@@ -78705,7 +78685,6 @@ class InputManager extends GameObject {
 
   /**
    * Return the registered buttons.
-   *
    * @returns {[]}
    */
   getButtons() {
@@ -78714,7 +78693,6 @@ class InputManager extends GameObject {
 
   /**
    * Return the registered keys.
-   *
    * @returns {[]}
    */
   getKeys() {
@@ -78723,7 +78701,6 @@ class InputManager extends GameObject {
 
   /**
    * Add a key binding to action names.
-   *
    * @param {array|KeyboardInput|string} input - a key string or an KeyboardInput instance
    * @param {array} actions - an array with strings identifying the actions this key(s) is|are used for
    */
@@ -78737,7 +78714,6 @@ class InputManager extends GameObject {
     let parent = this;
 
     for (let name of input) {
-
       if (Object.keys(this.buttons).indexOf(name) !== -1) {
         let info = this.buttons[name];
 
@@ -78754,17 +78730,17 @@ class InputManager extends GameObject {
         }
       } else {
 
-        let key = new KeyboardInput(name);
+        let keyboardInput = new KeyboardInput(name);
 
-        key.info.down = function (event) {
+        keyboardInput.key.down = function (event) {
           parent.emit('InputManager.keyDown', event);
         };
 
-        key.info.up = function (event) {
+        keyboardInput.key.up = function (event) {
           parent.emit('InputManager.keyUp', event);
         };
 
-        input[index] = key;
+        input[index] = keyboardInput;
         index++;
       }
     }
@@ -78788,14 +78764,13 @@ class InputManager extends GameObject {
 
   /**
    * Check to see if the mapping with the given name is down.
-   *
    * @param {string} name - the mapping name
    * @return {boolean}
    */
   isDown(name) {
 
     if (typeof this.map[name] === 'undefined') {
-      throw new Error('InputManager: name is not defined in mapping');
+      throw new Error('InputManager: ' + name + ' is not defined in mapping');
     }
 
     for (let i = 0; i < this.map[name].length; i++) {
@@ -78811,8 +78786,30 @@ class InputManager extends GameObject {
   }
 
   /**
+   * Only anticipate on a key to be down once.
+   * @param {string} name - the mapping name
+   * @returns {boolean}
+   */
+  onceDown(name) {
+    if (typeof this.map[name] === 'undefined') {
+      throw new Error('InputManager: ' + name + ' is not defined in mapping');
+    }
+
+    for (let i = 0; i < this.map[name].length; i++) {
+      if (!(this.map[name][i] instanceof KeyboardInput)) {
+        //    continue
+      }
+
+      if (this.map[name][i].isDown() === true) {
+        this.map[name][i].reset();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Check to see if the mapping with the given name is up.
-   *
    * @param {string} name - the mapping name
    * @return {boolean}
    */
@@ -78835,7 +78832,6 @@ class InputManager extends GameObject {
 
   /**
    * Check to see if there are any gamepads connected.
-   *
    * @returns {boolean|*}
    */
   haveGamePads() {
@@ -78845,7 +78841,6 @@ class InputManager extends GameObject {
   /**
    * Return the gamepad at index. Returns
    * false if the gamepad is not found.
-   *
    * @param {number} index - The index of the requested gamepad.
    * @returns {boolean|gamepad}
    */
@@ -78855,7 +78850,6 @@ class InputManager extends GameObject {
 
   /**
    * Gamepad connected handler
-   *
    * @param {Gamepad} gamepad - The connected gamepad
    */
   gamepadConnected(gamepad) {
@@ -78870,7 +78864,6 @@ class InputManager extends GameObject {
 
   /**
    * Gamepad disconnected handler.
-   *
    * @param {Gamepad} gamepad - The disconnected gamepad
    */
   gamepadDisconnected(gamepad) {
@@ -78921,7 +78914,7 @@ class PluginManager {
       throw new Error('loadPlugin: Empty plugin name.');
     }
 
-    let plugin = __webpack_require__(290)("./" + name + '/index');
+    let plugin = __webpack_require__(293)("./" + name + '/index');
 
     if (!alias) {
       alias = name;
@@ -79020,7 +79013,7 @@ module.exports = ResizeManager;
  */
 
 const Scene = __webpack_require__(19);
-const GameEngine = __webpack_require__(43);
+const GameEngine = __webpack_require__(42);
 const TransactionType = __webpack_require__(113);
 
 /**
@@ -79061,7 +79054,7 @@ class SceneManager {
    */
   add(scene, options) {
     if (!this.scenes[scene]) {
-      let _scene = __webpack_require__(289)("./" + scene);
+      let _scene = __webpack_require__(292)("./" + scene);
       _scene.validateScene();
 
       this.scenes[scene] = new _scene(options);
@@ -79505,7 +79498,7 @@ module.exports = Brick;
 const Dialogs = __webpack_require__(231);
 const Buttons = __webpack_require__(97);
 const GameObject = __webpack_require__(8);
-const TweenJS = __webpack_require__(42);
+const TweenJS = __webpack_require__(43);
 const PIXI = __webpack_require__(5);
 
 class GameOver extends GameObject {
@@ -80209,6 +80202,100 @@ module.exports = Text;
 
 /***/ }),
 /* 259 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+const PIXI = __webpack_require__(5);
+
+/**
+ * ObjectGateWay factory class.
+ */
+class GameObjectFactory {
+  constructor() {}
+
+  /**
+   * Create a new Sprite.
+   * @param {string|PIXI.Texture} texture - PIXI texture object.
+   * @param {number} [x=0] - The x position of this sprite.
+   * @param {number} [y=0] - The y position of this object.
+   * @returns {PIXI.Sprite}
+   */
+  sprite(texture = null, x = 0, y = 0) {
+
+    if (!texture instanceof PIXI.Texture) {
+      throw new Error('GameObjectFactory:sprite invalid texture.');
+    }
+
+    let sprite = new PIXI.Sprite(texture);
+    sprite.x = x;
+    sprite.y = y;
+
+    return sprite;
+  }
+
+  /**
+   * Create a new TilingSprite.
+   * @param {string|PIXI.Texture} texture - PIXI texture object..
+   * @param {number} [width=0] - The x position of this sprite.
+   * @param {number} [height=0] - The y position of this object.
+   * @returns {PIXI.extras.TilingSprite}
+   */
+  tilingSprite(texture = null, width = 0, height = 0) {
+    return new PIXI.extras.TilingSprite(texture, width, height);
+  }
+}
+
+module.exports = GameObjectFactory;
+
+/***/ }),
+/* 260 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+const GameEngine = __webpack_require__(42);
+
+/**
+ * World information class.
+ * @class World
+ */
+class World {
+
+  /**
+   * World constructor
+   * @param {object} options - World options
+   */
+  constructor(options) {
+
+    let ge = GameEngine.get();
+    let app = ge.get('App');
+
+    let renderer = app.renderer;
+
+    this._size = options.size || new Prophecy.Geometry.Size(renderer.screen.width, renderer.screen.height);
+  }
+
+  /**
+   * Return the world size
+   * @returns {*|Prophecy.Geometry.size}
+   */
+  get size() {
+    return this._size;
+  }
+}
+
+module.exports = World;
+
+/***/ }),
+/* 261 */
 /***/ (function(module, exports) {
 
 /**
@@ -80273,206 +80360,6 @@ Camera.FOLLOW_NONE = 0;
 Camera.FOLLOW_LOCKON = 1;
 
 module.exports = Camera;
-
-/***/ }),
-/* 260 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Johnny Mast <mastjohnny@gmail.com>
- * @copyright    2019 Prophecy.
- * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
- */
-
-/**
- * Rect class
- * @class PIXI.Geometry.Rect
- */
-class Rect {
-
-  /**
-   * Rect constructor.
-   *
-   * @param {number} [x=0] - position of the point on the x axis
-   * @param {number} [y=0] - position of the point on the y axis
-   * @param {number} [width=0] - width of the rect
-   * @param {number} [height=0] - height of the rect
-   * @constructor
-   */
-  constructor(x = 0, y = 0, width = 0, height = 0) {
-
-    /**
-     *
-     * @type {number}
-     * @default = 0
-     */
-    this.x = x;
-
-    /**
-     *
-     * @type {number}
-     * @default = 0
-     */
-    this.y = y;
-
-    /**
-     *
-     * @type {number}
-     * @default = 0
-     */
-    this.width = width;
-
-    /**
-     *
-     * @type {number}
-     * @default = 0
-     */
-    this.height = height;
-  }
-
-  /**
-   * Clone the current Rect.
-   *
-   * @returns {Rect}
-   */
-  clone() {
-    return new Rect(this.x, this.y, this.width, this.height);
-  }
-
-  /**
-   * Copy the values of rect onto the current Rect.
-   *
-   * @param {Rect} rect - The rect to copy
-   */
-  copy(rect) {
-    this.set(rect.x, rect.y, rect.width, rect.height);
-  }
-
-  /**
-   * Compare the given Rect to this Rect.
-   *
-   * @param {Rect} rect - Compare this Rect to the passed Rect
-   * @returns {boolean}
-   */
-  equals(rect) {
-    return rect.x === this.x && rect.y === this.y && rect.width === this.width && rect.height === this.height;
-  }
-
-  /**
-   * Sets the rect to a new x and y position.
-   * If height is omitted, both width and height will be set to width.
-   *
-   * @param {number} [x=0] - position of the point on the x axis
-   * @param {number} [y=0] - position of the point on the y axis
-   * @param {number} [width=0] - width of the rect
-   * @param {number} [height=0] - height of the rect
-   */
-  set(x, y, width, height) {
-
-    this.x = x || 0;
-    this.y = y;
-
-    this.width = width;
-    this.height = height || (height !== 0 ? this.width : 0);
-  }
-}
-
-if (true) {
-  module.exports = Rect;
-}
-
-/***/ }),
-/* 261 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Johnny Mast <mastjohnny@gmail.com>
- * @copyright    2019 Prophecy.
- * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
- */
-
-/**
- * Point class
- * @class PIXI.Geometry.Point
- */
-class Point {
-
-  /**
-   * Point constructor.
-   *
-   * @param {number} [x=0] - position of the point on the x axis
-   * @param {number} [y=0] - position of the point on the y axis
-   * @constructor
-   */
-  constructor(x = 0, y = 0) {
-
-    /**
-     * @member {number}
-     * @default 0
-     */
-    this.x = x;
-
-    /**
-     * @member {number}
-     * @default 0
-     */
-    this.y = y;
-  }
-
-  /**
-   * Creates a clone of this point
-   *
-   * @return {Point} a copy of the point
-   */
-  clone() {
-    return new Point(this.x, this.y);
-  }
-
-  /**
-   * Copies x and y from the given point
-   *
-   * @param {Point} p - The point to copy.
-   */
-  copy(p) {
-    this.set(p.x, p.y);
-  }
-
-  /**
-   * Returns true if the given point is equal to this point
-   *
-   * @param {Point} p - The point to check
-   * @returns {boolean} Whether the given point equal to this point
-   */
-  equals(p) {
-    return p.x === this.x && p.y === this.y;
-  }
-
-  /**
-   * Sets the point to a new x and y position.
-   * If y is omitted, both x and y will be set to x.
-   *
-   * @param {number} [x=0] - position of the point on the x axis
-   * @param {number} [y=0] - position of the point on the y axis
-   */
-  set(x, y) {
-
-    /**
-     * @member {number}
-     * @default 0
-     */
-    this.x = x || 0;
-
-    /**
-     * @member {number}
-     * @default 0
-     */
-    this.y = y || (y !== 0 ? this.x : 0);
-  }
-}
-
-if (true) {
-  module.exports = Point;
-}
 
 /***/ }),
 /* 262 */
@@ -80583,6 +80470,281 @@ if (true) {
 
 /***/ }),
 /* 263 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Point class
+ * @class PIXI.Geometry.Point
+ */
+class Point {
+
+  /**
+   * Point constructor.
+   *
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @constructor
+   */
+  constructor(x = 0, y = 0) {
+
+    /**
+     * @member {number}
+     * @default 0
+     */
+    this.x = x;
+
+    /**
+     * @member {number}
+     * @default 0
+     */
+    this.y = y;
+  }
+
+  /**
+   * Creates a clone of this point
+   *
+   * @return {Point} a copy of the point
+   */
+  clone() {
+    return new Point(this.x, this.y);
+  }
+
+  /**
+   * Copies x and y from the given point
+   *
+   * @param {Point} p - The point to copy.
+   */
+  copy(p) {
+    this.set(p.x, p.y);
+  }
+
+  /**
+   * Returns true if the given point is equal to this point
+   *
+   * @param {Point} p - The point to check
+   * @returns {boolean} Whether the given point equal to this point
+   */
+  equals(p) {
+    return p.x === this.x && p.y === this.y;
+  }
+
+  /**
+   * Sets the point to a new x and y position.
+   * If y is omitted, both x and y will be set to x.
+   *
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   */
+  set(x, y) {
+
+    /**
+     * @member {number}
+     * @default 0
+     */
+    this.x = x || 0;
+
+    /**
+     * @member {number}
+     * @default 0
+     */
+    this.y = y || (y !== 0 ? this.x : 0);
+  }
+}
+
+if (true) {
+  module.exports = Point;
+}
+
+/***/ }),
+/* 264 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Rect class
+ * @class PIXI.Geometry.Rect
+ */
+class Rect {
+
+  /**
+   * Rect constructor.
+   *
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @param {number} [width=0] - width of the rect
+   * @param {number} [height=0] - height of the rect
+   * @constructor
+   */
+  constructor(x = 0, y = 0, width = 0, height = 0) {
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.x = x;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.y = y;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.width = width;
+
+    /**
+     *
+     * @type {number}
+     * @default = 0
+     */
+    this.height = height;
+  }
+
+  /**
+   * Clone the current Rect.
+   *
+   * @returns {Rect}
+   */
+  clone() {
+    return new Rect(this.x, this.y, this.width, this.height);
+  }
+
+  /**
+   * Copy the values of rect onto the current Rect.
+   *
+   * @param {Rect} rect - The rect to copy
+   */
+  copy(rect) {
+    this.set(rect.x, rect.y, rect.width, rect.height);
+  }
+
+  /**
+   * Compare the given Rect to this Rect.
+   *
+   * @param {Rect} rect - Compare this Rect to the passed Rect
+   * @returns {boolean}
+   */
+  equals(rect) {
+    return rect.x === this.x && rect.y === this.y && rect.width === this.width && rect.height === this.height;
+  }
+
+  /**
+   * Sets the rect to a new x and y position.
+   * If height is omitted, both width and height will be set to width.
+   *
+   * @param {number} [x=0] - position of the point on the x axis
+   * @param {number} [y=0] - position of the point on the y axis
+   * @param {number} [width=0] - width of the rect
+   * @param {number} [height=0] - height of the rect
+   */
+  set(x, y, width, height) {
+
+    this.x = x || 0;
+    this.y = y;
+
+    this.width = width;
+    this.height = height || (height !== 0 ? this.width : 0);
+  }
+}
+
+if (true) {
+  module.exports = Rect;
+}
+
+/***/ }),
+/* 265 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Size class
+ * @class PIXI.Geometry.Size
+ */
+class Size {
+  constructor(width, height) {
+    this.width = width || 0;
+    this.height = height || 0;
+  }
+
+  /**
+   * Clone the current Size.
+   * @returns {Size}
+   */
+  clone() {
+    return new Size(this.width, this.height);
+  }
+
+  /**
+   * Copy the values of size onto the current Size.
+   * @param {Size} size - The size to copy
+   */
+  copy(size) {
+    this.set(size.width, size.height);
+  }
+
+  /**
+   * Compare the given Size to this Size.
+   *
+   * @param {Size} size - Compare this Size to the passed Size
+   * @returns {boolean}
+   */
+  equals(size) {
+    return size.width === this.width && size.height === this.height;
+  }
+
+  /**
+   * Sets the size to a new width and height position.
+   * @param {number} [width=0] - width of the size
+   * @param {number} [height=0] - height of the size
+   */
+  set(width, height) {
+    this.width = width || 0;
+    this.height = height || 0;
+  }
+
+  /**
+   * Returns the half width of the object.
+   * @returns {number}
+   */
+  get halfwidth() {
+    return this.width / 2;
+  }
+
+  /**
+   * Returns the half height of the object.
+   * @returns {number}
+   */
+  get halfheight() {
+    return this.height / 2;
+  }
+}
+
+module.exports = Size;
+
+/***/ }),
+/* 266 */
 /***/ (function(module, exports) {
 
 /**
@@ -80618,7 +80780,7 @@ window.lerp = function (start = 0, stop = 0, amt = 0) {
 };
 
 /***/ }),
-/* 264 */
+/* 267 */
 /***/ (function(module, exports) {
 
 /**
@@ -80639,7 +80801,7 @@ window.rand = function rand(min, max) {
 };
 
 /***/ }),
-/* 265 */
+/* 268 */
 /***/ (function(module, exports) {
 
 /**
@@ -80731,7 +80893,7 @@ window.map2 = function (from = [], to = [], n = 0) {
 };
 
 /***/ }),
-/* 266 */
+/* 269 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -80826,7 +80988,7 @@ class Axis extends PIXI.utils.EventEmitter {
 module.exports = Axis;
 
 /***/ }),
-/* 267 */
+/* 270 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -80835,7 +80997,7 @@ module.exports = Axis;
  * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
 
-const GamepadEvent = __webpack_require__(269);
+const GamepadEvent = __webpack_require__(272);
 const PIXI = __webpack_require__(5);
 
 /**
@@ -80964,7 +81126,7 @@ class Button extends PIXI.utils.EventEmitter {
 module.exports = Button;
 
 /***/ }),
-/* 268 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -80973,8 +81135,8 @@ module.exports = Button;
  * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
 
-const Button = __webpack_require__(267);
-const Axis = __webpack_require__(266);
+const Button = __webpack_require__(270);
+const Axis = __webpack_require__(269);
 const PIXI = __webpack_require__(5);
 
 /**
@@ -81131,7 +81293,7 @@ class GamePad extends PIXI.utils.EventEmitter {
 module.exports = GamePad;
 
 /***/ }),
-/* 269 */
+/* 272 */
 /***/ (function(module, exports) {
 
 /**
@@ -81190,7 +81352,7 @@ class GamepadEvent {
 module.exports = GamepadEvent;
 
 /***/ }),
-/* 270 */
+/* 273 */
 /***/ (function(module, exports) {
 
 /**
@@ -81223,29 +81385,34 @@ class KeyboardInput {
    * @constructor
    * @param {number} keyCode - The keycode to listen for
    */
-  constructor(key) {
+  constructor(keyCode) {
 
-    let info = {};
-    info.key = key;
-    info.isDown = false;
-    info.isUp = true;
-    info.down = undefined;
-    info.up = undefined;
+    let key = {};
+    key.keyCode = keyCode;
+    key.isDown = false;
+    key.isUp = true;
+    key.down = undefined;
+    key.up = undefined;
 
-    this.info = info;
+    this.key = key;
 
     window.addEventListener('keydown', this.downHandler.bind(this), false);
 
     window.addEventListener('keyup', this.upHandler.bind(this), false);
   }
 
+  reset() {
+    this.key.isDown = false;
+    this.key.isUp = true;
+  }
+
   /**
-   * Return the information object.
+   * Return the key object.
    *
    * @returns {object}
    */
-  getInfo() {
-    return this.info;
+  getKey() {
+    return this.key;
   }
 
   /**
@@ -81254,7 +81421,7 @@ class KeyboardInput {
    * @returns {boolean}
    */
   isDown() {
-    return this.info.isDown;
+    return this.key.isDown;
   }
 
   /**
@@ -81263,7 +81430,7 @@ class KeyboardInput {
    * @returns {boolean}
    */
   isUp() {
-    return this.info.isUp;
+    return this.key.isUp;
   }
 
   /**
@@ -81272,12 +81439,12 @@ class KeyboardInput {
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   downHandler(event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = true;
-      this.info.isUp = false;
+    if (event.key === this.key.keyCode) {
+      this.key.isDown = true;
+      this.key.isUp = false;
 
-      if (this.info.down) {
-        this.info.down(event);
+      if (this.key.down) {
+        this.key.down(event);
       }
     }
     event.preventDefault();
@@ -81289,12 +81456,12 @@ class KeyboardInput {
    * @param {KeyboardEvent} event - The browser KeyboardEvent
    */
   upHandler(event) {
-    if (event.key === this.info.key) {
-      this.info.isDown = false;
-      this.info.isUp = true;
+    if (event.key === this.key.keyCode) {
+      this.key.isDown = false;
+      this.key.isUp = true;
 
-      if (this.info.up) {
-        this.info.up(event);
+      if (this.key.up) {
+        this.key.up(event);
       }
     }
     event.preventDefault();
@@ -81308,7 +81475,7 @@ class KeyboardInput {
 module.exports = KeyboardInput;
 
 /***/ }),
-/* 271 */
+/* 274 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -81559,7 +81726,7 @@ if (true) {
 }
 
 /***/ }),
-/* 272 */
+/* 275 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -81906,7 +82073,7 @@ if (true) {
 }
 
 /***/ }),
-/* 273 */
+/* 276 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -82032,7 +82199,7 @@ class CrossFade extends TransactionType {
 module.exports = CrossFade;
 
 /***/ }),
-/* 274 */
+/* 277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -82042,7 +82209,7 @@ module.exports = CrossFade;
  */
 
 const TransactionType = __webpack_require__(113);
-const TweenJS = __webpack_require__(42);
+const TweenJS = __webpack_require__(43);
 const Scene = __webpack_require__(19);
 
 /**
@@ -82216,7 +82383,7 @@ class ScrollFrom extends TransactionType {
 module.exports = ScrollFrom;
 
 /***/ }),
-/* 275 */
+/* 278 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Button = __webpack_require__(114);
@@ -82425,7 +82592,7 @@ class BaseButton extends Button {
 module.exports = BaseButton;
 
 /***/ }),
-/* 276 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Button = __webpack_require__(114);
@@ -82631,7 +82798,7 @@ class ImageButton extends Button {
 module.exports = ImageButton;
 
 /***/ }),
-/* 277 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Buttons = __webpack_require__(97);
@@ -82717,7 +82884,7 @@ class CloseableDialog extends BaseDialog {
 module.exports = CloseableDialog;
 
 /***/ }),
-/* 278 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const BaseDialog = __webpack_require__(230);
@@ -82738,7 +82905,7 @@ class DefaultDialog extends BaseDialog {
 module.exports = DefaultDialog;
 
 /***/ }),
-/* 279 */
+/* 282 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -82746,13 +82913,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Menu", function() { return Menu; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemText", function() { return MenuItemText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MenuItemImageButton", function() { return MenuItemImageButton; });
-const Menu = __webpack_require__(280);
-const MenuItemText = __webpack_require__(282);
-const MenuItemImageButton = __webpack_require__(281);
+const Menu = __webpack_require__(283);
+const MenuItemText = __webpack_require__(285);
+const MenuItemImageButton = __webpack_require__(284);
 
 
 /***/ }),
-/* 280 */
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(8);
@@ -82830,7 +82997,7 @@ class Menu extends GameObject {
 module.exports = Menu;
 
 /***/ }),
-/* 281 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Buttons = __webpack_require__(97);
@@ -82908,7 +83075,7 @@ class MenuItemImageButton extends MenuItem {
 module.exports = MenuItemImageButton;
 
 /***/ }),
-/* 282 */
+/* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Buttons = __webpack_require__(97);
@@ -82986,7 +83153,7 @@ class MenuItemText extends MenuItem {
 module.exports = MenuItemText;
 
 /***/ }),
-/* 283 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameObject = __webpack_require__(8);
@@ -83203,13 +83370,13 @@ if (true) {
 }
 
 /***/ }),
-/* 284 */
+/* 287 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const pkg = __webpack_require__(233);
 
 module.exports = {
-  DebugManager: __webpack_require__(285)
+  DebugManager: __webpack_require__(288)
 
   // pkg.moduleExists('pixi' /* take care of absolute paths */)
   //   .then(() => {
@@ -83227,11 +83394,11 @@ module.exports = {
 };
 
 /***/ }),
-/* 285 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const PIXI = __webpack_require__(5);
-const Plugin = __webpack_require__(286);
+const Plugin = __webpack_require__(289);
 
 class DebugManager extends PIXI.utils.EventEmitter {
   constructor() {
@@ -83302,11 +83469,11 @@ if (true) {
 }
 
 /***/ }),
-/* 286 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const ScenePlugin = __webpack_require__(99);
-const DebugDialog = __webpack_require__(283);
+const DebugDialog = __webpack_require__(286);
 
 class Plugin extends ScenePlugin {
   constructor() {
@@ -83340,7 +83507,7 @@ if (true) {
 }
 
 /***/ }),
-/* 287 */
+/* 290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const PIXI = __webpack_require__(5);
@@ -83772,7 +83939,7 @@ module.exports = PhysicsSprite;
 // })
 
 /***/ }),
-/* 288 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(240);
@@ -83783,7 +83950,7 @@ __webpack_require__(105);
 
 const Prophecy = {
   Gameloop: __webpack_require__(237),
-  GameEngine: __webpack_require__(43),
+  GameEngine: __webpack_require__(42),
   Geometry: __webpack_require__(239),
   Transform: __webpack_require__(104),
   Transition: __webpack_require__(100),
@@ -83806,7 +83973,7 @@ const Prophecy = {
 module.exports = Prophecy;
 
 /***/ }),
-/* 289 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -83851,14 +84018,14 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 289;
+webpackContext.id = 292;
 
 /***/ }),
-/* 290 */
+/* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./debug/index": 284,
+	"./debug/index": 287,
 	"./matterjs/index": 235
 };
 function webpackContext(req) {
@@ -83875,167 +84042,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 290;
-
-/***/ }),
-/* 291 */,
-/* 292 */,
-/* 293 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Johnny Mast <mastjohnny@gmail.com>
- * @copyright    2019 Prophecy.
- * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
- */
-
-const PIXI = __webpack_require__(5);
-
-/**
- * ObjectGateWay factory class.
- */
-class GameObjectFactory {
-  constructor() {}
-
-  /**
-   * Create a new Sprite.
-   * @param {string|PIXI.Texture} texture - Texture name or object.
-   * @param {number} [x=0] - The x position of this sprite.
-   * @param {number} [y=0] - The y position of this object.
-   * @returns {PIXI.ObservablePoint}
-   */
-  sprite(texture = '', x = 0, y = 0) {
-
-    if (typeof texture == 'string') {
-      texture = new PIXI.Texture.fromImage(texture);
-    }
-
-    let sprite = new PIXI.Sprite(texture);
-    sprite.x = x;
-    sprite.y = y;
-
-    return sprite;
-  }
-}
-
-module.exports = GameObjectFactory;
-
-/***/ }),
-/* 294 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Johnny Mast <mastjohnny@gmail.com>
- * @copyright    2019 Prophecy.
- * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
- */
-
-/**
- * Size class
- * @class PIXI.Geometry.Size
- */
-class Size {
-  constructor(width, height) {
-    this.width = width || 0;
-    this.height = height || 0;
-  }
-
-  /**
-   * Clone the current Size.
-   * @returns {Size}
-   */
-  clone() {
-    return new Size(this.width, this.height);
-  }
-
-  /**
-   * Copy the values of size onto the current Size.
-   * @param {Size} size - The size to copy
-   */
-  copy(size) {
-    this.set(size.width, size.height);
-  }
-
-  /**
-   * Compare the given Size to this Size.
-   *
-   * @param {Size} size - Compare this Size to the passed Size
-   * @returns {boolean}
-   */
-  equals(size) {
-    return size.width === this.width && size.height === this.height;
-  }
-
-  /**
-   * Sets the size to a new width and height position.
-   * @param {number} [width=0] - width of the size
-   * @param {number} [height=0] - height of the size
-   */
-  set(width, height) {
-    this.width = width || 0;
-    this.height = height || 0;
-  }
-
-  /**
-   * Returns the half width of the object.
-   * @returns {number}
-   */
-  get halfwidth() {
-    return this.width / 2;
-  }
-
-  /**
-   * Returns the half height of the object.
-   * @returns {number}
-   */
-  get halfheight() {
-    return this.height / 2;
-  }
-}
-
-module.exports = Size;
-
-/***/ }),
-/* 295 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Johnny Mast <mastjohnny@gmail.com>
- * @copyright    2019 Prophecy.
- * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
- */
-const GameEngine = __webpack_require__(43);
-
-/**
- * World information class.
- * @class World
- */
-class World {
-
-  /**
-   * World constructor
-   * @param {object} options - World options
-   */
-  constructor(options) {
-
-    let ge = GameEngine.get();
-    let app = ge.get('App');
-
-    let renderer = app.renderer;
-
-    this._size = options.size || new Prophecy.Geometry.Size(renderer.screen.width, renderer.screen.height);
-  }
-
-  /**
-   * Return the world size
-   * @returns {*|Prophecy.Geometry.size}
-   */
-  get size() {
-    return this._size;
-  }
-}
-
-module.exports = World;
+webpackContext.id = 293;
 
 /***/ })
 /******/ ]);

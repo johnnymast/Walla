@@ -90,8 +90,8 @@ class Game {
 
     let canvas = this.config.canvas
     let resolution = 2 // window.devicePixelRatio
-    let width =  (this.config.width || 800)
-    let height =  (this.config.height || 600)
+    let width = (this.config.width || 800)
+    let height = (this.config.height || 600)
 
     if (!canvas) {
       canvas = document.createElement('canvas')
@@ -119,6 +119,7 @@ class Game {
     // this.ge.set('AssetManager', new Prophecy.AssetManager())
     this.ge.set('SceneManager', new Prophecy.SceneManager())
     // this.ge.set('StateManager', new Prophecy.StateManager())
+    // @deprecated
     this.ge.set('InputManager', new Prophecy.InputManager())
     // this.ge.set('PluginManager', new Prophecy.PluginManager(this.ge))
 
@@ -129,6 +130,7 @@ class Game {
     this.plugins = new Prophecy.PluginManager(this.ge)
     this.state = new Prophecy.StateManager()
     this.world = new World({ size: new Prophecy.Geometry.Size(width, height) })
+    this.input = new Prophecy.InputManager()
 
     this.add = new GameObjectFactory()
   }
