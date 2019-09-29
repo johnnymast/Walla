@@ -28,8 +28,8 @@ function create () {
   this.knobRadius = 10
   this.wallWidth = 20
 
-  this.centerX = this.ge.get('App').renderer.screen.width / 2
-  this.centerY = this.ge.get('App').renderer.screen.height / 2
+  this.centerX = game.world.size.halfwidth
+  this.centerY = game.world.size.halfheight
 
   let backplate = new PIXI.Graphics()
   backplate.lineStyle(2, 0x5a5d63, 1)
@@ -51,8 +51,7 @@ function create () {
   knob.anchor = 0.5
   knob.endFill()
 
-  let mickeyTexture = PIXI.Texture.fromImage('mickey.png')
-  let mickeyMouse = new PIXI.Sprite(mickeyTexture)
+  let mickeyMouse = game.add.sprite('mickey.png', this.centerX, this.centerY)
   mickeyMouse.x = this.centerX - mickeyMouse.width / 2
   mickeyMouse.y = this.centerY - mickeyMouse.height / 2
   mickeyMouse.scale.set(0.25)

@@ -78135,6 +78135,8 @@ module.exports = {
  */
 
 const Scene = __webpack_require__(19);
+const World = __webpack_require__(295);
+const GameObjectFactory = __webpack_require__(293);
 
 /**
  * Game class.
@@ -78204,17 +78206,19 @@ class Game {
 
     let canvas = this.config.canvas;
     let resolution = 2; // window.devicePixelRatio
+    let width = this.config.width || 800;
+    let height = this.config.height || 600;
 
     if (!canvas) {
       canvas = document.createElement('canvas');
-      canvas.style.width = (this.config.width || 800) + 'px';
-      canvas.style.height = (this.config.height || 600) + 'px';
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
       document.body.appendChild(canvas);
     }
 
     let app = new PIXI.Application(canvas.width, canvas.height, {
-      width: this.config.width || canvas.width,
-      height: this.config.height || canvas.height,
+      width: width,
+      height: height,
       view: canvas,
       resolution: resolution,
       antialias: true,
@@ -78240,6 +78244,9 @@ class Game {
     this.assets = new Prophecy.AssetManager();
     this.plugins = new Prophecy.PluginManager(this.ge);
     this.state = new Prophecy.StateManager();
+    this.world = new World({ size: new Prophecy.Geometry.Size(width, height) });
+
+    this.add = new GameObjectFactory();
   }
 
   start() {
@@ -78553,8 +78560,9 @@ module.exports = Camera;
 
 const Point = __webpack_require__(261);
 const Rect = __webpack_require__(262);
+const Size = __webpack_require__(294);
 
-module.exports = { Point, Rect };
+module.exports = { Point, Rect, Size };
 
 /***/ }),
 /* 240 */
@@ -83868,6 +83876,166 @@ webpackContext.keys = function webpackContextKeys() {
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
 webpackContext.id = 290;
+
+/***/ }),
+/* 291 */,
+/* 292 */,
+/* 293 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+const PIXI = __webpack_require__(5);
+
+/**
+ * ObjectGateWay factory class.
+ */
+class GameObjectFactory {
+  constructor() {}
+
+  /**
+   * Create a new Sprite.
+   * @param {string|PIXI.Texture} texture - Texture name or object.
+   * @param {number} [x=0] - The x position of this sprite.
+   * @param {number} [y=0] - The y position of this object.
+   * @returns {PIXI.ObservablePoint}
+   */
+  sprite(texture = '', x = 0, y = 0) {
+
+    if (typeof texture == 'string') {
+      texture = new PIXI.Texture.fromImage(texture);
+    }
+
+    let sprite = new PIXI.Sprite(texture);
+    sprite.x = x;
+    sprite.y = y;
+
+    return sprite;
+  }
+}
+
+module.exports = GameObjectFactory;
+
+/***/ }),
+/* 294 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Size class
+ * @class PIXI.Geometry.Size
+ */
+class Size {
+  constructor(width, height) {
+    this.width = width || 0;
+    this.height = height || 0;
+  }
+
+  /**
+   * Clone the current Size.
+   * @returns {Size}
+   */
+  clone() {
+    return new Size(this.width, this.height);
+  }
+
+  /**
+   * Copy the values of size onto the current Size.
+   * @param {Size} size - The size to copy
+   */
+  copy(size) {
+    this.set(size.width, size.height);
+  }
+
+  /**
+   * Compare the given Size to this Size.
+   *
+   * @param {Size} size - Compare this Size to the passed Size
+   * @returns {boolean}
+   */
+  equals(size) {
+    return size.width === this.width && size.height === this.height;
+  }
+
+  /**
+   * Sets the size to a new width and height position.
+   * @param {number} [width=0] - width of the size
+   * @param {number} [height=0] - height of the size
+   */
+  set(width, height) {
+    this.width = width || 0;
+    this.height = height || 0;
+  }
+
+  /**
+   * Returns the half width of the object.
+   * @returns {number}
+   */
+  get halfwidth() {
+    return this.width / 2;
+  }
+
+  /**
+   * Returns the half height of the object.
+   * @returns {number}
+   */
+  get halfheight() {
+    return this.height / 2;
+  }
+}
+
+module.exports = Size;
+
+/***/ }),
+/* 295 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+const GameEngine = __webpack_require__(43);
+
+/**
+ * World information class.
+ * @class World
+ */
+class World {
+
+  /**
+   * World constructor
+   * @param {object} options - World options
+   */
+  constructor(options) {
+
+    let ge = GameEngine.get();
+    let app = ge.get('App');
+
+    let renderer = app.renderer;
+
+    this._size = options.size || new Prophecy.Geometry.Size(renderer.screen.width, renderer.screen.height);
+  }
+
+  /**
+   * Return the world size
+   * @returns {*|Prophecy.Geometry.size}
+   */
+  get size() {
+    return this._size;
+  }
+}
+
+module.exports = World;
 
 /***/ })
 /******/ ]);

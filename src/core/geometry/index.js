@@ -6,5 +6,6 @@
 
 const Point = require ('./point')
 const Rect = require ('./rect')
+const Size = require ('./size')
 
-module.exports = { Point, Rect }
+module.exports = { Point, Rect, Size }

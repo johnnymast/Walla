@@ -5,6 +5,8 @@
  */
 
 const Scene = require('./Scene')
+const World = require('./World')
+const GameObjectFactory = require('./GameObjectFactory')
 
 /**
  * Game class.
@@ -88,17 +90,19 @@ class Game {
 
     let canvas = this.config.canvas
     let resolution = 2 // window.devicePixelRatio
+    let width =  (this.config.width || 800)
+    let height =  (this.config.height || 600)
 
     if (!canvas) {
       canvas = document.createElement('canvas')
-      canvas.style.width = (this.config.width || 800) + 'px'
-      canvas.style.height = (this.config.height || 600) + 'px'
+      canvas.style.width = width + 'px'
+      canvas.style.height = height + 'px'
       document.body.appendChild(canvas)
     }
 
     let app = new PIXI.Application(canvas.width, canvas.height, {
-      width: this.config.width || canvas.width,
-      height: this.config.height || canvas.height,
+      width: width,
+      height: height,
       view: canvas,
       resolution: resolution,
       antialias: true,
@@ -124,6 +128,9 @@ class Game {
     this.assets = new Prophecy.AssetManager()
     this.plugins = new Prophecy.PluginManager(this.ge)
     this.state = new Prophecy.StateManager()
+    this.world = new World({ size: new Prophecy.Geometry.Size(width, height) })
+
+    this.add = new GameObjectFactory()
   }
 
   start () {

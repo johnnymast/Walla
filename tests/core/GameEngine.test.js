@@ -16,7 +16,7 @@ describe('Core - Prophecy.GameEngine',  () => {
     let v1 = Prophecy.GameEngine.get()
     let v2 = Prophecy.GameEngine.get()
 
-    LocalStorage.set('test1', 'value')
+    v1.set('test1', 'value')
     expect(v1).toEqual(v2)
   })
 
@@ -24,9 +24,9 @@ describe('Core - Prophecy.GameEngine',  () => {
     let engine = Prophecy.GameEngine.get()
     let testValue = 'value'
 
-    LocalStorage.set('test1', testValue)
+    engine.set('test1', testValue)
 
-    let expected = LocalStorage.get('test1')
+    let expected = engine.get('test1')
 
     expect(expected).toEqual(testValue)
   })
