@@ -29,6 +29,31 @@ describe('Geometry - Prophecy.Geometry.Rect', function () {
     expect(r.width).toEqual(200)
     expect(r.height).toEqual(200)
   })
+
+  it('halfwidth() Should return the half of the rect with.', () => {
+    let r = new Prophecy.Geometry.Rect(0, 0, 100, 200)
+    let expected = 100 / 2
+    expect(expected).toEqual(r.halfwidth)
+  })
+
+  it('halfheight() Should return the half of the rect with.', function() {
+    let r = new Prophecy.Geometry.Rect(0, 0, 100, 200)
+    let expected = 200 / 2
+    expect(expected).toEqual(r.halfheight)
+  })
+
+  it('centerx() Should return the center of the rect on the x axis.', function() {
+    let r = new Prophecy.Geometry.Rect(10, 20, 100, 200)
+    let expected = 10/2
+    expect(expected).toEqual(r.centerx)
+  })
+
+  it('centery() Should return the center of the rect on the y axis.', function() {
+    let r = new Prophecy.Geometry.Rect(10, 20, 100, 200)
+    let expected = 20/2
+    expect(expected).toEqual(r.centery)
+  })
+
 })
 
 describe('Geometry - Prophecy.Geometry.Rect Element-wise', function () {

@@ -78203,7 +78203,7 @@ class Game {
 
     // FIXME: replace with prophecyjs/Loader
     this.loader = new Prophecy.AssetManager();
-    this.resize = new Prophecy.ResizeManager(app, { autoFullScreen: true });
+    //   this.resize = new Prophecy.ResizeManager(app, { autoFullScreen: true })
     this.assets = new Prophecy.AssetManager();
     this.plugins = new Prophecy.PluginManager(this.ge);
     this.state = new Prophecy.StateManager();
@@ -78235,6 +78235,14 @@ class Game {
       const Debug = this.plugins.loadPlugin('debug', 'Debug');
       Prophecy.Plugins.DebugManager = new Debug.DebugManager();
     }
+  }
+
+  // /**
+  //  * Return the current stage
+  //  * @returns {Object.scene|Prophecy.Scene}
+  //  */
+  get stage() {
+    return this.ge.get('SceneManager').getCurrentScene();
   }
 }
 
@@ -78447,13 +78455,14 @@ module.exports = Gameloop;
 
 /***/ }),
 /* 238 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Johnny Mast <mastjohnny@gmail.com>
  * @copyright    2019 Prophecy.
  * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
+const CameraInfo = __webpack_require__(295);
 
 /**
  * Camera class
@@ -78461,49 +78470,122 @@ module.exports = Gameloop;
  * @class Prophecy.Camera
  */
 class Camera extends PIXI.Container {
-  constructor(frame) {
-    super({ backgroundColor: 0x1099bb });
+  constructor(game, world, x, y, width, height) {
+    super();
 
-    if (!frame instanceof Prophecy.Geometry.Rect) {
-      throw new Error('Argument error: Did not pass a Rect');
-    }
+    this.game = game;
+    this.enableDebug = true;
 
-    this.target = null;
+    this.x = x;
+    this.y = y;
+    this.w = 300; //width
+    this.h = 300; //height
+
+    // this.w = width
+    // this.h = height
+
+
     this.deadzone = null;
 
-    this.x = frame.x;
-    this.y = frame.y;
+    this.world = world;
 
-    // this.mask = maskG
+    this.bounds = new Prophecy.Geometry.Rect(this.x, this.y, this.w, this.h);
 
-    console.log('test', frame instanceof Prophecy.Geometry.Rect);
+    /**
+     * The target we want the camera to follow.
+     * @type {*}
+     */
+    this.target = null;
+
+    /**
+     * ----------------------------------
+     * |     |-----| <--- Viewport rect
+     * |     |     |
+     * |     |     |
+     * |     |-----|
+     * ----------------------------------
+     * This is the part the player looks trough
+     * @type {PIXI.Geometry.Rect}
+     */
+    this.viewport = new Prophecy.Geometry.Rect(this.x, this.y, this.w, this.h);
+
+    this.debug = new CameraInfo(this);
+
+    this.addChild(this.debug);
+
+    if (this.enableDebug) {
+      console.log('show debug');
+      this.debug.show();
+    }
+  }
+
+  updateViewport() {
+
+    let diff = {
+      x: this.target.x + this.target.width / 2 - this.viewport.width / 2,
+      y: this.target.y + this.target.height / 2 - this.viewport.height / 2
+    };
+
+    if (this.checkViewPortBounds(diff.x, diff.y)) {
+      this.x = diff.x;
+      this.y = diff.y;
+
+      this.viewport.x = this.x;
+      this.viewport.y = this.y;
+
+      if (game.stage) {
+        game.stage.x = -this.viewport.x;
+        game.stage.y = -this.viewport.y;
+      }
+    }
+  }
+
+  checkViewPortBounds(x, y) {
+
+    if (x < 1 || x > this.bounds.width - this.viewport.width) {
+      this.debug.options.lineWidth = 4;
+      return false;
+    } else {
+      this.debug.options.lineWidth = 2;
+    }
+
+    if (y < 1 || y > this.bounds.height - this.viewport.height) {
+      this.debug.options.lineWidth = 4;
+      return false;
+    } else {
+      this.debug.options.lineWidth = 2;
+    }
+
+    return true;
   }
 
   follow(target, style = Prophecy.Camera.FOLLOW_NONE) {
 
+    this.target = target;
+
     switch (style) {
       case Prophecy.Camera.FOLLOW_LOCKON:
-        let w = this.width / 8;
-        let h = this.height / 3;
-        this.deadzone = new Prophecy.Geometry.Rect((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
 
-        console.log('Simple follow');
+        this.deadzone = new Prophecy.Geometry.Rect(this.target.x + this.target.width / 2 - this.bounds.width / 2, this.target.y + this.target.height / 2 - this.bounds.height / 2, this.bounds.width, this.bounds.height);
+
+        this.x = this.deadzone.x;
+        this.y = this.deadzone.y;
+
         break;
 
       default:
         this.deadzone = null;
         break;
     }
-
-    this.target = target;
   }
 
-  unfollow() {
-    this.target = null;
-  }
+  update(delta) {
 
-  update() {
-    // console.log('delta update')
+    this.updateViewport();
+
+    if (this.enableDebug) {
+      this.debug.update();
+    }
   }
 }
 
@@ -80276,19 +80358,50 @@ class World {
   constructor(options) {
 
     let ge = GameEngine.get();
-    let app = ge.get('App');
+    let game = ge.get('Game');
 
-    let renderer = app.renderer;
+    this.size = options.size;
+    this.camera = new Prophecy.Camera(game, this, 0, 0, this.size.width, this.size.height);
 
-    this._size = options.size || new Prophecy.Geometry.Size(renderer.screen.width, renderer.screen.height);
+    this.setBounds(0, 0, this.size.width, this.size.height);
   }
 
   /**
-   * Return the world size
-   * @returns {*|Prophecy.Geometry.size}
+   *
+   * @param {Number} [x=0] - The x coordinate.
+   * @param {Number} [y=0] - The y coordinate.
+   * @param {Number} [width=0] - The width of the world.
+   * @param {Number} [height=0] - The height of the world.
    */
-  get size() {
-    return this._size;
+  setBounds(x = 0, y = 0, width = 0, height = 0) {
+    this.bounds = new Prophecy.Geometry.Rect(x, y, width, height);
+
+    if (this.camera.bounds) {
+
+      //  this.camera.bounds.set(x, y, width, height)
+      this.camera.bounds.set(x, y, Math.max(width, this.size.width), Math.max(height, this.size.height));
+      console.log(this.camera.bounds);
+    }
+  }
+
+  /**
+   * Return the world bounds.
+   * @returns {PIXI.Geometry.Rect}
+   */
+  getBounds() {
+    return this.bounds;
+  }
+
+  /**
+   * Return the center of the world
+   * @returns {PIXI.Geometry.Point}
+   */
+  getCenter() {
+    return new Prophecy.Geometry.Point(this.bounds.width / 2, this.bounds.height / 2);
+  }
+
+  update(delta) {
+    this.camera.update(delta);
   }
 }
 
@@ -80296,13 +80409,14 @@ module.exports = World;
 
 /***/ }),
 /* 261 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Johnny Mast <mastjohnny@gmail.com>
  * @copyright    2019 Prophecy.
  * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
  */
+const CameraInfo = __webpack_require__(295);
 
 /**
  * Camera class
@@ -80310,49 +80424,122 @@ module.exports = World;
  * @class Prophecy.Camera
  */
 class Camera extends PIXI.Container {
-  constructor(frame) {
-    super({ backgroundColor: 0x1099bb });
+  constructor(game, world, x, y, width, height) {
+    super();
 
-    if (!frame instanceof Prophecy.Geometry.Rect) {
-      throw new Error('Argument error: Did not pass a Rect');
-    }
+    this.game = game;
+    this.enableDebug = true;
 
-    this.target = null;
+    this.x = x;
+    this.y = y;
+    this.w = 300; //width
+    this.h = 300; //height
+
+    // this.w = width
+    // this.h = height
+
+
     this.deadzone = null;
 
-    this.x = frame.x;
-    this.y = frame.y;
+    this.world = world;
 
-    // this.mask = maskG
+    this.bounds = new Prophecy.Geometry.Rect(this.x, this.y, this.w, this.h);
 
-    console.log('test', frame instanceof Prophecy.Geometry.Rect);
+    /**
+     * The target we want the camera to follow.
+     * @type {*}
+     */
+    this.target = null;
+
+    /**
+     * ----------------------------------
+     * |     |-----| <--- Viewport rect
+     * |     |     |
+     * |     |     |
+     * |     |-----|
+     * ----------------------------------
+     * This is the part the player looks trough
+     * @type {PIXI.Geometry.Rect}
+     */
+    this.viewport = new Prophecy.Geometry.Rect(this.x, this.y, this.w, this.h);
+
+    this.debug = new CameraInfo(this);
+
+    this.addChild(this.debug);
+
+    if (this.enableDebug) {
+      console.log('show debug');
+      this.debug.show();
+    }
+  }
+
+  updateViewport() {
+
+    let diff = {
+      x: this.target.x + this.target.width / 2 - this.viewport.width / 2,
+      y: this.target.y + this.target.height / 2 - this.viewport.height / 2
+    };
+
+    if (this.checkViewPortBounds(diff.x, diff.y)) {
+      this.x = diff.x;
+      this.y = diff.y;
+
+      this.viewport.x = this.x;
+      this.viewport.y = this.y;
+
+      if (game.stage) {
+        game.stage.x = -this.viewport.x;
+        game.stage.y = -this.viewport.y;
+      }
+    }
+  }
+
+  checkViewPortBounds(x, y) {
+
+    if (x < 1 || x > this.bounds.width - this.viewport.width) {
+      this.debug.options.lineWidth = 4;
+      return false;
+    } else {
+      this.debug.options.lineWidth = 2;
+    }
+
+    if (y < 1 || y > this.bounds.height - this.viewport.height) {
+      this.debug.options.lineWidth = 4;
+      return false;
+    } else {
+      this.debug.options.lineWidth = 2;
+    }
+
+    return true;
   }
 
   follow(target, style = Prophecy.Camera.FOLLOW_NONE) {
 
+    this.target = target;
+
     switch (style) {
       case Prophecy.Camera.FOLLOW_LOCKON:
-        let w = this.width / 8;
-        let h = this.height / 3;
-        this.deadzone = new Prophecy.Geometry.Rect((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
 
-        console.log('Simple follow');
+        this.deadzone = new Prophecy.Geometry.Rect(this.target.x + this.target.width / 2 - this.bounds.width / 2, this.target.y + this.target.height / 2 - this.bounds.height / 2, this.bounds.width, this.bounds.height);
+
+        this.x = this.deadzone.x;
+        this.y = this.deadzone.y;
+
         break;
 
       default:
         this.deadzone = null;
         break;
     }
-
-    this.target = target;
   }
 
-  unfollow() {
-    this.target = null;
-  }
+  update(delta) {
 
-  update() {
-    // console.log('delta update')
+    this.updateViewport();
+
+    if (this.enableDebug) {
+      this.debug.update();
+    }
   }
 }
 
@@ -80462,6 +80649,38 @@ class Rect {
     this.width = width;
     this.height = height || (height !== 0 ? this.width : 0);
   }
+
+  /**
+   * Return the half of the width.
+   * @returns {number}
+   */
+  get halfwidth() {
+    return this.width / 2;
+  }
+
+  /**
+   * Returns the half of the height
+   * @returns {number}
+   */
+  get halfheight() {
+    return this.height / 2;
+  }
+
+  /**
+   * Returns the x center of the rect.
+   * @returns {number}
+   */
+  get centerx() {
+    return this.x / 2;
+  }
+
+  /**
+   * Return the y center of the rect.
+   */
+  get centery() {
+    return this.y / 2;
+  }
+
 }
 
 if (true) {
@@ -80662,6 +80881,38 @@ class Rect {
     this.width = width;
     this.height = height || (height !== 0 ? this.width : 0);
   }
+
+  /**
+   * Return the half of the width.
+   * @returns {number}
+   */
+  get halfwidth() {
+    return this.width / 2;
+  }
+
+  /**
+   * Returns the half of the height
+   * @returns {number}
+   */
+  get halfheight() {
+    return this.height / 2;
+  }
+
+  /**
+   * Returns the x center of the rect.
+   * @returns {number}
+   */
+  get centerx() {
+    return this.x / 2;
+  }
+
+  /**
+   * Return the y center of the rect.
+   */
+  get centery() {
+    return this.y / 2;
+  }
+
 }
 
 if (true) {
@@ -84043,6 +84294,83 @@ webpackContext.keys = function webpackContextKeys() {
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
 webpackContext.id = 293;
+
+/***/ }),
+/* 294 */,
+/* 295 */
+/***/ (function(module, exports) {
+
+class CameraInfo extends PIXI.Container {
+  constructor(camera) {
+    super();
+
+    this.options = {
+      visible: true,
+      lineWidth: 2,
+      panel: null,
+      frame: null,
+      info: null,
+      text: {
+        paddingLeft: 5,
+        paddingButton: 5
+      }
+    };
+
+    this.camera = camera;
+
+    this.hide();
+    this.init();
+  }
+
+  init() {
+    let panel = new PIXI.Container();
+    panel.x = panel.y = 0;
+
+    let frame = new PIXI.Graphics();
+
+    const style = new PIXI.TextStyle({
+      fontFamily: 'monospace',
+      fontSize: 14,
+      fill: ['#FFFFFF'] // gradient
+    });
+
+    let text = new PIXI.Text('', style);
+    text.x = text.y = 0;
+    frame.addChild(text);
+    panel.addChild(frame);
+
+    this.options.frame = frame;
+    this.options.info = text;
+
+    this.addChild(panel);
+  }
+
+  show() {
+    this.visible = true;
+  }
+
+  hide() {
+    this.visible = false;
+  }
+
+  update() {
+
+    let camera = this.camera;
+
+    let msg = `Camera (${camera.viewport.width} x ${camera.viewport.height})\n` + `X: ${camera.viewport.x} Y: ${camera.viewport.y}\n` + `Bounds x: ${camera.bounds.x} Y: ${camera.bounds.y} w: ${camera.bounds.width} h: ${camera.bounds.height}\n` + `View x: ${camera.viewport.x} Y: ${camera.viewport.y} w: ${camera.viewport.height} h: ${camera.viewport.height}`;
+
+    this.options.info.text = msg;
+    this.options.frame.clear();
+    this.options.frame.lineStyle(this.options.lineWidth, 0xFF0000, 1);
+    this.options.frame.drawRect(0, 0, camera.viewport.width - this.options.lineWidth, camera.viewport.height - this.options.lineWidth);
+    this.options.frame.endFill();
+
+    this.options.info.x = this.options.text.paddingLeft;
+    this.options.info.y = camera.viewport.height - this.options.info.height - this.options.text.paddingButton;
+  }
+}
+
+module.exports = CameraInfo;
 
 /***/ })
 /******/ ]);

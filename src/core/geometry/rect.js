@@ -95,6 +95,38 @@ class Rect {
     this.width = width
     this.height = height || ((height !== 0) ? this.width : 0)
   }
+
+  /**
+   * Return the half of the width.
+   * @returns {number}
+   */
+  get halfwidth () {
+    return this.width / 2
+  }
+
+  /**
+   * Returns the half of the height
+   * @returns {number}
+   */
+  get halfheight () {
+    return this.height / 2
+  }
+
+  /**
+   * Returns the x center of the rect.
+   * @returns {number}
+   */
+  get centerx () {
+    return this.x / 2
+  }
+
+  /**
+   * Return the y center of the rect.
+   */
+  get centery () {
+    return this.y / 2
+  }
+
 }
 
 if (typeof module !== 'undefined') {

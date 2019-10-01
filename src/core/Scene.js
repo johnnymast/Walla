@@ -74,6 +74,7 @@ class Scene extends GameObject {
       this._fixedupdate(delta)
     })
 
+
     // this.physicsTicker = new PIXI.ticker.Ticker()
     // this.physicsTicker.speed = PIXI.ticker.shared.speed + 0.5
     // this.physicsTicker.autoStart = true

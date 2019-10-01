@@ -125,7 +125,7 @@ class Game {
 
     // FIXME: replace with prophecyjs/Loader
     this.loader = new Prophecy.AssetManager()
-    this.resize = new Prophecy.ResizeManager(app, { autoFullScreen: true })
+    //   this.resize = new Prophecy.ResizeManager(app, { autoFullScreen: true })
     this.assets = new Prophecy.AssetManager()
     this.plugins = new Prophecy.PluginManager(this.ge)
     this.state = new Prophecy.StateManager()
@@ -161,6 +161,14 @@ class Game {
       const Debug = this.plugins.loadPlugin('debug', 'Debug')
       Prophecy.Plugins.DebugManager = new Debug.DebugManager
     }
+  }
+
+  // /**
+  //  * Return the current stage
+  //  * @returns {Object.scene|Prophecy.Scene}
+  //  */
+  get stage () {
+    return this.ge.get('SceneManager').getCurrentScene()
   }
 }
 
