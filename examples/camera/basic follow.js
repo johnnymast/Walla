@@ -40,12 +40,12 @@ game.createScene('basic_follow', {
      */
     this.game.world.setBounds(0, 0, this.properties.world.width, this.properties.world.height)
 
-    let tilingSprite = game.add.tilingSprite('debug_bg_grid', this.game.world.bounds.width, this.game.world.bounds.height)
+    let background = game.add.tilingSprite('debug_bg_grid', this.game.world.bounds.width, this.game.world.bounds.height)
     let dude = game.add.sprite('phaser_dude', game.world.viewport.centerx, game.world.viewport.centery)
 
     this.dude = dude
 
-    this.addChild(tilingSprite)
+    this.addChild(background)
     this.addChild(dude)
     this.addChild(game.world.camera)
 
