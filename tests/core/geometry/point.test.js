@@ -1,6 +1,10 @@
-const Prophecy = require('prophecyjs')
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
 
-// const Prophecy.Geometry.Point = require('../../../src/core/geometry/Prophecy.Geometry.Point')
+const Prophecy = require('prophecyjs')
 
 describe('Geometry - Prophecy.Geometry.Point', function () {
 

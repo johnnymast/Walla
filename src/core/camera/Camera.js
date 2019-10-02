@@ -11,6 +11,17 @@ const CameraInfo = require('./CameraInfo')
  * @class Prophecy.Camera
  */
 class Camera extends PIXI.Container {
+
+  /**
+   * Prophecy.Camera constructor.
+   * @param {Prophecy.Game} game - The actual game
+   * @param {Prophecy.World} world - The world
+   * @param {Number} x - The x position of the camera
+   * @param {Number} y - The y position of the camera
+   * @param {Number} width - The width of the camera
+   * @param {Number} height - The height the camera
+   * @constructor
+   */
   constructor (game, world, x, y, width, height) {
     super()
 
@@ -21,10 +32,6 @@ class Camera extends PIXI.Container {
     this.y = y
     this.w = 300 //width
     this.h = 300 //height
-
-    // this.w = width
-    // this.h = height
-
 
     this.deadzone = null
 
@@ -46,7 +53,7 @@ class Camera extends PIXI.Container {
      * |     |-----|
      * ----------------------------------
      * This is the part the player looks trough
-     * @type {PIXI.Geometry.Rect}
+     * @type {Prophecy.Geometry.Rect}
      */
     this.viewport = new Prophecy.Geometry.Rect(this.x, this.y, this.w, this.h)
 
@@ -55,12 +62,13 @@ class Camera extends PIXI.Container {
     this.addChild(this.debug)
 
     if (this.enableDebug) {
-      console.log('show debug')
       this.debug.show()
     }
-
   }
 
+  /**
+   * Update the camera movement.
+   */
   updateViewport () {
 
     let diff = {
@@ -82,6 +90,12 @@ class Camera extends PIXI.Container {
     }
   }
 
+  /**
+   * Validate the ViewPort coordinates.
+   * @param {Number} x - The x coordinate
+   * @param {Number} y - The y coordiante
+   * @returns {boolean}
+   */
   checkViewPortBounds (x, y) {
 
     if (x < 1 || x > this.bounds.width - this.viewport.width) {
@@ -101,6 +115,11 @@ class Camera extends PIXI.Container {
     return true
   }
 
+  /**
+   * Start following the target.
+   * @param {*} target - The object to follow
+   * @param {Number} style - The follow style.
+   */
   follow (target, style = Prophecy.Camera.FOLLOW_NONE) {
 
     this.target = target
@@ -123,9 +142,12 @@ class Camera extends PIXI.Container {
         this.deadzone = null
         break
     }
-
   }
 
+  /**
+   * Update the camera object.
+   * @param {Number} delta - The time difference since last update.
+   */
   update (delta) {
 
     this.updateViewport()

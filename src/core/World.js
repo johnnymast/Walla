@@ -7,7 +7,7 @@ const GameEngine = require('core/GameEngine')
 
 /**
  * World information class.
- * @class World
+ * @class Prophecy.World
  */
 class World {
 
@@ -37,16 +37,13 @@ class World {
     this.bounds = new Prophecy.Geometry.Rect(x, y, width, height)
 
     if (this.camera.bounds) {
-
-    //  this.camera.bounds.set(x, y, width, height)
       this.camera.bounds.set(x, y, Math.max(width, this.size.width), Math.max(height, this.size.height))
-      console.log(this.camera.bounds)
-     }
+    }
   }
 
   /**
    * Return the world bounds.
-   * @returns {PIXI.Geometry.Rect}
+   * @returns {Prophecy.Geometry.Rect}
    */
   getBounds () {
     return this.bounds
@@ -54,13 +51,17 @@ class World {
 
   /**
    * Return the center of the world
-   * @returns {PIXI.Geometry.Point}
+   * @returns {Prophecy.Geometry.Point}
    */
   getCenter () {
     return new Prophecy.Geometry.Point(this.bounds.width / 2, this.bounds.height / 2)
   }
 
-  update(delta) {
+  /**
+   * Update the world object.
+   * @param {Number} delta - The time difference since last update.
+   */
+  update (delta) {
     this.camera.update(delta)
   }
 }

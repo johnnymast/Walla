@@ -1,7 +1,12 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Prophecy = require('prophecyjs')
 
-
-describe('Core - Transform',  () => {
+describe('Core - Transform', () => {
 
   it('It should be constructable by using coordinates and scale factor.', () => {
     let expected = new Prophecy.Transform(2, 3, 4)
@@ -36,4 +41,4 @@ describe('Core - Transform',  () => {
     expect(expected.x).toEqual(9) // 2 * 3 + 3
     expect(expected.y).toEqual(12) // 2 * 4 + 4
   })
-});
+})

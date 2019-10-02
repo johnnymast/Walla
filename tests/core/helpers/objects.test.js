@@ -1,3 +1,9 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 require('prophecyjs')
 
 describe('Object Helpers - extend', function () {
@@ -71,13 +77,13 @@ describe('Object Helpers - merge', function () {
       a: 'new',
     }
 
-    v1 = merge(v1, v2);
+    v1 = merge(v1, v2)
 
     expect(v1).toEqual({
       a: 'new',
       b: 'second'
     })
-  });
+  })
 })
 
 describe('Object Helpers - map2', function () {

@@ -30,8 +30,8 @@ game.start()
  */
 function preload () {
   game.loader.loadManifest([
-    { name: 'debug_bg_grid', src: '/assets/examples/backgrounds/debug-grid-1920x1920.png' },
-    { name: 'phaser_dude', src: '/assets/examples/sprites/phaser-dude.png' },
+    {name: 'debug_bg_grid', src: '/assets/examples/backgrounds/debug-grid-1920x1920.png'},
+    {name: 'phaser_dude', src: '/assets/examples/sprites/phaser-dude.png'},
   ])
 }
 
@@ -52,13 +52,12 @@ function create () {
   let tilingSprite = game.add.tilingSprite(PIXI.Texture.fromFrame('debug_bg_grid'), movable_width, movable_height)
   let dude = game.add.sprite(PIXI.Texture.fromFrame('phaser_dude'))
 
-  dude.x = 800 /2 - dude.width / 2
-  dude.y = 600 /2 - dude.height / 2
+  dude.x = 800 / 2 - dude.width / 2
+  dude.y = 600 / 2 - dude.height / 2
 
   //dude.anchor.set(0.5)
 
   game.world.camera.follow(dude, Prophecy.Camera.FOLLOW_LOCKON)
-
 
   // this.camera = camera
   this.dude = dude
@@ -75,7 +74,7 @@ function create () {
   game.input.mapInput([game.input.keys.ArrowDown, 's'], ['down'])
 }
 
-function validate(x, y, width, height) {
+function validate (x, y, width, height) {
 
   if (x < 1 || x > game.world.bounds.width - width) {
     return false
@@ -86,6 +85,11 @@ function validate(x, y, width, height) {
   }
   return true
 }
+
+/**
+ * Update the scene.
+ * @param {Number} delta - The time difference since last update.
+ */
 function update (delta) {
   // this.camera.update(delta)
   game.world.camera.update(delta)

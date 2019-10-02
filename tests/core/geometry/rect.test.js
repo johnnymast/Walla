@@ -1,3 +1,9 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Prophecy = require('prophecyjs')
 
 describe('Geometry - Prophecy.Geometry.Rect', function () {
@@ -23,7 +29,7 @@ describe('Geometry - Prophecy.Geometry.Rect', function () {
 
   it('set() without y should make y equal to passed x.', () => {
     let r = new Prophecy.Geometry.Rect()
-    r.set(5,  10, 200)
+    r.set(5, 10, 200)
     expect(r.x).toEqual(5)
     expect(r.y).toEqual(10)
     expect(r.width).toEqual(200)
@@ -36,21 +42,21 @@ describe('Geometry - Prophecy.Geometry.Rect', function () {
     expect(expected).toEqual(r.halfwidth)
   })
 
-  it('halfheight() Should return the half of the rect with.', function() {
+  it('halfheight() Should return the half of the rect with.', function () {
     let r = new Prophecy.Geometry.Rect(0, 0, 100, 200)
     let expected = 200 / 2
     expect(expected).toEqual(r.halfheight)
   })
 
-  it('centerx() Should return the center of the rect on the x axis.', function() {
+  it('centerx() Should return the center of the rect on the x axis.', function () {
     let r = new Prophecy.Geometry.Rect(10, 20, 100, 200)
-    let expected = 10/2
+    let expected = 10 / 2
     expect(expected).toEqual(r.centerx)
   })
 
-  it('centery() Should return the center of the rect on the y axis.', function() {
+  it('centery() Should return the center of the rect on the y axis.', function () {
     let r = new Prophecy.Geometry.Rect(10, 20, 100, 200)
-    let expected = 20/2
+    let expected = 20 / 2
     expect(expected).toEqual(r.centery)
   })
 

@@ -1,3 +1,9 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Prophecy = require('prophecyjs')
 
 describe('Geometry - Prophecy.Geometry.Size', function () {
@@ -45,7 +51,6 @@ describe('Geometry - Prophecy.Geometry.Size Element-wise', function () {
     let r2 = new Prophecy.Geometry.Size(200, 300)
     expect(r1.equals(r2)).toBeFalsy()
   })
-
 
   it('copy() should copy the values from one point to an other.', () => {
     let r1 = new Prophecy.Geometry.Size(204, 208)

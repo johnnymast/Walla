@@ -1,6 +1,12 @@
+/**
+ * @author       Johnny Mast <mastjohnny@gmail.com>
+ * @copyright    2019 Prophecy.
+ * @license      {@link https://github.com/prophecyjs/prophecy/blob/master/license.txt|MIT License}
+ */
+
 const Prophecy = require('prophecyjs')
 
-describe('Core - Prophecy.GameEngine',  () => {
+describe('Core - Prophecy.GameEngine', () => {
 
   it('It should be constructable by using keyword new.', () => {
     let expected = new Prophecy.GameEngine()
@@ -31,4 +37,4 @@ describe('Core - Prophecy.GameEngine',  () => {
     expect(expected).toEqual(testValue)
   })
 
-});
+})
