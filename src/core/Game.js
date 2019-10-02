@@ -129,7 +129,7 @@ class Game {
     this.assets = new Prophecy.AssetManager()
     this.plugins = new Prophecy.PluginManager(this.ge)
     this.state = new Prophecy.StateManager()
-    this.world = new World({ size: new Prophecy.Geometry.Size(width, height) })
+    this.world = new World({size: new Prophecy.Geometry.Size(width, height)})
     this.input = new Prophecy.InputManager()
 
     this.add = new GameObjectFactory()
@@ -161,6 +161,17 @@ class Game {
       const Debug = this.plugins.loadPlugin('debug', 'Debug')
       Prophecy.Plugins.DebugManager = new Debug.DebugManager
     }
+  }
+
+  createScene (name, scene) {
+    let newscene = new Scene()
+    Object.keys(scene).forEach(item => {
+      newscene[item] = scene[item]
+    })
+
+    this.scene = newscene
+    this.ge.get('SceneManager')
+      .addSceneInstance(name, newscene)
   }
 
   // /**
