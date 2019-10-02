@@ -6,7 +6,7 @@
 
 /**
  * Rect class
- * @class PIXI.Geometry.Rect
+ * @class Prophecy.Geometry.Rect
  */
 class Rect {
 
@@ -97,6 +97,50 @@ class Rect {
   }
 
   /**
+   * Check to see if a given x and y position are inside the rect.
+   * @param {number} [x=0] - The x coordinate.
+   * @param {number} [y=0] - The y coordinate.
+   * @returns {boolean}
+   */
+  inside (x = 0, y = 0) {
+    if (x < this.x || x > this.x + this.width) {
+      return false
+    }
+
+    if (y < this.y || y > this.y + this.height) {
+      return false
+    }
+
+    return true
+  }
+
+  /**
+   * Check to see if a given x and y position are outside the rect.
+   * @param {number} [x=0] - The x coordinate.
+   * @param {number} [y=0] - The y coordinate.
+   * @returns {boolean}
+   */
+  outside (x = 0, y = 0) {
+    if (x < this.x || x > this.x + this.width) {
+      return true
+    }
+
+    if (y < this.y || y > this.y + this.height) {
+      return true
+    }
+
+    return false
+  }
+
+  /**
+   * Return the center of the Rect as a Point.
+   * @returns {PIXI.Geometry.Point}
+   */
+  get center () {
+    return new Prophecy.Geometry.Point(this.centerx, this.centery)
+  }
+
+  /**
    * Return the half of the width.
    * @returns {number}
    */
@@ -117,16 +161,15 @@ class Rect {
    * @returns {number}
    */
   get centerx () {
-    return this.x / 2
+    return this.x + this.halfwidth
   }
 
   /**
    * Return the y center of the rect.
    */
   get centery () {
-    return this.y / 2
+    return this.y + this.halfheight
   }
-
 }
 
 if (typeof module !== 'undefined') {

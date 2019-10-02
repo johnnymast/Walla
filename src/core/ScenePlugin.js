@@ -12,7 +12,7 @@ const GameObject = require('core/GameObject')
  * @class Prophecy.ScenePlugin
  */
 class ScenePlugin extends GameObject {
-  constructor () {
+  constructor (game) {
     super()
 
     this.setPreUpdateMode()

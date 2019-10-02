@@ -15,12 +15,46 @@ let config = {
 let game = new Prophecy.Game(config)
 
 game.createScene('Main', {
+  init () {
+    console.log('1 init')
+  },
+  preload () {
+    console.log('1 preload')
+  },
   create () {
-    console.log('created')
+    console.log('1 created')
+  },
+  movedToScene (scene) {
+    console.log('1 Game moved to scene ', scene.name)
+  },
+  movedFromScene (scene) {
+    console.log('1 Game moved from scene ', scene.name)
   },
   update () {
-    console.log('update')
+    console.log('1 update')
   }
 })
 
-game.start('Main')
+game.createScene('2Main', {
+  init () {
+    console.log('2 init')
+  },
+  preload () {
+    console.log('2 preload')
+  },
+  create () {
+    console.log('2 created')
+    this.game.scenes.switchTo('Main')
+  },
+  movedToScene (scene) {
+    console.log('2 Game moved to scene ', scene.name)
+  },
+  movedFromScene (scene) {
+    console.log('2 Game moved from scene ', scene.name)
+  },
+  update () {
+    console.log('2 update')
+  }
+})
+
+game.start('2Main')

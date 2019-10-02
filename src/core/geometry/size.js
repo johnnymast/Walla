@@ -6,7 +6,7 @@
 
 /**
  * Size class
- * @class PIXI.Geometry.Size
+ * @class Prophecy.Geometry.Size
  */
 class Size {
   constructor (width, height) {

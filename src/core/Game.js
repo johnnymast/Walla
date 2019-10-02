@@ -42,24 +42,7 @@ class Game {
     this.hello()
     this.init()
 
-    if (typeof config.scene === 'string') {
-
-      this.scene = config.scene
-    } else if (config.scene instanceof Object) {
-      this.scene = new Scene(config)
-
-      if (typeof config.scene.preload !== 'undefined')
-        this.scene.preload = config.scene.preload
-
-      if (typeof config.scene.create !== 'undefined')
-        this.scene.onStart = config.scene.create
-
-      if (typeof config.scene.update !== 'undefined')
-        this.scene.update = config.scene.update
-    }
-
     this.setupPlugins()
-    // this.start()
   }
 
   hello () {
@@ -89,7 +72,7 @@ class Game {
   init () {
 
     let canvas = this.config.canvas
-    let resolution = 2 // window.devicePixelRatio
+    let resolution = window.devicePixelRatio
     let width = (this.config.width || 800)
     let height = (this.config.height || 600)
 
@@ -126,25 +109,28 @@ class Game {
     // FIXME: replace with prophecyjs/Loader
     this.loader = new Prophecy.AssetManager()
     //   this.resize = new Prophecy.ResizeManager(app, { autoFullScreen: true })
-    this.assets = new Prophecy.AssetManager()
+
     this.plugins = new Prophecy.PluginManager(this.ge)
     this.state = new Prophecy.StateManager()
-    this.world = new World({size: new Prophecy.Geometry.Size(width, height)})
-    this.input = new Prophecy.InputManager()
-
+    this.world = new World({ size: new Prophecy.Geometry.Size(width, height) })
+    this.scenes = this.ge.get('SceneManager')
     this.add = new GameObjectFactory()
+
+    console.error('TODO: Unit test inside / outside with negative values')
   }
 
-  start () {
-    if (this.scene instanceof Scene) {
-      this.ge.get('SceneManager')
-        .addSceneInstance('_global_', this.scene)
-        .switchTo('_global_')
-    } else {
-      this.ge.get('SceneManager')
-        .add(this.scene)
-        .switchTo(this.scene)
+  /**
+   * Start the game
+   * @param {string} [scene=''] - Optional scene name
+   */
+  start (scene) {
+
+    console.error('TODO: Start if scene name is empty try to load the first registered scene.')
+
+    if (scene instanceof String) {
+      return this.scenes.switchTo(scene)
     }
+    return this.scenes.switchTo(scene)
   }
 
   /**
@@ -164,22 +150,25 @@ class Game {
   }
 
   createScene (name, scene) {
-    let newscene = new Scene()
+
+    let _scene = new Scene(name)
+
     Object.keys(scene).forEach(item => {
-      newscene[item] = scene[item]
+      _scene[item] = scene[item]
     })
 
-    this.scene = newscene
-    this.ge.get('SceneManager')
-      .addSceneInstance(name, newscene)
+    _scene.init()
+
+    this.scenes.addSceneInstance(name, _scene)
+    return this
   }
 
-  // /**
-  //  * Return the current stage
-  //  * @returns {Object.scene|Prophecy.Scene}
-  //  */
+  /**
+   * Return the current stage
+   * @returns {Object.scene|Prophecy.Scene}
+   */
   get stage () {
-    return this.ge.get('SceneManager').getCurrentScene()
+    return this.scenes.getCurrentScene()
   }
 }
 

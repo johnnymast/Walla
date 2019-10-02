@@ -35,6 +35,14 @@ class AssetManager extends PIXI.utils.EventEmitter {
   }
 
   /**
+   * Indicates if resources are being loaded.
+   * @returns {boolean}
+   */
+  isLoading () {
+    return PIXI.loader.loading
+  }
+
+  /**
    * Progress callback for the AssetManager. This internal function will emit
    * the progress event for the AssetManager.
    *

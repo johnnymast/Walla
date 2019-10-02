@@ -57,7 +57,7 @@ class CameraInfo extends PIXI.Container {
 
     let msg = `Camera (${camera.viewport.width} x ${camera.viewport.height})\n`
       + `X: ${camera.viewport.x} Y: ${camera.viewport.y}\n`
-      + `Bounds x: ${camera.bounds.x} Y: ${camera.bounds.y} w: ${camera.bounds.width} h: ${camera.bounds.height}\n`
+      + `Bounds x: ${camera.world.bounds.x} Y: ${camera.world.bounds.y} w: ${camera.world.bounds.width} h: ${camera.world.bounds.height}\n`
       + `View x: ${camera.viewport.x} Y: ${camera.viewport.y} w: ${camera.viewport.height} h: ${camera.viewport.height}`
 
     this.options.info.text = msg

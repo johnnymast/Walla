@@ -27,17 +27,11 @@ class Camera extends PIXI.Container {
 
     this.game = game
     this.enableDebug = true
-
-    this.x = x
-    this.y = y
-    this.w = 300 //width
-    this.h = 300 //height
-
     this.deadzone = null
-
     this.world = world
 
-    this.bounds = new Prophecy.Geometry.Rect(this.x, this.y, this.w, this.h)
+    this.bounds = this.world.bounds // new Prophecy.Geometry.Rect(x, y, width, height)
+
 
     /**
      * The target we want the camera to follow.
@@ -55,7 +49,7 @@ class Camera extends PIXI.Container {
      * This is the part the player looks trough
      * @type {Prophecy.Geometry.Rect}
      */
-    this.viewport = new Prophecy.Geometry.Rect(this.x, this.y, this.w, this.h)
+    this.viewport = new Prophecy.Geometry.Rect(this.x, this.y, width, height)
 
     this.debug = new CameraInfo(this)
 
@@ -72,8 +66,8 @@ class Camera extends PIXI.Container {
   updateViewport () {
 
     let diff = {
-      x: (this.target.x + this.target.width / 2) - this.viewport.width / 2,
-      y: (this.target.y + this.target.height / 2) - this.viewport.height / 2,
+      x: (this.target.x + this.target.width / 2) - this.viewport.halfwidth,
+      y: (this.target.y + this.target.height / 2) - this.viewport.halfheight,
     }
 
     if (this.checkViewPortBounds(diff.x, diff.y)) {
@@ -93,19 +87,12 @@ class Camera extends PIXI.Container {
   /**
    * Validate the ViewPort coordinates.
    * @param {Number} x - The x coordinate
-   * @param {Number} y - The y coordiante
+   * @param {Number} y - The y coordinate
    * @returns {boolean}
    */
   checkViewPortBounds (x, y) {
 
-    if (x < 1 || x > this.bounds.width - this.viewport.width) {
-      this.debug.options.lineWidth = 4
-      return false
-    } else {
-      this.debug.options.lineWidth = 2
-    }
-
-    if (y < 1 || y > this.bounds.height - this.viewport.height) {
+    if (this.world.bounds.outside(x, y)) {
       this.debug.options.lineWidth = 4
       return false
     } else {
@@ -128,10 +115,10 @@ class Camera extends PIXI.Container {
       case Prophecy.Camera.FOLLOW_LOCKON:
 
         this.deadzone = new Prophecy.Geometry.Rect(
-          (this.target.x + this.target.width / 2) - this.bounds.width / 2,
-          (this.target.y + this.target.height / 2) - this.bounds.height / 2,
-          this.bounds.width,
-          this.bounds.height)
+          (this.target.x + this.target.width / 2) - this.viewport.halfwidth,
+          (this.target.y + this.target.height / 2) - this.viewport.halfheight,
+          this.viewport.width,
+          this.viewport.height)
 
         this.x = this.deadzone.x
         this.y = this.deadzone.y
@@ -153,7 +140,7 @@ class Camera extends PIXI.Container {
     this.updateViewport()
 
     if (this.enableDebug) {
-      this.debug.update()
+      this.debug.update(delta)
     }
   }
 }

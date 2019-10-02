@@ -48,18 +48,49 @@ describe('Geometry - Prophecy.Geometry.Rect', function () {
     expect(expected).toEqual(r.halfheight)
   })
 
+  it('center() Should return a Prophecy.Geometry.Point width the center of the Rect.', function () {
+    let r = new Prophecy.Geometry.Rect(10, 20, 100, 200)
+    let expected = new Prophecy.Geometry.Point(10 + 100 / 2, 20 + 200 / 2)
+    let actual = r.center
+    expect(expected).toEqual(actual)
+  })
+
   it('centerx() Should return the center of the rect on the x axis.', function () {
     let r = new Prophecy.Geometry.Rect(10, 20, 100, 200)
-    let expected = 10 / 2
+    let expected = 10 + 100 / 2
     expect(expected).toEqual(r.centerx)
   })
 
   it('centery() Should return the center of the rect on the y axis.', function () {
     let r = new Prophecy.Geometry.Rect(10, 20, 100, 200)
-    let expected = 20 / 2
+    let expected = 20 + 200 / 2
     expect(expected).toEqual(r.centery)
   })
 
+  it('inside(x,y) should return true if inside the Prophecy.Geometry.Rect.', function () {
+    let r = new Prophecy.Geometry.Rect(10, 10, 100, 100)
+    expect(r.inside(15, 20)).toBeTruthy()
+  })
+
+  it('inside(x,y) should return false if outside the Prophecy.Geometry.Rect on x axis.', function () {
+    let r = new Prophecy.Geometry.Rect(10, 10, 100, 100)
+    expect(r.inside(500, 20)).toBeFalsy()
+  })
+
+  it('inside(x,y) should return false if outside the Prophecy.Geometry.Rect on y axis.', function () {
+    let r = new Prophecy.Geometry.Rect(10, 10, 100, 100)
+    expect(r.inside(15, 500)).toBeFalsy()
+  })
+
+  it('outside(x,y) should return true if outside the Prophecy.Geometry.Rect on the x axis.', function () {
+    let r = new Prophecy.Geometry.Rect(10, 10, 100, 100)
+    expect(r.outside(10 + 105, 10)).toBeTruthy()
+  })
+
+  it('outside(x,y) should return true if outside the Prophecy.Geometry.Rect on the y axis.', function () {
+    let r = new Prophecy.Geometry.Rect(10, 10, 100, 100)
+    expect(r.outside(10, 10 + 105)).toBeTruthy()
+  })
 })
 
 describe('Geometry - Prophecy.Geometry.Rect Element-wise', function () {

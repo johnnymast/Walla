@@ -6,7 +6,7 @@
 
 /**
  * Point class
- * @class PIXI.Geometry.Point
+ * @class Prophecy.Geometry.Point
  */
 class Point {
 

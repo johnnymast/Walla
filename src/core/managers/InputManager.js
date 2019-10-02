@@ -36,15 +36,16 @@ class InputManager extends GameObject {
   /**
    * Enable keyboard input on the current scene.
    */
-  enableKeyboardInput () {
+  enableKeyboard () {
     let scene = this.SceneManager.getCurrentScene()
     scene.interactive = true
+    return this
   }
 
   /**
    * Enable gamepad input on the current scene.
    */
-  enableGamePadInput () {
+  enableGamePad () {
     throw new Error('Not implemented yet.')
   }
 
@@ -134,6 +135,8 @@ class InputManager extends GameObject {
         this.map[name].push(input[j])
       }
     }
+
+    return this
   }
 
   /**

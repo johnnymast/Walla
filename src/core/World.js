@@ -24,6 +24,7 @@ class World {
     this.camera = new Prophecy.Camera(game, this, 0, 0, this.size.width, this.size.height)
 
     this.setBounds(0, 0, this.size.width, this.size.height)
+    this.setViewPort(0, 0, this.size.width, this.size.height)
   }
 
   /**
@@ -34,7 +35,18 @@ class World {
    * @param {Number} [height=0] - The height of the world.
    */
   setBounds (x = 0, y = 0, width = 0, height = 0) {
-    this.bounds = new Prophecy.Geometry.Rect(x, y, width, height)
+    this._bounds = new Prophecy.Geometry.Rect(x, y, width, height)
+  }
+
+  /**
+   *
+   * @param {Number} [x=0] - The x coordinate.
+   * @param {Number} [y=0] - The y coordinate.
+   * @param {Number} [width=0] - The width of the world.
+   * @param {Number} [height=0] - The height of the world.
+   */
+  setViewPort (x = 0, y = 0, width = 0, height = 0) {
+    this._viewport = new Prophecy.Geometry.Rect(x, y, width, height)
 
     if (this.camera.bounds) {
       this.camera.bounds.set(x, y, Math.max(width, this.size.width), Math.max(height, this.size.height))
@@ -42,19 +54,23 @@ class World {
   }
 
   /**
-   * Return the world bounds.
-   * @returns {Prophecy.Geometry.Rect}
-   */
-  getBounds () {
-    return this.bounds
-  }
-
-  /**
    * Return the center of the world
    * @returns {Prophecy.Geometry.Point}
    */
-  getCenter () {
-    return new Prophecy.Geometry.Point(this.bounds.width / 2, this.bounds.height / 2)
+  get center () {
+    return new Prophecy.Geometry.Point(this.bounds.halfwidth, this.bounds.halfheight)
+  }
+
+  /**
+   * Return the world bounds.
+   * @returns {Prophecy.Geometry.Rect}
+   */
+  get bounds () {
+    return this._bounds
+  }
+
+  get viewport () {
+    return this._viewport
   }
 
   /**

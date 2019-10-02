@@ -26,6 +26,11 @@ class GameObject extends PIXI.Container {
     this.ge = GameEngine.get()
 
     /**
+     * @type {Prophecy.Game}
+     */
+    this.game = this.ge.get('Game')
+
+    /**
      * @type {PIXI.Application}
      */
     this.app = this.ge.get('App')

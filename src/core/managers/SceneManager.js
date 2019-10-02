@@ -47,7 +47,6 @@ class SceneManager {
   add (scene, options) {
     if (!this.scenes[scene]) {
       let _scene = require('screens/' + scene)
-      _scene.validateScene()
 
       this.scenes[scene] = new _scene(options)
     }
@@ -62,7 +61,6 @@ class SceneManager {
    */
   addSceneInstance (name, scene) {
     this.scenes[name] = scene
-    scene.validateScene()
 
     return this
   }
@@ -134,7 +132,9 @@ class SceneManager {
     if (nextScene) {
       if (this.currentScene) {
         this.app.stage.removeChild(this.currentScene)
-        this.currentScene.switchedAway()
+
+        this.currentScene.movedToScene(nextScene)
+        nextScene.movedFromScene(this.currentScene)
       }
 
       this.currentScene = nextScene
@@ -142,15 +142,20 @@ class SceneManager {
       if (typeof nextScene.preload === 'function') {
 
         this.game.loader.once('complete', () => {
-          nextScene.init()
-          nextScene.start()
+          nextScene.create()
+          nextScene.boot()
         })
 
         nextScene.preload()
 
+        if (this.game.loader.isLoading() === false) {
+          nextScene.create()
+          nextScene.boot()
+        }
+
       } else {
-        nextScene.init()
-        nextScene.start()
+        nextScene.create()
+        nextScene.boot()
       }
 
       this.app.stage.addChild(this.currentScene)
@@ -182,8 +187,6 @@ class SceneManager {
     if (!transition instanceof TransactionType) {
       throw new Error('switchToUsingTransaction: Unknown transition')
     }
-
-    // TODO: Add preload
 
     if (nextScene) {
 

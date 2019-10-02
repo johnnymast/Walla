@@ -1,9 +1,6 @@
 require('core/helpers')
 
-// import 'babel-polyfill'
-require('core/Transform')
-require('core/math')
-
+// TODO: Clean up not all need to be here
 const Prophecy = {
   Gameloop: require('core/Gameloop'),
   GameEngine: require('core/GameEngine'),

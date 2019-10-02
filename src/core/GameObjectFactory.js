@@ -23,6 +23,15 @@ class GameObjectFactory {
    */
   sprite (texture = null, x = 0, y = 0) {
 
+    if (typeof texture == 'string') {
+      let cached = PIXI.Texture﻿.fromFrame(texture)
+      if (cached) {
+        texture = cached
+      } else {
+        texture = PIXI.Texture﻿.fromImage(texture)
+      }
+    }
+
     if (!texture instanceof PIXI.Texture) {
       throw new Error('GameObjectFactory:sprite invalid texture.')
     }
@@ -42,6 +51,20 @@ class GameObjectFactory {
    * @returns {PIXI.extras.TilingSprite}
    */
   tilingSprite (texture = null, width = 0, height = 0) {
+
+    if (typeof texture == 'string') {
+      let cached = PIXI.Texture﻿.fromFrame(texture)
+      if (cached) {
+        texture = cached
+      } else {
+        texture = PIXI.Texture﻿.fromImage(texture)
+      }
+    }
+
+    if (!texture instanceof PIXI.Texture) {
+      throw new Error('GameObjectFactory:tilingSprite invalid texture.')
+    }
+
     return new PIXI.extras.TilingSprite(texture, width, height)
   }
 }
