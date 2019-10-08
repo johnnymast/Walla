@@ -4,7 +4,7 @@ require('core/helpers')
 const Prophecy = {
   Gameloop: require('core/Gameloop'),
   GameEngine: require('core/GameEngine'),
-  Geometry: require('core/geometry'),
+  Geometry: require('core/geometry'), // depricated
   Transform: require('core/Transform'),
   Transition: require('core/transitions/Transition'),
   SceneManager: require('core/managers/SceneManager'),
@@ -17,7 +17,7 @@ const Prophecy = {
   Storage: require('core/storage'),
   Camera: require('core/camera/Camera'),
   Plugins: {},
-  Math: require('core/math'),
+  Math: require('core/math'), // Depricated
   Game: require('core/Game'),
   Pixi: require('pixi')
 }
